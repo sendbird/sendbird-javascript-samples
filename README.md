@@ -1,5 +1,4 @@
-# SendBird-JavaScript
-SendBird JavaScript Sample
+# SendBird JavaScript Sample
 
 [SendBird](https://sendbird.com) provides the chat API and SDK for your app enabling real-time communication among your users.  
 

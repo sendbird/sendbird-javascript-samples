@@ -6,11 +6,11 @@
     "start": "node node_modules/react-native/local-cli/cli.js start"
   },
   "dependencies": {
-    "react-native": "^0.19.0",
-    "react-native-button": "^1.4.2",
+    "react-native": "0.19.0",
+    "react-native-button": "1.4.2",
     "react-native-gifted-messenger": "0.0.18",
     "react-native-gifted-spinner": "0.0.3",
-    "react-native-popup": "^0.5.2",
-    "sendbird": "^2.1.5"
+    "react-native-popup": "0.5.2",
+    "sendbird": "2.1.5"
   }
 }

@@ -10,7 +10,8 @@ var {
 import Popup from 'react-native-popup';
 
 var TopBar = require('../common/topBar');
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 var tempIcon = 'https://s3-ap-northeast-1.amazonaws.com/sendbird-logo-social/120x120symbol_SendBird_positive.png';
 var inviteOffIcon = require('../../img/btn-invite-off.png');
 var inviteOnIcon = require('../../img/btn-invite-on.png');

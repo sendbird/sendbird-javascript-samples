@@ -8,7 +8,9 @@ var {
 } = React;
 
 var Button = require('../common/button');
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
+
 var icon = require('../../img/logo-sendbird.png');
 var appId = 'A7A2672C-AD11-11E4-8DAA-0A18B21C2D82';
 

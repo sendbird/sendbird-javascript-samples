@@ -8,7 +8,8 @@ import Popup from 'react-native-popup';
 
 var Button = require('../common/button');
 var TopBar = require('../common/topBar');
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 
 module.exports = React.createClass({
   componentWillMount: function() {

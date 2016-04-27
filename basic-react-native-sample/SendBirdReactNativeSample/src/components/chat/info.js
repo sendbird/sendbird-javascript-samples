@@ -25,7 +25,7 @@ module.exports = React.createClass({
         </View>
         <View style={styles.infoContainer}>
           <Image style={styles.sendbirdLogo} source={icon} />
-          <Text style={styles.label}>Web SDK version 2.1.3</Text>
+          <Text style={styles.label}>Web SDK version 2.4.2</Text>
         </View>
       </View>
     );

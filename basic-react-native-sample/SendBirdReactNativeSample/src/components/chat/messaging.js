@@ -10,7 +10,8 @@ var {
 } = React;
 
 var TopBar = require('../common/topBar');
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 var searchIcon = require('../../img/icon-search.png');
 var PULLDOWN_DISTANCE = 40;
 
@@ -111,8 +112,8 @@ module.exports = React.createClass({
   },
   getLastMessage: function(msg) {
     var _last_message = '';
-    if (msg) {
-      _last_message = JSON.parse(msg.substring(4)).message;
+    if (typeof msg == 'object' && msg.message.length) {
+      _last_message = msg.message;
       if (_last_message.length > 20) {
         _last_message = _last_message.substring(0, 19) + '...';
       }

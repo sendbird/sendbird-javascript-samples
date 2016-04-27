@@ -12,7 +12,8 @@ var {
 var Button = require('react-native-button');
 var GiftedSpinner = require('react-native-gifted-spinner');
 
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 var LOAD_MESSAGE_COUNT = 50;
 
 var GiftedMessenger = require('react-native-gifted-messenger');

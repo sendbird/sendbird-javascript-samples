@@ -8,7 +8,8 @@ var {
 } = React;
 
 var TopBar = require('../common/topBar');
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 
 module.exports = React.createClass({
   getInitialState: function() {

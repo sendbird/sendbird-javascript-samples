@@ -9,7 +9,8 @@ var {
   StyleSheet
 } = React;
 
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 var PULLDOWN_DISTANCE = 40;
 
 module.exports = React.createClass({

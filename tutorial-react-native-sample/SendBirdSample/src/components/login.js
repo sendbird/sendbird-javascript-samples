@@ -7,7 +7,8 @@ var {
   StyleSheet
 } = React;
 
-var sendbird = require('sendbird');
+var sb = require('sendbird');
+var sendbird = sb.getInstance();
 
 module.exports = React.createClass({
   getInitialState: function() {

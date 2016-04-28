@@ -9,8 +9,7 @@ var {
   StyleSheet
 } = React;
 
-var sb = require('sendbird');
-var sendbird = sb.getInstance();
+var sendbird = require('sendbird');
 var windowSize = Dimensions.get('window');
 
 module.exports = React.createClass({

@@ -10,8 +10,7 @@ var {
 } = React;
 
 var TopBar = require('../common/topBar');
-var sb = require('sendbird');
-var sendbird = sb.getInstance();
+var sendbird = require('sendbird');
 var searchIcon = require('../../img/icon-search.png');
 var PULLDOWN_DISTANCE = 40;
 

@@ -12,8 +12,7 @@ import Popup from 'react-native-popup';
 
 var TopBar = require('../common/topBar');
 var ChatBox = require('../common/chatBox');
-var sb = require('sendbird');
-var sendbird = sb.getInstance();
+var sendbird = require('sendbird');
 
 module.exports = React.createClass({
   getInitialState: function() {

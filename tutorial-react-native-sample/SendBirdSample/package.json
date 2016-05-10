@@ -7,6 +7,6 @@
   },
   "dependencies": {
     "react-native": "^0.20.0",
-    "sendbird": "2.4.9"
+    "sendbird": "2.4.10"
   }
 }

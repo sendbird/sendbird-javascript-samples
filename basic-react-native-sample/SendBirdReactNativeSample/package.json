@@ -11,9 +11,9 @@
     "react-native-gifted-messenger": "0.0.18",
     "react-native-gifted-spinner": "0.0.3",
     "react-native-popup": "0.5.2",
-    "sendbird": "2.4.9"
+    "sendbird": "2.4.10"
   },
   "devDependencies": {
-    "sendbird": "^2.4.9"
+    "sendbird": "^2.4.10"
   }
 }

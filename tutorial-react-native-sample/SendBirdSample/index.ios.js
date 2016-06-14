@@ -1,8 +1,8 @@
-var React = require('react-native');
-var {
-  AppRegistry
-} = React;
+import React from 'react';
+import {
+    AppRegistry
+} from 'react-native';
 
-var Main = require('./src/main');
+import Main from './src/main'
 
 AppRegistry.registerComponent('SendBirdSample', () => Main);

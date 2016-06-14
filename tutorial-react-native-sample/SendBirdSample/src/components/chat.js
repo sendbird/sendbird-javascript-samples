@@ -1,5 +1,5 @@
-var React = require('react-native');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TouchableHighlight,
@@ -7,12 +7,13 @@ var {
   Dimensions,
   ScrollView,
   StyleSheet
-} = React;
+} from 'react-native';
 
-var sendbird = require('sendbird');
+import sendbird from 'sendbird'
+
 var windowSize = Dimensions.get('window');
 
-module.exports = React.createClass({
+var Chat = React.createClass({
   getInitialState: function() {
     return {
       message: '',
@@ -183,3 +184,5 @@ var styles = StyleSheet.create({
     color: '#60768b'
   }
 });
+
+module.exports = Chat;

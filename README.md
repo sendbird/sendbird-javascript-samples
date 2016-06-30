@@ -18,5 +18,5 @@
 [download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) JavaScript SDK  
 
 
-# [Documentation](https://sendbird.gitbooks.io/sendbird-web-sdk/content/en/index.html)  
+# [Documentation](https://docs.sendbird.com/javascript)  
 

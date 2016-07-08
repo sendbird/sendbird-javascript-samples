@@ -51,6 +51,7 @@ module.exports = React.createClass({
         _position = 'right';
       }
       var newMessage = {
+        uniqueId: obj.msg_id,
         text: obj.message,
         name: obj.user.name,
         image: {uri: obj.user.image},
@@ -78,6 +79,7 @@ module.exports = React.createClass({
         _position = 'right';
       }
       var newMessage = {
+        uniqueId: obj.msg_id,
         text: obj.name,
         name: obj.user.name,
         image: {uri: obj.user.image},
@@ -215,6 +217,7 @@ module.exports = React.createClass({
             }
             if(sendbird.isMessage(msg.cmd)) {
               _messageList.push({
+                uniqueId: msg.payload.msg_id,
                 text: msg.payload.message,
                 name: msg.payload.user.name,
                 image: {uri: msg.payload.user.image},
@@ -223,6 +226,7 @@ module.exports = React.createClass({
               });
             } else if (sendbird.isFileMessage(msg.cmd)) {
               _messageList.push({
+                uniqueId: msg.payload.msg_id,
                 text: msg.payload.name,
                 name: msg.payload.user.name,
                 image: {uri: msg.payload.user.image},

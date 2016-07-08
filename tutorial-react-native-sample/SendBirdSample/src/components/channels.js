@@ -1,5 +1,5 @@
-var React = require('react-native');
-var {
+import React from 'react';
+import {
   View,
   Text,
   Image,
@@ -7,12 +7,13 @@ var {
   ListView,
   TouchableHighlight,
   StyleSheet
-} = React;
+} from 'react-native';
 
-var sendbird = require('sendbird');
+import sendbird from 'sendbird'
+
 var PULLDOWN_DISTANCE = 40;
 
-module.exports = React.createClass({
+var Channels = React.createClass({
   getInitialState: function() {
     var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     return {
@@ -147,3 +148,5 @@ var styles = StyleSheet.create({
     color: '#abb8c4',
   }
 });
+
+module.exports = Channels;

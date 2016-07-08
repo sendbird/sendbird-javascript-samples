@@ -1,15 +1,14 @@
-var React = require('react-native');
-var {
+import React from 'react';
+import {
   View,
   Text,
   TextInput,
   TouchableHighlight,
   StyleSheet
-} = React;
+} from 'react-native';
+import sendbird from 'sendbird'
 
-var sendbird = require('sendbird');
-
-module.exports = React.createClass({
+var Login = React.createClass({
   getInitialState: function() {
     return {
       username: ''
@@ -99,3 +98,5 @@ var styles = StyleSheet.create({
     color: '#ffffff'
   }
 });
+
+module.exports = Login;

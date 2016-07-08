@@ -1,23 +1,24 @@
-var React = require('react-native')
-var {
+import React from 'react'
+import {
   Navigator,
   StyleSheet
-} = React;
+} from 'react-native'
 
-var Login = require('./components/login');
-var Channels = require('./components/channels');
-var Chat = require('./components/chat');
 
-var ROUTES = {
+import Login from './components/login'
+import Channels from './components/channels'
+import Chat from './components/chat'
+
+let ROUTES = {
   login: Login,
   channels: Channels,
   chat: Chat
-};
+}
 
-module.exports = React.createClass({
+var Main = React.createClass({
   renderScene: function(route, navigator) {
-    var Component = ROUTES[route.name];
-    return <Component route={route} navigator={navigator} />;
+    let Component = ROUTES[route.name]
+    return <Component route={route} navigator={navigator} />
   },
   render: function() {
     return (
@@ -27,12 +28,14 @@ module.exports = React.createClass({
         renderScene={this.renderScene}
         configureScene={ () => { return Navigator.SceneConfigs.FloatFromRight; } }
       />
-    );
+    )
   }
-});
+})
 
-var styles = StyleSheet.create({
+let styles = StyleSheet.create({
   container: {
     flex: 1
   }
-});
+})
+
+module.exports = Main;

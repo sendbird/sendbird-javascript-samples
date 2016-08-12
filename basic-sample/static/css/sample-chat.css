@@ -795,7 +795,7 @@ label.chat-input-file.file-upload {
 
 .modal-open-chat-list {
   width: 100%;
-  height: calc(100% - 143px);
+  height: calc(100% - 163px);
   overflow-y: auto;
 }
 

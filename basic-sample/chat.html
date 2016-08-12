@@ -10,8 +10,10 @@
   <link href='https://fonts.googleapis.com/css?family=Lato:400,900italic,900,800italic,800,700italic,700,600italic,600,500italic,500,400italic,300italic,200italic,200,100italic,100,300'
         rel='stylesheet' type='text/css'>
 
-  <link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">
-  <link rel="stylesheet" href="/static/css/sample-chat.css">
+  <!--<link rel="stylesheet" href="/static/bootstrap/bootstrap.min.css">-->
+  <!--<link rel="stylesheet" href="/static/css/sample-chat.css">-->
+  <link rel="stylesheet" href="static/bootstrap/bootstrap.min.css">
+  <link rel="stylesheet" href="static/css/sample-chat.css">
 
   <title>Web SDK Sample</title>
   
@@ -26,11 +28,11 @@
       <a href="//sendbird.com" target="_blank"><div class="left-nav-icon"></div></a>
       <div class="left-nav-channel-select">
         <button type="button" class="left-nav-button left-nav-open" id="btn_open_chat">
-          OPEN CHAT
+          OPEN CHANNEL
           <div class="left-nav-button-guide"></div>
         </button>
         <button type="button" class="left-nav-button left-nav-messaging" id="btn_messaging_chat">
-          1ON1 & GROUP CHAT
+          INVITE USER
           <div class="left-nav-button-guide"></div>
         </button>
       </div>
@@ -103,7 +105,7 @@
             <input type="file" name="file" id="chat_file_input" style="display: none;">
           </label>
           <div class="chat-input-text">
-            <textarea class="chat-input-text__field" placeholder="Write a chat" disabled="true"></textarea>
+            <textarea class="chat-input-text__field" placeholder="Write a chat" disabled="true" autofocus></textarea>
           </div>
         </div>
         <label class="chat-input-typing"></label>
@@ -126,8 +128,9 @@
   </div>
 
   <div class="modal-open-chat">
-    <div class="modal-open-chat-top">
-      <input type="text" class="modal-open-chat-top__search" placeholder="Search Channel" id="modal_open_chat_search">
+    <div class="modal-messaging-top">
+      <label class="modal-messaging-top__title">Open Channel</label>
+      <label class="modal-messaging-top__desc">Channel list shows channel names inside the application.</label>
     </div>
     <div class="modal-open-chat-list"></div>
     <div class="modal-open-chat-more">
@@ -137,7 +140,7 @@
 
   <div class="modal-messaging">
     <div class="modal-messaging-top">
-      <label class="modal-messaging-top__title">1on1 Chat</label>
+      <label class="modal-messaging-top__title">Group Channel</label>
       <label class="modal-messaging-top__desc">Member list shows people inside the application.</label>
     </div>
     <div class="modal-messaging-list">
@@ -159,7 +162,7 @@
   <div class="modal-invite">
     <div class="modal-invite-title">USER LIST</div>
     <div class="modal-invite-top">
-      <label class="modal-messaging-top__title modal-invite-top__title">1on1 Chat</label>
+      <label class="modal-messaging-top__title modal-invite-top__title">Group Channel</label>
       <label class="modal-invite-top__desc">Member list shows people inside the application.</label>
     </div>
     <div class="modal-messaging-list modal-invite-list">
@@ -189,6 +192,10 @@
   <script src="/static/js/jquery-1.11.3.min.js"></script>
   <script src="/static/js/util.js"></script>
   <script src="/static/js/chat.js"></script>
+  <!--<script src="../SendBird.js"></script>-->
+  <!--<script src="static/js/jquery-1.11.3.min.js"></script>-->
+  <!--<script src="static/js/util.js"></script>-->
+  <!--<script src="static/js/chat.js"></script>-->
 
 </body>
 </html>

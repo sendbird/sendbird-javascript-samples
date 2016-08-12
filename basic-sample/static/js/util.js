@@ -10,12 +10,12 @@ String.prototype.format = function () {
   });
 };
 
-Array.prototype.pushUnique = function (item){
-    if(this.indexOf(item) == -1) {
-        this.push(item);        
-    }
-    return this.length;
-};
+// Array.prototype.pushUnique = function (item){
+//     if(this.indexOf(item) == -1) {
+//         this.push(item);
+//     }
+//     return this.length;
+// };
 
 function getUrlVars() {
   var vars = [], hash;
@@ -46,13 +46,13 @@ function notifyMe() {
   }
 }
 
-function notifyMessage(message) {
+function notifyMessage(channel, message) {
   var iconUrl = location.protocol + '//' + location.host + '/static/img/sendbird-icon-120x120.png';
   if (window.Notification && Notification.permission === "granted") {
-    var noti = new Notification("SendBird | " + currChannelUrl, {
+    var noti = new Notification("SendBird | " + channel.url, {
       icon: iconUrl,
       body: message,
-      tag: currChannelUrl
+      tag: channel.url
     });
     noti.onclick = function(){
       window.focus();
@@ -101,16 +101,26 @@ function setCookieGuestId(uuid) {
 }
 
 function nameInjectionCheck(name) {
-  name = name.replace(/</g, '&lt;');
-  name = name.replace(/>/g, '&gt;');
-  return name;
+  try {
+    name = name.replace(/</g, '&lt;');
+    name = name.replace(/>/g, '&gt;');
+
+    return name;
+  } catch(e) {
+    // console.log(e);
+    return '';
+  }
 }
 
 function convertLinkMessage(msg) {
   var returnString = '';
 
-  msg = msg.replace(/</g, '&lt;');
-  msg = msg.replace(/>/g, '&gt;');
+  try {
+    msg = msg.replace(/</g, '&lt;');
+    msg = msg.replace(/>/g, '&gt;');
+  } catch(e) {
+    msg = '';
+  }
 
   var urlexp = new RegExp('(http|ftp|https)://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?', 'i');
   if (urlexp.test(msg)) {

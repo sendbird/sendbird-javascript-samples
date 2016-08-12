@@ -21,6 +21,9 @@ var typingUser = [];
 
 var TYPE_CHECK_TIME = 10000;
 
+// 3.0.0
+var currentUser;
+
 $('#guide_create').click(function() {
   $('.modal-guide-create').hide();
 });
@@ -42,68 +45,49 @@ $('#btn_open_chat').click(function() {
   } else {
     $('.right-section__modal-bg').show();
     $(this).addClass('left-nav-open--active');
-    getChannelList(1);
+    getChannelList(true);
   }
 });
 
 $('.modal-open-chat-more').click(function() {
-  getChannelList(channelListPage + 1);
+  getChannelList(false);
 });
 
-function getChannelList(page) {
-  if(page == 1) {
+function getChannelList(isFirstPage) {
+  if(isFirstPage) {
     $('.modal-open-chat-list').html('');
+    OpenChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
   }
-  sendbird.getChannelList({
-    "page": page,
-    "limit": 20,
-    "successFunc" : function(data) {
-      $('.modal-open-chat-list').append(createChannelList(data));
-      channelListPage = data['page'];
-      if (data['next'] != 0) {
+
+  if (OpenChannelListQuery.hasNext) {
+    OpenChannelListQuery.next(function(channels, error){
+      if (error) {
+        return;
+      }
+
+      $('.modal-open-chat-list').append(createChannelList(channels));
+      channelListPage = channels['page'];
+      if (channels['next'] != 0) {
         $('.modal-open-chat-more').show();
       } else {
         $('.modal-open-chat-more').hide();
       }
       $('.modal-open-chat').show();
-    },
-    "errorFunc": function(status, error) {
-      console.log(status, error);
-    }
-  });
-}
-
-function createChannelList(obj) {
-  var channelListHtml = '';
-  $.each(obj['channels'], function(index, channel) {
-    channelListHtml += '' +
-      '<div class="modal-open-chat-list__item" onclick="joinChannel(\''+ channel['channel_url'] +'\')">' +
-      channel['name'] +
-      '</div>';
-  });
-  return channelListHtml;
-}
-
-$('#modal_open_chat_search').keydown(function(event) {
-  if (event.keyCode == 13) {
-    sendbird.getChannelSearch({
-      "query": $(this).val(),
-      "successFunc" : function(data) {
-        $('.modal-open-chat-list').html('');
-        $('.modal-open-chat-list').append(createChannelList(data));
-        channelListPage = data['page'];
-        if (data['next'] != 0) {
-          $('.modal-open-chat-more').show();
-        } else {
-          $('.modal-open-chat-more').hide();
-        }
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
-      }
     });
   }
-});
+}
+
+function createChannelList(channels) {
+  var channelListHtml = '';
+
+  for (var i in channels) {
+    var channel = channels[i];
+      channelListHtml += '' +
+        '<div class="modal-open-chat-list__item" onclick="joinChannel(\''+ channel.url +'\')">' +
+        channel.name + '</div>';
+  }
+  return channelListHtml;
+}
 
 function joinChannel(channelUrl) {
   if (channelUrl == currChannelUrl) {
@@ -112,41 +96,40 @@ function joinChannel(channelUrl) {
     return false;
   }
 
-  sendbird.joinChannel(
-    channelUrl,
-    {
-      "successFunc": function(data) {
-        currChannelInfo = data;
-        currChannelUrl = currChannelInfo['channel_url'];
-
-        $('.chat-empty').hide();
-        initChatTitle(currChannelInfo['name'], 0);
-        $('.chat-canvas').html('');
-        $('.chat-input-text__field').val('');
-        $('.chat').show();
-
-        navInit();
-        popupInit();
-
-        sendbird.connect({
-          "successFunc": function(data) {
-            isOpenChat = true;
-            loadMoreChatMessage(scrollPositionBottom);
-            setWelcomeMessage(currChannelInfo['name']);
-            addChannel();
-            $('.chat-input-text__field').attr('disabled', false);
-          },
-          "errorFunc": function(status, error) {
-            console.log(status, error);
-          }
-        });
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
-      }
+  sb.OpenChannel.getChannel(channelUrl, function(channel, error){
+    if (error) {
+      return;
     }
-  );
 
+    channel.enter(function(response, error){
+      if (error) {
+        if (error.code == 900100) {
+          alert('Oops...You got banned out from this channel.');
+        }
+        return;
+      }
+
+      currChannelInfo = channel;
+      currChannelUrl = channelUrl;
+
+      $('.chat-empty').hide();
+      initChatTitle(currChannelInfo.name, 0);
+
+      $('.chat-canvas').html('');
+      $('.chat-input-text__field').val('');
+      $('.chat').show();
+
+      navInit();
+      popupInit();
+
+      isOpenChat = true;
+      loadMoreChatMessage(scrollPositionBottom);
+      setWelcomeMessage(currChannelInfo.name);
+      addChannel();
+      $('.chat-input-text__field').attr('disabled', false);
+
+    });
+  });
 }
 
 function addChannel() {
@@ -171,11 +154,10 @@ function addChannel() {
   if(addFlag) {
     $('#open_channel_list').append(
       '<div class="left-nav-channel left-nav-channel-open left-nav-channel-open--active" ' +
-      '     onclick="joinChannel(\'' + currChannelInfo["channel_url"] + '\')"' +
-      '     data-channel-url="' + currChannelInfo["channel_url"] + '"' +
+      '     onclick="joinChannel(\'' + currChannelInfo.url + '\')"' +
+      '     data-channel-url="' + currChannelInfo.url + '"' +
       '>' +
-      (currChannelInfo["name"].length > 12 ? currChannelInfo["name"].substring(0, 12) + '...' : currChannelInfo["name"]) +
-      '  <div class="left-nav-channel-leave" onclick="leaveChannel(currChannelInfo, $(this))"></div>' +
+      (currChannelInfo.name.length > 12 ? currChannelInfo.name.substring(0, 12) + '...' : currChannelInfo["name"]) +
       '</div>'
     );
   }
@@ -188,12 +170,6 @@ function leaveChannel(channel, obj) {
   popupInit();
 
   leaveChannelUrl = channel['channel_url'];
-
-  if (obj.hasClass('chat-top__button')) {
-    obj.addClass('chat-top__button-leave--active');
-  } else {
-    obj.addClass('left-nav-channel-leave--active');
-  }
 
   if($('.chat-top__button-invite').is(':visible')) {
     $('.modal-leave-channel-desc').html('Do you want to leave this messaging channel?');
@@ -220,7 +196,7 @@ $('.chat-top__button-member').click(function() {
   } else {
     popupInit();
     $(this).addClass('chat-top__button-member--active');
-    getMemberList(currChannelUrl);
+    getMemberList(currChannelInfo);
     $('.modal-member').show();
   }
 });
@@ -237,34 +213,58 @@ $('.chat-top__button-invite').click(function() {
   }
 });
 
-function getMemberList(channelUrl) {
-  sendbird.getMemberList(
-    channelUrl,
-    {
-      "successFunc" : function(data) {
-        $('.modal-member-list').html('');
-        var memberListHtml = '';
-        $.each(data['members'], function(index, member) {
-          memberListHtml += '' +
-            '<div class="modal-member-list__item">' +
-            (member['is_online'] ? '<div class="modal-member-list__icon modal-member-list__icon--online"></div>' : '<div class="modal-member-list__icon"></div>') +
-            '  <div class="modal-member-list__name">' +
-            (member['nickname'].length > 13 ? member['nickname'].substring(0, 12) + '...' : member['nickname']) +
-            '  </div>' +
-            '</div>';
-        });
-        $('.modal-member-list').html(memberListHtml);
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
+function getMemberList(channel) {
+  if (channel.isOpenChannel()) {
+    OpenChannelParticipantListQuery = channel.createParticipantListQuery(channel);
+    OpenChannelParticipantListQuery.next(function (members, error) {
+      if (error) {
+        return;
       }
-    }
-  );
+
+      $('.modal-member-list').html('');
+      var memberListHtml = '';
+      members.forEach(function (member) {
+        memberListHtml += '' +
+          '<div class="modal-member-list__item">' +
+          '<div class="modal-member-list__icon modal-member-list__icon--online"></div>' +
+          '  <div class="modal-member-list__name">' +
+          (member.nickname.length > 13 ? member.nickname.substring(0, 12) + '...' : member.nickname) +
+          '  </div>' +
+          '</div>';
+      });
+      $('.modal-member-list').html(memberListHtml);
+    });
+  }
+
+  if (channel.isGroupChannel()) {
+    var members = channel.members;
+    $('.modal-member-list').html('');
+
+    var memberListHtml = '';
+    members.forEach(function (member) {
+      if (member.connectionStatus == 'online') {
+        memberListHtml += '' +
+          '<div class="modal-member-list__item">' +
+          '<div class="modal-member-list__icon modal-member-list__icon--online"></div>' +
+          '  <div class="modal-member-list__name">' +
+          (member.nickname.length > 13 ? member.nickname.substring(0, 12) + '...' : member.nickname) +
+          '  </div>' +
+          '</div>';
+      } else { // (member.connectionStatus == 'offline')
+        memberListHtml += '' +
+          '<div class="modal-member-list__item">' +
+          '<div class="modal-member-list__icon"></div>' +
+          '  <div class="modal-member-list__name">' +
+          (member.nickname.length > 13 ? member.nickname.substring(0, 12) + '...' : member.nickname) +
+          '  </div>' +
+          '</div>';
+      }
+    });
+    $('.modal-member-list').html(memberListHtml);
+  }
 }
 
 $('.modal-leave-channel-close').click(function() {
-  $('.left-nav-channel-leave').removeClass('left-nav-channel-leave--active');
-  $('.chat-top__button-leave').removeClass('chat-top__button-leave--active');
   $('.modal-leave-channel').hide();
   leaveChannelUrl = '';
   return false;
@@ -272,71 +272,56 @@ $('.modal-leave-channel-close').click(function() {
 
 $('.modal-leave-channel-submit').click(function() {
   $('#open_channel_list').removeClass('chat-top__button-leave--active');
-  $('.chat-top__button-leave').removeClass('left-nav-channel-leave--active');
 
-  if (!leaveChannelUrl.isEmpty()) {
-    sendbird.leaveChannel(
-      leaveChannelUrl,
-      {
-        "successFunc": function(data) {
-          $('.chat-canvas').html('');
-          $('.chat-input-text__field').val('');
-          $('.chat').hide();
-          initChatTitle('', -1);
-          $('.chat-empty').show();
-
-          $('.left-nav-channel-open--active').remove();
-
-          if ($('.left-nav-channel-open').length == 0) {
-            $('.left-nav-channel-empty').show();
-          }
-
-          $('.modal-leave-channel').hide();
-          channelListPage = 0;
-          currChannelUrl = null;
-          currChannelInfo = null;
-          leaveChannelUrl = '';
-
-          $('.chat-input-text__field').attr('disabled', true);
-          sendbird.disconnect();
-          sendbird.connect();
-        },
-        "errorFunc": function(status, error) {
-          console.log(status, error);
-        }
+  if (currChannelInfo.isOpenChannel()) {
+    currChannelInfo.exit(function(response, error){
+      if (error) {
+        return;
       }
-    );
-  } else if (!leaveMessagingChannelUrl.isEmpty()) {
-    sendbird.endMessaging(
-      leaveMessagingChannelUrl,
-      {
-        "successFunc" : function(data) {
-          $('.chat-canvas').html('');
-          $('.chat-input-text__field').val('');
-          $('.chat').hide();
-          initChatTitle('', -1);
-          $('.chat-empty').show();
+      $('.chat-canvas').html('');
+      $('.chat-input-text__field').val('');
+      $('.chat').hide();
+      initChatTitle('', -1);
+      $('.chat-empty').show();
 
-          $('.left-nav-channel-messaging--active').remove();
-          $('.left-nav-channel-group--active').remove();
+      $('.left-nav-channel-open--active').remove();
 
-          $('.modal-leave-channel').hide();
-          channelListPage = 0;
-          currChannelUrl = null;
-          currChannelInfo = null;
-          leaveMessagingChannelUrl = '';
-
-          $('.chat-input-text__field').attr('disabled', true);
-          sendbird.disconnect();
-          sendbird.connect();
-        },
-        "errorFunc": function(status, error) {
-          console.log(status, error);
-        }
+      if ($('.left-nav-channel-open').length == 0) {
+      $('.left-nav-channel-empty').show();
       }
-    );
+
+      $('.modal-leave-channel').hide();
+      channelListPage = 0;
+      currChannelUrl = null;
+      currChannelInfo = null;
+      leaveChannelUrl = '';
+
+      $('.chat-input-text__field').attr('disabled', true);
+    });
+  } else if (currChannelInfo.isGroupChannel()) {
+    currChannelInfo.leave(function(response, error){
+      if (error) {
+        return;
+      }
+
+      $('.chat-canvas').html('');
+      $('.chat-input-text__field').val('');
+      $('.chat').hide();
+      initChatTitle('', -1);
+      $('.chat-empty').show();
+
+      $('.left-nav-channel-messaging--active').remove();
+      $('.left-nav-channel-group--active').remove();
+
+      $('.modal-leave-channel').hide();
+      channelListPage = 0;
+      currChannelUrl = null;
+      currChannelInfo = null;
+      leaveMessagingChannelUrl = '';
+
+      $('.chat-input-text__field').attr('disabled', true);
+    });
   }
-
 });
 /***********************************************
  *              // END OPEN CHAT
@@ -368,49 +353,46 @@ $('#btn_messaging_chat').click(function() {
   }
 });
 
-function getUserList(options) {
-  options = $.extend({}, {"page": 1, "token": '', "limit": 30}, options);
-  if (options["page"] == 1 && options["token"] == '') {
+function getUserList(isFirstPage) {
+  if (isFirstPage) {
     $('.modal-messaging-list').html('');
+    UserListQuery = sb.createUserListQuery();
   }
 
-  sendbird.getUserList({
-    "token": options["token"],
-    "page": options["page"],
-    "limit": options["limit"],
-    "successFunc" : function(data) {
-      userListToken = data["token"];
-      userListNext = data["next"];
-      var users = data["users"];
+  if (UserListQuery.hasNext) {
+    UserListQuery.next(function(userList, error){
+      if (error) {
+        return;
+      }
 
+      var users = userList;
       $('.modal-messaging-more').remove();
       $.each(users, function(index, user) {
-        if (!isCurrentUser(user["guest_id"])) {
+        UserList[user.userId] = user;
+        if (!isCurrentUser(user.userId)) {
           $('.modal-messaging-list').append(
             '<div class="modal-messaging-list__item" onclick="userClick($(this))">' +
-            (user["nickname"].length > 12 ? user["nickname"].substring(0, 12) + '...' : user["nickname"]) +
-            '  <div class="modal-messaging-list__icon" data-guest-id="' + user["guest_id"] + '"></div>' +
+            (user.nickname.length > 12 ? user.nickname.substring(0, 12) + '...' : user.nickname) +
+            '  <div class="modal-messaging-list__icon" data-guest-id="' + user.userId + '"></div>' +
             '</div>'
           );
         }
       });
 
-      if (userListNext != 0) {
+      if (UserListQuery.hasNext) {
         $('.modal-messaging-list').append(
           '<div class="modal-messaging-more" onclick="userListLoadMore()">MORE<div class="modal-messaging-more__icon"></div></div>'
         );
       } else {
         $('.modal-messaging-more').remove();
       }
-    },
-    "errorFunc": function(status, error) {
-      console.log(status, error);
-    }
-  });
+    });
+  }
+
 }
 
 function userListLoadMore() {
-  getUserList({"token": userListToken, "page": userListNext, "limit": 30});
+  getUserList(false);
 }
 
 function userClick(obj) {
@@ -425,7 +407,7 @@ function userClick(obj) {
   if (selectCount > 1) {
     $('.modal-messaging-top__title').html('Group Chat ({})'.format(selectCount));
   } else {
-    $('.modal-messaging-top__title').html('1on1 Chat');
+    $('.modal-messaging-top__title').html('Group Channel');
   }
 }
 
@@ -435,67 +417,60 @@ function startMessaging() {
     return false;
   }
 
-  var guestIds = [];
+  var users = [];
   $.each($('.modal-messaging-list__icon--select'), function(index, user) {
-    guestIds.push($(user).data("guest-id"));
+    users.push(UserList[$(user).data("guest-id")]);
   });
 
-  sendbird.startMessaging(
-    guestIds,
-    {
-      "successFunc": function(data) {
-        currChannelInfo = data['channel'];
-        currChannelUrl = currChannelInfo['channel_url'];
-
-        var members = data["members"];
-        var channelTitle = '';
-        $.each(members, function(index, member) {
-          if (!isCurrentUser(member['guest_id'])) {
-            channelTitle += member['name'] + ', ';
-          }
-        });
-        channelTitle = channelTitle.slice(0,-2);
-        var channelMemberList = channelTitle;
-        if (channelTitle.length > 24) {
-          channelTitle = channelTitle.substring(0, 22);
-          channelTitle += '... '
-        }
-        var titleType = 1;
-        var isGroup = false;
-        if(members.length > 2) {
-          channelTitle += '({})'.format(members.length);
-          titleType = 2;
-          isGroup = true;
-        }
-
-        $('.chat-empty').hide();
-        initChatTitle(channelTitle, titleType);
-        $('.chat-canvas').html('');
-        $('.chat-input-text__field').val('');
-        $('.chat').show();
-
-        navInit();
-        popupInit();
-        makeMemberList(members);
-
-        sendbird.connect({
-          "successFunc": function(data) {
-            loadMoreChatMessage(scrollPositionBottom);
-            setWelcomeMessage('Messaging Channel');
-            addMessagingChannel(isGroup, channelMemberList, currChannelInfo);
-            sendbird.markAsRead(currChannelInfo['channel_url']);
-            $('.chat-input-text__field').attr('disabled', false);
-          },
-          "errorFunc": function(status, error) {
-            console.log(status, error);
-          }
-        });
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
-      }
+  sb.GroupChannel.createChannel(users, true, 'test_name', '', '', function(channel, error){
+    if (error) {
+      return;
     }
-  );
+
+    currChannelInfo = channel;
+    currChannelUrl = channel.url;
+
+    var members = channel.members;
+    var channelTitle = '';
+
+    $.each(members, function(index, member) {
+      if (!isCurrentUser(member.userId)) {
+        channelTitle += member.nickname + ', ';
+      }
+    });
+
+    channelTitle = channelTitle.slice(0,-2);
+    var channelMemberList = channelTitle;
+    if (channelTitle.length > 24) {
+      channelTitle = channelTitle.substring(0, 22);
+      channelTitle += '... '
+    }
+    var titleType = 1;
+    var isGroup = true;
+    if(members.length > 2) {
+      channelTitle += '({})'.format(members.length);
+      titleType = 2;
+    }
+
+    $('.chat-empty').hide();
+    initChatTitle(channelTitle, titleType);
+    $('.chat-canvas').html('');
+    $('.chat-input-text__field').val('');
+    $('.chat').show();
+
+    navInit();
+    popupInit();
+    makeMemberList(members);
+
+    isOpenChat = false;
+    loadMoreChatMessage(scrollPositionBottom);
+    setWelcomeMessage('Messaging Channel');
+    addMessagingChannel(true, channelMemberList, currChannelInfo);
+    $('.chat-input-text__field').attr('disabled', false);
+  });
+
+  return;
+
 }
 
 function addMessagingChannel(isGroup, channelMemberList, targetChannel) {
@@ -509,18 +484,14 @@ function addMessagingChannel(isGroup, channelMemberList, targetChannel) {
   $.each($('.left-nav-channel-messaging'), function(index, channel) {
     if (currChannelUrl == $(channel).data('channel-url')) {
       $(channel).addClass('left-nav-channel-messaging--active');
-      $(channel).find('div[class="left-nav-channel-leave"]').attr('style', '');
       $(channel).find('div[class="left-nav-channe__unread"]').remove();
-      sendbird.markAsRead(currChannelUrl);
       addFlag = false;
     }
   });
   $.each($('.left-nav-channel-group'), function(index, channel) {
     if (currChannelUrl == $(channel).data('channel-url')) {
       $(channel).addClass('left-nav-channel-group--active');
-      $(channel).find('div[class="left-nav-channel-leave"]').attr('style', '');
       $(channel).find('div[class="left-nav-channe__unread"]').remove();
-      sendbird.markAsRead(currChannelUrl);
       addFlag = false;
     }
   });
@@ -533,21 +504,19 @@ function addMessagingChannel(isGroup, channelMemberList, targetChannel) {
   if (addFlag && !isGroup) {
     $('#messaging_channel_list').append(
       '<div class="left-nav-channel left-nav-channel-messaging left-nav-channel-messaging--active" ' +
-      '     onclick="joinMessagingChannel(\'' + targetChannel["channel_url"] + '\')"' +
-      '     data-channel-url="' + targetChannel["channel_url"] + '"' +
+      '     onclick="joinMessagingChannel(\'' + targetChannel.url + '\')"' +
+      '     data-channel-url="' + targetChannel.url + '"' +
       '>' +
       channelMemberList +
-      '  <div class="left-nav-channel-leave" onclick="endMessaging(targetAddMessagingChannel, $(this))"></div>' +
       '</div>'
     );
   } else if (addFlag && isGroup) {
     $('#messaging_channel_list').append(
       '<div class="left-nav-channel left-nav-channel-group left-nav-channel-group--active" ' +
-      '     onclick="joinMessagingChannel(\'' + targetChannel["channel_url"] + '\')"' +
-      '     data-channel-url="' + targetChannel["channel_url"] + '"' +
+      '     onclick="joinMessagingChannel(\'' + targetChannel.url + '\')"' +
+      '     data-channel-url="' + targetChannel.url + '"' +
       '>' +
       channelMemberList +
-      '  <div class="left-nav-channel-leave" onclick="endMessaging(targetAddMessagingChannel, $(this))"></div>' +
       '</div>'
     );
     targetAddMessagingChannel = null;
@@ -563,82 +532,74 @@ function joinMessagingChannel(channelUrl) {
     popupInit();
     $.each($('.left-nav-channel'), function(index, channel) {
       if ($(channel).data('channel-url') == channelUrl) {
-        $(channel).find('div[class="left-nav-channel-leave"]').attr('style', '');
         $(channel).find('div[class="left-nav-channe__unread"]').remove();
       }
     });
-    sendbird.markAsRead(channelUrl);
     return false;
   }
 
-  sendbird.joinMessagingChannel(
-    channelUrl,
-    {
-      "successFunc" : function(data) {
-        currChannelInfo = data['channel'];
-        currChannelUrl = currChannelInfo['channel_url'];
-
-        var members = data["members"];
-        var channelTitle = '';
-        $.each(members, function(index, member) {
-          if (!isCurrentUser(member['guest_id'])) {
-            channelTitle += member['name'] + ', ';
-          }
-        });
-        channelTitle = channelTitle.slice(0,-2);
-        var channelMemberList = channelTitle;
-        if (channelTitle.length > 24) {
-          channelTitle = channelTitle.substring(0, 22);
-          channelTitle += '... '
-        }
-        var titleType = 1;
-        var isGroup = false;
-        if(members.length > 2) {
-          channelTitle += '({})'.format(members.length);
-          titleType = 2;
-          isGroup = true;
-        }
-
-        $('.chat-empty').hide();
-        initChatTitle(channelTitle, titleType);
-        $('.chat-canvas').html('');
-        $('.chat-input-text__field').val('');
-        $('.chat').show();
-
-        navInit();
-        popupInit();
-        makeMemberList(members);
-
-        sendbird.connect({
-          "successFunc": function(data) {
-            loadMoreChatMessage(scrollPositionBottom);
-            setWelcomeMessage('Messaging Channel');
-            addMessagingChannel(isGroup, channelMemberList, currChannelInfo);
-            $('.chat-input-text__field').attr('disabled', false);
-          },
-          "errorFunc": function(status, error) {
-            console.log(status, error);
-          }
-        });
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
-      }
+  sb.GroupChannel.getChannel(channelUrl, function(channel, error){
+    if (error) {
+      console.error(error);
+      return;
     }
-  );
+
+    channel.markAsRead();
+
+    currChannelInfo = channel;
+    currChannelUrl = channelUrl;
+
+    var members = channel.members;
+    var channelTitle = '';
+
+    channel.refresh(function(){
+      // TODO
+    });
+
+    $.each(members, function(index, member) {
+      if (!isCurrentUser(member.userId)) {
+        channelTitle += member.nickname + ', ';
+      }
+    });
+
+    channelTitle = channelTitle.slice(0,-2);
+    var channelMemberList = channelTitle;
+    if (channelTitle.length > 24) {
+      channelTitle = channelTitle.substring(0, 22);
+      channelTitle += '... '
+    }
+    var titleType = 1;
+    var isGroup = false;
+    if (members.length > 2) {
+      channelTitle += '({})'.format(members.length);
+      titleType = 2;
+      isGroup = true;
+    }
+
+    $('.chat-empty').hide();
+    initChatTitle(channelTitle, titleType);
+    $('.chat-canvas').html('');
+    $('.chat-input-text__field').val('');
+    $('.chat').show();
+
+    navInit();
+    popupInit();
+    makeMemberList(members);
+
+    isOpenChat = false;
+    loadMoreChatMessage(scrollPositionBottom);
+    setWelcomeMessage('Messaging Channel');
+    addMessagingChannel(isGroup, channelMemberList, currChannelInfo);
+    $('.chat-input-text__field').attr('disabled', false);
+  });
+
+  return;
+
 }
 
 function endMessaging(channel, obj) {
   popupInit();
-
-  leaveMessagingChannelUrl = channel['channel_url'];
-
-  if (obj.hasClass('chat-top__button')) {
-    obj.addClass('chat-top__button-leave--active');
-  } else {
-    obj.addClass('left-nav-channel-leave--active');
-  }
-
+  leaveMessagingChannelUrl = channel.url;
   $('.modal-leave-channel-desc').html('Do you want to leave this messaging channel?');
   $('.modal-leave-channel').show();
   return false;
@@ -650,102 +611,60 @@ function inviteMember() {
     return false;
   }
 
-  var guestIds = [];
+  var userIds = [];
   $.each($('.modal-messaging-list__icon--select'), function(index, user) {
-    guestIds.push($(user).data("guest-id"));
+    if ($(user).data("guest-id")) {
+      userIds.push($(user).data("guest-id"));
+    }
   });
 
-  sendbird.inviteMessaging(
-    guestIds,
-    {
-      "successFunc": function(data) {
-        currChannelInfo = data['channel'];
-        currChannelUrl = currChannelInfo['channel_url'];
-
-        var members = data["members"];
-        var channelTitle = '';
-        $.each(members, function(index, member) {
-          if (!isCurrentUser(member['guest_id'])) {
-            channelTitle += member['name'] + ', ';
-          }
-        });
-        channelTitle = channelTitle.slice(0,-2);
-        var channelMemberList = channelTitle;
-        if (channelTitle.length > 24) {
-          channelTitle = channelTitle.substring(0, 22);
-          channelTitle += '... '
-        }
-        var titleType = 1;
-        var isGroup = false;
-        if(members.length > 2) {
-          channelTitle += '({})'.format(members.length);
-          titleType = 2;
-          isGroup = true;
-        }
-
-        $('.chat-empty').hide();
-        initChatTitle(channelTitle, titleType);
-        $('.chat-canvas').html('');
-        $('.chat-input-text__field').val('');
-        $('.chat').show();
-
-        navInit();
-        popupInit();
-        makeMemberList(members);
-
-        sendbird.connect({
-          "successFunc": function(data) {
-            loadMoreChatMessage(scrollPositionBottom);
-            setWelcomeMessage('Messaging Channel');
-            addMessagingChannel(isGroup, channelMemberList, currChannelInfo);
-            sendbird.markAsRead(currChannelInfo['channel_url']);
-            $('.chat-input-text__field').attr('disabled', false);
-          },
-          "errorFunc": function(status, error) {
-            console.log(status, error);
-          }
-        });
-      },
-      "errorFunc": function(status, error) {
-        console.log(status, error);
-      }
+  currChannelInfo.inviteWithUserIds(userIds, function(response, error) {
+    if (error) {
+      return;
     }
-  );
+
+    popupInit();
+  });
+
 }
 
 function getMessagingChannelList() {
-  sendbird.getMessagingChannelList({
-    "successFunc": function(data) {
-      $.each(data['channels'], function(index, channel) {
-        var channelMemberList = '';
-        $.each(channel["members"], function(index, member) {
-          if (!isCurrentUser(member['guest_id'])) {
-            channelMemberList += member['name'] + ', ';
-          }
-        });
-        channelMemberList = channelMemberList.slice(0, -2);
-        var groupCheck = sendbird.isGroupMessaging(channel["channel_type"]);
-        addMessagingChannel(groupCheck, channelMemberList, channel["channel"]);
+  GroupChannelListQuery.next(function(channels, error){
+    if (error) {
+      return;
+    }
 
-        $.each($('.left-nav-channel'), function(index, item) {
-          $(item).removeClass('left-nav-channel-messaging--active');
-          $(item).removeClass('left-nav-channel-group--active');
-        });
-        var targetUrl = channel["channel"]["channel_url"];
-        var unread = channel['unread_message_count'];
-        if (unread != 0) {
-          $.each($('.left-nav-channel'), function(index, item) {
-            if ($(item).data("channel-url") == targetUrl) {
-              addUnreadCount(item, unread, targetUrl);
-            }
-          });
+    channels.forEach(function(channel){
+      var channelMemberList = '';
+      var members = channel.members;
+
+      members.forEach(function(member){
+        if (currentUser.userId != member.userId) {
+          channelMemberList += member.nickname + ', ';
         }
       });
-    },
-    "errorFunc": function(status, error) {
-      console.log(status, error);
-    }
+
+      channelMemberList = channelMemberList.slice(0, -2);
+      addMessagingChannel(true, channelMemberList, channel);
+
+      $.each($('.left-nav-channel'), function(index, item) {
+        $(item).removeClass('left-nav-channel-messaging--active');
+        $(item).removeClass('left-nav-channel-group--active');
+      });
+
+      var targetUrl = channel.url;
+      var unread = channel.unreadMessageCount > 9 ? '9+' : channel.unreadMessageCount;
+      if (unread != 0) {
+        $.each($('.left-nav-channel'), function(index, item) {
+          if ($(item).data("channel-url") == targetUrl) {
+            addUnreadCount(item, unread, targetUrl);
+          }
+        });
+      }
+    });
+
   });
+
 }
 
 function makeMemberList(members) {
@@ -757,7 +676,7 @@ function makeMemberList(members) {
     if (!isCurrentUser(member['guest_id'])) {
       item["guest_id"] = member["guest_id"];
       item["name"] = member["name"];
-      memberList.pushUnique(item);
+      memberList.push(item);
     }
   });
 }
@@ -769,107 +688,201 @@ function makeMemberList(members) {
 /***********************************************
  *            SendBird Settings
  **********************************************/
-function startSendBird(guestId, nickName) {
-  sendbird.init({
-    "app_id": appId,
-    "guest_id": guestId,
-    "user_name": nickName,
-    "image_url": '',
-    "access_token": '',
-    "successFunc": function(data) {
-      $('.init-check').hide();
-      getMessagingChannelList();
-      sendbird.connect();
-    },
-    "errorFunc": function(status, error) {
-      console.log(status, error);
+var sb;
 
-      if (error == 'Request Domain is not authentication.') {
-        alert(error);
-      } else {
-        alert('please check your access code');
-      }
-      window.location.href = '/';
+var GroupChannelListQuery;
+var OpenChannelListQuery;
+var OpenChannelParticipantListQuery;
+
+var UserListQuery;
+var SendMessageHandler;
+
+var UserList = {};
+var isInit = false;
+
+function startSendBird(guestId, nickName) {
+  sb = new SendBird({
+    appId: appId
+  });
+
+  sb.connect(guestId, function(user, error){
+    if (error) {
+      return;
+    } else {
+      initPage(user);
     }
   });
 
-  sendbird.events.onMessageReceived = function(obj) {
-    setChatMessage(obj);
-  };
+  var initPage = function(user){
+    isInit = true;
+    $('.init-check').hide();
 
-  sendbird.events.onSystemMessageReceived = function(obj) {
-    setSysMessage(obj);
-  };
-
-  sendbird.events.onFileMessageReceived = function(obj) {
-    if (sendbird.hasImage(obj)) {
-      setImageMessage(obj);
-    } else {
-      setFileMessage(obj);
-    }
-  };
-
-  sendbird.events.onBroadcastMessageReceived = function(obj) {
-    setBroadcastMessage(obj);
-  };
-
-  sendbird.events.onMessagingChannelUpdateReceived = function(obj) {
-    unreadCountUpdate(obj);
-  };
-
-  sendbird.events.onTypeStartReceived = function(obj) {
-    var userId = obj['user']['guest_id'];
-    $.each(memberList, function(index, member) {
-      if (member['guest_id'] == userId) {
-        isTyping = true;
-
-        $.each(typingUser, function(index, user) {
-          if (user['user']['guest_id'] == userId) {
-            isTyping = false;
-          }
-        });
-
-        if (isTyping) {
-          typingUser.push(obj);
-        }
-      }
+    currentUser = user;
+    sb.updateCurrentUserInfo(nickName, '', function(response, error) {
+      console.log(response, error);
     });
 
-    if (isTyping) {
-      var typingMember = '';
-      $.each(typingUser, function(index, user) {
-        typingMember += user['user']['name'] + ', ';
-      });
+    GroupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+    OpenChannelListQuery = sb.OpenChannel.createOpenChannelListQuery();
+    UserListQuery = sb.createUserListQuery();
 
-      if (typingMember.length > 2) {
-        if (typingUser.length > 2) {
-          typingMember = 'someone are';
-        } else if (typingUser.length == 2) {
-          typingMember = '{} are'.format(typingMember.slice(0, -2));
-        } else {
-          typingMember = '{} is'.format(typingMember.slice(0, -2));
-        }
+    GroupChannelListQuery.limit = 100;
+    OpenChannelListQuery.limit = 100;
+
+    UserListQuery.limit = 100;
+
+    getMessagingChannelList();
+  };
+
+  var ConnectionHandler = new sb.ConnectionHandler();
+  ConnectionHandler.onReconnectStarted = function(id) {
+    
+  };
+
+  ConnectionHandler.onReconnectSucceeded = function(id) {
+    if (!isInit) {
+      initPage();
+    }
+  };
+
+  ConnectionHandler.onReconnectFailed = function(id) {
+    
+  };
+  sb.addConnectionHandler('uniqueID', ConnectionHandler);
+
+
+  var ChannelHandler = new sb.ChannelHandler();
+  ChannelHandler.onMessageReceived = function(channel, message){
+
+    if (currChannelInfo == channel) {
+      if (channel.isGroupChannel()) {
+        channel.markAsRead();
       }
 
-      $('.chat-input-typing').html('{} typing...'.format(typingMember));
-      $('.chat-input-typing').show();
+      if (!document.hasFocus()) {
+        notifyMessage(channel, message.message);
+      }
+    } else {
+      unreadCountUpdate(channel);
     }
 
+    if (message.isUserMessage()) {
+      setChatMessage(message);
+    }
+
+    if (message.isFileMessage()) {
+      $('.chat-input-file').removeClass('file-upload');
+      $('#chat_file_input').val('');
+
+      if (message.type.match(/^image\/.+$/)) {
+        setImageMessage(message);
+      } else {
+        setFileMessage(message);
+      }
+    }
+
+    if (message.isAdminMessage()) {
+      setBroadcastMessage(message);
+    }
   };
 
-  sendbird.events.onTypeEndReceived = function(obj) {
-    endTyping(obj['user']['guest_id']);
+  SendMessageHandler = function(message, error) {
+    if (error) {
+      if (error.code == 900050) {
+        setSysMessage({'message': 'This channel is freeze.'});
+        return;
+      } else if(error.code == 900041) {
+        setSysMessage({'message': 'You are muted.'});
+        return;
+      }
+    }
+
+    if (message.isUserMessage()) {
+      setChatMessage(message);
+    }
+
+    if (message.isFileMessage()) {
+      $('.chat-input-file').removeClass('file-upload');
+      $('#chat_file_input').val('');
+
+      if (message.type.match(/^image\/.+$/)) {
+        setImageMessage(message);
+      } else {
+        setFileMessage(message);
+      }
+    }
   };
 
-  sendbird.events.onReadReceived = function(obj) {
-    console.log(obj);
+  ChannelHandler.onMessageDeleted = function (channel, messageId) {
+    console.log('ChannelHandler.onMessageDeleted: ', channel, messageId);
   };
 
-  sendbird.events.onMessageDelivery = function(obj) {
-    console.log(obj);
+  ChannelHandler.onReadReceiptUpdated = function (channel) {
+    console.log('ChannelHandler.onReadReceiptUpdated: ', channel);
   };
 
-  sendbird.setDebugMessage(false);
+  ChannelHandler.onTypingStatusUpdated = function (channel) {
+    console.log('ChannelHandler.onTypingStatusUpdated: ', channel);
+  };
+
+  ChannelHandler.onUserJoined = function (channel, user) {
+    console.log('ChannelHandler.onUserJoined: ', channel, user);
+  };
+
+  ChannelHandler.onUserLeft = function (channel, user) {
+    console.log('ChannelHandler.onUserLeft: ', channel, user);
+    setSysMessage({'message': '"' + user.nickname + '" user is left.'});
+  };
+
+  ChannelHandler.onUserEntered = function (channel, user) {
+    console.log('ChannelHandler.onUserEntered: ', channel, user);
+  };
+
+  ChannelHandler.onUserExited = function (channel, user) {
+    console.log('ChannelHandler.onUserExited: ', channel, user);
+  };
+
+  ChannelHandler.onUserMuted = function (channel, user) {
+    console.log('ChannelHandler.onUserMuted: ', channel, user);
+  };
+
+  ChannelHandler.onUserUnmuted = function (channel, user) {
+    console.log('ChannelHandler.onUserUnmuted: ', channel, user);
+  };
+
+  ChannelHandler.onUserBanned = function (channel, user) {
+    console.log('ChannelHandler.onUserBanned: ', channel, user);
+    if (isCurrentUser(user.userId)) {
+      alert('Oops...You got banned out from this channel.');
+      navInit();
+      popupInit();
+    } else {
+      setSysMessage({'message': '"' + user.nickname + '" user is banned.'});
+    }
+  };
+
+  ChannelHandler.onUserUnbanned = function (channel, user) {
+    console.log('ChannelHandler.onUserUnbanned: ', channel, user);
+    setSysMessage({'message': '"' + user.nickname + '" user is unbanned.'});
+  };
+
+  ChannelHandler.onChannelFrozen = function (channel) {
+    console.log('ChannelHandler.onChannelFrozen: ', channel);
+  };
+
+  ChannelHandler.onChannelUnfrozen = function (channel) {
+    console.log('ChannelHandler.onChannelUnfrozen: ', channel);
+  };
+
+  ChannelHandler.onChannelChanged = function (channel) {
+    console.log('ChannelHandler.onChannelChanged: ', channel);
+  };
+
+  ChannelHandler.onChannelDeleted = function (channel) {
+    console.log('ChannelHandler.onChannelDeleted: ', channel);
+  };
+
+  sb.addChannelHandler('channel', ChannelHandler);
 }
 
 var checkTyping = setInterval(function() {
@@ -963,130 +976,141 @@ function setChatMessage(obj) {
   scrollPositionBottom();
 }
 
+var PreviousMessageListQuery = null;
 function loadMoreChatMessage(func) {
-  sendbird.getMessageLoadMore({
-    "limit": 50,
-    "successFunc": function(data) {
-      var moreMessage = data["messages"];
-      var msgList = '';
-      $.each(moreMessage.reverse(), function(index, msg) {
-        if (sendbird.isMessage(msg.cmd)) {
-          msgList += messageList(msg.payload);
-        } else if (sendbird.isFileMessage(msg.cmd)) {
-          if (!sendbird.hasImage(msg.payload)) {
-            msgList += fileMessageList(msg.payload);
+  if (!PreviousMessageListQuery) {
+    PreviousMessageListQuery = currChannelInfo.createPreviousMessageListQuery();
+  }
+
+  PreviousMessageListQuery.load(50, false, function(messages, error){
+    if (error) {
+      return;
+    }
+
+    var moreMessage = messages;
+    var msgList = '';
+    messages.forEach(function(message){
+      switch (message.MESSAGE_TYPE) {
+        case message.MESSAGE_TYPE_USER:
+          msgList += messageList(message);
+          break;
+        case message.MESSAGE_TYPE_FILE:
+          $('.chat-input-file').removeClass('file-upload');
+          $('#chat_file_input').val('');
+
+          if (message.type.match(/^image\/.+$/)) {
+            msgList +=imageMessageList(message);
           } else {
-            msgList += imageMessageList(msg.payload);
+            msgList +=fileMessageList(message);
           }
-        }
-      });
-      $('.chat-canvas').prepend(msgList);
-      $('.chat-canvas')[0].scrollTop = (moreMessage.length * MESSAGE_TEXT_HEIGHT);
-      if (func != undefined) func();
-    },
-    "errorFunc": function(status, error) {
-      console.log(status, error);
+          break;
+        default:
+      }
+    });
+
+    $('.chat-canvas').prepend(msgList);
+    $('.chat-canvas')[0].scrollTop = (moreMessage.length * MESSAGE_TEXT_HEIGHT);
+
+    if (func) {
+      func();
     }
   });
 }
 
 function messageList(obj) {
   var msgList = '';
-  if (isCurrentUser(obj['user']['guest_id'])) {
+  var message = obj;
+  var user = message.sender;
+  if (isCurrentUser(user.userId)) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
-      convertLinkMessage(obj['message']) +
+      convertLinkMessage(message.message) +
       '  </label>' +
       '</div>';
   } else {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
-      convertLinkMessage(obj['message']) +
+      convertLinkMessage(message.message) +
       '  </label>' +
       '</div>';
-    if (!document.hasFocus()) {
-      notifyMessage(obj['message']);
-    }
   }
   return msgList;
 }
 
 function fileMessageList(obj) {
   var msgList = '';
-  if (isCurrentUser(obj['user']['guest_id'])) {
+  var message = obj;
+  var user = message.sender;
+  if (isCurrentUser(user.userId)) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
       '    <label class="chat-canvas__list-text-file">FILE</label>' +
-      '    <a href="' + obj['url'] + '" target="_blank">' + obj['name'] + '</a>' +
+      '    <a href="' + message.url + '" target="_blank">' + message.name + '</a>' +
       '  </label>' +
       '</div>';
   } else {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
       '    <label class="chat-canvas__list-text-file">FILE</label>' +
-      '    <a href="' + obj['url'] + '" target="_blank">' + obj['name'] + '</a>' +
+      '    <a href="' + message.url + '" target="_blank">' + message.name + '</a>' +
       '  </label>' +
       '</div>';
-    if (!document.hasFocus()) {
-      notifyMessage(obj['message']);
-    }
   }
   return msgList;
 }
 
 function imageMessageList(obj) {
   var msgList = '';
-  if (isCurrentUser(obj['user']['guest_id'])) {
+  var message = obj;
+  var user = message.sender;
+  if (isCurrentUser(user.userId)) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickanme) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
-      obj['name'] +
+      message.name +
       '  </label>' +
-      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + obj['url'] + '\', \'_blank\');">' +
-      '    <img src="' + obj['url'] + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
+      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + message.url + '\', \'_blank\');">' +
+      '    <img src="' + message.url + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
       '  </div>' +
       '</div>';
   } else {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name">' +
-      nameInjectionCheck(obj['user']['name']) +
+      nameInjectionCheck(user.nickanme) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text">' +
-      obj['name'] +
+      message.name +
       '  </label>' +
-      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + obj['url'] + '\', \'_blank\');">' +
-      '    <img src="' + obj['url'] + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
+      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + message.url + '\', \'_blank\');">' +
+      '    <img src="' + message.url + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
       '  </div>' +
       '</div>';
-    if (!document.hasFocus()) {
-      notifyMessage(obj['message']);
-    }
   }
   return msgList;
 }
@@ -1107,14 +1131,16 @@ $('.chat-input-text__field').keydown(function (event) {
     if (!$.trim(this.value).isEmpty()) {
       event.preventDefault();
       this.value = $.trim(this.value);
-      sendbird.message($.trim(this.value));
+
+      currChannelInfo.sendUserMessage($.trim(this.value), '', SendMessageHandler);
+
       scrollPositionBottom();
     }
     this.value = "";
   } else {
     if (!$.trim(this.value).isEmpty()) {
-      if (!isOpenChat) {
-        sendbird.typeStart();
+      if (!currChannelInfo.isOpenChannel()) {
+        currChannelInfo.startTyping();
       }
     }
   }
@@ -1124,23 +1150,8 @@ $('#chat_file_input').change(function() {
   if ($('#chat_file_input').val().trim().length == 0) return;
   var file = $('#chat_file_input')[0].files[0];
   $('.chat-input-file').addClass('file-upload');
-  sendbird.sendFile(
-    file,
-    {
-      "successFunc" : function(data) {
-        $('.chat-input-file').removeClass('file-upload');
-        $('#chat_file_input').val('');
-        console.log(data.url);
-      },
-      "errorFunc": function(status, error) {
-        $('.chat-input-file').removeClass('file-upload');
-        $('#chat_file_input').val('');
-        console.log(status, error);
-        alert('file size too large.\nplease select less than 25MB.');
-      }
-    }
-  );
 
+  currChannelInfo.sendFileMessage(file, SendMessageHandler);
 });
 
 function setImageMessage(obj) {
@@ -1186,11 +1197,11 @@ function setBroadcastMessage(obj) {
   scrollPositionBottom();
 }
 
-function unreadCountUpdate(data) {
-  var targetUrl = data['channel']['channel_url'];
+function unreadCountUpdate(channel) {
+  var targetUrl = channel.url;
 
   var callAdd = true;
-  var unread = data['unread_message_count'] > 9 ? '9+' : data['unread_message_count'];
+  var unread = channel.unreadMessageCount > 9 ? '9+' : channel.unreadMessageCount;
   if (unread > 0 || unread == '9+') {
     $.each($('.left-nav-channel'), function(index, item) {
       if ($(item).data("channel-url") == targetUrl) {
@@ -1200,10 +1211,10 @@ function unreadCountUpdate(data) {
     });
 
     if (callAdd) {
-      showChannel(data, unread, targetUrl);
+      showChannel(channel, unread, targetUrl);
     }
   } else {
-    showChannel(data, unread, targetUrl);
+    showChannel(channel, unread, targetUrl);
   }
 }
 
@@ -1222,21 +1233,19 @@ function addUnreadCount(item, unread, targetUrl) {
       unread +
       '</div>'
     );
-    $(item).find('div[class="left-nav-channel-leave"]').hide();
   }
 }
 
-function showChannel(data, unread, targetUrl) {
-  var members = data["members"];
+function showChannel(channel, unread, targetUrl) {
+  var members = channel.members;
   var channelMemberList = '';
   $.each(members, function(index, member) {
-    if (!isCurrentUser(member['guest_id'])) {
-      channelMemberList += member['name'] + ', ';
+    if (currentUser.userId != member.userId) {
+      channelMemberList += member.nickname + ', ';
     }
   });
   channelMemberList = channelMemberList.slice(0, -2);
-  var groupCheck = sendbird.isGroupMessaging(data["channel_type"]);
-  addMessagingChannel(groupCheck, channelMemberList, data["channel"]);
+  addMessagingChannel(true, channelMemberList, channel);
 
   if (unread != 0) {
     $.each($('.left-nav-channel'), function(index, item) {
@@ -1289,13 +1298,12 @@ $(document).ready(function() {
 });
 
 window.onfocus = function() {
-  if (!isOpenChat && currChannelUrl != null) {
-    sendbird.markAsRead(currChannelUrl);
+  if (currChannelInfo && !currChannelInfo.isOpenChannel()) {
+     currChannelInfo.markAsRead();
   }
   $.each($('.left-nav-channel'), function(index, item) {
     if ($(item).data("channel-url") == currChannelUrl) {
       $(item).find('div[class="left-nav-channe__unread"]').remove();
-      $(item).find('div[class="left-nav-channel-leave"]').attr('style', '');
     }
   });
 };

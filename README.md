@@ -10,13 +10,13 @@
       bower install sendbird
 
 
-[npm](https://www.npmjs.com/package/sendbird) module for [SendBird.com](https://sendbird.com) JavaScript SDK  
-
-      npm install sendbird
-
-
 [download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) JavaScript SDK  
 
 
 # [Documentation](https://docs.sendbird.com/javascript)  
+
+## Access to Version 2
+
+You can check out `v2` branch instead of `master` branch to download version 2 samples.
+
 

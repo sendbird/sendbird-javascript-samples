@@ -66,13 +66,15 @@ function isCurrentUser(userId) {
 
 function checkUserId(userId) {
   if (!userId) {
-    var userId = getUserId();
+    userId = getUserId();
   } else {
     setCookieUserId(userId);
   }
+
   if (userId.trim().length == 0) {
-    return generateUUID();
+    userId = generateUUID();
   }
+
   return userId;
 }
 

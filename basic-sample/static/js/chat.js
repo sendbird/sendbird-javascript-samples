@@ -1290,7 +1290,7 @@ function popupInit() {
 
 function init() {
   userId = decodeURI(decodeURIComponent(getUrlVars()['userid']));
-  checkUserId(userId);
+  userId = checkUserId(userId);
   nickname = decodeURI(decodeURIComponent(getUrlVars()['nickname']));
 
   $('.init-check').show();

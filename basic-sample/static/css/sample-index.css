@@ -12,7 +12,7 @@ input, button {
 .index-section {
   width: 624px;
   margin: auto;
-  height: 70px;
+  /*height: 70px;*/
 }
 
 .index-top {
@@ -45,7 +45,6 @@ input, button {
 
 .index-input {
   text-align: center;
-  margin-top: 40px;
 }
 
 .index-nickname:focus,
@@ -54,8 +53,14 @@ input, button {
   border: 2px solid #32C5E6;
 }
 
+.index-userid:focus,
+.index-userid:hover,
+.index-userid:active {
+  border: 2px solid #32C5E6;
+}
 
-.index-nickname {
+
+.index-nickname, .index-userid {
   padding: 0 10px 0 44px;
   background: url("../img/icon-username-landing.svg") #fff no-repeat 12px;
   width: 290px;
@@ -69,6 +74,11 @@ input, button {
   font-size: 16px;
   color: #555555;
 }
+.index-userid {
+  margin-right: 120px;
+  margin-top: 40px;
+}
+
 ::-webkit-input-placeholder { /* WebKit browsers */
   font-family: 'Exo 2';
   font-weight: 400;

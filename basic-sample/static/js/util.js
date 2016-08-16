@@ -60,23 +60,28 @@ function notifyMessage(channel, message) {
   }
 }
 
-function isCurrentUser(guestId) {
-  return (getGuestId()==guestId) ? true : false;
+function isCurrentUser(userId) {
+  return (getUserId()==userId) ? true : false;
 }
 
-function checkGuestId() {
-  var name = getGuestId();
-  if (name.trim().length == 0) {
+function checkUserId(userId) {
+  if (!userId) {
+    var userId = getUserId();
+  } else {
+    setCookieUserId(userId);
+  }
+  if (userId.trim().length == 0) {
     return generateUUID();
   }
-  return name;
+  return userId;
 }
 
-function getGuestId() {
-  var name = 'guest_id=';
+function getUserId() {
+  var name = 'user_id=';
   var ca = document.cookie.split(';');
   for (var i=0 ; i<ca.length ; i++) {
     var c = ca[i];
+    if (!c) continue;
     while (c.charAt(0)==' ') c = c.substring(1);
     if (c.indexOf(name) == 0) {
       return c.substring(name.length,c.length);
@@ -92,11 +97,11 @@ function generateUUID() {
       d = Math.floor(d/16);
       return (c=='x' ? r : (r&0x3|0x8)).toString(16);
   });
-  return setCookieGuestId(uuid);
+  return uuid;
 }
 
-function setCookieGuestId(uuid) {
-  document.cookie = "guest_id=" + uuid + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
+function setCookieUserId(uuid) {
+  document.cookie = "user_id=" + uuid + '; expires=Fri, 31 Dec 9999 23:59:59 GMT';
   return uuid;
 }
 

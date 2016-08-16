@@ -4,7 +4,7 @@ var currScrollHeight = 0;
 var MESSAGE_TEXT_HEIGHT = 27;
 
 var nickname = null;
-var guestId = null;
+var userId = null;
 var channelListPage = 0;
 var currChannelUrl = null;
 var currChannelInfo = null;
@@ -96,6 +96,7 @@ function joinChannel(channelUrl) {
     return false;
   }
 
+  PreviousMessageListQuery = null;
   sb.OpenChannel.getChannel(channelUrl, function(channel, error){
     if (error) {
       return;
@@ -422,6 +423,7 @@ function startMessaging() {
     users.push(UserList[$(user).data("guest-id")]);
   });
 
+  PreviousMessageListQuery = null;
   sb.GroupChannel.createChannel(users, true, 'test_name', '', '', function(channel, error){
     if (error) {
       return;
@@ -527,6 +529,7 @@ function addMessagingChannel(isGroup, channelMemberList, targetChannel) {
 }
 
 function joinMessagingChannel(channelUrl) {
+
   if (channelUrl == currChannelUrl) {
     navInit();
     popupInit();
@@ -538,6 +541,7 @@ function joinMessagingChannel(channelUrl) {
     return false;
   }
 
+  PreviousMessageListQuery = null;
   sb.GroupChannel.getChannel(channelUrl, function(channel, error){
     if (error) {
       console.error(error);
@@ -673,8 +677,8 @@ function makeMemberList(members) {
   memberList = [];
   $.each(members, function(index, member) {
     item = {};
-    if (!isCurrentUser(member['guest_id'])) {
-      item["guest_id"] = member["guest_id"];
+    if (!isCurrentUser(member['user_id'])) {
+      item["user_id"] = member["user_id"];
       item["name"] = member["name"];
       memberList.push(item);
     }
@@ -700,12 +704,12 @@ var SendMessageHandler;
 var UserList = {};
 var isInit = false;
 
-function startSendBird(guestId, nickName) {
+function startSendBird(userId, nickName) {
   sb = new SendBird({
     appId: appId
   });
 
-  sb.connect(guestId, function(user, error){
+  sb.connect(userId, function(user, error){
     if (error) {
       return;
     } else {
@@ -719,7 +723,7 @@ function startSendBird(guestId, nickName) {
 
     currentUser = user;
     sb.updateCurrentUserInfo(nickName, '', function(response, error) {
-      console.log(response, error);
+      // console.log(response, error);
     });
 
     GroupChannelListQuery = sb.GroupChannel.createMyGroupChannelListQuery();
@@ -890,7 +894,7 @@ var checkTyping = setInterval(function() {
   $.each(typingUser, function(index, user) {
     var typingTime = user["ts"];
     if (now - typingTime > TYPE_CHECK_TIME) {
-      endTyping(user['user']['guest_id']);
+      endTyping(user['user']['user_id']);
     }
   });
 }, TYPE_CHECK_TIME);
@@ -898,7 +902,7 @@ var checkTyping = setInterval(function() {
 function endTyping(userId) {
   var temp = [];
   $.each(typingUser, function(index, user) {
-    if (user['user']['guest_id'] != userId) {
+    if (user['user']['user_id'] != userId) {
       temp.push(user);
     }
   });
@@ -1285,10 +1289,12 @@ function popupInit() {
 }
 
 function init() {
-  guestId = checkGuestId();
+  userId = decodeURI(decodeURIComponent(getUrlVars()['userid']));
+  checkUserId(userId);
   nickname = decodeURI(decodeURIComponent(getUrlVars()['nickname']));
+
   $('.init-check').show();
-  startSendBird(guestId, nickname);
+  startSendBird(userId, nickname);
   $('.left-nav-user-nickname').html(nickname);
 }
 

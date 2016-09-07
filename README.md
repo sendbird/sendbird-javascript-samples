@@ -2,6 +2,10 @@
 
 [SendBird](https://sendbird.com) provides the chat API and SDK for your app enabling real-time communication among your users.  
 
+basic-sample : SendBird Standard Sample Codes for Desktop Web Browsers.
+
+react-native-sample : Sendbird React Native Sample Codes ( It's still in very early version not ready to be used in production yet. ) 
+
 
 # Getting Started  
   
@@ -11,6 +15,7 @@
 
 
 [npm](https://www.npmjs.com/package/sendbird) module for [SendBird.com](https://sendbird.com) JavaScript SDK  
+* Note that we only support React Native for now. NodeJS support is coming.
 
       npm install sendbird
 

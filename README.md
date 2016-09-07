@@ -15,10 +15,10 @@
 
 
 [npm](https://www.npmjs.com/package/sendbird) module for [SendBird.com](https://sendbird.com) JavaScript SDK  
-* Note that we only support React Native for now. NodeJS support is coming.
 
       npm install sendbird
 
+* Note that we only support React Native for now. NodeJS support is coming.
 
 [download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) JavaScript SDK
 

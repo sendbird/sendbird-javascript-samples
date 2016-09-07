@@ -23,8 +23,7 @@
 
 # Manual Download
 
-You can download JS SDK Files here.
-[download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) 
+You can download JS SDK Files [here](https://github.com/smilefam/SendBird-SDK-JavaScript).
 
 
 # [Documentation](https://docs.sendbird.com/javascript)  

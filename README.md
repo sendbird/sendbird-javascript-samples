@@ -20,7 +20,11 @@
 
 * Note that we only support React Native for now. NodeJS support is coming.
 
-[download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) JavaScript SDK
+
+# Manual Download
+
+You can download JS SDK Files here.
+[download](https://github.com/smilefam/SendBird-SDK-JavaScript) for [SendBird.com](https://sendbird.com) 
 
 
 # [Documentation](https://docs.sendbird.com/javascript)  

@@ -48,7 +48,6 @@ export default class OpenChannel extends Component {
     }, () => {
       var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       _SELF.setState({dataSource: ds.cloneWithRows(_SELF.state.channelList)});
-      dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.channelList)
     });
   }
 

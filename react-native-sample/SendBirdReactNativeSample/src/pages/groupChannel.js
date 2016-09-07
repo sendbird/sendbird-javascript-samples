@@ -14,12 +14,13 @@ import TopBar from '../components/topBar';
 import moment from 'moment';
 import SendBird from 'sendbird';
 var sb = null;
+var ds = null;
 
 export default class GroupChannel extends Component {
   constructor(props) {
     super(props);
     sb = SendBird.getInstance();
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       channelList: [],
       dataSource: ds.cloneWithRows([]),
@@ -46,18 +47,20 @@ export default class GroupChannel extends Component {
 
   _channelUpdate(channel) {
     var _SELF = this;
+    var _exist = false;
     var _list = _SELF.state.channelList.map(function(ch) {
       if (channel.url == ch.url ) {
+        _exist = true;
         return channel
       }
       return ch
     });
+    if (!_exist) {
+      _list.push(channel);
+    }
     _SELF.setState({
-      channelList: _list
-    }, () => {
-      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      _SELF.setState({dataSource: ds.cloneWithRows(_SELF.state.channelList)});
-      dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.channelList)
+      channelList: _list,
+      dataSource: ds.cloneWithRows(_SELF.state.channelList)
     });
   }
 
@@ -164,7 +167,7 @@ export default class GroupChannel extends Component {
             _SELF.setState({editMode: true});
           }},
           {text: 'Invite', onPress: () => {
-            _SELF.props.navigator.push({name: 'inviteUser'});
+            _SELF.props.navigator.push({name: 'inviteUser', refresh: _SELF._refresh});
           }},
           {text: 'Cancel'}
         ]
@@ -203,7 +206,7 @@ export default class GroupChannel extends Component {
                     </View>
                      <View style={{flex: 1, alignItems: 'flex-end'}}>
                        <Text style={styles.descText}>{rowData.memberCount} members</Text>
-                       <Text style={styles.descText}>{(rowData.lastSeenAt == 0) ? '-' : moment(rowData.lastSeenAt).format('MM/DD HH:mm')}</Text>
+                       <Text style={styles.descText}>{(!rowData.lastMessage || rowData.lastMessage.createdAt == 0) ? '-' : moment(rowData.lastMessage.createdAt).format('MM/DD HH:mm')}</Text>
                      </View>
                   </View>
                 </View>

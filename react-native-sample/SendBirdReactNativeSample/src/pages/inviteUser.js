@@ -48,7 +48,7 @@ export default class InviteUser extends Component {
             })
         } else {
           user.check = true;
-          _inviteList.push(user.userId);
+          _inviteList.push(user);
         }
       }
       return user
@@ -58,23 +58,6 @@ export default class InviteUser extends Component {
       var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       _SELF.setState({dataSource: ds.cloneWithRows(_SELF.state.list)});
     });
-  }
-
-  _onlineStyle(online) {
-    return {
-      textAlign: 'center',
-      fontSize: 12,
-      color: (online == 'online') ? '#6E5BAA' : '#ababab',
-      fontWeight: (online == 'online') ? 'bold' : 'normal'
-    }
-  }
-
-  _checkStyle(rowData) {
-    return {
-      width: 20,
-      height: 20,
-      opacity: (rowData.check == true)? 1 : 0.2
-    }
   }
 
   _onInvite() {
@@ -88,11 +71,12 @@ export default class InviteUser extends Component {
 
         _SELF.props.navigator.pop();
         setTimeout(() => {
-          _SELF.props.navigator.push({name: 'chat', channel: channel});
+          _SELF.props.navigator.push({name: 'chat', channel: channel, refresh: _SELF.props.route.refresh});
         }, 500);
       });
     } else {
-      _SELF.state.channel.inviteWithUserIds(this.state.inviteList, function(response, error) {
+      var _inviteIds = this.state.inviteList.map(function(user) {return user.userId});
+      _SELF.state.channel.inviteWithUserIds(_inviteIds, function(response, error) {
         if (error) {
           console.log(error);
           return;
@@ -124,6 +108,23 @@ export default class InviteUser extends Component {
 
   _onBackPress() {
     this.props.navigator.pop();
+  }
+
+  _onlineStyle(online) {
+    return {
+      textAlign: 'center',
+      fontSize: 12,
+      color: (online == 'online') ? '#6E5BAA' : '#ababab',
+      fontWeight: (online == 'online') ? 'bold' : 'normal'
+    }
+  }
+
+  _checkStyle(rowData) {
+    return {
+      width: 20,
+      height: 20,
+      opacity: (rowData.check == true)? 1 : 0.2
+    }
   }
 
   render() {

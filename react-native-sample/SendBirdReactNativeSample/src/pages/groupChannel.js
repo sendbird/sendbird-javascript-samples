@@ -198,7 +198,7 @@ export default class GroupChannel extends Component {
                   </View>
                   <View style={styles.listInfo}>
                     <Text style={styles.titleLabel}>{this._channelTitle(rowData.members)}</Text>
-                    <Text style={styles.memberLabel}>{rowData.lastMessage.message.length > 15 ? rowData.lastMessage.message.substring(0, 11) + '...' : rowData.lastMessage.message}</Text>
+                    <Text style={styles.memberLabel}>{rowData.lastMessage ? ( rowData.lastMessage.message && rowData.lastMessage.message.length > 15 ? rowData.lastMessage.message.substring(0, 11) + '...' : rowData.lastMessage.message ) : '' }</Text>
                   </View>
                   <View style={{flex: 1, flexDirection: 'row', alignItems: 'flex-end', marginRight: 10}}>
                     <View style={{flex: 1, flexDirection: 'column', alignItems: 'flex-end', marginRight: 4}}>

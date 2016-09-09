@@ -44,6 +44,10 @@ export default class Chat extends Component {
     this._onPressExitChannel = this._onPressExitChannel.bind(this);
   }
 
+  componentWillUnmount() {
+    sb.removeChannelHandler('MessageHandler');
+  }
+
   componentWillMount() {
     var _SELF = this;
     _SELF._getChannelMessage();
@@ -63,8 +67,10 @@ export default class Chat extends Component {
           _messages.push(message);
         }
 
-        _SELF.setState({messages: _messages.concat(_SELF.state.messages)}, () => {
-          _SELF.setState({dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.messages)});
+        var _newMessageList = _messages.concat(_SELF.state.messages);
+        _SELF.setState({
+          messages: _newMessageList,
+          dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
         });
         _SELF.state.lastMessage = message;
         _SELF.state.channel.lastMessage = message;
@@ -110,15 +116,17 @@ export default class Chat extends Component {
         _SELF.state.lastMessage = _curr;
       }
 
-      _SELF.setState({messages: _SELF.state.messages.concat(_messages.reverse())}, () => {
-        _SELF.setState({dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.messages)});
+      var _newMessageList = _SELF.state.messages.concat(_messages.reverse());
+      _SELF.setState({
+        messages: _newMessageList,
+        dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
       });
     });
   }
 
   _onSend() {
     var _SELF = this;
-    _SELF.state.channel.sendUserMessage(_SELF.state.text, '', function(message, error){
+    _SELF.state.channel.sendUserMessage(_SELF.state.text, '', function(message, error) {
       if (error) {
         console.log(error);
         return;
@@ -134,15 +142,16 @@ export default class Chat extends Component {
       } else {
         _messages.push(message);
       }
-      _SELF.setState({messages: _messages.concat(_SELF.state.messages)}, () => {
-        _SELF.setState({
-          dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.messages)
-        });
+
+      var _newMessageList = _messages.concat(_SELF.state.messages);
+      _SELF.setState({
+        messages: _newMessageList,
+        dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
       });
       _SELF.state.lastMessage = message;
       _SELF.state.channel.lastMessage = message;
+      _SELF.setState({text: ''})
     });
-    _SELF.setState({text: ''})
   }
 
   _onBackPress() {

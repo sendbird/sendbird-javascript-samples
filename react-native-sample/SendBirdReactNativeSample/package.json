@@ -10,6 +10,6 @@
     "react": "15.3.1",
     "react-native": "0.32.0",
     "react-native-button": "1.7.0",
-    "sendbird": "3.0.4"
+    "sendbird": "3.0.6"
   }
 }

@@ -18,7 +18,7 @@
 
       npm install sendbird
 
-* Note that we only support React Native for now. NodeJS support is coming.
+* Now we support both React Native and NodeJS.
 
 
 # Manual Download

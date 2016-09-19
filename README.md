@@ -4,8 +4,7 @@
 
 1) basic-sample : SendBird Standard Sample Codes for Desktop Web Browsers.
 
-2) react-native-sample : Sendbird React Native Sample Codes ( It's very early version and not ready to be used in production yet.) 
-
+2) react-native-sample : Sendbird React Native Sample Codes.
 
 # Getting Started  
   

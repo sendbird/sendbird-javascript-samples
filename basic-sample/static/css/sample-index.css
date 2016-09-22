@@ -141,3 +141,12 @@ input, button {
   text-align: center;
   margin-top: 80px;
 }
+
+a.download-sample:link,
+a.download-sample:visited {
+  font-family: 'Exo 2';
+  font-weight: 300;
+  font-size: 16px;
+  color: #c7b0ff;
+  text-align: center;
+}

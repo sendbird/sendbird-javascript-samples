@@ -29,4 +29,6 @@ $('#btn_start').click(function() {
 $(document).ready(function() {
   $('#user_nickname').val('');
   $('#user_nickname').focus();
+
+  $('#user_id').val(getUserId());
 });

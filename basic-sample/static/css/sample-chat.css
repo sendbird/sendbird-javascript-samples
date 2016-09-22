@@ -50,9 +50,12 @@ input, button, textarea {
 }
 
 .left-nav-icon {
-  width: 142px;
+  /*width: 142px;*/
   height: 50px;
-  background: url("../img/logo_main.svg") no-repeat center center;
+  background: url("../img/logo_SendBird_reversed.svg") no-repeat center center;
+  background-size: 160px;
+  background-position: 25%;
+
   margin-left: 14px;
 }
 
@@ -154,18 +157,28 @@ input, button, textarea {
 
 .left-nav-channel {
   width: 100%;
-  height: 30px;
   font-family: 'Lato';
   font-weight: 500;
   font-size: 16px;
   color: #a08dce;
-  line-height: 30px;
-  padding: 0 0 0 38px;
+  padding: 0 0 0 44px;
   cursor: pointer;
+}
+
+.left-nav-channel-lastmessage {
+  font-size: 13px;
+  color: #7f6da0;
+}
+.left-nav-channel-lastmessagetime {
+  font-size: 13px;
+  color: #7f6da0;
+  text-align: left;
+  padding-right: 20px;
 }
 
 .left-nav-channel-open {
   background: url("../img/icon-menu-channel-off.svg") no-repeat 14px center transparent;
+  margin-bottom: 4px;
 }
 .left-nav-channel-open:hover {
   background: url("../img/icon-menu-channel-off.svg") no-repeat 14px center #463c66;
@@ -211,18 +224,32 @@ input, button, textarea {
 }
 
 .left-nav-channel-group {
-  background: url("../img/icon-menu-group-off.svg") no-repeat 14px center transparent;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  background-position: left top;
+  background-color: transparent;
+  background-image: url("../img/icon-menu-group-off.svg");
+  background-position-x: 10px;
+  background-position-y: 5px;
+  margin-bottom: 14px;
+  min-height: 35px;
 }
 .left-nav-channel-group:hover {
-  background: url("../img/icon-menu-group-off.svg") no-repeat 14px center #463c66;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  background-color: #463c66;
+  background-position-x: 10px;
 }
 
 .left-nav-channel-group--active {
-  background: url("../img/icon-menu-group-on.svg") no-repeat 14px center #362f4f;
+  background-repeat: no-repeat;
+  background-size: 24px;
+  background-color: #362f4f;
+  background-position-x: 10px;
   color: #fff;
 }
 
-.left-nav-channe__unread {
+.left-nav-channel__unread {
   width: 20px;
   height: 16px;
   -webkit-border-radius: 6px;
@@ -345,6 +372,23 @@ input, button, textarea {
 
 }
 
+.chat-top__button-hide {
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  border-right: 0;
+
+  display: none;
+  -webkit-border-top-left-radius: 0;
+  border-top-left-radius: 0;
+  -webkit-border-bottom-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background: url("../img/btn-hide-normal.svg") no-repeat center center #f7f8fc;
+}
+.chat-top__button-hide:hover {
+  background: url("../img/btn-hide-over.svg") no-repeat center center #f7f8fc;
+}
+
 .chat-top__button-leave {
   -webkit-border-top-left-radius: 0;
   border-top-left-radius: 0;
@@ -461,6 +505,16 @@ input, button, textarea {
   color: #60768b;
   padding: 0 20px;
 }
+.chat-canvas__list:hover {
+  background-color: #efefef;
+}
+
+/*label.chat-canvas__list-name:hover {*/
+  /*cursor: pointer;*/
+/*}*/
+/*label.chat-canvas__list-text:hover {*/
+  /*cursor: pointer;*/
+/*}*/
 
 .chat-canvas__list-notice {
   width: 100%;
@@ -496,6 +550,7 @@ input, button, textarea {
 }
 
 .chat-canvas__list-name {
+  cursor: pointer;
   font-weight: 600;
   color: #333e4a;
   vertical-align: top;
@@ -510,12 +565,27 @@ input, button, textarea {
   font-weight: 400;
 }
 .chat-canvas__list-text {
+  cursor: pointer;
   max-width: calc(100% - 220px);
   color: #2a78c2;
   word-wrap: break-word;
   font-weight: 400;
   font-size: 16px;
   color: #60768b;
+}
+.chat-canvas__list-readreceipt {
+  font-size: 10px;
+  color: white;
+  display: none;
+  background-color: #75daeb;
+  border-radius: 10px;
+  /*border: 5px;*/
+  width: 14px;
+  height: 14px;
+  line-height: 130%;
+  vertical-align: middle;
+  text-align: center;
+  margin: 0 0 0 5px;
 }
 .chat-canvas__list-text-file {
   width: 44px;
@@ -802,19 +872,26 @@ label.chat-input-file.file-upload {
 .modal-open-chat-list__item {
   width: 100%;
   height: 36px;
-  background: url("../img/icon-list-channel.svg") no-repeat 20px center transparent;
+  background: 20px center transparent;
   font-family: 'Lato';
   font-weight: 400;
   font-size: 16px;
   color: #60768b;
   line-height: 36px;
-  padding: 0 0 0 40px;
+  padding: 0 0 0 10px;
   cursor: pointer;
+  overflow-y: hidden;
+  word-break: break-all;
 }
 .modal-open-chat-list__item:hover {
-  background: url("../img/icon-list-channel.svg") no-repeat 20px center #e4ebef;
+  background: 20px center #e4ebef;
   font-weight: 600;
   color: #333e4a;
+}
+.modal-open-chat-list__item img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
 }
 
 .modal-open-chat-more {
@@ -878,7 +955,7 @@ label.chat-input-file.file-upload {
 }
 .modal-messaging-top {
   width: 100%;
-  height: 92px;
+  min-height: 48px;
   padding: 16px 20px 0 20px;
   font-family: 'Lato';
   font-weight: 500;
@@ -894,6 +971,20 @@ label.chat-input-file.file-upload {
   font-weight: 300;
   color: #abb8c4;
 }
+
+.modal-messaging-top__btn{
+  position: absolute;
+  right: 10px;
+
+  border: 1px solid #4e4273;
+  color: #4e4273;
+  background-color: #f7f8fc;
+  background: url("../img/icon-create-channel.svg") no-repeat 20px center #fff;
+  background-position: center center;
+  width: 26px;
+  height: 26px;
+}
+
 .modal-messaging-list {
   width: 100%;
   height: calc(100% - 164px);
@@ -983,7 +1074,7 @@ label.chat-input-file.file-upload {
   background: #328fe6;
 }
 
-.modal-leave-channel {
+.modal-leave-channel, .modal-hide-channel, .modal-confirm, .modal-input {
   display: none;
   position: fixed;
   top: 0;
@@ -1000,7 +1091,7 @@ label.chat-input-file.file-upload {
   transition: opacity .15s linear;
 }
 
-.modal-leave-channel-card {
+.modal-leave-channel-card, .modal-hide-channel-card, .modal-confirm-card, .modal-input-card {
   width: 386px;
   height: auto;
   margin: 200px auto;
@@ -1012,16 +1103,16 @@ label.chat-input-file.file-upload {
   border-radius: 4px;
 }
 
-.modal-leave-channel-title {
+.modal-leave-channel-title, .modal-hide-channel-title, .modal-confirm-title, .modal-input-title {
   font-family: 'Lato';
   font-weight: 600;
   font-size: 18px;
   color: #333e4a;
-  margin-top: 24px;
+  margin-top: 15px;
   padding: 0 20px;
 }
 
-.modal-leave-channel-desc {
+.modal-leave-channel-desc, .modal-hide-channel-desc, .modal-confirm-desc, .modal-input-desc {
   font-family: 'Lato';
   font-weight: 400;
   font-size: 14px;
@@ -1030,17 +1121,17 @@ label.chat-input-file.file-upload {
   padding: 0 20px;
 }
 
-.modal-leave-channel-separator {
+.modal-leave-channel-separator, .modal-hide-channel-seprator, .modal-confirm-seprator, .modal-input-separator {
   padding-top: 14px;
   border-bottom: 1px solid rgba(171, 184, 196, 0.5);
 }
 
-.modal-leave-channel-bottom {
+.modal-leave-channel-bottom, .modal-hide-channel-bottom, .modal-confirm-bottom, .modal-input-bottom {
   padding: 10px 20px;
   text-align: right;
 }
 
-.modal-leave-channel-button {
+.modal-leave-channel-button, .modal-hide-channel-button, .modal-confirm-button, .modal-input-button {
   width: 68px;
   height: 28px;
   text-align: center;
@@ -1053,26 +1144,41 @@ label.chat-input-file.file-upload {
   border-radius: 2px;
 }
 
-.modal-leave-channel-close {
+.modal-leave-channel-close, .modal-hide-channel-close, .modal-confirm-close, .modal-input-close {
   color: #60678b;
   border: 1px solid #abb8c4;
   background: #fafcff;
 }
-.modal-leave-channel-close:hover,
-.modal-leave-channel-close:focus {
+.modal-leave-channel-close:hover, .modal-hide-channel-close:hover, .modal-confirm-close:hover, .modal-input-close:hover,
+.modal-leave-channel-close:focus, .modal-hide-channel-close:focus, .modal-confirm-close:focus, .modal-input-close:focus {
   color: #6742d6;
   border: 1px solid #6742d6;
 }
 
-.modal-leave-channel-submit {
+.modal-leave-channel-submit, .modal-hide-channel-submit, .modal-confirm-submit, .modal-input-submit {
+  width: 58px;
   color: #fff;
   border: 1px solid #0692b0;
   background: #32c5e6;
 }
-.modal-leave-channel-submit:hover,
-.modal-leave-channel-submit:focus {
+.modal-leave-channel-submit:hover, .modal-hide-channel-submit:hover, .modal-confirm-submit:hover, .modal-input-submit:hover,
+.modal-leave-channel-submit:focus, .modal-hide-channel-submit:focus, .modal-confirm-submit:focus, .modal-input-submit:focus {
   border: 1px solid #1a64ab;
   background: #328fe6;
+}
+
+.modal-input-box {
+  width: 100%;
+  padding: 0 20px 0 20px;
+}
+
+.modal-input-box-elem {
+  width: 100%;
+  background-color: #F8F8F8;
+  border-radius: 3px;
+  border: 1px solid #dedede;
+  height: 30px;
+  padding-left: 12px;
 }
 
 .modal-member {
@@ -1122,21 +1228,28 @@ label.chat-input-file.file-upload {
   padding: 0 20px 14px 20px;
 }
 
-.modal-member-list__icon {
+.modal-member-list__icon img {
   width: 23px;
   height: 23px;
-  background: url("../img/icon-off.svg") no-repeat center center;
   float: left;
   margin-right: 10px;
-}
-.modal-member-list__icon--online {
-  background: url("../img/icon-on.svg") no-repeat center center;
 }
 
 .modal-member-list__name {
   width: auto;
   height: 23px;
   line-height: 23px;
+  color: #cdcdcd;
+}
+
+.modal-member-list__name.online {
+  color: #60768b;
+}
+
+.modal-member-list__lastseenat {
+  text-align: right;
+  font-size: 10pt;
+  color: #cdcdcd;
 }
 
 .modal-invite {

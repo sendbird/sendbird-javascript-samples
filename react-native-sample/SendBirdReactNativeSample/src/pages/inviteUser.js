@@ -68,11 +68,7 @@ export default class InviteUser extends Component {
           console.log(error);
           return;
         }
-
-        _SELF.props.navigator.pop();
-        setTimeout(() => {
-          _SELF.props.navigator.push({name: 'chat', channel: channel, refresh: _SELF.props.route.refresh});
-        }, 500);
+        _SELF.props.navigator.replace({name: 'chat', channel: channel, refresh: _SELF.props.route.refresh});
       });
     } else {
       var _inviteIds = this.state.inviteList.map(function(user) {return user.userId});

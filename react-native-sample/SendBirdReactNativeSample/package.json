@@ -8,8 +8,8 @@
   "dependencies": {
     "moment": "2.14.1",
     "react": "15.3.1",
-    "react-native": "0.32.0",
+    "react-native": "0.34.1",
     "react-native-button": "1.7.0",
-    "sendbird": "3.0.6"
+    "sendbird": "3.0.11"
   }
 }

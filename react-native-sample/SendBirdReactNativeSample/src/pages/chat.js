@@ -48,7 +48,7 @@ export default class Chat extends Component {
     sb.removeChannelHandler('MessageHandler');
   }
 
-  componentWillMount() {
+  componentDidMount() {
     var _SELF = this;
     _SELF._getChannelMessage();
     if (_SELF.state.channel.channelType == 'group') {

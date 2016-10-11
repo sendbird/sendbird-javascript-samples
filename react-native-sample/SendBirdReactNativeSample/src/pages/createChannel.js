@@ -12,7 +12,7 @@ var sb = null;
 import TopBar from '../components/topBar';
 import Button from '../components/button';
 
-export default class CraeteChannel extends Component {
+export default class CreateChannel extends Component {
   constructor(props) {
     super(props);
     sb = SendBird.getInstance();

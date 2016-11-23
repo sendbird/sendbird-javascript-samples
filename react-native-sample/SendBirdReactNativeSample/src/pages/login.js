@@ -4,9 +4,9 @@ import {
   Text,
   TextInput,
   StyleSheet,
+  Platform
 } from 'react-native'
 
-import {APP_ID} from '../consts'
 import Button from '../components/button'
 import SendBird from 'sendbird'
 var sb = null;
@@ -51,7 +51,7 @@ export default class Login extends Component {
       return;
     }
 
-    sb = new SendBird({appId: APP_ID});
+    sb = SendBird.getInstance();
     var _SELF = this;
     sb.connect(_SELF.state.userId, function (user, error) {
       if (error) {
@@ -63,6 +63,23 @@ export default class Login extends Component {
         console.log(error);
         return;
       }
+      
+      if (Platform.OS === 'ios') {
+        if (sb.getPendingAPNSToken()){
+          sb.registerAPNSPushTokenForCurrentUser(sb.getPendingAPNSToken(), function(result, error){
+            console.log("APNS TOKEN REGISTER AFTER LOGIN");
+            console.log(result);
+          });
+        }
+      } else {
+        if (sb.getPendingGCMToken()){
+          sb.registerGCMPushTokenForCurrentUser(sb.getPendingGCMToken(), function(result, error){
+            console.log("GCM TOKEN REGISTER AFTER LOGIN");
+            console.log(result);
+          });
+        }
+      }
+
       sb.updateCurrentUserInfo(_SELF.state.username, '', function(response, error) {
         _SELF.setState({
           buttonDisabled: false,

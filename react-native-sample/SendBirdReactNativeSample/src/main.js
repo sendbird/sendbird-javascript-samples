@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   Navigator,
-  StyleSheet
+  StyleSheet,
+  AppState,
+  Platform
 } from 'react-native';
 
 import Login from './pages/login';
@@ -14,6 +16,12 @@ import BlockList from './pages/blockList';
 import GroupChannel from './pages/groupChannel';
 import InviteUser from './pages/inviteUser';
 import Members from './pages/members'
+
+import {APP_ID} from './consts'
+import SendBird from 'sendbird'
+var sb = null;
+
+
 
 var ROUTES = {
   login: Login,
@@ -28,6 +36,61 @@ var ROUTES = {
 };
 
 export default class Main extends Component {
+
+  componentDidMount() {
+    sb = new SendBird({appId: APP_ID});
+
+    AppState.addEventListener('change', function(currentAppState){
+      if (currentAppState === 'active') {
+        sb.setForegroundState();
+      } else if (currentAppState === 'background') {
+        sb.setBackgroundState();
+      }
+    });
+    var Notifications = require('react-native-push-notification');
+    Notifications.configure({
+        onRegister: function(token) {
+            if (Platform.OS === 'ios') {
+              sb.registerAPNSPushTokenForCurrentUser(token['token'], function(result, error){
+                console.log("registerAPNSPushTokenForCurrentUser");
+                console.log(result);
+              });
+            } else {
+              sb.registerGCMPushTokenForCurrentUser(token['token'], function(result, error){
+                console.log("registerAPNSPushTokenForCurrentUser");
+                console.log(result);
+              });
+            }
+        },
+
+        onNotification: function(notification) {
+            console.log( 'NOTIFICATION:', notification );
+        },
+
+        // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications) 
+        senderID: "984140644677",
+
+        // IOS ONLY (optional): default: all - Permissions to register.
+        permissions: {
+            alert: true,
+            badge: true,
+            sound: true
+        },
+
+        // Should the initial notification be popped automatically
+        // default: true
+        popInitialNotification: true,
+
+        /**
+          * (optional) default: true
+          * - Specified if permissions (ios) and token (android and ios) will requested or not,
+          * - if not, you must call PushNotificationsHandler.requestPermissions() later
+          */
+        requestPermissions: true,
+    });
+    
+  }
+
   render() {
     return (
       <Navigator

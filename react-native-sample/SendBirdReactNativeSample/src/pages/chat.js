@@ -34,7 +34,8 @@ export default class Chat extends Component {
       text: '',
       disabled: true,
       show: false,
-      lastMessage: null
+      lastMessage: null,
+      hasRendered: false,
     };
     this._onBackPress = this._onBackPress.bind(this);
     this._onSend = this._onSend.bind(this);
@@ -45,48 +46,68 @@ export default class Chat extends Component {
   }
 
   componentWillUnmount() {
-    sb.removeChannelHandler('MessageHandler');
+    sb.removeChannelHandler('ChatView');
+    sb.removeConnectionHandler('ChatView')
   }
 
   componentDidMount() {
+    console.log("componentDidMount");      
     var _SELF = this;
-    _SELF._getChannelMessage();
-    if (_SELF.state.channel.channelType == 'group') {
-        _SELF.state.channel.markAsRead();
-    }
-
-    // channel handler
-    var ChannelHandler = new sb.ChannelHandler();
-    ChannelHandler.onMessageReceived = function(channel, message){
-      if (channel.url == _SELF.state.channel.url) {
-        var _messages = [];
-        if (message.sender.userId == _SELF.state.lastMessage.sender.userId) {
-          message.sender.isDisplay = false;
-          _messages.push(message);
-        } else {
-          _messages.push(message);
-        }
-
-        var _newMessageList = _messages.concat(_SELF.state.messages);
-        _SELF.setState({
-          messages: _newMessageList,
-          dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
-        });
-        _SELF.state.lastMessage = message;
-        _SELF.state.channel.lastMessage = message;
+    if (!_SELF.state.hasRendered){
+      _SELF.state.hasRendered = true;
+      _SELF._getChannelMessage(false);    
+      if (_SELF.state.channel.channelType == 'group') {
+          _SELF.state.channel.markAsRead();
       }
-    };
-    ChannelHandler.onUserJoined = function(channel, user) {
-      _SELF.props.route.refresh(_SELF.state.channel);
-    };
-    ChannelHandler.onUserLeft = function(channel, user) {
-      _SELF.props.route.refresh(_SELF.state.channel);
-    };
-    sb.addChannelHandler('MessageHandler', ChannelHandler);
-  }
 
-  _getChannelMessage() {
+      // channel handler
+      var ChannelHandler = new sb.ChannelHandler();
+      ChannelHandler.onMessageReceived = function(channel, message){
+        if (channel.url == _SELF.state.channel.url) {
+          var _messages = [];
+          if (message.sender.userId == _SELF.state.lastMessage.sender.userId) {
+            message.sender.isDisplay = false;
+            _messages.push(message);
+          } else {
+            _messages.push(message);
+          }
+          var _newMessageList = _messages.concat(_SELF.state.messages);
+          _SELF.setState({
+            messages: _newMessageList,
+            dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
+          });
+          _SELF.state.lastMessage = message;
+          if (_SELF.state.channel.channelType == 'group') {
+            _SELF.state.channel.markAsRead();
+            _SELF.state.channel.lastMessage = message;
+          }        
+        }
+      };
+
+      ChannelHandler.onUserJoined = function(channel, user) {
+        _SELF.props.route.refresh(_SELF.state.channel);
+      };
+      ChannelHandler.onUserLeft = function(channel, user) {
+        _SELF.props.route.refresh(_SELF.state.channel);
+      };
+      sb.addChannelHandler('ChatView', ChannelHandler);
+
+      var ConnectionHandler = new sb.ConnectionHandler();
+      ConnectionHandler.onReconnectSucceeded = function(){
+        _SELF._getChannelMessage(true);
+      }
+      sb.addConnectionHandler('ChatView', ConnectionHandler);
+    }
+  }
+  
+  _getChannelMessage(refresh) {
     var _SELF = this;
+
+    if(refresh){
+      _SELF.state.messageQuery = _SELF.props.route.channel.createPreviousMessageListQuery();
+      _SELF.state.messages = [];      
+    }
+    
     if (!this.state.messageQuery.hasMore) {
       return;
     }
@@ -264,7 +285,7 @@ export default class Chat extends Component {
         <View style={[styles.chatContainer, {transform: [{ scaleY: -1 }]}]}>
           <ListView
             enableEmptySections={true}
-            onEndReached={() => this._getChannelMessage()}
+            onEndReached={() => this._getChannelMessage(false)}
             onEndReachedThreshold={PULLDOWN_DISTANCE}
             dataSource={this.state.dataSource}
             renderRow={(rowData) => {

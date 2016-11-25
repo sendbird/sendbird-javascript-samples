@@ -95,11 +95,14 @@ export default class Chat extends Component {
       var ConnectionHandler = new sb.ConnectionHandler();
       ConnectionHandler.onReconnectSucceeded = function(){
         _SELF._getChannelMessage(true);
+        _SELF.state.channel.refresh(function(){
+          _SELF.props.route.refresh(_SELF.state.channel);          
+        });
       }
       sb.addConnectionHandler('ChatView', ConnectionHandler);
     }
   }
-  
+
   _getChannelMessage(refresh) {
     var _SELF = this;
 

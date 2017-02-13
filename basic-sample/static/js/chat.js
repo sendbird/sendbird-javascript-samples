@@ -1130,8 +1130,7 @@ function startSendBird(userId, nickName) {
     }
 
     if (isCurrentChannel && channel.isGroupChannel()) {
-      channel.markAsRead();
-    } else {
+      channel.markAsRead();    
       unreadCountUpdate(channel);
     }
 
@@ -1176,7 +1175,6 @@ function startSendBird(userId, nickName) {
       updateGroupChannelLastMessage(message);
     }
 
-
     if (message.isUserMessage()) {
       setChatMessage(message);
     }
@@ -1191,7 +1189,6 @@ function startSendBird(userId, nickName) {
         setFileMessage(message);
       }
     }
-
   };
 
   ChannelHandler.onMessageDeleted = function (channel, messageId) {
@@ -1367,7 +1364,7 @@ function setChatMessage(message) {
   updateChannelMessageCache(currChannelInfo, message);
   scrollPositionBottom();
 }
-
+  
 var PreviousMessageListQuery = null;
 function loadMoreChatMessage(func) {
   if (!PreviousMessageListQuery) {
@@ -1382,12 +1379,13 @@ function loadMoreChatMessage(func) {
     var moreMessage = messages;
     var msgList = '';
     messages.forEach(function(message){
-      switch (message.MESSAGE_TYPE) {
-        case message.MESSAGE_TYPE_USER:
-          msgList += messageList(message);
-          break;
-        case message.MESSAGE_TYPE_FILE:
-          $('.chat-input-file').removeClass('file-upload');
+      if(message.isUserMessage()){
+        msgList += messageList(message);  
+      } else if(message.isAdminMessage()){
+        console.log(message);
+        msgList += adminMessageList(message);
+      } else if(message.isFileMessage()){
+         $('.chat-input-file').removeClass('file-upload');
           $('#chat_file_input').val('');
 
           if (message.type.match(/^image\/.+$/)) {
@@ -1395,8 +1393,8 @@ function loadMoreChatMessage(func) {
           } else {
             msgList +=fileMessageList(message);
           }
-          break;
-        default:
+      } else{
+        console.log("unknown type of message :" + message);
       }
     });
 
@@ -1418,7 +1416,6 @@ function messageList(message) {
   var msgList = '';
   var user = message.sender;
   var channel = currChannelInfo;
-
   if (isCurrentUser(user.userId)) {
     // var readReceiptHtml = '';
     // if (channel.isGroupChannel()) {
@@ -1494,6 +1491,14 @@ function updateChannelMessageCacheAll(channel) {
     var message = channelMessageList[channel.url][i]['message'];
     updateChannelMessageCache(channel, message);
   }
+}
+
+function adminMessageList(message){
+   return '<div class="chat-canvas__list">' +
+    '  <label class="chat-canvas__list-broadcast">' +
+    message.message +
+    '  </label>' +
+    '</div>';
 }
 
 function fileMessageList(message) {

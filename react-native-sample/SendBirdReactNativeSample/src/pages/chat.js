@@ -65,7 +65,7 @@ export default class Chat extends Component {
       ChannelHandler.onMessageReceived = function(channel, message){
         if (channel.url == _SELF.state.channel.url) {
           var _messages = [];
-          if (message.sender.userId == _SELF.state.lastMessage.sender.userId) {
+          if (message.sender && _SELF.state.lastMessage.sender && message.sender.userId == _SELF.state.lastMessage.sender.userId) {
             message.sender.isDisplay = false;
             _messages.push(message);
           } else {
@@ -122,10 +122,10 @@ export default class Chat extends Component {
 
       var _messages = [];
       for (var i = 0 ; i < response.length ; i++) {
-        var _curr = response[i];
+        var _curr = response[i];        
         if (i != 0) {
           var _prev = response[i - 1];
-          if (_curr.sender.userId == _prev.sender.userId) {
+          if (_curr.sender && _prev.sendeer && _curr.sender.userId == _prev.sender.userId) {
             _curr.sender.isDisplay = false;
           }
 
@@ -150,6 +150,9 @@ export default class Chat extends Component {
 
   _onSend() {
     var _SELF = this;
+    if (!_SELF.state.text){
+      return;
+    }
     _SELF.state.channel.sendUserMessage(_SELF.state.text, '', function(message, error) {
       if (error) {
         console.log(error);
@@ -160,7 +163,7 @@ export default class Chat extends Component {
       if (_SELF.state.lastMessage && message.createdAt - _SELF.state.lastMessage.createdAt  > (1000 * 60 * 60)) {
         _messages.push(message);
         _messages.push({isDate: true, createdAt: message.createdAt});
-      } else if (_SELF.state.lastMessage && message.sender.userId == _SELF.state.lastMessage.sender.userId) {
+      } else if (_SELF.state.lastMessage && message.sender && _SELF.state.lastMessage.sender && message.sender.userId == _SELF.state.lastMessage.sender.userId) {
         message.sender.isDisplay = false;
         _messages.push(message);
       } else {
@@ -174,7 +177,7 @@ export default class Chat extends Component {
       });
       _SELF.state.lastMessage = message;
       _SELF.state.channel.lastMessage = message;
-      _SELF.setState({text: ''})
+      _SELF.setState({text: '', disabled: true});
     });
   }
 
@@ -298,27 +301,9 @@ export default class Chat extends Component {
                     <Text style={styles.dateText}>{moment(rowData.createdAt).calendar()}</Text>
                   </View>
                 )
-              } else if (rowData.sender.isDisplay == false) {
-                if (rowData.constructor.name == 'UserMessage') {
-                  return (
-                    <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}, {marginLeft: 55}]}>
-                      <View style={styles.senderContainer}>
-                        <Text style={[styles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
-                      </View>
-                    </View>
-                  )
-                } else if (rowData.constructor.name == 'FileMessage') {
-                  return (
-                    <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}, {marginLeft: 55}]}>
-                      <View style={styles.senderContainer}>
-                        <Image style={{width: 100, height: 70}} source={{uri: rowData.url.replace('http://', 'https://')}} />
-                      </View>
-                    </View>
-                  )
-                }
-              } else {
-                if (rowData.constructor.name == 'UserMessage') {
-                  return (
+              } else if (rowData.constructor.name == 'UserMessage') {
+                  if (rowData.sender.isDisplay){
+                    return (
                     <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
                       <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
                         <View style={styles.listIcon}>
@@ -331,23 +316,51 @@ export default class Chat extends Component {
                       </View>
                     </TouchableHighlight>
                   )
-                } else if (rowData.constructor.name == 'FileMessage') {
-                  return (
-                    <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
-                      <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
-                        <View style={styles.listIcon}>
-                          <Image style={styles.senderIcon} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
-                        </View>
+                  }else{
+                    return (
+                      <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}, {marginLeft: 55}]}>
                         <View style={styles.senderContainer}>
-                          <Text style={[styles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                          <Text style={[styles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                        </View>
+                      </View>
+                      )
+                  }                                  
+                } else if (rowData.constructor.name == 'FileMessage') {
+                  if (rowData.sender.isDisplay){
+                    return (
+                      <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}, {marginLeft: 55}]}>
+                        <View style={styles.senderContainer}>
                           <Image style={{width: 100, height: 70}} source={{uri: rowData.url.replace('http://', 'https://')}} />
                         </View>
                       </View>
-                    </TouchableHighlight>
-                  )
+                    )
+                  } else {
+                    return (
+                      <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
+                        <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
+                          <View style={styles.listIcon}>
+                            <Image style={styles.senderIcon} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
+                          </View>
+                          <View style={styles.senderContainer}>
+                            <Text style={[styles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
+                            <Image style={{width: 100, height: 70}} source={{uri: rowData.url.replace('http://', 'https://')}} />
+                          </View>
+                        </View>
+                      </TouchableHighlight>
+                    )
+
+                  }
+                } else if (rowData.constructor.name == 'AdminMessage') {
+                  return (
+                      <View style={[styles.adListItem, {transform: [{ scaleY: -1 }]}, {flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}]}>
+                        <View style={styles.senderContainer}>
+                          <Text style={[styles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
+                        </View>
+                      </View>
+                      )
                 }
               }
-            }}
+            }
           />
         </View>
         <View style={styles.inputContainer}>
@@ -413,6 +426,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#f7f8fc',
     padding: 5,
   },
+
+  adListItem: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#e6e9f0',
+    padding: 5,
+    margin: 5,
+  },
+  
   listIcon: {
     justifyContent: 'flex-start',
     paddingLeft: 10,

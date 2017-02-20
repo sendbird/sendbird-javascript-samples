@@ -42,8 +42,10 @@ export default class Main extends Component {
 
     AppState.addEventListener('change', function(currentAppState){
       if (currentAppState === 'active') {
+        console.log('foreground');
         sb.setForegroundState();
       } else if (currentAppState === 'background') {
+        console.log('background');
         sb.setBackgroundState();
       }
     });

@@ -4,8 +4,15 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Platform
+  Platform,
+  Keyboard,
+  KeyboardAvoidingView
 } from 'react-native'
+
+const LoginView = Platform.select({
+  ios: () => KeyboardAvoidingView,
+  android: () => View,
+})();
 
 import Button from '../components/button'
 import SendBird from 'sendbird'
@@ -27,6 +34,8 @@ export default class Login extends Component {
   }
 
   _onPressConnect() {
+    Keyboard.dismiss();
+
     if (!this.state.buttonDisabled) {
       this._onPressDisconnect();
       return;
@@ -121,12 +130,13 @@ export default class Login extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <LoginView behavior='padding' style={styles.container} >        
         <View style={styles.loginContainer}>
           <TextInput
             style={styles.input}
             value={this.state.userId}
             onChangeText={(text) => this.setState({userId: text})}
+            onSubmitEditing={Keyboard.dismiss}
             placeholder={'Enter User ID'}
             maxLength={12}
             multiline={false}
@@ -135,6 +145,7 @@ export default class Login extends Component {
             style={[styles.input, {marginTop: 10}]}
             value={this.state.username}
             onChangeText={(text) => this.setState({username: text})}
+            onSubmitEditing={Keyboard.dismiss}
             placeholder={'Enter User Nickname'}
             maxLength={12}
             multiline={false}
@@ -161,7 +172,7 @@ export default class Login extends Component {
             onPress={this._onPressGroupChannel}
           />
         </View>
-      </View>
+      </LoginView>
     );
   }
 }

@@ -43,8 +43,8 @@ export default class InviteUser extends Component {
       if (user.userId == rowData.userId) {
         if (user.check) {
             user.check = false;
-            _inviteList = _inviteList.filter((userId) => {
-              return userId !== user.userId;
+            _inviteList = _inviteList.filter((invitee) => {
+              return invitee.userId !== user.userId;
             })
         } else {
           user.check = true;

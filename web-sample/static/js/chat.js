@@ -167,6 +167,29 @@ function modalInput(title, desc, submit, close){
   });
 }
 
+function showChatUI(){
+  $('.chat').show();
+  if(typeof moxie !== 'undefined' && moxie){
+  console.log("existing");
+  var fileInput = new moxie.file.FileInput({
+    browse_button: 'chat_file_input2', // or document.getElementById('file-picker')
+    accept: [
+                {title: "Images", extensions: "jpg,gif,png"} // accept only images
+            ]
+  });
+  fileInput.onchange = function(e) {
+     // do something to files array
+     target_file = e.target.files[0];
+     reader = new moxie.file.FileReader();
+     reader.onload = function(e){
+       var send_file = {'name':target_file.name,'type':target_file.type,'base64':e.target.result.split(',')[1]};
+       currChannelInfo.sendFileMessage(send_file, SendMessageHandler);
+     }
+     reader.readAsDataURL(target_file);
+  };
+  fileInput.init(); // initialize
+  }
+}
 
 
 function getChannelList(isFirstPage) {
@@ -238,7 +261,7 @@ function joinChannel(channelUrl) {
 
       $('.chat-canvas').html('');
       $('.chat-input-text__field').val('');
-      $('.chat').show();
+      showChatUI();
 
       navInit();
       popupInit();
@@ -552,7 +575,7 @@ function startMessaging() {
       initChatTitle(channelTitle, titleType);
       $('.chat-canvas').html('');
       $('.chat-input-text__field').val('');
-      $('.chat').show();
+      showChatUI();
 
       navInit();
       popupInit();
@@ -898,7 +921,7 @@ function joinGroupChannel(channelUrl, callback) {
     initChatTitle(channelTitle, titleType);
     $('.chat-canvas').html('');
     $('.chat-input-text__field').val('');
-    $('.chat').show();
+    showChatUI();
 
     navInit();
     popupInit();
@@ -1143,9 +1166,6 @@ function startSendBird(userId, nickName) {
     }
 
     if (message.isFileMessage() && isCurrentChannel) {
-      $('.chat-input-file').removeClass('file-upload');
-      $('#chat_file_input').val('');
-
       if (message.type.match(/^image\/.+$/)) {
         setImageMessage(message);
       } else {
@@ -1385,9 +1405,6 @@ function loadMoreChatMessage(func) {
         console.log(message);
         msgList += adminMessageList(message);
       } else if(message.isFileMessage()){
-         $('.chat-input-file').removeClass('file-upload');
-          $('#chat_file_input').val('');
-
           if (message.type.match(/^image\/.+$/)) {
             msgList +=imageMessageList(message);
           } else {
@@ -1764,4 +1781,5 @@ window.onfocus = function() {
     }
   });
 };
+
 

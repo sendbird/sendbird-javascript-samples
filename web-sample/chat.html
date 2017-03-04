@@ -2,7 +2,25 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <!--[if gt IE 7]>      
+  <script type="text/javascript">
+  // Let the library know where WebSocketMain.swf is:
+  window.WEB_SOCKET_SWF_LOCATION = "static/lib/WebSocketMain.swf";  
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xdomain/0.7.5/xdomain.js"></script>
+  <script>
+    xdomain.slaves({
+      "https://api-us-1.sendbird.com": "/xdomain.html",
+      "https://api-p.sendbird.com": "/xdomain.html"
+    });
+  </script>
+  <script src="static/lib/swfobject.js"></script>
+  <script src="static/lib/web_socket.js"></script>
+  <script src="static/lib/moxie.js"></script>
+  <script>moxie.core.utils.Env.swf_url = 'static/lib/Moxie.min.swf';</script>
+  <![endif]-->
 
+  <script src="static/js/jquery-1.11.3.min.js"></script>
   <link rel="shortcut icon" href="https://s3.amazonaws.com/sendbird-static/favicon/favicon.ico" type="image/x-icon">
 
   <link href='https://fonts.googleapis.com/css?family=Exo+2:400,900italic,900,800italic,800,700italic,700,600italic,600,500italic,500,400italic,300italic,200italic,200,100italic,100,300'
@@ -100,9 +118,18 @@
         <div class="chat-canvas"></div>
 
         <div class="chat-input">
+              <div id="container">
+    </div>
           <label class="chat-input-file" for="chat_file_input">
             <input type="file" name="file" id="chat_file_input" style="display: none;">
-          </label>
+          </label>  
+          <!--[if gt IE 7]>
+          <script>
+             $('.chat-input-file').remove();
+          </script>
+          <a class="chat-input-file" id="chat_file_input2" href="javascript:;">
+          </a>
+          <![endif]-->
           <div class="chat-input-text">
             <textarea class="chat-input-text__field" placeholder="Write a chat" disabled="true" autofocus></textarea>
           </div>
@@ -113,7 +140,6 @@
     </div> <!-- // end chat section -->
 
   </div>
-
   <!-----------------------
             modal
   ------------------------>
@@ -222,16 +248,7 @@
       </div>
     </div>
   </div>
-  <!-----------------------
-        // END modal
-  ------------------------>
-
-  <!--<script src="/static/lib/SendBird.min.js"></script>-->
-  <!--<script src="/static/js/jquery-1.11.3.min.js"></script>-->
-  <!--<script src="/static/js/util.js"></script>-->
-  <!--<script src="/static/js/chat.js"></script>-->
   <script src="static/lib/SendBird.min.js"></script>
-  <script src="static/js/jquery-1.11.3.min.js"></script>
   <script src="static/js/util.js"></script>
   <script src="static/js/chat.js"></script>
 

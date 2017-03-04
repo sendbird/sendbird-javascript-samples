@@ -2,7 +2,7 @@
 
 [SendBird](https://sendbird.com) provides the chat API and SDK for your app enabling real-time communication among your users.  
 
-1) basic-sample : SendBird Standard Sample Codes for Desktop Web Browsers.
+1) web-sample : SendBird Standard Sample Codes for Desktop Web Browsers.
 
 2) react-native-sample : Sendbird React Native Sample Codes.
 

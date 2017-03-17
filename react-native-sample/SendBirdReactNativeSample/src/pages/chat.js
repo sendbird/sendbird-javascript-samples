@@ -188,26 +188,38 @@ export default class Chat extends Component {
           source['type'] = response.type; 
         }
 
-        _SELF.state.channel.sendFileMessage(source, function(message, error){
-          if (error) {
-            console.log(error);
-            return;
-          }
+        const CHECK_IMAGE_URI_INTERVAL = Platform.OS === 'android' ? 300 : 100;
 
-          var _messages = [];
-          _messages.push(message);
-          if (_SELF.state.lastMessage && message.createdAt - _SELF.state.lastMessage.createdAt  > (1000 * 60 * 60)) {            
-            _messages.push({isDate: true, createdAt: message.createdAt});
-          }
-          
-          var _newMessageList = _messages.concat(_SELF.state.messages);
-          _SELF.setState({
-            messages: _newMessageList,
-            dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
-          });
-          _SELF.state.lastMessage = message;
-          _SELF.state.channel.lastMessage = message;
-        });
+        // This is needed to ensure that a file exists
+        setTimeout(() => {
+          // Use getSize as a proxy for when the image exists
+          Image.getSize(
+            response.uri,
+            () => {
+              _SELF.state.channel.sendFileMessage(source, function(message, error){
+          	if (error) {
+                  console.log(error);
+            	  return;
+          	}
+
+                var _messages = [];
+                _messages.push(message);
+                if (_SELF.state.lastMessage && message.createdAt - _SELF.state.lastMessage.createdAt  > (1000 * 60 * 60)) {
+                  _messages.push({isDate: true, createdAt: message.createdAt});
+                }
+
+                var _newMessageList = _messages.concat(_SELF.state.messages);
+                _SELF.setState({
+                  messages: _newMessageList,
+                  dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
+                });
+          	_SELF.state.lastMessage = message;
+          	_SELF.state.channel.lastMessage = message;
+              });
+            }
+          );
+        }, CHECK_IMAGE_URI_INTERVAL);
+
       };
          
     });

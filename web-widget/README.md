@@ -25,12 +25,12 @@ This is a sample `Web Widget` using [`SendBird SDK`](https://github.com/smilefam
 ## Modify
 1. install npm
 
-      npm install --save-dev
+        npm install --save-dev
 
 2. modify files.
 3. create bundle file.
 
-      webpack -p
+        webpack -p
 
 
 ## File Structure

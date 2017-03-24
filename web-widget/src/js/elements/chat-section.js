@@ -27,6 +27,7 @@ class ChatSection extends Element {
     super();
     this._create();
     widget.appendChild(this.self);
+    this.textKr = '';
   }
 
   reset() {
@@ -175,6 +176,7 @@ class ChatSection extends Element {
 
   closeChatBoard(target) {
     target.remove();
+    this.textKr = '';
   }
 
   createMessageContent(target) {

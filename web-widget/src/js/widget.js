@@ -12,6 +12,7 @@ const TIME_STRING_TODAY = 'today';
 const TIME_MESSAGE_TYPE = 'time';
 const NEW_CHAT_BOARD_ID = 'NEW_CHAT';
 const KEY_DOWN_ENTER = 13;
+const KEY_DOWN_KR = 229;
 const CHAT_BOARD_WIDTH = 300;
 const ERROR_MESSAGE = 'Please create "sb_widget" element on first.';
 const ERROR_MESSAGE_SDK = 'Please import "SendBird SDK" on first.';
@@ -22,7 +23,7 @@ window.WebFontConfig = {
 
 class SBWidget {
   constructor() {
-
+    
   }
 
   start(appId) {
@@ -486,14 +487,19 @@ class SBWidget {
           });
         });
         this.chatSection.addKeyDownEvent(target.input, (event) => {
+          if(event.keyCode == KEY_DOWN_KR) {
+            this.chatSection.textKr = target.input.textContent;
+          }
+
           if (event.keyCode == KEY_DOWN_ENTER && !event.shiftKey) {
-            let textMessage = target.input.textContent.trim();
-            if (!isEmptyString(textMessage)) {
+            let textMessage = target.input.textContent || this.chatSection.textKr;
+            if (!isEmptyString(textMessage.trim())) {
               this.sb.sendTextMessage(channelSet.channel, textMessage, (message) => {
                 this.messageReceivedAction(channelSet.channel, message);
               });
             }
             this.chatSection.clearInputText(target.input);
+            this.chatSection.textKr = '';
             channelSet.channel.endTyping();
           } else {
             channelSet.channel.startTyping();
@@ -503,11 +509,11 @@ class SBWidget {
         this.chatSection.addKeyUpEvent(target.input, (event) => {
           let isBottom = this.chatSection.isBottom(target.messageContent, target.list);
           this.chatSection.responsiveHeight(channelSet.channel.url);
-          if (isBottom) {
-            this.chatSection.scrollToBottom(target.messageContent);
-          }
           if (event.keyCode == KEY_DOWN_ENTER && !event.shiftKey) {
             this.chatSection.clearInputText(target.input);
+            if (isBottom) {
+              this.chatSection.scrollToBottom(target.messageContent);
+            }
           }
         });
       }

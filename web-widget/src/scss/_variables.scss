@@ -1,0 +1,62 @@
+// Color
+$color-transparent:                   transparent !default;
+$color-white:                         #FFFFFF !default;
+$color-purple-light:                  #BDB0FF !default;
+$color-purple:                        #896BF5 !default;
+$color-purple-dark:                   #7b5fd9 !default;
+$color-gray-lightest:                 #F3F5F7 !default;
+$color-gray-lighter:                  #D5D7D9 !default;
+$color-gray-light:                    #A5B3CD !default;
+$color-gray-dark:                     #8090B4 !default;
+$color-gray-darker:                   #67769A !default;
+$color-gray-darkest:                  #485874 !default;
+$color-black:                         #000000 !default;
+
+$color-widget-background:             $color-purple !default;
+$color-widget-background-hover:       #775AE0 !default;
+
+$color-button-spinner:                #35A300 !default;
+$color-button-border:                 #38B349 !default;
+$color-button-border-disabled:        #95D296 !default;
+$color-button-background:             #3FCC52 !default;
+$color-button-background-disabled:    #98DC99 !default;
+
+$color-unread-background:             #FB6094 !default;
+
+$color-list-top-background:           $color-purple !default;
+$color-list-top-border:               #795FDC !default;
+$color-list-top-title:                #EBE6FF !default;
+
+$color-login-title:                   #3A414D !default;
+$color-input-border:                  #E2E7EB !default;
+$color-input-background:              #F8F9FA !default;
+
+$color-list-hover:                    #F5F8FA !default;
+$color-list-border:                   #E5E5E5 !default;
+
+$color-chat-top-background:           $color-gray-lightest !default;
+$color-chat-member-background:        $color-gray-lighter !default;
+$color-chat-content-background:       $color-white !default;
+$color-chat-bottom-background:        $color-gray-lightest !default;
+
+$color-chat-message-background:       #F0F0F5 !default;
+$color-chat-message-user-background:  $color-purple !default;
+$color-chat-system-message-color:     #C3CBD9 !default;
+
+$color-popup-background:              $color-gray-lightest !default;
+$color-popup-bottom-background:       $color-gray-lighter !default;
+$color-popup-count-background:        #F0F0F2 !default;
+
+// Letter Spacing
+$letter-spacing-default:  0.85px;
+
+// Font
+$font-family-default: 'Lato';
+$font-weight-default: 400;
+
+// Height
+$height-list-board-content: 390px;
+
+// Content
+$content-message-input-default: 'Type a Message';
+$content-message-input-empty: '';

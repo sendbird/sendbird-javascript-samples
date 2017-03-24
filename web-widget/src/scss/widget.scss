@@ -1,0 +1,1089 @@
+@import "variables";
+@import "mixins";
+@import "animation";
+@import "icons";
+
+#sb_widget {
+  z-index: 99990;
+  width: 60px;
+  height: 60px;
+  position: fixed;
+  bottom: 0;
+  right: 20px;
+  font-family: $font-family-default;
+  font-weight: $font-weight-default;
+  -webkit-font-smoothing: antialiased;
+
+  // Animations
+  .sb-fade-in {
+    @include sb-ani-fade-in();
+  }
+
+  .sb-fade-out {
+    @include sb-ani-fade-out();
+  }
+
+  .sb-spinner {
+    width: 100%;
+    text-align: center;
+
+    div {
+      display: inline-block;
+      width: 18px;
+      height: 18px;
+      background-color: $color-gray-light;
+      @include border-radius(50%);
+      @include sb-ani-spinner();
+
+    }
+    :nth-child(1) {
+      @include animation-delay(-0.32s);
+    }
+    :nth-child(2) {
+      margin: 0 2px;
+      @include animation-delay(-0.16s);
+    }
+  }
+
+  // Icons
+  .ic-login {
+    @include icon($icon-login);
+  }
+
+  .ic-connected {
+    @include icon($icon-channel-list);
+  }
+
+  .ic-minimize {
+    @include icon($icon-minimize);
+    @include hover {
+      @include icon($icon-minimize-hover);
+    }
+  }
+
+  .ic-option {
+    @include icon($icon-option);
+    @include hover {
+      @include icon($icon-option-hover);
+    }
+  }
+  .ic-option.active {
+    @include icon($icon-option-hover);
+  }
+
+  .ic-new-chat {
+    @include icon($icon-new-chat);
+    @include hover {
+      @include icon($icon-new-chat-hover);
+    }
+  }
+
+  .ic-close {
+    @include icon($icon-close);
+    @include hover {
+      @include icon($icon-close-hover);
+    }
+  }
+  .ic-close.active {
+    @include icon($icon-close-selected);
+  }
+
+  .ic-members {
+    @include icon($icon-friend-list);
+    @include hover {
+      @include icon($icon-friend-list-hover);
+    }
+  }
+  .ic-members.active {
+    @include icon($icon-friend-list-selected);
+  }
+
+  .ic-invite {
+    @include icon($icon-friend-add);
+    @include hover {
+      @include icon($icon-friend-add-hover);
+    }
+  }
+  .ic-invite.active {
+    @include icon($icon-friend-add-selected);
+  }
+
+  // Tooltip
+  .tooltip {
+    display: none;
+    background-color: $color-black;
+    text-align: center;
+    z-index: 1;
+    font-size: 12px;
+    color: $color-white;
+    padding: 0 12px;
+    height: 32px;
+    line-height: 32px;
+
+    @include after {
+      content: ' ';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      margin-left: -5px;
+      border-width: 5px;
+      border-style: solid;
+      border-color: $color-black transparent transparent transparent;
+    }
+  }
+
+
+  // Widget Button
+  .widget {
+    z-index: 99991;
+    position: absolute;
+    right: 0;
+    bottom: 20px;
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    @include border-radius(50%);
+    @include box-shadow(0 1px 6px rgba(0,0,0,0.06), 0 2px 32px rgba(0,0,0,0.16));
+    background-color: $color-purple;
+
+    @include hover {
+      background-color: $color-widget-background-hover;
+      @include box-shadow(0 1px 9px rgba(0,0,0,0.28), 0 2px 32px rgba(0,0,0,0.16));
+    }
+
+    .notification {
+      display: none;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 18px;
+      height: 18px;
+      background-color: $color-unread-background;
+      color: $color-white;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 18px;
+      text-align: center;
+      @include border-radius(50%);
+      @include box-shadow(0 1px 5px rgba(0,0,0,0.28));
+    }
+  }
+
+
+  // Btn
+  .sb-common-btn {
+    padding: 0 16px;
+    border: 1px solid $color-button-border;
+    background-color: $color-button-background;
+    color: $color-white;
+    cursor: pointer;
+    @include border-radius(3px);
+    @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.05), 0 1px rgba(255, 255, 255, 0.75));
+    @include hover {
+      @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.25), 0 1px rgba(255, 255, 255, 0.75));
+    }
+  }
+  .sb-common-btn.disabled {
+    background-color: $color-button-background-disabled;
+    border: 1px solid $color-button-border-disabled;
+    @include hover {
+      @include box-shadow(0 1px 2px rgba(0, 0, 0, 0.05), 0 1px rgba(255, 255, 255, 0.75));
+    }
+  }
+
+  // List Board
+  .channel-board {
+    display: none;
+    z-index: 99992;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 280px;
+    height: 480px;
+    @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
+
+    .board-top {
+      width: calc(100% - 24px);
+      height: calc(90px - 1px);
+      background-color: $color-purple;
+      padding: 0 12px;
+      border-bottom: 1px solid $color-list-top-border;
+
+      .title {
+        display: inline-block;
+        float: left;
+        font-size: 16px;
+        color: $color-list-top-title;
+        letter-spacing: 0.85px;
+        line-height: 90px;
+      }
+
+      .btn {
+        display: inline-block;
+        float: right;
+        position: relative;
+        top: 50%;
+        width: 24px;
+        height: 26px;
+        cursor: pointer;
+        @include transform-translate(0, -50%);
+        @include hover {
+          & > .tooltip {
+            @extend .tooltip;
+            display: block;
+          }
+        }
+
+        .tooltip {
+          width: 74px;
+          position: absolute;
+          top: -37px;
+          left: -37px;
+        }
+
+        .option-menu {
+          display: none;
+          position: absolute;
+          top: 25px;
+          right: -35px;
+          width: 140px;
+          height: 42px;
+          background-color: transparent;
+          cursor: pointer;
+          .option-content {
+            position: absolute;
+            bottom: 0;
+            width: calc(100% - 32px);
+            height: 32px;
+            background-color: $color-white;
+            font-size: 13px;
+            color: $color-gray-darkest;
+            line-height: 32px;
+            padding: 0 16px;
+            @include border-radius(3px);
+            @include box-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+            @include before {
+              content: ' ';
+              position: absolute;
+              bottom: 100%;
+              left: calc(50% + 18px);
+              margin-left: -5px;
+              border-width: 10px;
+              border-style: solid;
+              border-color: transparent transparent $color-white transparent;
+            }
+          }
+        }
+
+      }
+    }
+
+    .content {
+      height: $height-list-board-content;
+      background-color: $color-white;
+
+      .user-id {
+        width: 100%;
+        padding-top: 30px;
+      }
+      .nickname {
+        width: 100%;
+        padding-top: 12px;
+      }
+
+      .title {
+        font-size: 11px;
+        color: $color-gray-darker;
+        padding-bottom: 6px;
+      }
+      .input {
+        width: calc(98% - 16px);
+        height: 32px;
+        border: 1px solid $color-input-border;
+        background-color: $color-input-background;
+        font-size: 13px;
+        color: $color-login-title;
+        padding: 0 8px;
+        @include border-radius(3px);
+        @include focus {
+          outline: none;
+          border: 1px solid $color-purple-dark;
+          @include box-shadow(0 0 4px $color-purple-light);
+        }
+      }
+
+      .login-btn {
+        @extend .sb-common-btn;
+        display: inline-block;
+        position: absolute;
+        left: 50%;
+        margin-top: 20px;
+        height: 32px;
+        width: calc(98px - 32px);
+        text-align: center;
+        line-height: 32px;
+        font-size: 14px;
+        @include transform-translate(-50%, 0);
+
+        .sb-spinner {
+          div {
+            width: 16px;
+            height: 16px;
+            margin-top: 8px;
+            background-color: $color-button-spinner;
+          }
+        }
+      }
+    }
+    .content.login-form {
+      width: calc(100% - 24px);
+      padding: 0 12px;
+    }
+    .content.channel-list {
+      overflow-y: scroll;
+      overflow-x: hidden;
+
+      ul {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+
+        li {
+          width: calc(100% - 24px);
+          height: 48px;
+          padding: 0 12px;
+          background-color: $color-white;
+          cursor: pointer;
+          @include hover {
+            background-color: $color-list-hover;
+            .content {
+              background-color: $color-list-hover;
+            }
+          }
+
+          .item {
+            width: 100%;
+            height: calc(100% - 12px - 1px);
+            padding: 6px 0;
+            border-bottom: 1px solid $color-list-border;
+          }
+        }
+
+        .image {
+          float: left;
+          width: 36px;
+          height: 100%;
+          @include icon($icon-channel-1);
+        }
+
+        .content {
+          float: right;
+          width: calc(100% - 36px - 8px);
+          height: 100%;
+          margin-left: 8px;
+        }
+        .content-top {
+          width: 100%;
+          height: 50%;
+
+          .title {
+            padding: 0;
+            float: left;
+            width: 140px;
+            height: 18px;
+            font-size: 14px;
+            color: $color-gray-darker;
+            line-height: 18px;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          time {
+            float: right;
+            font-size: 12px;
+            line-height: 18px;
+            color: $color-gray-light;
+          }
+        }
+        .content-bottom {
+          width: 100%;
+          height: 50%;
+
+          .last-message {
+            float: left;
+            width: 170px;
+            height: 18px;
+            font-size: 13px;
+            color: $color-gray-light;
+            line-height: 18px;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+          span {
+            display: none;
+            float: right;
+            width: 18px;
+            height: 18px;
+            background-color: $color-unread-background;
+            font-weight: 700;
+            font-size: 12px;
+            color: $color-white;
+            line-height: 18px;
+            text-align: center;
+            @include border-radius(50%);
+          }
+        }
+      }
+
+      .sb-spinner {
+        position: relative;
+        top: calc(#{$height-list-board-content} / 2);
+        @include transform-translate(0, -50%);
+
+        div {
+          width: 18px;
+          height: 18px;
+          margin-top: 8px;
+        }
+        :nth-child(2) {
+          margin: 0 8px;
+        }
+      }
+
+    }
+  }
+
+  // Chat Board
+  .chat-section {
+    z-index: 99992;
+    position: absolute;
+    right: 60px;
+    bottom: 0;
+    width: calc(100vw - 360px);
+    max-height: 520px;
+
+    .chat-board {
+      margin-top: 40px;
+      float: right;
+      width: 280px;
+      height: 426px;
+      margin-right: 20px;
+      @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
+    }
+
+    .top {
+      width: calc(100% - 24px);
+      height: 35px;
+      padding: 0 12px;
+      background-color: $color-gray-lightest;
+      @include box-shadow(0 1px 1px -2px rgba(0, 0, 0, 0.20));
+
+      .title {
+        float: left;
+        max-width: 150px;
+        font-size: 13px;
+        color: $color-gray-darker;
+        line-height: 35px;
+        overflow: hidden;
+        -ms-text-overflow: ellipsis;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .count {
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        background-color: $color-gray-lighter;
+        font-weight: 700;
+        font-size: 10px;
+        color: $color-gray-darker;
+        text-align: center;
+        line-height: 16px;
+        position: relative;
+        top: 50%;
+        @include transform-translate(0, -50%);
+      }
+
+      .btn {
+        float: right;
+        width: 24px;
+        height: 26px;
+        position: relative;
+        top: 50%;
+        cursor: pointer;
+        @include transform-translate(0, -50%);
+        @include hover {
+          & > .tooltip {
+            @extend .tooltip;
+            display: block;
+          }
+        }
+      }
+      .btn.ic-members {
+        margin: 0 3px;
+      }
+      .ic-members {
+        .tooltip {
+          width: 74px;
+          position: absolute;
+          top: -37px;
+          left: -37px;
+        }
+      }
+      .ic-invite {
+        .tooltip {
+          width: 78px;
+          position: absolute;
+          top: -37px;
+          left: -39px;
+        }
+      }
+    }
+
+    .content {
+      width: 100%;
+      height: calc(100% - 24px - 2px);
+      margin-top: 2px;
+      background-color: $color-white;
+
+      .sb-spinner {
+        position: relative;
+        top: 50%;
+        @include transform-translate(0, -50%);
+      }
+
+      .user-content {
+        width: 100%;
+        height: calc(100% - 64px);
+        background-color: $color-white;
+        overflow-y: scroll;
+        overflow-x: hidden;
+
+        ul {
+          width: 100%;
+          margin: 0;
+          padding: 0;
+          list-style-type: none;
+
+          li {
+            width: calc(100% - 24px);
+            height: 44px;
+            padding: 0 12px;
+            cursor: pointer;
+            @include hover {
+              background-color: $color-list-hover;
+            }
+          }
+        }
+        .user-item {
+          width: 100%;
+          height: calc(100% - 12px - 1px);
+          padding: 6px 0;
+          border-bottom: 1px solid $color-list-border;
+
+          .user-select {
+            position: relative;
+            top: 50%;
+            float: left;
+            width: 16px;
+            height: 16px;
+            @include transform-translate(0, -50%);
+            @include icon($icon-unchecked);
+          }
+          .user-select.active {
+            @include icon($icon-checked);
+          }
+
+          .image {
+            float: left;
+            width: 31px;
+            height: 31px;
+            margin: 0 8px;
+            @include icon($icon-member-1);
+          }
+
+          .nickname {
+            float: left;
+            font-size: 13px;
+            color: $color-gray-darker;
+            line-height: 31px;
+            max-width: 70%;
+            overflow: hidden;
+            -ms-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+
+      .content-bottom {
+        width: calc(100% - 24px);
+        height: calc(52px - 24px);
+        padding: 12px;
+        background-color: $color-gray-lightest;
+        text-align: center;
+        @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.20));
+
+        .new-chat-btn {
+          @extend .sb-common-btn;
+          display: inline-block;
+          width: 70px;
+          height: 26px;
+          padding: 0 12px;
+          text-align: center;
+          line-height: 26px;
+          font-size: 13px;
+          letter-spacing: 0.85px;
+
+          .sb-spinner {
+            div {
+              width: 14px;
+              height: 14px;
+              margin-top: 6px;
+              background-color: $color-button-spinner;
+            }
+          }
+        }
+        .new-chat-btn.disabled {
+          cursor: default;
+        }
+      }
+
+      .message-content {
+        width: calc(100% - 16px);
+        height: 328px;
+        min-height: 240px;
+        max-height: 328px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding: 0 8px 8px 8px;
+
+        .message-list {
+        }
+      }
+
+      .typing {
+        display: none;
+        width: calc(100% - 16px);
+        height: 22px;
+        padding: 0 8px;
+        font-size: 12px;
+        color: $color-chat-system-message-color;
+        line-height: 22px;
+      }
+
+      .input {
+        width: calc(100% - 16px);
+        min-height: 51px;
+        max-height: 118px;
+        padding: 0 8px;
+        border-top: 1px solid $color-list-border;
+
+        .text {
+          width: calc(100% - 8px);
+          min-height: 24px;
+          max-height: 90px;
+          padding: 5px 8px 0 0;
+          outline: none !important;
+          overflow-x: hidden;
+          overflow-y: auto;
+          word-wrap: break-word;
+          resize: none;
+          border: 0;
+          font-size: 13px;
+          color: $color-gray-darkest;
+          background-color: $color-white;
+          @include focus {
+            outline: 0;
+          }
+          & > div {
+            height: 0px !important;
+          }
+        }
+        .text:empty::before {
+          font-size: 13px;
+          content: $content-message-input-default;
+          color: $color-chat-system-message-color;
+        }
+        .text:focus:empty::before {
+          content: $content-message-input-empty;
+        }
+
+        .file {
+          float: left;
+          width: 22px;
+          height: 22px;
+          cursor: pointer;
+          @include icon($icon-file-add);
+          background-position: inherit;
+          background-size: 14px 14px;
+
+          @include hover {
+            @include icon($icon-file-add-hover);
+            background-position: inherit;
+            background-size: 14px 14px;
+          }
+        }
+
+      }
+    }
+
+    .message-set {
+      width: 100%;
+      margin-top: 10px;
+      float: left;
+      direction: ltr;
+      text-align: left;
+
+      .image {
+        float: inherit;
+        width: 32px;
+        height: 32px;
+        margin-right: 8px;
+        @include icon($icon-member-1);
+        background-position: inherit;
+      }
+
+      .message {
+        float: inherit;
+      }
+      .nickname {
+        font-size: 12px;
+        color: $color-gray-dark;
+      }
+      .message-item {
+        float: inherit;
+        .text {
+          display: inline-block;
+          text-align: inherit;
+          max-width: 180px;
+          background-color: $color-chat-message-background;
+          color: $color-gray-darkest;
+          font-size: 13px;
+          padding: 6px;
+          word-wrap: break-word;
+          @include border-radius(5px);
+        }
+        .image {
+          display: inline-block;
+          text-align: inherit;
+          width: 160px;
+          height: 160px;
+          cursor: pointer;
+          @include imageMessage();
+          @include border-radius(5px);
+        }
+        .file {
+          display: inline-flex;
+          text-align: inherit;
+          max-width: 180px;
+          background-color: $color-transparent;
+          color: $color-gray-darkest;
+          font-size: 13px;
+          padding: 6px 6px 6px 0;
+          word-wrap: break-word;
+          cursor: pointer;
+
+          & > .file-icon {
+            display: inline-block;
+            width: 24px;
+            height: 26px;
+            @include icon($icon-file);
+          }
+          & > .file-name {
+            display: inline-block;
+            max-width: calc(100% - 24px - 8px);
+            margin: 0 0 0 8px;
+          }
+        }
+        .unread {
+          display: inline-block;
+          height: 14px;
+          width: 14px;
+          background-color: transparent;
+          color: $color-purple;
+          font-size: 11px;
+          font-weight: 700;
+          text-align: center;
+          line-height: 14px;
+          margin: 0 6px;
+        }
+      }
+
+
+    }
+    .message-set.user {
+      float: right;
+      .image,
+      .nickname {
+        display: none;
+      }
+      .message-item {
+        float: inherit;
+        .text {
+          background: $color-purple;
+          color: $color-white;
+        }
+        .image {
+          display: inline-block;
+          text-align: inherit;
+          width: 160px;
+          height: 160px;
+          cursor: pointer;
+          margin: 0;
+          @include imageMessage();
+          @include border-radius(5px);
+        }
+        .file {
+          display: inline-flex;
+          text-align: inherit;
+          max-width: 180px;
+          background-color: $color-transparent;
+          color: $color-gray-darkest;
+          font-size: 13px;
+          padding: 6px 0 6px 6px;
+          word-wrap: break-word;
+          cursor: pointer;
+
+          & > .file-icon {
+            display: inline-block;
+            width: 24px;
+            height: 26px;
+            @include icon($icon-file);
+          }
+          & > .file-name {
+            display: inline-block;
+            max-width: calc(100% - 24px - 8px);
+            margin: 0 8px 0 0;
+          }
+        }
+      }
+    }
+    .message-set.time {
+      text-align: center;
+      font-size: 12px;
+      color: $color-gray-dark;
+    }
+
+
+  }
+
+  // Popup
+  .popup {
+    display: none;
+    background-color: $color-transparent;
+    position: absolute;
+    bottom: 26px;
+
+    .popup-body {
+      width: 260px;
+      height: 360px;
+      background-color: $color-white;
+      @include box-shadow(0 0 0 1px rgba(0, 0, 0, 0.1), 0 5px 60px rgba(0,0,0,0.35));
+      @include before {
+        content: ' ';
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 7px;
+        border-style: solid;
+        border-color: transparent transparent $color-white transparent;
+      }
+
+      & > .content {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        height: calc(100% - 51px - 2px);
+        margin: 0;
+
+        & > ul {
+          width: 100%;
+          min-height: 306px;
+          margin: 0 0 2px 0;
+          padding: 0;
+          list-style-type: none;
+
+          & > .sb-spinner {
+            position: absolute;
+          }
+
+          & > li {
+            display: inline-table;
+            width: calc(100% - 24px);
+            height: calc(44px - 11px);
+            background: $color-white;
+            padding: 0 12px;
+            cursor: pointer;
+            @include hover {
+              background-color: $color-list-hover;
+            }
+
+            & > div {
+              display: inline-block;
+              width: 100%;
+              padding: 5px 0;
+              border-bottom: 1px solid $color-list-border;
+            }
+
+            .user-select {
+              display: inline-block;
+              margin-right: 8px;
+              position: relative;
+              top: 50%;
+              width: 16px;
+              height: 16px;
+              @include transform-translate(0, -50%);
+              @include icon($icon-unchecked);
+            }
+            .user-select.active {
+              @include icon($icon-checked);
+            }
+
+            .image {
+              display: inline-block;
+              margin-right: 8px;
+              width: 31px;
+              height: 31px;
+              @include icon($icon-member-1);
+            }
+            .nickname {
+              display: inline-block;
+              font-size: 13px;
+              color: $color-gray-darker;
+              line-height: 31px;
+              max-width: 70%;
+              overflow: hidden;
+              -ms-text-overflow: ellipsis;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+      }
+    }
+
+    .popup-top {
+      height: 36px;
+      background-color: $color-gray-lightest;
+      padding: 0 12px;
+      @include box-shadow(0 1px 1px 0 rgba(0, 0, 0, 0.2));
+
+      .title {
+        float: left;
+        font-size: 13px;
+        color: $color-gray-darker;
+        line-height: 36px;
+      }
+
+      .count {
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        background-color: $color-gray-lighter;
+        font-weight: 700;
+        font-size: 10px;
+        color: $color-gray-darker;
+        text-align: center;
+        line-height: 16px;
+        position: relative;
+        top: 50%;
+        @include transform-translate(0, -50%);
+      }
+
+      .btn {
+        float: right;
+        width: 24px;
+        height: 26px;
+        position: relative;
+        top: 50%;
+        cursor: pointer;
+        @include transform-translate(0, -50%);
+      }
+
+    }
+
+    .popup-bottom {
+      height: 52px;
+      background-color: $color-white;
+      border-top: 1px solid rgba(0, 0, 0, 0.2);
+      padding: 0 12px;
+
+      .title {
+        float: left;
+        font-size: 13px;
+        line-height: 52px;
+        color: $color-gray-darker;
+      }
+
+      .count {
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin-left: 8px;
+        background-color: $color-popup-count-background;
+        font-weight: 700;
+        font-size: 10px;
+        color: $color-gray-darker;
+        text-align: center;
+        line-height: 16px;
+        position: relative;
+        top: 50%;
+        @include transform-translate(0, -50%);
+      }
+
+      .invite-btn {
+        @extend .sb-common-btn;
+        float: right;
+        position: relative;
+        top: 50%;
+        width: 41px;
+        height: 24px;
+        font-size: 14px;
+        line-height: 24px;
+        letter-spacing: 0.85px;
+        @include transform-translate(0, -50%);
+        .sb-spinner {
+          div {
+            width: 12px;
+            height: 12px;
+            margin-top: 6px;
+            background-color: $color-button-spinner;
+          }
+        }
+      }
+      .invite-btn.disabled {
+        cursor: default;
+      }
+    }
+
+  }
+  .popup.members {
+    .popup-body {
+      @include before {
+        border-color: transparent transparent $color-gray-lightest transparent;
+      }
+
+      & > .content {
+        height: calc(100% - 36px - 2px);
+        & > ul {
+          height: 322px;
+          margin: 2px 0 0 0;
+          & > li {
+            cursor: default;
+          }
+        }
+      }
+    }
+
+  }
+
+
+}

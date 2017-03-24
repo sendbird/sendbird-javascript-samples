@@ -1,0 +1,53 @@
+// Icons
+$icon-prefix: 'https://dxstmhyqfqr1o.cloudfront.net/widget/';
+
+$icon-login:                  'icon-open-nonmember.svg';
+$icon-channel-list:           'icon-open-member.svg';
+
+$icon-minimize:               'btn-minimize-default.svg';
+$icon-minimize-hover:         'btn-minimize-over.svg';
+$icon-option:                 'btn-option-default.svg';
+$icon-option-hover:           'btn-option-over.svg';
+$icon-new-chat:               'btn-new-chat-default.svg';
+$icon-new-chat-hover:         'btn-new-chat-over.svg';
+
+$icon-close:                  'btn-close-default.svg';
+$icon-close-hover:            'btn-close-over.svg';
+$icon-close-selected:         'btn-close-select.svg';
+$icon-friend-list:            'btn-friend-list-default.svg';
+$icon-friend-list-hover:      'btn-friend-list-over.svg';
+$icon-friend-list-selected:   'btn-friend-list-select.svg';
+$icon-friend-add:             'btn-friend-add-default.svg';
+$icon-friend-add-hover:       'btn-friend-add-over.svg';
+$icon-friend-add-selected:    'btn-friend-add-select.svg';
+
+$icon-file-add:               'btn-file-add-default.svg';
+$icon-file-add-hover:         'btn-file-add-over.svg';
+
+$icon-channel-1:              'thumnail-channel-01.svg';
+$icon-channel-2:              'thumnail-channel-02.svg';
+$icon-channel-3:              'thumnail-channel-03.svg';
+$icon-channel-4:              'thumnail-channel-04.svg';
+
+$icon-unchecked:              'btn-check-off.svg';
+$icon-checked:                'btn-check-on.svg';
+
+$icon-file:                   'icon-file.svg';
+
+$icon-member-1:               'thumnail-member-01.svg';
+$icon-member-2:               'thumnail-member-02.svg';
+$icon-member-3:               'thumnail-member-03.svg';
+$icon-member-4:               'thumnail-member-04.svg';
+
+@mixin icon($name) {
+  background-image: url($icon-prefix + $name);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+@mixin imageMessage() {
+  background-position: center;
+  background-size: 160px 160px;
+  background-repeat: no-repeat;
+}

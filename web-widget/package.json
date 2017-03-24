@@ -1,0 +1,25 @@
+{
+  "name": "widget-sample",
+  "version": "1.0.0",
+  "description": "SendBird Widget Sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SendBird",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.24.0",
+    "babel-eslint": "^7.1.1",
+    "babel-loader": "^6.4.1",
+    "babel-preset-env": "^1.2.2",
+    "babel-preset-es2015": "^6.24.0",
+    "css-loader": "^0.27.3",
+    "eslint": "^3.18.0",
+    "eslint-loader": "^1.6.3",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.14.1",
+    "webpack": "^2.2.1"
+  }
+}

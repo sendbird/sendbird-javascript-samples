@@ -23,6 +23,10 @@ This is a sample `Web Widget` using [`SendBird SDK`](https://github.com/smilefam
 
 
 ## Modify
+If you refresh browser, you need to connect `SendBird`.  
+If you want retain connect when refresh browser, appropriate `event handler` is required.  
+If you want to use `access_token`, you need to modify `connect function` in `src/sendbird.js`.  
+
 1. install npm
 
         npm install --save-dev

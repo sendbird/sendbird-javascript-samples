@@ -20,7 +20,8 @@ class Element {
       KEYDOWN: 'keydown',
       KEYUP: 'keyup',
       CHANGE: 'change',
-      SCROLL: 'scroll'
+      SCROLL: 'scroll',
+      PASTE: 'paste'
     };
   }
 
@@ -100,6 +101,14 @@ class Element {
     args.reduce((target, action) => {
       target.addEventListener(this.eventName.CLICK, () => {
         action();
+      });
+    });
+  }
+
+  _setPasteEvent(...args) {
+    args.reduce((target, action) => {
+      target.addEventListener(this.eventName.PASTE, (event) => {
+        action(event);
       });
     });
   }

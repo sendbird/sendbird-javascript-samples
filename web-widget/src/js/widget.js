@@ -23,7 +23,7 @@ window.WebFontConfig = {
 
 class SBWidget {
   constructor() {
-    
+
   }
 
   start(appId) {
@@ -350,6 +350,7 @@ class SBWidget {
       if (hasClass(chatBoard.memberBtn, className.ACTIVE)) {
         this.closeMemberPopup();
       } else {
+        this.closeMemberPopup();
         this.closeInvitePopup();
         addClass(chatBoard.memberBtn, className.ACTIVE);
         let index = this.chatSection.indexOfChatBord(channelUrl);
@@ -358,10 +359,8 @@ class SBWidget {
         this.popup.updateCount(this.popup.memberPopup.count, channelSet.channel.memberCount);
         for (var i = 0 ; i < channelSet.channel.members.length ; i++) {
           let member = channelSet.channel.members[i];
-          if (!this.sb.isCurrentUser(member)) {
-            let item = this.popup.createMemberItem(member);
-            this.popup.memberPopup.list.appendChild(item);
-          }
+          let item = this.popup.createMemberItem(member);
+          this.popup.memberPopup.list.appendChild(item);
         }
       }
     });
@@ -390,6 +389,7 @@ class SBWidget {
       if (hasClass(chatBoard.inviteBtn, className.ACTIVE)) {
         this.closeInvitePopup();
       } else {
+        this.closeInvitePopup();
         this.closeMemberPopup();
         addClass(chatBoard.inviteBtn, className.ACTIVE);
         let index = this.chatSection.indexOfChatBord(channelUrl);
@@ -515,6 +515,18 @@ class SBWidget {
               this.chatSection.scrollToBottom(target.messageContent);
             }
           }
+        });
+        this.chatSection.addPasteEvent(target.input, (event) => {
+          var clipboardData;
+          var pastedData;
+
+          event.stopPropagation();
+          event.preventDefault();
+
+          clipboardData = event.clipboardData || window.clipboardData;
+          pastedData = clipboardData.getData('Text');
+
+          target.input.textContent = pastedData;
         });
       }
       if (scrollEvent) {

@@ -168,7 +168,7 @@ class ListBoard extends Element {
     hide(this.btnOption);
     hide(this.btnNewChat);
     this.self.appendChild(this.loginForm);
-    this.enabledToggle(this.btnLogin, false);
+    this._toggleLoginBtn();
   }
 
   _cleanLoginForm() {

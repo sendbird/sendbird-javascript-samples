@@ -240,6 +240,10 @@ class ChatSection extends Element {
     this._setContent(target, EMPTY_STRING);
   }
 
+  addPasteEvent(target, action) {
+    this._setPasteEvent(target, action);
+  }
+
   addKeyUpEvent(target, action) {
     this._setKeyupEvent(target, action);
   }
@@ -452,9 +456,11 @@ class ChatSection extends Element {
   }
 
   createUserList(target) {
-    var userList = this.createUl();
-    target.list = userList;
-    target.appendChild(userList);
+    if (target.querySelectorAll(this.tagName.UL).length == 0) {
+      var userList = this.createUl();
+      target.list = userList;
+      target.appendChild(userList);
+    }
   }
 
   createUserListItem(user) {

@@ -16,6 +16,7 @@ const KEY_DOWN_KR = 229;
 const CHAT_BOARD_WIDTH = 300;
 const ERROR_MESSAGE = 'Please create "sb_widget" element on first.';
 const ERROR_MESSAGE_SDK = 'Please import "SendBird SDK" on first.';
+const EVENT_TYPE_CLICK = 'click';
 
 window.WebFontConfig = {
   google: { families: ['Lato:400,700'] }
@@ -34,6 +35,23 @@ class SBWidget {
     this._getGoogleFont();
     this.widget = document.getElementById(WIDGET_ID);
     if (this.widget) {
+      this.widget.addEventListener(EVENT_TYPE_CLICK, (event) => {
+        var closed = true;
+        for (var i = 0 ; i < event.path.length ; i++) {
+          let item = event.path[i];
+          if (hasClass(item, className.IC_MEMBERS) || hasClass(item, className.IC_INVITE)) {
+            closed = false;
+            break;
+          }
+          if (item == this.popup.memberPopup || item == this.popup.invitePopup) {
+            closed = false;
+            break;
+          }
+        }
+        if (closed) {
+          this.closePopup();
+        }
+      });
       this.spinner = new Spinner();
 
       this.widgetBtn = new WidgetBtn(this.widget);

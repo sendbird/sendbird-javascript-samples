@@ -1,34 +1,40 @@
 # SendBird JavaScript Sample
 
-[SendBird](https://sendbird.com) provides the chat API and SDK for your app enabling real-time communication among your users.  
+The samples in this repository are fully functional messaging applications built using the [SendBird](https://sendbird.com) JS SDK.
+  1. **Web sample:** for Desktop web browsers.
+  1. **React Native sample:** for iOS and Android.
+  1. **Web widget sample:** attaches a small chat widget to a regular website.
 
-1) web-sample : SendBird Standard Sample Codes for Desktop Web Browsers.
+## Table of Contents
 
-2) react-native-sample : Sendbird React Native Sample Codes.
-
-# Getting Started  
+  1. [Installing the SendBird JS SDK](#installing-the-sendbird-js-sdk)
+  1. [Previous versions](#previous-versions)
+  1. [Contributing](#contributing)
   
-[Bower](http://bower.io) package for [SendBird.com](https://sendbird.com) JavaScript SDK  
+## Installing the SendBird JS SDK
+  
+Using [Bower](http://bower.io):
 
       bower install sendbird
 
 
-[npm](https://www.npmjs.com/package/sendbird) module for [SendBird.com](https://sendbird.com) JavaScript SDK  
+Using [npm](https://www.npmjs.com/package/sendbird):
 
       npm install sendbird
 
-* Now we support both React Native and NodeJS.
+> We now support both React Native and NodeJS.
 
 
-# Manual Download
-
-You can download JS SDK Files [here](https://github.com/smilefam/SendBird-SDK-JavaScript).
-
-
-# [Jump to Documentation](https://docs.sendbird.com/javascript)  
-
-## Access to Version 2
-
-You can check out `v2` branch instead of `master` branch to download version 2 samples.
+### Manual download
+  
+Or, you can manually download the JS SDK files [here](https://github.com/smilefam/SendBird-SDK-JavaScript).
 
 
+## Previous versions
+
+To view the version 2 sample, checkout the `v2` branch instead of `master.`
+
+
+## Contributing
+
+The SendBird JavaScript samples are fully open-source. All contributions and suggestions are welcome!

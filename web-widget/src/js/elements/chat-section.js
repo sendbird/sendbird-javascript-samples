@@ -196,7 +196,7 @@ class ChatSection extends Element {
 
   updateChatTop(target, count, title) {
     this._setContent(target.count, count);
-    if (title) {
+    if (title !== null) {
       this._setContent(target.topTitle, title);
     }
   }
@@ -466,7 +466,7 @@ class ChatSection extends Element {
 
   setUnreadCount(target, count) {
     count = parseInt(count);
-    this._setContent(target, (count > 9) ? MAX_COUNT : count.toString());
+    this._setContent(target, (count > 9) ? MAX_COUNT : (count == 0) ? '' : count.toString());
     (count > 0) ? show(target, DISPLAY_TYPE_INLINE_BLOCK) : hide(target);
   }
 

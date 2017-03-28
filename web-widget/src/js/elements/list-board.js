@@ -299,8 +299,10 @@ class ListBoard extends Element {
     if (this.list.childNodes.length < 1) {
       this._createEmptyItem();
     } else {
-      this.list.removeChild(this.emptyItem);
-      this.emptyItem = null;
+      if (this.emptyItem) {
+        this.list.removeChild(this.emptyItem);
+        this.emptyItem = null;
+      }
     }
   }
 

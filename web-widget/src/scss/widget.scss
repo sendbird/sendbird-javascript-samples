@@ -207,7 +207,7 @@
     right: 0;
     width: 280px;
     height: 462px;
-    @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
+    @include box-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
 
     .board-top {
       width: calc(100% - 24px);
@@ -499,7 +499,7 @@
       width: 280px;
       height: 426px;
       margin-right: 20px;
-      @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
+      @include box-shadow(0 3px 6px rgba(0, 0, 0, 0.3));
 
       .leave-popup {
         width: 280px;
@@ -555,6 +555,7 @@
       height: 35px;
       padding: 0 12px;
       background-color: $color-gray-lightest;
+      border-bottom: 1px solid $color-list-border;
       @include box-shadow(0 1px 1px -2px rgba(0, 0, 0, 0.20));
 
       .title {
@@ -632,8 +633,7 @@
 
     .content {
       width: 100%;
-      height: calc(100% - 24px - 2px);
-      margin-top: 2px;
+      height: calc(100% - 24px - 1px);
       background-color: $color-white;
 
       .sb-spinner {

@@ -254,6 +254,17 @@ class SBWidget {
               } else {
                 this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
                 this.updateUnreadMessageCount(channel);
+                let targetChatBoard = this.chatSection.getChatBoard(channel.url);
+                if (targetChatBoard) {
+                  this.updateChannelInfo(targetChatBoard, channel);
+                }
+              }
+            },
+            (channel, user) => {
+              this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
+              let targetChatBoard = this.chatSection.getChatBoard(channel.url);
+              if (targetChatBoard) {
+                this.updateChannelInfo(targetChatBoard, channel);
               }
             }
           );
@@ -272,6 +283,7 @@ class SBWidget {
     let target = this.listBoard.getChannelItem(channel.url);
     if (!target) {
       target = this.createChannelItem(channel);
+      this.listBoard.checkEmptyList();
     }
     this.listBoard.addListOnFirstIndex(target);
 
@@ -302,7 +314,7 @@ class SBWidget {
         this.chatSection.addClickEvent(item, () => {
           hasClass(item.select, className.ACTIVE) ? removeClass(item.select, className.ACTIVE) : addClass(item.select, className.ACTIVE);
           let selectedUserCount = this.chatSection.getSelectedUserIds(userContent.list).length;
-          this.chatSection.updateChatTop(target, selectedUserCount > 9 ? MAX_COUNT : selectedUserCount.toString());
+          this.chatSection.updateChatTop(target, selectedUserCount > 9 ? MAX_COUNT : selectedUserCount.toString(), null);
           (selectedUserCount > 0) ? removeClass(target.startBtn, className.DISABLED) : addClass(target.startBtn, className.DISABLED);
         });
         userContent.list.appendChild(item);

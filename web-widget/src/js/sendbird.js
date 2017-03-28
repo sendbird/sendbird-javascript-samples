@@ -177,7 +177,14 @@ class Sendbird {
   /*
   Handler
    */
-  createHandlerGlobal(messageReceivedFunc, ChannelChangedFunc, typingStatusFunc, readReceiptFunc, userLeftFunc) {
+  createHandlerGlobal(...args) {
+    let messageReceivedFunc = args[0];
+    let ChannelChangedFunc = args[1];
+    let typingStatusFunc = args[2];
+    let readReceiptFunc = args[3];
+    let userLeftFunc = args[4];
+    let userJoinFunc = args[5];
+
     let channelHandler = new this.sb.ChannelHandler();
     channelHandler.onMessageReceived = function(channel, message) {
       messageReceivedFunc(channel, message);
@@ -193,6 +200,9 @@ class Sendbird {
     };
     channelHandler.onUserLeft = function (channel, user) {
       userLeftFunc(channel, user);
+    };
+    channelHandler.onUserJoined = function (channel, user) {
+      userJoinFunc(channel, user);
     };
     this.sb.addChannelHandler(GLOBAL_HANDLER, channelHandler);
   }

@@ -1,12 +1,14 @@
 # SendBird JavaScript Widget Sample
-This is a sample `Web Widget` using [`SendBird SDK`](https://github.com/smilefam/SendBird-SDK-JavaScript).   
+This is a sample chat widget built using using the [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). It can be used to add a functional chat widget to any website.  
 
 
 ## [Demo](https://sample.sendbird.com/widget/)
 
+You can try out a live demo from the link [here](https://sample.sendbird.com/widget/). Click on the button at the bottom-right corner of the webpage to try out the widget. Choose any 'User ID' and 'Nickname' to log in and participate in chats.
+
 
 ## Setup
-1. The `body` must have a `div` element that id is `sb_widget`.
+1. The `body` must have a `div` element whose id is `sb_widget`.
   
 ```html
 <body>
@@ -22,17 +24,17 @@ This is a sample `Web Widget` using [`SendBird SDK`](https://github.com/smilefam
 ```
 
 
-## Modify
-If you refresh browser, you need to connect `SendBird`.  
-If you want retain connect when refresh browser, appropriate `event handler` is required.  
-If you want to use `access_token`, you need to modify `connect function` in `src/sendbird.js`.  
+## Customizing the widget
+If you refresh your browser window, you need to reconnect to SendBird. To retain connection on browser refresh, you must implement an appropriate `event handler`. 
 
-1. install npm
+If you wish to issue an `access_token` for your user, modify the `connect function` in `src/sendbird.js`.  
+
+1. Install npm
 
         npm install --save-dev
 
-2. modify files.
-3. create bundle file.
+2. Modify files.
+3. Create a bundle file.
 
         webpack -p
 

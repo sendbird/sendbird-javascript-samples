@@ -7,9 +7,13 @@ const EMPTY_STRING = '';
 const CHAT_SECTION_RIGHT_MAX = '280px';
 const CHAT_SECTION_RIGHT_MIN = '60px';
 const TOOLTIP_MEMBER_LIST = 'Member List';
+const TOOLTIP_CHANNEL_LEAVE = 'Channel Leave';
 const TOOLTIP_INVITE_MEMBER = 'Invite Member';
 const TITLE_CHAT_TITLE_DEFAULT = 'Group Channel';
 const TITLE_CHAT_TITLE_NEW_CHAT = 'New Chat';
+const TITLE_CHAT_LEAVE_POPUP = 'Do you really want to leave?';
+const TITLE_CHAT_LEAVE_BTN = 'Leave';
+const TITLE_CHAT_CANCEL_BTN = 'Cancel';
 const MEMBER_COUNT_DEFAULT = '0';
 const MARGIN_TOP_MESSAGE = '3px';
 const MESSAGE_NONE_IMAGE_HEIGHT = '10px';
@@ -21,6 +25,7 @@ const MESSAGE_TYPING_SEVERAL = 'Several people are typing...';
 const MESSAGE_TYPING_MEMBER = ' is typing...';
 const DISPLAY_TYPE_INLINE_BLOCK = 'inline-block';
 const IMAGE_MAX_SIZE = 160;
+const TEXT_FILE_DOWNLOAD = 'Download';
 
 class ChatSection extends Element {
   constructor(widget) {
@@ -88,6 +93,17 @@ class ChatSection extends Element {
     chatBoard.closeBtn = topBtnClose;
     chatTop.appendChild(topBtnClose);
 
+    var topBtnLeave = this.createDiv();
+    this._setClass(topBtnLeave, [className.BTN, className.IC_LEAVE]);
+    chatBoard.leaveBtn = topBtnLeave;
+
+    var tooltipLeave = this.createSpan();
+    this._setClass(tooltipLeave, [className.TOOLTIP]);
+    this._setContent(tooltipLeave, TOOLTIP_CHANNEL_LEAVE);
+
+    topBtnLeave.appendChild(tooltipLeave);
+    chatTop.appendChild(topBtnLeave);
+
     var topBtnMembers = this.createDiv();
     this._setClass(topBtnMembers, [className.BTN, className.IC_MEMBERS]);
     chatBoard.memberBtn = topBtnMembers;
@@ -119,6 +135,43 @@ class ChatSection extends Element {
 
     isLast ? this.self.appendChild(chatBoard) : this.moveToFirstIndex(chatBoard);
     return chatBoard;
+  }
+
+  addLeavePopup(target) {
+    if (!target.leavePopup) {
+      var leavePopup = this.createDiv();
+      this._setClass(leavePopup, [className.LEAVE_POPUP]);
+
+      var leaveTitle = this.createDiv();
+      this._setClass(leaveTitle, [className.POPUP_TOP]);
+      this._setContent(leaveTitle, TITLE_CHAT_LEAVE_POPUP);
+      leavePopup.appendChild(leaveTitle);
+
+      var div = this.createDiv();
+      var leaveBtn = this.createDiv();
+      this._setClass(leaveBtn, [className.LEAVE_BTN]);
+      this._setContent(leaveBtn, TITLE_CHAT_LEAVE_BTN);
+      div.appendChild(leaveBtn);
+
+      var cancelBtn = this.createDiv();
+      this._setClickEvent(cancelBtn, () => {
+        target.removeChild(leavePopup);
+        target.leavePopup = null;
+      });
+      this._setClass(cancelBtn, [className.CANCEL_BTN]);
+      this._setContent(cancelBtn, TITLE_CHAT_CANCEL_BTN);
+      div.appendChild(cancelBtn);
+
+      leavePopup.appendChild(div);
+
+      target.leavePopup = leavePopup;
+      target.leavePopup.leaveBtn = leaveBtn;
+      target.insertBefore(leavePopup, target.firstChild);
+    }
+  }
+
+  setLeaveBtnClickEvent(target, action) {
+    this._setClickEvent(target, action);
   }
 
   removeMemberPopup() {
@@ -270,7 +323,7 @@ class ChatSection extends Element {
     );
   }
 
-  showTyping(channel) {
+  showTyping(channel, spinner) {
     let targetBoard = this.getChatBoard(channel.url);
     let typing = targetBoard.typing;
     if (!channel.isTyping()) {
@@ -278,7 +331,8 @@ class ChatSection extends Element {
       hide(typing);
     } else {
       let typingUser = channel.getTypingMembers();
-      this._setContent(typing, (typingUser.length > 1) ? MESSAGE_TYPING_SEVERAL : typingUser[0].nickname + MESSAGE_TYPING_MEMBER);
+      spinner.insert(typing);
+      this._addContent(typing, (typingUser.length > 1) ? MESSAGE_TYPING_SEVERAL : typingUser[0].nickname + MESSAGE_TYPING_MEMBER);
       show(typing);
     }
   }
@@ -347,41 +401,48 @@ class ChatSection extends Element {
     var messageItem = this.createDiv();
     this._setClass(messageItem, [className.MESSAGE_ITEM]);
 
-    var itemText;
+    var itemText = this.createDiv();
     if (message.isUserMessage()) {
-      itemText = this.createDiv();
       this._setClass(itemText, [className.TEXT]);
       this._setContent(itemText, message.message);
     } else if (message.isFileMessage()) {
       if (message.type.match(/^image\/gif$/)) {
-        itemText = this.createImg();
-        this._setClass(itemText, [className.IMAGE]);
-        itemText.src = message.url;
-        this.setImageSize(itemText, message);
+        this._setClass(itemText, [className.FILE_MESSAGE]);
+        let image = this.createImg();
+        this._setClass(image, [className.IMAGE]);
+        image.src = message.url;
+        this.setImageSize(image, message);
+        itemText.appendChild(image);
       } else {
-        itemText = this.createA();
-        itemText.href = message.url;
-        itemText.target = 'blank';
+        this._setClass(itemText, [className.FILE_MESSAGE]);
+        let file = this.createA();
+        file.href = message.url;
+        file.target = 'blank';
         if (message.type.match(/^image\/.+$/)) {
-          this._setClass(itemText, [className.IMAGE]);
-          this.setImageSize(itemText, message);
+          this._setClass(file, [className.IMAGE]);
+          this.setImageSize(file, message);
         } else {
-          this._setClass(itemText, [className.FILE]);
+          this._setClass(file, [className.FILE]);
           var fileIcon = this.createDiv();
           this._setClass(fileIcon, [className.FILE_ICON]);
+
+          var fileText = this.createDiv();
+          this._setClass(fileText, [className.FILE_TEXT]);
 
           var fileName = this.createDiv();
           this._setClass(fileName, [className.FILE_NAME]);
           this._setContent(fileName, message.name);
+          fileText.appendChild(fileName);
 
-          if (isCurrentUser) {
-            itemText.appendChild(fileName);
-            itemText.appendChild(fileIcon);
-          } else {
-            itemText.appendChild(fileIcon);
-            itemText.appendChild(fileName);
-          }
+          var fileDownload = this.createDiv();
+          this._setClass(fileDownload, [className.FILE_DOWNLOAD]);
+          this._setContent(fileDownload, TEXT_FILE_DOWNLOAD);
+          fileText.appendChild(fileDownload);
+
+          file.appendChild(fileIcon);
+          file.appendChild(fileText);
         }
+        itemText.appendChild(file);
       }
     }
 

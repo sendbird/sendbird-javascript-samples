@@ -1,5 +1,5 @@
 // Icons
-$icon-prefix: 'https://dxstmhyqfqr1o.cloudfront.net/widget/';
+$icon-prefix:                 'https://dxstmhyqfqr1o.cloudfront.net/widget/';
 
 $icon-login:                  'icon-open-nonmember.svg';
 $icon-channel-list:           'icon-open-member.svg';
@@ -14,6 +14,8 @@ $icon-new-chat-hover:         'btn-new-chat-over.svg';
 $icon-close:                  'btn-close-default.svg';
 $icon-close-hover:            'btn-close-over.svg';
 $icon-close-selected:         'btn-close-select.svg';
+$icon-leave-chat:             'btn-leave-chat-normal.svg';
+$icon-leave-chat-hover:       'btn-leave-chat-over.svg';
 $icon-friend-list:            'btn-friend-list-default.svg';
 $icon-friend-list-hover:      'btn-friend-list-over.svg';
 $icon-friend-list-selected:   'btn-friend-list-select.svg';
@@ -34,6 +36,7 @@ $icon-checked:                'btn-check-on.svg';
 
 $icon-file:                   'icon-file.svg';
 
+$icon-member-me:              'icon-member-me.svg';
 $icon-member-1:               'thumnail-member-01.svg';
 $icon-member-2:               'thumnail-member-02.svg';
 $icon-member-3:               'thumnail-member-03.svg';

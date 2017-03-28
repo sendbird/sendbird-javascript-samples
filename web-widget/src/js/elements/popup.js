@@ -6,8 +6,8 @@ const EMPTY_STRING = '';
 const TITLE_POPUP_MEMBER_LIST = 'Member List';
 const TITLE_POPUP_INVITE_LIST = 'Invite Members';
 const TITLE_POPUP_INVITE_BTN = 'Invite';
-const MEMBER_POPUP_DEFAULT = -57;
-const INVITE_POPUP_DEFAULT = -30;
+const MEMBER_POPUP_DEFAULT = -30;
+const INVITE_POPUP_DEFAULT = -3;
 const POPUP_DISTANCE = 300;
 
 class Popup extends Element {
@@ -91,7 +91,7 @@ class Popup extends Element {
     this._setContent(target, (count > 9) ? MAX_COUNT : count.toString());
   }
 
-  createMemberItem(member, isInvite) {
+  createMemberItem(member, isInvite, isCurrentUser) {
     var li = this.createLi();
     var div = this.createDiv();
 
@@ -101,6 +101,12 @@ class Popup extends Element {
       this._setDataset(userSelect, 'userId', member.userId);
       li.select = userSelect;
       div.appendChild(userSelect);
+    }
+
+    if (isCurrentUser) {
+      var userProfileMe = this.createDiv();
+      this._setClass(userProfileMe, [className.IMAGE_ME]);
+      div.appendChild(userProfileMe);
     }
 
     var userProfile = this.createDiv();

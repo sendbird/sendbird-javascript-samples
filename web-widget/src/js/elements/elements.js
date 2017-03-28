@@ -74,11 +74,19 @@ class Element {
     target.innerHTML = text;
   }
 
+  _addContent(target, text) {
+    target.innerHTML += text;
+  }
+
   _setBackgroundImage(target, url) {
     target.style.backgroundImage = 'url(' + url + ')';
   }
   _setBackgroundSize(target, size) {
     target.style.backgroundSize = size;
+  }
+
+  _setFontSize(target, size) {
+    target.style.fontSize = size ? size + 'px' : null;
   }
 
   _setHeight(target, height) {

@@ -30,6 +30,7 @@ export const className = {
   CONTENT_TOP: 'content-top',
   CONTENT_BOTTOM: 'content-bottom',
   LAST_MESSAGE: 'last-message',
+  EMPTY_ITEM: 'empty-item',
 
   CHAT_SECTION: 'chat-section',
   CHAT_BOARD: 'chat-board',
@@ -37,9 +38,12 @@ export const className = {
   MESSAGE_LIST: 'message-list',
   TYPING: 'typing',
   TEXT: 'text',
+  FILE_MESSAGE: 'file-message',
   FILE: 'file',
   FILE_ICON: 'file-icon',
   FILE_NAME: 'file-name',
+  FILE_DOWNLOAD: 'file-download',
+  FILE_TEXT: 'file-text',
   MESSAGE_SET: 'message-set',
   USER: 'user',
   MESSAGE_ITEM: 'message-item',
@@ -48,6 +52,9 @@ export const className = {
   NEW_CHAT_BTN: 'new-chat-btn',
   USER_SELECT: 'user-select',
   USER_ITEM: 'user-item',
+  LEAVE_POPUP: 'leave-popup',
+  LEAVE_BTN: 'leave-btn',
+  CANCEL_BTN: 'cancel-btn',
 
   POPUP: 'popup',
   MEMBERS: 'members',
@@ -57,6 +64,7 @@ export const className = {
   POPUP_CONTENT: 'popup-content',
   POPUP_BOTTOM: 'popup-bottom',
   INVITE_BTN: 'invite-btn',
+  IMAGE_ME: 'image-me',
 
   TOOLTIP: 'tooltip',
 
@@ -68,6 +76,7 @@ export const className = {
   IC_CLOSE: 'ic-close',
   IC_MEMBERS: 'ic-members',
   IC_INVITE: 'ic-invite',
+  IC_LEAVE: 'ic-leave',
 
   FADE_IN: 'sb-fade-in',
   FADE_OUT: 'sb-fade-out',
@@ -81,5 +90,6 @@ export const styleValue = {
 };
 
 export const MAX_COUNT = '+9';
+export const MAX_FONT_ZISE = '11';
 
 export const TYPE_STRING = 'string';

@@ -98,6 +98,16 @@ class Sendbird {
     });
   }
 
+  channelLeave(channel, action) {
+    channel.leave((response, error) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      action();
+    });
+  }
+
   /*
   Message
    */
@@ -167,7 +177,7 @@ class Sendbird {
   /*
   Handler
    */
-  createHandlerGlobal(messageReceivedFunc, ChannelChangedFunc, typingStatusFunc, readReceiptFunc) {
+  createHandlerGlobal(messageReceivedFunc, ChannelChangedFunc, typingStatusFunc, readReceiptFunc, userLeftFunc) {
     let channelHandler = new this.sb.ChannelHandler();
     channelHandler.onMessageReceived = function(channel, message) {
       messageReceivedFunc(channel, message);
@@ -180,6 +190,9 @@ class Sendbird {
     };
     channelHandler.onReadReceiptUpdated = function(channel) {
       readReceiptFunc(channel);
+    };
+    channelHandler.onUserLeft = function (channel, user) {
+      userLeftFunc(channel, user);
     };
     this.sb.addChannelHandler(GLOBAL_HANDLER, channelHandler);
   }
@@ -210,12 +223,31 @@ class Sendbird {
   }
 
   getMessageTime(message) {
-    var _checkTime = function(val) {
+    const months = [
+      'JAN', 'FEB', 'MAR', 'APR', 'MAY',
+      'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
+      'NOV', 'DEC'
+    ];
+
+    var _getDay = (val) => {
+      let day = parseInt(val);
+      if (day == 1) {
+        return day + 'st';
+      } else if (day == 2) {
+        return day + 'en';
+      } else if (day == 3) {
+        return day + 'rd';
+      } else {
+        return day + 'th';
+      }
+    };
+
+    var _checkTime = (val) => {
       return (+val < 10) ? '0' + val : val;
     };
 
     if (message) {
-      const LAST_MESSAGE_YESTERDAY = 'yesterday';
+      const LAST_MESSAGE_YESTERDAY = 'YESTERDAY';
       var _nowDate = new Date();
       var _date = new Date(message.createdAt);
       if (_nowDate.getDate() - _date.getDate() == 1) {
@@ -225,7 +257,7 @@ class Sendbird {
         && _nowDate.getDate() == _date.getDate()) {
         return _checkTime(_date.getHours()) + ':' + _checkTime(_date.getMinutes());
       } else {
-        return _checkTime(_date.getMonth() + 1) + '/' + _checkTime(_date.getDate());
+        return months[_date.getMonth()] + ' ' + _getDay(_date.getDate());
       }
     }
     return '';

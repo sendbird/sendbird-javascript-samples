@@ -29,8 +29,8 @@
 
     div {
       display: inline-block;
-      width: 18px;
-      height: 18px;
+      width: 12px;
+      height: 12px;
       background-color: $color-gray-light;
       @include border-radius(50%);
       @include sb-ani-spinner();
@@ -40,7 +40,7 @@
       @include animation-delay(-0.32s);
     }
     :nth-child(2) {
-      margin: 0 2px;
+      margin: 0 6px;
       @include animation-delay(-0.16s);
     }
   }
@@ -106,6 +106,13 @@
   }
   .ic-invite.active {
     @include icon($icon-friend-add-selected);
+  }
+
+  .ic-leave {
+    @include icon($icon-leave-chat);
+    @include hover {
+      @include icon($icon-leave-chat-hover);
+    }
   }
 
   // Tooltip
@@ -199,12 +206,12 @@
     bottom: 0;
     right: 0;
     width: 280px;
-    height: 480px;
+    height: 462px;
     @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
 
     .board-top {
       width: calc(100% - 24px);
-      height: calc(90px - 1px);
+      height: calc(36px - 1px);
       background-color: $color-purple;
       padding: 0 12px;
       border-bottom: 1px solid $color-list-top-border;
@@ -215,7 +222,7 @@
         font-size: 16px;
         color: $color-list-top-title;
         letter-spacing: 0.85px;
-        line-height: 90px;
+        line-height: 36px;
       }
 
       .btn {
@@ -261,7 +268,7 @@
             line-height: 32px;
             padding: 0 16px;
             @include border-radius(3px);
-            @include box-shadow(0 3px 8px rgba(0, 0, 0, 0.3));
+            @include box-shadow(1px 1px 14px 3px rgba(0, 0, 0, 0.3));
             @include before {
               content: ' ';
               position: absolute;
@@ -327,10 +334,13 @@
 
         .sb-spinner {
           div {
-            width: 16px;
-            height: 16px;
-            margin-top: 8px;
+            width: 8px;
+            height: 8px;
+            margin-top: 4px;
             background-color: $color-button-spinner;
+          }
+          :nth-child(2) {
+            margin: 0 4px;
           }
         }
       }
@@ -393,7 +403,7 @@
             width: 140px;
             height: 18px;
             font-size: 14px;
-            color: $color-gray-darker;
+            color: $color-content-text;
             line-height: 18px;
             overflow: hidden;
             -ms-text-overflow: ellipsis;
@@ -437,6 +447,23 @@
             @include border-radius(50%);
           }
         }
+
+        .empty-item {
+          text-align: center;
+          & > .title {
+            margin: 130px 0 16px 0;
+            font-size: 14px;
+            color: $color-gray-darker;
+          }
+          & > .new-chat-btn {
+            @extend .sb-common-btn;
+            display: block;
+            margin: 0 auto;
+            width: 48px;
+            height: 30px;
+            line-height: 30px;
+          }
+        }
       }
 
       .sb-spinner {
@@ -445,12 +472,12 @@
         @include transform-translate(0, -50%);
 
         div {
-          width: 18px;
-          height: 18px;
-          margin-top: 8px;
+          width: 12px;
+          height: 12px;
+          margin-top: 6px;
         }
         :nth-child(2) {
-          margin: 0 8px;
+          margin: 0 6px;
         }
       }
 
@@ -473,6 +500,54 @@
       height: 426px;
       margin-right: 20px;
       @include box-shadow(0 5px 40px rgba(0, 0, 0, 0.16));
+
+      .leave-popup {
+        width: 280px;
+        height: 100%;
+        position: absolute;
+        background-color: rgba(255, 255 ,255, 0.9);
+        z-index: 1;
+        & > .popup-top {
+          margin-top: 130px;
+          text-align: center;
+          color: $color-gray-darker;
+        }
+        & > div {
+          margin-top: 16px;
+          text-align: center;
+          .leave-btn {
+            @extend .sb-common-btn;
+            display: inline-block;
+            padding: 0 8px;
+            width: 52px;
+            height: 32px;
+            line-height: 32px;
+            .sb-spinner {
+              div {
+                width: 8px;
+                height: 8px;
+                margin-top: 4px;
+                background-color: $color-button-spinner;
+              }
+              :nth-child(2) {
+                margin: 0 4px;
+              }
+            }
+          }
+          .cancel-btn {
+            @extend .sb-common-btn;
+            background-color: $color-chat-message-background;
+            border-color: $color-input-border;
+            color: $color-gray-darker;
+            margin-left: 8px;
+            display: inline-block;
+            padding: 0 8px;
+            width: 52px;
+            height: 32px;
+            line-height: 32px;
+          }
+        }
+      }
     }
 
     .top {
@@ -484,9 +559,9 @@
 
       .title {
         float: left;
-        max-width: 150px;
+        max-width: 123px;
         font-size: 13px;
-        color: $color-gray-darker;
+        color: $color-content-text;
         line-height: 35px;
         overflow: hidden;
         -ms-text-overflow: ellipsis;
@@ -523,6 +598,15 @@
             @extend .tooltip;
             display: block;
           }
+        }
+      }
+      .btn.ic-leave {
+        margin-right: 3px;
+        .tooltip {
+          width: 78px;
+          position: absolute;
+          top: -37px;
+          left: -37px;
         }
       }
       .btn.ic-members {
@@ -643,10 +727,13 @@
 
           .sb-spinner {
             div {
-              width: 14px;
-              height: 14px;
-              margin-top: 6px;
+              width: 8px;
+              height: 8px;
+              margin-top: 4px;
               background-color: $color-button-spinner;
+            }
+            :nth-child(2) {
+              margin: 0 4px;
             }
           }
         }
@@ -676,6 +763,20 @@
         font-size: 12px;
         color: $color-chat-system-message-color;
         line-height: 22px;
+        .sb-spinner {
+          display: inline-block;
+          width: auto;
+          text-align: left;
+          margin-right: 8px;
+          div {
+            background-color: $color-typing-spinner;
+            width: 6px;
+            height: 6px;
+          }
+          :nth-child(2) {
+            margin: 0 3px;
+          }
+        }
       }
 
       .input {
@@ -736,7 +837,7 @@
 
     .message-set {
       width: 100%;
-      margin-top: 10px;
+      margin-top: 8px;
       float: left;
       direction: ltr;
       text-align: left;
@@ -764,31 +865,36 @@
           text-align: inherit;
           max-width: 180px;
           background-color: $color-chat-message-background;
-          color: $color-gray-darkest;
+          color: $color-content-text;
           font-size: 13px;
           padding: 6px;
           word-wrap: break-word;
           @include border-radius(5px);
         }
-        .image {
+        .file-message {
           display: inline-block;
-          text-align: inherit;
-          width: 160px;
-          height: 160px;
-          cursor: pointer;
-          @include imageMessage();
-          @include border-radius(5px);
+          .image {
+            display: inline-block;
+            text-align: inherit;
+            width: 160px;
+            height: 160px;
+            cursor: pointer;
+            vertical-align: middle;
+            @include imageMessage();
+            @include border-radius(5px);
+          }
         }
         .file {
           display: inline-flex;
           text-align: inherit;
           max-width: 180px;
           background-color: $color-transparent;
-          color: $color-gray-darkest;
+          color: $color-content-text;
           font-size: 13px;
-          padding: 6px 6px 6px 0;
           word-wrap: break-word;
           cursor: pointer;
+          text-decoration: none;
+          vertical-align: bottom;
 
           & > .file-icon {
             display: inline-block;
@@ -796,23 +902,35 @@
             height: 26px;
             @include icon($icon-file);
           }
-          & > .file-name {
-            display: inline-block;
-            max-width: calc(100% - 24px - 8px);
+          & > .file-text {
             margin: 0 0 0 8px;
+            max-width: calc(100% - 24px - 8px);
+
+
+            & > .file-name {
+              display: inline-block;
+              max-width: 100%;
+              -ms-text-overflow: ellipsis;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              overflow: hidden;
+            }
+            & > .file-download {
+              font-size: 11px;
+              line-height: 6px;
+              color: $color-text-download;
+            }
           }
         }
         .unread {
-          display: inline-block;
-          height: 14px;
-          width: 14px;
+          display: none !important;
           background-color: transparent;
-          color: $color-purple;
+          color: $color-read-receipt;
           font-size: 11px;
           font-weight: 700;
           text-align: center;
-          line-height: 14px;
-          margin: 0 6px;
+          margin: 0 4px;
+          vertical-align: bottom;
         }
       }
 
@@ -840,34 +958,14 @@
           @include imageMessage();
           @include border-radius(5px);
         }
-        .file {
-          display: inline-flex;
-          text-align: inherit;
-          max-width: 180px;
-          background-color: $color-transparent;
-          color: $color-gray-darkest;
-          font-size: 13px;
-          padding: 6px 0 6px 6px;
-          word-wrap: break-word;
-          cursor: pointer;
-
-          & > .file-icon {
-            display: inline-block;
-            width: 24px;
-            height: 26px;
-            @include icon($icon-file);
-          }
-          & > .file-name {
-            display: inline-block;
-            max-width: calc(100% - 24px - 8px);
-            margin: 0 8px 0 0;
-          }
+        .unread {
+          display: inline-block !important;
         }
       }
     }
     .message-set.time {
       text-align: center;
-      font-size: 12px;
+      font-size: 11px;
       color: $color-gray-dark;
     }
 
@@ -946,6 +1044,12 @@
               @include icon($icon-checked);
             }
 
+            .image-me {
+              width: 31px;
+              height: 31px;
+              position: absolute;
+              @include icon($icon-member-me);
+            }
             .image {
               display: inline-block;
               margin-right: 8px;
@@ -1052,10 +1156,13 @@
         @include transform-translate(0, -50%);
         .sb-spinner {
           div {
-            width: 12px;
-            height: 12px;
-            margin-top: 6px;
+            width: 8px;
+            height: 8px;
+            margin-top: 4px;
             background-color: $color-button-spinner;
+          }
+          :nth-child(2) {
+            margin: 0 4px;
           }
         }
       }

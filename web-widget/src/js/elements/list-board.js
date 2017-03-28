@@ -1,4 +1,4 @@
-import { className, MAX_COUNT } from '../consts.js';
+import { className, MAX_COUNT, MAX_FONT_ZISE } from '../consts.js';
 import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace } from '../utils.js';
 import Element from './elements.js';
 
@@ -12,6 +12,8 @@ const TITLE_TOP_CHANNEL = 'Channel List';
 const TITLE_LOGIN_USER_ID = 'USER ID';
 const TITLE_LOGIN_NICKNAME = 'NICKNAME';
 const TITLE_LOGIN_BTN = 'Start Chat';
+const TITLE_EMPTY_ITEM = 'Click Bottom to Start';
+const TITLE_EMPTY_BTN = 'Create';
 
 const INPUT_TYPE = 'text';
 const INPUT_MAX_LENGTH = 20;
@@ -205,6 +207,10 @@ class ListBoard extends Element {
     this._setClickEvent(this.btnLogin, action);
   }
 
+  addKeyDownEvent(target, action) {
+    this._setKeydownEvent(target, action);
+  }
+
   createChannelListBoard() {
     this.listContent = this.createDiv();
     this._setClass(this.listContent, [className.CONTENT, className.CHANNEL_LIST]);
@@ -289,9 +295,40 @@ class ListBoard extends Element {
     return li;
   }
 
+  checkEmptyList() {
+    if (this.list.childNodes.length < 1) {
+      this._createEmptyItem();
+    } else {
+      this.list.removeChild(this.emptyItem);
+      this.emptyItem = null;
+    }
+  }
+
+  _createEmptyItem() {
+    var emptyList = this.createDiv();
+    this._setClass(emptyList, [className.EMPTY_ITEM]);
+
+    var emptyTitle = this.createDiv();
+    this._setClass(emptyTitle, [className.TITLE]);
+    this._setContent(emptyTitle, TITLE_EMPTY_ITEM);
+
+    var emptyBtn = this.createDiv();
+    this._setClickEvent(emptyBtn, () => {
+      this.btnNewChat.click();
+    })
+    this._setClass(emptyBtn, [className.NEW_CHAT_BTN]);
+    this._setContent(emptyBtn, TITLE_EMPTY_BTN);
+
+    emptyList.appendChild(emptyTitle);
+    emptyList.appendChild(emptyBtn);
+    this.emptyItem = emptyList;
+    this.list.appendChild(emptyList);
+  }
+
   setUnreadCount(target, count) {
     count = parseInt(count);
     this._setContent(target, (count > 9) ? MAX_COUNT : count.toString());
+    this._setFontSize(target, (count > 9) ? MAX_FONT_ZISE : null);
     (count > 0) ? show(target) : hide(target);
   }
 

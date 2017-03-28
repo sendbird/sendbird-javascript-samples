@@ -12,8 +12,14 @@ $color-gray-darker:                   #67769A !default;
 $color-gray-darkest:                  #485874 !default;
 $color-black:                         #000000 !default;
 
+$color-content-text:                  #444444 !default;
+$color-read-receipt:                  #A08CFF !default;
+$color-text-download:                 #0081D6 !default;
+
 $color-widget-background:             $color-purple !default;
 $color-widget-background-hover:       #775AE0 !default;
+
+$color-typing-spinner:                #A5B4CD !default;
 
 $color-button-spinner:                #35A300 !default;
 $color-button-border:                 #38B349 !default;
@@ -55,7 +61,7 @@ $font-family-default: 'Lato';
 $font-weight-default: 400;
 
 // Height
-$height-list-board-content: 390px;
+$height-list-board-content: 426px;
 
 // Content
 $content-message-input-default: 'Type a Message';

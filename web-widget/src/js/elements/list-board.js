@@ -12,7 +12,7 @@ const TITLE_TOP_CHANNEL = 'Channel List';
 const TITLE_LOGIN_USER_ID = 'USER ID';
 const TITLE_LOGIN_NICKNAME = 'NICKNAME';
 const TITLE_LOGIN_BTN = 'Start Chat';
-const TITLE_EMPTY_ITEM = 'Click Bottom to Start';
+const TITLE_EMPTY_ITEM = 'Click below to start';
 const TITLE_EMPTY_BTN = 'Create';
 
 const INPUT_TYPE = 'text';

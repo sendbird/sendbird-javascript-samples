@@ -21,12 +21,12 @@ class Sendbird {
   }
 
   connect(userId, nickname, action) {
-    this.sb.connect(userId, (user, error) => {
+    this.sb.connect(userId.trim(), (user, error) => {
       if (error) {
         console.error(error);
         return;
       }
-      this.sb.updateCurrentUserInfo(nickname, '', (response, error) => {
+      this.sb.updateCurrentUserInfo(nickname.trim(), '', (response, error) => {
         if (error) {
           console.error(error);
           return;

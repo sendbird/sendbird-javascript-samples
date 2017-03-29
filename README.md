@@ -1,9 +1,10 @@
 # SendBird JavaScript Sample
 
 The samples in this repository are fully functional messaging applications built using the [SendBird](https://sendbird.com) JS SDK.
-  1. **Web sample:** for Desktop web browsers.
-  1. **React Native sample:** for iOS and Android.
-  1. **Web widget sample:** attaches a small chat widget to a regular website.
+  1. **Web widget sample:** Facebook-chat-like chat widget to regular websites.  
+  1. **React Native sample:** Mobile chat sample for iOS and Android.
+  1. **Web sample:** Slack-like full screen chat sample for desktop browsers.
+
 
 ## Table of Contents
 

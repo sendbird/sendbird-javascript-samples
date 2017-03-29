@@ -211,7 +211,7 @@
 
     .board-top {
       width: calc(100% - 24px);
-      height: calc(36px - 1px);
+      height: 36px;
       background-color: $color-purple;
       padding: 0 12px;
       border-bottom: 1px solid $color-list-top-border;
@@ -352,6 +352,7 @@
     .content.channel-list {
       overflow-y: scroll;
       overflow-x: hidden;
+      width: 100%;
 
       ul {
         width: 100%;
@@ -400,7 +401,7 @@
           .title {
             padding: 0;
             float: left;
-            width: 140px;
+            width: 125px;
             height: 18px;
             font-size: 14px;
             color: $color-content-text;

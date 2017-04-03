@@ -276,7 +276,7 @@ class SBWidget {
       if (event.keyCode == KEY_DOWN_ENTER) {
         this.listBoard.btnLogin.click();
       }
-    })
+    });
   }
 
   messageReceivedAction(channel, message) {
@@ -398,17 +398,19 @@ class SBWidget {
       this.chatSection.addLeavePopup(chatBoard);
       this.chatSection.setLeaveBtnClickEvent(chatBoard.leavePopup.leaveBtn, () => {
         this.spinner.insert(chatBoard.leavePopup.leaveBtn);
+        addClass(chatBoard.leavePopup.leaveBtn, className.DISABLED);
         let channelSet = this.getChannelSet(channelUrl);
         if (channelSet) {
           this.sb.channelLeave(channelSet.channel, () => {
             chatBoard.removeChild(chatBoard.leavePopup);
+            removeClass(chatBoard.leavePopup.leaveBtn, className.DISABLED);
             chatBoard.leavePopup = null;
             chatBoard.closeBtn.click();
           });
         } else {
           this.chatSection.closeChatBoard(chatBoard);
         }
-      })
+      });
     });
     this.chatSection.addClickEvent(chatBoard.memberBtn, () => {
       if (hasClass(chatBoard.memberBtn, className.ACTIVE)) {
@@ -591,7 +593,7 @@ class SBWidget {
           clipboardData = event.clipboardData || window.clipboardData;
           pastedData = clipboardData.getData('Text');
 
-          target.input.textContent = pastedData;
+          target.input.textContent += pastedData;
         });
       }
       if (scrollEvent) {

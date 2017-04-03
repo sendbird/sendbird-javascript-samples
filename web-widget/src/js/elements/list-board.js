@@ -184,7 +184,9 @@ class ListBoard extends Element {
 
   _toggleLoginBtn() {
     if(!isEmptyString(removeWhiteSpace(this.userId.value)) && !isEmptyString(removeWhiteSpace(this.nickname.value))) {
-      this.enabledToggle(this.btnLogin, true);
+      if (this.btnLogin.innerHTML == TITLE_LOGIN_BTN) {
+        this.enabledToggle(this.btnLogin, true);
+      }
     } else {
       this.enabledToggle(this.btnLogin, false);
     }
@@ -317,7 +319,7 @@ class ListBoard extends Element {
     var emptyBtn = this.createDiv();
     this._setClickEvent(emptyBtn, () => {
       this.btnNewChat.click();
-    })
+    });
     this._setClass(emptyBtn, [className.NEW_CHAT_BTN]);
     this._setContent(emptyBtn, TITLE_EMPTY_BTN);
 

@@ -11,13 +11,13 @@ function login(){
 }
 
 $('#user_nickname').change(function() {
-  userId = $('#user_id').val().replace(' ', '');
-  nickname = $('#user_nickname').val().replace(' ', '');
+  userId = $('#user_id').val().trim();
+  nickname = $('#user_nickname').val().trim();
 });
 
 $('#user_nickname').keydown(function(e){
   if (e.which == 13) {
-    nickname = $('#user_nickname').val().replace(' ', '');
+    nickname = $('#user_nickname').val().trim();
     login();
   }
 });

@@ -39,13 +39,6 @@ String.prototype.format = function () {
   });
 };
 
-// Array.prototype.pushUnique = function (item){
-//     if(this.indexOf(item) == -1) {
-//         this.push(item);
-//     }
-//     return this.length;
-// };
-
 function getUrlVars() {
   var vars = [], hash;
   var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');

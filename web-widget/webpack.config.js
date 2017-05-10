@@ -1,7 +1,7 @@
 module.exports = {
   context: __dirname + '/src',
   entry: {
-    widget: './js/widget.js'
+    widget: ['babel-polyfill', './js/widget.js']
   },
   output: {
     path: __dirname + '/build',

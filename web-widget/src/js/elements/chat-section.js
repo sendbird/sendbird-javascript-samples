@@ -228,7 +228,7 @@ class ChatSection extends Element {
   }
 
   closeChatBoard(target) {
-    target.remove();
+    target.parentNode.removeChild(target);
     this.textKr = '';
   }
 
@@ -267,7 +267,7 @@ class ChatSection extends Element {
     contentInput.appendChild(chatFile);
     chatContent.appendChild(contentInput);
 
-    target.content.remove();
+    target.content.parentNode.removeChild(target.content);
     target.content = chatContent;
     target.messageContent = messageContent;
     target.list = messageList;
@@ -284,13 +284,14 @@ class ChatSection extends Element {
     return chatText;
   }
 
-  clearInputText(target) {
+  clearInputText(target, channelUrl) {
     let items = target.querySelectorAll(this.tagName.DIV);
     for (var i = 0 ; i < items.length ; i++) {
       let item = items[i];
       item.remove();
     }
     this._setContent(target, EMPTY_STRING);
+    this.responsiveHeight(channelUrl);
   }
 
   addPasteEvent(target, action) {
@@ -362,8 +363,7 @@ class ChatSection extends Element {
     } else {
       var img = new Image();
       img.addEventListener('load', (res) => {
-        imageResize(target, res.path[0].width, res.path[0].height);
-        img.remove();
+        res.path ? imageResize(target, res.path[0].width, res.path[0].height) : imageResize(target, res.target.width, res.target.height);
       });
       img.src = message.url;
     }
@@ -508,7 +508,7 @@ class ChatSection extends Element {
     contentBottom.appendChild(contentBottomBtn);
     chatContent.appendChild(contentBottom);
 
-    target.content.remove();
+    target.content.parentNode.removeChild(target.content);
     target.content = chatContent;
     target.startBtn = contentBottomBtn;
     target.userContent = userContent;

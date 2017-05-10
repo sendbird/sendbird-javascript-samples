@@ -36,20 +36,27 @@ class SBWidget {
     this.widget = document.getElementById(WIDGET_ID);
     if (this.widget) {
       document.addEventListener(EVENT_TYPE_CLICK, (event) => {
-        var closed = true;
-        for (var i = 0 ; i < event.path.length ; i++) {
-          let item = event.path[i];
-          if (hasClass(item, className.IC_MEMBERS) || hasClass(item, className.IC_INVITE)) {
-            closed = false;
-            break;
+        var _checkPopup = function(_target, obj) {
+          if (obj === _target || hasClass(_target, className.IC_MEMBERS) || hasClass(_target, className.IC_INVITE)) {
+            return true;
+          } else {
+            var returnedCheck = false;
+            for (var i = 0 ; i < obj.childNodes.length ; i++) {
+              returnedCheck = _checkPopup(_target, obj.childNodes[i]);
+              if (returnedCheck) break;
+            }
+            return returnedCheck;
           }
-          if (item == this.popup.memberPopup || item == this.popup.invitePopup) {
-            closed = false;
-            break;
-          }
+        };
+
+        var isMemberPopup = _checkPopup(event.target, this.popup.memberPopup);
+        var isInvitePopup = _checkPopup(event.target, this.popup.invitePopup);
+
+        if (!isMemberPopup) {
+          this.closeMemberPopup();
         }
-        if (closed) {
-          this.closePopup();
+        if (!isInvitePopup) {
+          this.closeInvitePopup();
         }
       });
       this.spinner = new Spinner();
@@ -164,7 +171,7 @@ class SBWidget {
           this.spinner.insert(chatBoard.startBtn);
           let selectedUserIds = this.chatSection.getSelectedUserIds(chatBoard.userContent);
           this.sb.createNewChannel(selectedUserIds, (channel) => {
-            chatBoard.remove();
+            chatBoard.parentNode.removeChild(chatBoard);
             this.connectChannel(channel.url, true);
             this.listBoard.checkEmptyList();
           });
@@ -565,7 +572,7 @@ class SBWidget {
                 this.messageReceivedAction(channelSet.channel, message);
               });
             }
-            this.chatSection.clearInputText(target.input);
+            this.chatSection.clearInputText(target.input, channelSet.channel.url);
             this.chatSection.textKr = '';
             channelSet.channel.endTyping();
           } else {
@@ -577,7 +584,7 @@ class SBWidget {
           let isBottom = this.chatSection.isBottom(target.messageContent, target.list);
           this.chatSection.responsiveHeight(channelSet.channel.url);
           if (event.keyCode == KEY_DOWN_ENTER && !event.shiftKey) {
-            this.chatSection.clearInputText(target.input);
+            this.chatSection.clearInputText(target.input, channelSet.channel.url);
             if (isBottom) {
               this.chatSection.scrollToBottom(target.messageContent);
             }

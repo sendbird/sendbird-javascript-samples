@@ -102,7 +102,7 @@ class Element {
   }
 
   _setDataset(target, name, data) {
-    target.dataset[name] = data;
+    target.setAttribute('data-' + name, data);
   }
 
   _setClickEvent(...args) {

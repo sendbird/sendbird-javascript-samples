@@ -287,7 +287,7 @@ class ListBoard extends Element {
     item.appendChild(itemContent);
 
     var li = this.createLi();
-    this._setDataset(li, 'channelUrl', channelUrl);
+    this._setDataset(li, 'channel-url', channelUrl);
     li.topTitle = contentTitle;
     li.time = contentTime;
     li.message = contentLastMessage;
@@ -347,7 +347,7 @@ class ListBoard extends Element {
   addListOnFirstIndex(target) {
     let items = this._getListItemsArray();
     items.filter((item) => {
-      if (item.dataset.channelUrl == target.dataset.channelUrl) {
+      if (item.getAttribute('data-channel-url') == target.getAttribute('data-channel-url')) {
         this.list.removeChild(item);
       }
     });
@@ -359,7 +359,7 @@ class ListBoard extends Element {
     let targetChannel;
     for (var i = 0 ; i < items.length ; i++) {
       let item = items[i];
-      if (item.dataset.channelUrl == channelUrl) {
+      if (item.getAttribute('data-channel-url') == channelUrl) {
         targetChannel = item;
         break;
       }

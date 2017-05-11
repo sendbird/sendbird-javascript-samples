@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
-  Navigator,
   StyleSheet,
   AppState,
   Platform
 } from 'react-native';
-
+import NavigationExperimental from 'react-native-deprecated-custom-components';
 import Login from './pages/login';
 import OpenChannel from './pages/openChannel';
 import CreateChannel from './pages/createChannel';
@@ -95,10 +94,10 @@ export default class Main extends Component {
 
   render() {
     return (
-      <Navigator
+      <NavigationExperimental.Navigator
         initialRoute={{name: 'login'}}
         renderScene={this._renderScene}
-        configureScene={() => {return Navigator.SceneConfigs.FloatFromRight;}}
+        configureScene={() => {return NavigationExperimental.Navigator.SceneConfigs.FloatFromRight;}}
         style={styles.container}
       />
     )

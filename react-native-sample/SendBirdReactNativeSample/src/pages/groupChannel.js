@@ -45,6 +45,10 @@ export default class GroupChannel extends Component {
     sb.addChannelHandler('ListHandler', ChannelHandler);
   }
 
+  componentWillUnmount() {
+    sb.removeChannelHandler('ListHandler');
+  }
+
   _channelUpdate(channel) {
     var _SELF = this;
     var _exist = false;

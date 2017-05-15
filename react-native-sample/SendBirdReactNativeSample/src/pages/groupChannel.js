@@ -31,40 +31,52 @@ export default class GroupChannel extends Component {
     this._onHideChannel = this._onHideChannel.bind(this);
     this._refresh = this._refresh.bind(this);
     this._channelUpdate = this._channelUpdate.bind(this);
+    this._refreshChannelList = this._refreshChannelList.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._getChannelList();
 
     // channel handler
     var _SELF = this;
     var ChannelHandler = new sb.ChannelHandler();
-    ChannelHandler.onMessageReceived = function(channel, message){
+    ChannelHandler.onUserJoined = function(channel, user) {
       _SELF._channelUpdate(channel);
     };
-    sb.addChannelHandler('ListHandler', ChannelHandler);
+    ChannelHandler.onUserLeft = function(channel, user) {
+      _SELF._channelUpdate(channel);
+    };
+    ChannelHandler.onChannelChanged = function(channel) {
+      _SELF._channelUpdate(channel);
+    };
+    sb.addChannelHandler('ChannelHandlerInList', ChannelHandler);
+
+    var ConnectionHandler = new sb.ConnectionHandler();
+    ConnectionHandler.onReconnectSucceeded = function(){
+      _SELF._refreshChannelList();
+    }
+    sb.addConnectionHandler('ConnectionHandlerInList', ConnectionHandler);
   }
 
   componentWillUnmount() {
-    sb.removeChannelHandler('ListHandler');
+    sb.removeChannelHandler('ChannelHandlerInList');
+    sb.removeChannelHandler('ConnectionHandlerInList');
   }
 
   _channelUpdate(channel) {
+    if(!channel) return;
+
     var _SELF = this;
     var _exist = false;
-    var _list = _SELF.state.channelList.map(function(ch) {
-      if (channel.url == ch.url ) {
-        _exist = true;
-        return channel
-      }
-      return ch
+    var _list = _SELF.state.channelList.filter(function(ch) {
+      return channel.url != ch.url
     });
-    if (!_exist) {
-      _list.push(channel);
-    }
+
+    _list.unshift(channel);
+
     _SELF.setState({
       channelList: _list,
-      dataSource: ds.cloneWithRows(_SELF.state.channelList)
+      dataSource: ds.cloneWithRows(_list)
     });
   }
 
@@ -117,7 +129,7 @@ export default class GroupChannel extends Component {
         ]
       )
     } else {
-      _SELF.props.navigator.push({name: 'chat', channel: channel, _onHideChannel: this._onHideChannel, refresh: this._refresh});
+      _SELF.props.navigator.push({name: 'chat', channel: channel, _onHideChannel: this._onHideChannel, refresh: this._refreshChannelList});
     }
   }
 
@@ -126,8 +138,21 @@ export default class GroupChannel extends Component {
       return channel.url !== ch.url
     })}, ()=> {
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(this.state.channelList)
+        dataSource: ds.cloneWithRows(this.state.channelList)
       });
+    });
+  }
+
+  _refreshChannelList() {
+    var _SELF = this;
+    var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
+    listQuery.next(function(channelList, error){
+      if (error) {
+        console.log(error);
+        return;
+      }
+      _SELF.setState({ listQuery: listQuery, channelList: channelList, dataSource: ds.cloneWithRows(channelList)});
+
     });
   }
 
@@ -138,11 +163,9 @@ export default class GroupChannel extends Component {
         console.log(error);
         return;
       }
-      _SELF.setState({channelList: _SELF.state.channelList.concat(channelList)}, () => {
-        _SELF.setState({
-          dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.channelList)
-        });
-      });
+      var newList = _SELF.state.channelList.concat(channelList);
+      _SELF.setState({ channelList: newList, dataSource: ds.cloneWithRows(newList)});
+
     });
   }
 
@@ -171,7 +194,7 @@ export default class GroupChannel extends Component {
             _SELF.setState({editMode: true});
           }},
           {text: 'Invite', onPress: () => {
-            _SELF.props.navigator.push({name: 'inviteUser', refresh: _SELF._refresh});
+            _SELF.props.navigator.push({name: 'inviteUser', refresh: _SELF._refreshChannelList});
           }},
           {text: 'Cancel'}
         ]

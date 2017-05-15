@@ -68,7 +68,6 @@ export default class Chat extends Component {
   }
 
   componentDidMount() {
-    console.log("componentDidMount");      
     var _SELF = this;
     if (!_SELF.state.hasRendered){
       _SELF.state.hasRendered = true;
@@ -91,25 +90,16 @@ export default class Chat extends Component {
           _SELF.state.lastMessage = message;
           if (_SELF.state.channel.channelType == 'group') {
             _SELF.state.channel.markAsRead();
-            _SELF.state.channel.lastMessage = message;
-          }        
+          }
         }
       };
 
-      ChannelHandler.onUserJoined = function(channel, user) {
-        _SELF.props.route.refresh(_SELF.state.channel);
-      };
-      ChannelHandler.onUserLeft = function(channel, user) {
-        _SELF.props.route.refresh(_SELF.state.channel);
-      };
       sb.addChannelHandler('ChatView', ChannelHandler);
 
       var ConnectionHandler = new sb.ConnectionHandler();
       ConnectionHandler.onReconnectSucceeded = function(){
         _SELF._getChannelMessage(true);
-        _SELF.state.channel.refresh(function(){
-          _SELF.props.route.refresh(_SELF.state.channel);          
-        });
+        _SELF.state.channel.refresh();
       }
       sb.addConnectionHandler('ChatView', ConnectionHandler);
     }
@@ -214,7 +204,6 @@ export default class Chat extends Component {
                   dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
                 });
           	_SELF.state.lastMessage = message;
-          	_SELF.state.channel.lastMessage = message;
               });
             }
           );
@@ -248,13 +237,12 @@ export default class Chat extends Component {
         dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
       });
       _SELF.state.lastMessage = message;
-      _SELF.state.channel.lastMessage = message;
       _SELF.setState({text: '', disabled: true});
     });
   }
 
   _onBackPress() {
-    this.props.route.refresh(this.state.channel);
+    this.props.route.refresh();
     this.props.navigator.pop();
   }
 

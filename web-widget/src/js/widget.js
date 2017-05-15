@@ -361,7 +361,7 @@ class SBWidget {
     );
     this.listBoard.addChannelClickEvent(item, () => {
       this.closePopup();
-      let channelUrl = item.dataset.channelUrl;
+      let channelUrl = item.getAttribute('data-channel-url');
       let openChatBoard = this.chatSection.getChatBoard(channelUrl);
       if (!openChatBoard) {
         var newChat = this.chatSection.getChatBoard(NEW_CHAT_BOARD_ID);

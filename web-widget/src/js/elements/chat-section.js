@@ -532,7 +532,7 @@ class ChatSection extends Element {
 
     var userSelect = this.createDiv();
     this._setClass(userSelect, [className.USER_SELECT]);
-    this._setDataset(userSelect, 'userId', user.userId);
+    this._setDataset(userSelect, 'user-id', user.userId);
     li.select = userSelect;
     userItem.appendChild(userSelect);
 
@@ -555,7 +555,7 @@ class ChatSection extends Element {
     var userIds = [];
     for (var i = 0 ; i < items.length ; i++) {
       let item = items[i];
-      userIds.push(item.dataset.userId);
+      userIds.push(item.getAttribute('data-user-id'));
     }
     return userIds;
   }

@@ -98,7 +98,7 @@ class Popup extends Element {
     if (isInvite) {
       var userSelect = this.createDiv();
       this._setClass(userSelect, [className.USER_SELECT]);
-      this._setDataset(userSelect, 'userId', member.userId);
+      this._setDataset(userSelect, 'user-id', member.userId);
       li.select = userSelect;
       div.appendChild(userSelect);
     }
@@ -168,7 +168,7 @@ class Popup extends Element {
     var userIds = [];
     for (var i = 0 ; i < items.length ; i++) {
       let item = items[i];
-      userIds.push(item.dataset.userId);
+      userIds.push(item.getAttribute('data-user-id'));
     }
     return userIds;
   }

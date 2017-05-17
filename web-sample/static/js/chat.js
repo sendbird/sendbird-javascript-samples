@@ -90,17 +90,36 @@ $(document).on('click', '.chat-canvas__list-text', function(e){
   });
 });
 
+function debounce(func, wait, immediate) {
+	var timeout;
+	return function() {
+		var context = this, args = arguments;
+		var later = function() {
+			timeout = null;
+			if (!immediate) func.apply(context, args);
+		};
+		var callNow = immediate && !timeout;
+		clearTimeout(timeout);
+		timeout = setTimeout(later, wait);
+		if (callNow) func.apply(context, args);
+	};
+};
+
 
 function modalConfirm(title, desc, submit, close){
+
+  console.log("modalConfirmmodalConfirmmodalConfirmmodalConfirmmodalConfirmmodalConfirm");
+
   $('.modal-confirm-title').html(title);
   $('.modal-confirm-desc').html(desc);
 
-  // $('.modal-confirm-submit').unbind('click');
-  // $('.modal-confirm-close').unbind('click');
+  $('.modal-confirm-submit').unbind('click');
+  $('.modal-confirm-close').unbind('click');
 
   $('.modal-confirm-close').click(function(){
     if (close) {
-      close();
+      close_modal = debounce(close, 1000, true);
+      close_modal();
     }
     $('.modal-confirm').hide();
     $('.modal-confirm-close').unbind('click');
@@ -108,7 +127,8 @@ function modalConfirm(title, desc, submit, close){
 
   $('.modal-confirm-submit').click(function(){
     if (submit) {
-      submit();
+      submit_modal = debounce(submit, 1000, true);
+      submit_modal();
     }
     $('.modal-confirm').hide();
     $('.modal-confirm-submit').unbind('click');
@@ -535,6 +555,7 @@ function startMessaging() {
   }
 
   var startMessagingProcess = function(){
+    console.log("startMessagingProcessstartMessagingProcessstartMessagingProcessstartMessagingProcessstartMessagingProcess");
     var users = [];
     $.each($('.modal-messaging-list__icon--select'), function(index, user) {
       users.push(UserList[$(user).data("guest-id")]);

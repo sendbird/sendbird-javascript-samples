@@ -59,7 +59,6 @@ export default class Chat extends Component {
     this._onChangeText = this._onChangeText.bind(this);
     this._onPressParticipants = this._onPressParticipants.bind(this);
     this._onPressBlockList = this._onPressBlockList.bind(this);
-    this._onPressExitChannel = this._onPressExitChannel.bind(this);
   }
 
   componentWillUnmount() {
@@ -242,8 +241,16 @@ export default class Chat extends Component {
   }
 
   _onBackPress() {
-    this.props.route.refresh();
-    this.props.navigator.pop();
+    var _SELF = this;
+    if(_SELF.state.channel.isOpenChannel()){
+       _SELF.state.channel.exit(function(response, error){
+          _SELF.props.route.refresh();
+          _SELF.props.navigator.pop();
+        });
+    } else{
+      _SELF.props.route.refresh();
+      _SELF.props.navigator.pop();
+    }
   }
 
   _onOpenMenu() {
@@ -254,7 +261,6 @@ export default class Chat extends Component {
         [
           {text: 'Participant list', onPress: () => {this._onPressParticipants();}},
           {text: 'Blocked user list', onPress: () => {this._onPressBlockList();}},
-          {text: 'Exit this channel', onPress: () => {this._onPressExitChannel();}},
           {text: 'Close'}
         ]
       )
@@ -328,16 +334,6 @@ export default class Chat extends Component {
   _onPressBlockList() {
     this.setState({show: false});
     this.props.navigator.push({name: 'blockList', channel: this.state.channel});
-  }
-  _onPressExitChannel() {
-    var _SELF = this;
-    _SELF.setState({show: false});
-    _SELF.state.channel.exit(function(response, error){
-      if (error) {
-        return;
-      }
-      _SELF.props.navigator.pop();
-    });
   }
 
   render() {

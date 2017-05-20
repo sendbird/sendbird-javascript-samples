@@ -12,12 +12,13 @@ import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';
 var sb = null;
+var ds = null;
 
 export default class OpenChannel extends Component {
   constructor(props) {
     super(props);
     sb = SendBird.getInstance();
-    var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
       channelList: [],
       dataSource: ds.cloneWithRows([]),
@@ -29,10 +30,40 @@ export default class OpenChannel extends Component {
     this._getChannelList = this._getChannelList.bind(this);
     this._onBackPress = this._onBackPress.bind(this);
     this._onCreateOpenChannel = this._onCreateOpenChannel.bind(this);
+    this._refreshChannelList = this._refreshChannelList.bind(this);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this._getChannelList();
+
+    var _SELF = this;
+
+    var ChannelHandler = new sb.ChannelHandler();
+    sb.addChannelHandler('ChannelHandlerInList', ChannelHandler);
+
+    var ConnectionHandler = new sb.ConnectionHandler();
+    ConnectionHandler.onReconnectSucceeded = function(){
+      _SELF._refreshChannelList();
+    }
+    sb.addConnectionHandler('ConnectionHandlerInList', ConnectionHandler);
+  }
+
+  componentWillUnmount() {
+    sb.removeChannelHandler('ChannelHandlerInList');
+    sb.removeChannelHandler('ConnectionHandlerInList');
+  }
+
+  _refreshChannelList() {
+    var _SELF = this;
+    var listQuery = sb.OpenChannel.createOpenChannelListQuery();
+    listQuery.next(function(channelList, error){
+      if (error) {
+        console.log(error);
+        return;
+      }
+      _SELF.setState({ listQuery: listQuery, channelList: channelList, dataSource: ds.cloneWithRows(channelList)});
+
+    });
   }
 
   _channelUpdate(channel) {
@@ -65,7 +96,7 @@ export default class OpenChannel extends Component {
           alert('Enter openChannel Fail.');
         }
       }
-      _SELF.props.navigator.push({name: 'chat', channel: channel, refresh: _SELF._refresh});
+      _SELF.props.navigator.push({name: 'chat', channel: channel, refresh: _SELF._refreshChannelList});
     })
   }
 
@@ -93,7 +124,7 @@ export default class OpenChannel extends Component {
   }
 
   _onCreateOpenChannel() {
-    this.props.navigator.push({name: 'createChannel', refresh: this._refresh});
+    this.props.navigator.push({name: 'createChannel', refresh: this._refreshChannelList});
   }
 
   render() {

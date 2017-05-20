@@ -158,19 +158,19 @@ export default class Login extends Component {
           />
 
           <Text style={styles.errorLabel}>{this.state.errorMessage}</Text>
-
-          <Button
-            text={'Open Channel'}
-            style={this._buttonStyle()}
-            disabled={this.state.buttonDisabled}
-            onPress={this._onPressOpenChannel}
-          />
           <Button
             text={'Group Channel'}
             style={this._buttonStyle()}
             disabled={this.state.buttonDisabled}
             onPress={this._onPressGroupChannel}
           />
+          <Button
+            text={'Open Channel'}
+            style={this._buttonStyle()}
+            disabled={this.state.buttonDisabled}
+            onPress={this._onPressOpenChannel}
+          />
+
         </View>
       </LoginView>
     );

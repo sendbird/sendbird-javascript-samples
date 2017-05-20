@@ -193,7 +193,7 @@ export default class GroupChannel extends Component {
           {text: 'Edit', onPress: () => {
             _SELF.setState({editMode: true});
           }},
-          {text: 'Invite', onPress: () => {
+          {text: 'Create', onPress: () => {
             _SELF.props.navigator.push({name: 'inviteUser', refresh: _SELF._refreshChannelList});
           }},
           {text: 'Cancel'}

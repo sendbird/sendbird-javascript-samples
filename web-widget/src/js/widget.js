@@ -36,53 +36,76 @@ class SBWidget {
     this.widget = document.getElementById(WIDGET_ID);
     if (this.widget) {
       document.addEventListener(EVENT_TYPE_CLICK, (event) => {
-        var _checkPopup = function(_target, obj) {
-          if (obj === _target || hasClass(_target, className.IC_MEMBERS) || hasClass(_target, className.IC_INVITE)) {
-            return true;
-          } else {
-            var returnedCheck = false;
-            for (var i = 0 ; i < obj.childNodes.length ; i++) {
-              returnedCheck = _checkPopup(_target, obj.childNodes[i]);
-              if (returnedCheck) break;
-            }
-            return returnedCheck;
-          }
-        };
-
-        var isMemberPopup = _checkPopup(event.target, this.popup.memberPopup);
-        var isInvitePopup = _checkPopup(event.target, this.popup.invitePopup);
-
-        if (!isMemberPopup) {
-          this.closeMemberPopup();
-        }
-        if (!isInvitePopup) {
-          this.closeInvitePopup();
-        }
+        this._initClickEvent(event)
       });
-      this.spinner = new Spinner();
-
-      this.widgetBtn = new WidgetBtn(this.widget);
-      this.listBoard = new ListBoard(this.widget);
-      this.chatSection = new ChatSection(this.widget);
-      this.popup = new Popup();
-
-      this.activeChannelSetList = [];
-      this.extraChannelSetList = [];
-
-      this.timeMessage = class TimeMessage {
-        constructor(date) {
-          this.time = date;
-          this.type = TIME_MESSAGE_TYPE;
-        }
-        isTimeMessage() {
-          return this.type == TIME_MESSAGE_TYPE;
-        }
-      };
-
+      this._init();
       this._start(appId);
     } else {
       console.error(ERROR_MESSAGE);
     }
+  }
+
+  startWithConnect(appId, userId, nickname, callback) {
+    if (!window.SendBird) {
+      console.error(ERROR_MESSAGE_SDK);
+      return;
+    }
+    this._getGoogleFont();
+    this.widget = document.getElementById(WIDGET_ID);
+    if (this.widget) {
+      document.addEventListener(EVENT_TYPE_CLICK, (event) => {
+        this._initClickEvent(event)
+      });
+      this._init();
+      this._start(appId);
+      this._connect(userId, nickname, callback);
+    } else {
+      console.error(ERROR_MESSAGE);
+    }
+  }
+
+  _initClickEvent(event) {
+    var _checkPopup = function(_target, obj) {
+      if (obj === _target || hasClass(_target, className.IC_MEMBERS) || hasClass(_target, className.IC_INVITE)) {
+        return true;
+      } else {
+        var returnedCheck = false;
+        for (var i = 0 ; i < obj.childNodes.length ; i++) {
+          returnedCheck = _checkPopup(_target, obj.childNodes[i]);
+          if (returnedCheck) break;
+        }
+        return returnedCheck;
+      }
+    };
+
+    if (!_checkPopup(event.target, this.popup.memberPopup)) {
+      this.closeMemberPopup();
+    }
+    if (!_checkPopup(event.target, this.popup.invitePopup)) {
+      this.closeInvitePopup();
+    }
+  }
+
+  _init() {
+    this.spinner = new Spinner();
+
+    this.widgetBtn = new WidgetBtn(this.widget);
+    this.listBoard = new ListBoard(this.widget);
+    this.chatSection = new ChatSection(this.widget);
+    this.popup = new Popup();
+
+    this.activeChannelSetList = [];
+    this.extraChannelSetList = [];
+
+    this.timeMessage = class TimeMessage {
+      constructor(date) {
+        this.time = date;
+        this.type = TIME_MESSAGE_TYPE;
+      }
+      isTimeMessage() {
+        return this.type == TIME_MESSAGE_TYPE;
+      }
+    };
   }
 
   _getGoogleFont() {
@@ -136,7 +159,7 @@ class SBWidget {
     } else {
       let popChannelUrl = this.extraChannelSetList.pop();
       if (popChannelUrl) {
-        this.connectChannel(popChannelUrl, true);
+        this._connectChannel(popChannelUrl, true);
       }
     }
   }
@@ -172,7 +195,7 @@ class SBWidget {
           let selectedUserIds = this.chatSection.getSelectedUserIds(chatBoard.userContent);
           this.sb.createNewChannel(selectedUserIds, (channel) => {
             chatBoard.parentNode.removeChild(chatBoard);
-            this.connectChannel(channel.url, true);
+            this._connectChannel(channel.url, true);
             this.listBoard.checkEmptyList();
           });
         }
@@ -219,70 +242,75 @@ class SBWidget {
         this.listBoard.userId.disabled = true;
         this.listBoard.nickname.disabled = true;
 
-        this.sb.connect(this.listBoard.getUserId(), this.listBoard.getNickname(), () => {
-          this.widgetBtn.toggleIcon(true);
-
-          this.listBoard.showChannelList();
-          this.spinner.insert(this.listBoard.list);
-          this.getChannelList();
-
-          this.sb.createHandlerGlobal(
-            (channel, message) => {
-              this.messageReceivedAction(channel, message);
-            },
-            (channel) => {
-              this.updateUnreadMessageCount(channel);
-            },
-            (channel) => {
-              let targetBoard = this.chatSection.getChatBoard(channel.url);
-              if (targetBoard) {
-                let isBottom = this.chatSection.isBottom(targetBoard.messageContent, targetBoard.list);
-                this.chatSection.showTyping(channel, this.spinner);
-                this.chatSection.responsiveHeight(channel.url);
-                if (isBottom) {
-                  this.chatSection.scrollToBottom(targetBoard.messageContent);
-                }
-              }
-            },
-            (channel) => {
-              let targetBoard = this.chatSection.getChatBoard(channel.url);
-              if (targetBoard) {
-                var channelSet = this.getChannelSet(channel.url);
-                if (channelSet) {
-                  this.chatSection.updateReadReceipt(channelSet, targetBoard);
-                }
-              }
-            },
-            (channel, user) => {
-              if (this.sb.isCurrentUser(user)) {
-                let item = this.listBoard.getChannelItem(channel.url);
-                this.listBoard.list.removeChild(item);
-                this.listBoard.checkEmptyList();
-              } else {
-                this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
-                this.updateUnreadMessageCount(channel);
-                let targetChatBoard = this.chatSection.getChatBoard(channel.url);
-                if (targetChatBoard) {
-                  this.updateChannelInfo(targetChatBoard, channel);
-                }
-              }
-            },
-            (channel, user) => {
-              this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
-              let targetChatBoard = this.chatSection.getChatBoard(channel.url);
-              if (targetChatBoard) {
-                this.updateChannelInfo(targetChatBoard, channel);
-              }
-            }
-          );
-
-        });
+        this._connect(this.listBoard.getUserId(), this.listBoard.getNickname());
       }
     });
     this.listBoard.addKeyDownEvent(this.listBoard.nickname, (event) => {
       if (event.keyCode == KEY_DOWN_ENTER) {
         this.listBoard.btnLogin.click();
       }
+    });
+  }
+
+  _connect(userId, nickname, callback) {
+    this.sb.connect(userId, nickname, () => {
+      this.widgetBtn.toggleIcon(true);
+
+      this.listBoard.showChannelList();
+      this.spinner.insert(this.listBoard.list);
+      this.getChannelList();
+
+      this.sb.createHandlerGlobal(
+        (channel, message) => {
+          this.messageReceivedAction(channel, message);
+        },
+        (channel) => {
+          this.updateUnreadMessageCount(channel);
+        },
+        (channel) => {
+          let targetBoard = this.chatSection.getChatBoard(channel.url);
+          if (targetBoard) {
+            let isBottom = this.chatSection.isBottom(targetBoard.messageContent, targetBoard.list);
+            this.chatSection.showTyping(channel, this.spinner);
+            this.chatSection.responsiveHeight(channel.url);
+            if (isBottom) {
+              this.chatSection.scrollToBottom(targetBoard.messageContent);
+            }
+          }
+        },
+        (channel) => {
+          let targetBoard = this.chatSection.getChatBoard(channel.url);
+          if (targetBoard) {
+            var channelSet = this.getChannelSet(channel.url);
+            if (channelSet) {
+              this.chatSection.updateReadReceipt(channelSet, targetBoard);
+            }
+          }
+        },
+        (channel, user) => {
+          if (this.sb.isCurrentUser(user)) {
+            let item = this.listBoard.getChannelItem(channel.url);
+            this.listBoard.list.removeChild(item);
+            this.listBoard.checkEmptyList();
+          } else {
+            this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
+            this.updateUnreadMessageCount(channel);
+            let targetChatBoard = this.chatSection.getChatBoard(channel.url);
+            if (targetChatBoard) {
+              this.updateChannelInfo(targetChatBoard, channel);
+            }
+          }
+        },
+        (channel, user) => {
+          this.listBoard.setChannelTitle(channel.url, this.sb.getNicknamesString(channel));
+          let targetChatBoard = this.chatSection.getChatBoard(channel.url);
+          if (targetChatBoard) {
+            this.updateChannelInfo(targetChatBoard, channel);
+          }
+        }
+      );
+
+      if (callback) callback();
     });
   }
 
@@ -368,7 +396,7 @@ class SBWidget {
         if (newChat) {
           this.chatSection.closeChatBoard(newChat);
         }
-        this.connectChannel(channelUrl);
+        this._connectChannel(channelUrl);
       }
     });
     return item;
@@ -390,7 +418,11 @@ class SBWidget {
     this.sb.userListQuery = null;
   }
 
-  connectChannel(channelUrl, doNotCall) {
+  connectChannel(channelUrl) {
+    this._connectChannel(channelUrl, false);
+  }
+
+  _connectChannel(channelUrl, doNotCall) {
     var chatBoard = this.chatSection.createChatBoard(channelUrl, doNotCall);
     if (!doNotCall) {
       this.responsiveChatSection(channelUrl);

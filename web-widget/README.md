@@ -39,6 +39,24 @@ If you wish to issue an `access_token` for your user, modify the `connect functi
         webpack -p
 
 
+## Start with user connect  
+If you want start widget with user connect, you follow below.  
+
+```javascript
+sbWidget.startWithConnect(APP_ID, USER_ID, NICKNAME, function() {
+  // do something...
+});
+```
+
+
+## Open chat  
+If you want to open chat, you can using `connectChannel(channelUrl)`.  
+
+```javascript
+sbWidget.connectChannel(CHANNEL_URL);
+```
+
+
 ## File Structure
 ```
     |-- build
@@ -64,13 +82,14 @@ If you wish to issue an `access_token` for your user, modify the `connect functi
                 |-- _box-shadow.scss        - box shadow mixin
                 |-- _state.scss             - element state mixin
                 |-- _transform.scss         - transform mixin
+                |-- _reset.scss             - clean css mixin
             |-- _mixins.scss                - import mixin
             |-- _variables.scss             - css variables
             |-- _animation.scss             - animation
             |-- _icons.scss                 - icon 
             |-- widget.scss                 - main css  
 |-- .eslintrc.js                            - lint setting 
-|-- webpack.config.js                       - widget setting 
+|-- webpack.config.js                       - webpack setting 
 |-- package.json                            - npm package 
 |-- SendBird.min.js                         - SendBird SDK 
 |-- index.html                              - sample file

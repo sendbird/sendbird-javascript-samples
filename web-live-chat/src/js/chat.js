@@ -8,6 +8,7 @@ import { hasClass } from './utils.js';
 const ELEMENT_ID = 'sb_chat';
 const ERROR_MESSAGE_SDK = 'Please import "SendBird SDK" on first.';
 const ERROR_MESSAGE_APP_ID = 'Please pass "APP_ID" when start.';
+const ERROR_MESSAGE_USER_INFO = 'Please pass "USER_ID" and "NICKNAME" when start.';
 const ERROR_MESSAGE_CHANNEL_URL = 'Please pass "CHANNEL_URL" when start.';
 const ERROR_MESSAGE = 'Please create "sb_chat" element on first.';
 
@@ -25,8 +26,7 @@ let loginBoard;
 let messageBoard;
 
 class LiveChat {
-  constructor() {
-  }
+  constructor() {}
 
   start(appId, channelUrl) {
     if (!window.SendBird) {
@@ -45,33 +45,14 @@ class LiveChat {
 
     chat = document.getElementById(ELEMENT_ID);
     if (chat) {
-      sendbird = new Sendbird(appId);
-      spinner = new Spinner();
-      board = new ChatBoard(chat);
-
-      messageBoard = new MessageBoard();
-      messageBoard.setScrollEvent(() => {
-        sendbird.getMessageList((messageList) => {
-          messageBoard.renderMessage(messageList, false, true);
-        });
-      });
-      messageBoard.iconClickEvent(() => {
-        let textMessage = messageBoard.getMessage();
-        messageBoard.clearInput();
-        if (textMessage) {
-          sendbird.sendMessage(textMessage, (message) => {
-            messageBoard.renderMessage([message], true, false);
-            this._removeOverCountMessage();
-          });
-        }
-      });
+      this._init(appId, chat);
 
       loginBoard = new LoginBoard(board.self);
       loginBoard.addLoginBtnClickEvent(() => {
         if (!hasClass(loginBoard.loginBtn, loginBoard.classes.DISABLED)) {
           loginBoard.disableLoginBoard();
           spinner.insert(loginBoard.loginBtn);
-          sendbird.connect(loginBoard.userId.value, loginBoard.nickname.value, () => {
+          this._connectUser(loginBoard.userId.value, loginBoard.nickname.value, () => {
             spinner.remove(loginBoard.loginBtn);
             loginBoard.reset();
             spinner.insert(messageBoard.content);
@@ -85,6 +66,57 @@ class LiveChat {
     }
   }
 
+  startWithConnect(appId, userId, nickname, callback) {
+    if (!window.SendBird) {
+      console.error(ERROR_MESSAGE_SDK);
+      return;
+    }
+    if (!appId) {
+      console.error(ERROR_MESSAGE_APP_ID);
+      return;
+    }
+    if (!userId || !nickname) {
+      console.error(ERROR_MESSAGE_USER_INFO);
+      return;
+    }
+    this._getGoogleFont();
+
+    chat = document.getElementById(ELEMENT_ID);
+    if (chat) {
+      this._init(appId, chat);
+      this._connectUser(userId, nickname, () => {
+        spinner.insert(messageBoard.content);
+        board.self.appendChild(messageBoard.self);
+        callback();
+      });
+    } else {
+      console.error(ERROR_MESSAGE);
+    }
+  }
+
+  _init(appId, chat) {
+    sendbird = new Sendbird(appId);
+    spinner = new Spinner();
+    board = new ChatBoard(chat);
+
+    messageBoard = new MessageBoard();
+    messageBoard.setScrollEvent(() => {
+      sendbird.getMessageList((messageList) => {
+        messageBoard.renderMessage(messageList, false, true);
+      });
+    });
+    messageBoard.iconClickEvent(() => {
+      let textMessage = messageBoard.getMessage();
+      messageBoard.clearInput();
+      if (textMessage) {
+        sendbird.sendMessage(textMessage, (message) => {
+          messageBoard.renderMessage([message], true, false);
+          this._removeOverCountMessage();
+        });
+      }
+    });
+  }
+
   _getGoogleFont() {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
@@ -93,6 +125,16 @@ class LiveChat {
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);
+  }
+
+  _connectUser(userId, nickname, callback) {
+    sendbird.connect(userId, nickname, () => {
+      callback();
+    });
+  }
+
+  connectChannel(channelUrl) {
+    this._connectChannel(channelUrl);
   }
 
   _connectChannel(channelUrl) {

@@ -38,6 +38,8 @@ If you wish to issue an `access_token` for your user, modify the `connect functi
 
         webpack -p
 
+
+## Advanced  
 ### Connect other APP or Channel
 If you want to connect other application or channel, you need to change variable `appId` or `channelUrl` in `index.html`.
 
@@ -53,6 +55,36 @@ If you want to connect other application or channel, you need to change variable
   </script>
 
 </html>
+```
+
+### Start with User connect  
+If you want to start this sample with user connect, you can using `startWithConnect()`.  
+
+```html
+...
+  <script src="SendBird.min.js"></script>
+  <script src="build/liveChat.SendBird.js"></script>
+  <script>
+    var appId = '<APP_ID>';
+    var userId = '<USER_ID>';
+    var nickname = '<NICKNAME>';
+    var channelUrl = '<CHANNEL_URL>';
+    liveChat.startWithConnect(appId, userId, nickname, function() {
+      // do something...
+    });
+  </script>
+
+</html>
+```
+
+### Open Chat
+If you want to open chat, you can using `connectChannel()`.  
+
+```javascript
+...
+var channelUrl = '<CHANNEL_URL>';
+liveChat.connectChannel(channelUrl);
+...
 ```
 
 

@@ -39,21 +39,51 @@ If you wish to issue an `access_token` for your user, modify the `connect functi
         webpack -p
 
 
-## Start with user connect  
-If you want start widget with user connect, you follow below.  
+## Advanced  
+### Connect other APP or Channel  
+If you want to connect other application, you need to change variable `appId` in `index.html`.
 
-```javascript
-sbWidget.startWithConnect(APP_ID, USER_ID, NICKNAME, function() {
-  // do something...
-});
+```html
+...
+
+  <script src="SendBird.min.js"></script>
+  <script src="build/widget.SendBird.js"></script>
+  <script>
+    var appId = '<APP_ID>';
+    sbWidget.start(appId);
+  </script>
+
+</html>
 ```
 
+### Start with User connect  
+If you want to start this sample with user connect, you can using `startWithConnect()`.  
 
-## Open chat  
-If you want to open chat, you can using `connectChannel(channelUrl)`.  
+```html
+...
+
+  <script src="SendBird.min.js"></script>
+  <script src="build/widget.SendBird.js"></script>
+  <script>
+    var appId = '<APP_ID>';
+    var userId = '<USER_ID>';
+    var nickname = '<NICKNAME>';
+    sbWidget.startWithConnect(appId, userId, nickname, function() {
+      // do something...
+    });
+  </script>
+
+</html>
+```
+
+### Open Chat  
+If you want to open chat, you can using `connectChannel()`.  
 
 ```javascript
-sbWidget.connectChannel(CHANNEL_URL);
+...
+var channelUrl = '<CHANNEL_URL>';
+sbWidget.connectChannel(channelUrl);
+...
 ```
 
 

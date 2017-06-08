@@ -77,13 +77,26 @@ If you want to start this sample with user connect, you can using `startWithConn
 </html>
 ```
 
-### Open Chat
-If you want to open chat, you can using `connectChannel()`.  
+### Enter Channel
+If you want to enter channel, you can using `enterChannel()`.  
 
 ```javascript
 ...
 var channelUrl = '<CHANNEL_URL>';
-liveChat.connectChannel(channelUrl);
+liveChat.enterChannel(channelUrl, function() {
+  // do something...
+});
+...
+```
+
+### Exit Channel
+If you want to exit current channel, you can using `exitChannel()`.  
+
+```javascript
+...
+liveChat.exitChannel(function() {
+  // do something...
+});
 ...
 ```
 

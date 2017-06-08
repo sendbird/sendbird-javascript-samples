@@ -76,13 +76,13 @@ If you want to start this sample with user connect, you can using `startWithConn
 </html>
 ```
 
-### Open Chat  
-If you want to open chat, you can using `connectChannel()`.  
+### Show Channel  
+If you want to open chat, you can using `showChannel()`.  
 
 ```javascript
 ...
 var channelUrl = '<CHANNEL_URL>';
-sbWidget.connectChannel(channelUrl);
+sbWidget.showChannel(channelUrl);
 ...
 ```
 

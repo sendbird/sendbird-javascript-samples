@@ -418,7 +418,7 @@ class SBWidget {
     this.sb.userListQuery = null;
   }
 
-  connectChannel(channelUrl) {
+  showChannel(channelUrl) {
     this._connectChannel(channelUrl, false);
   }
 

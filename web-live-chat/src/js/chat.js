@@ -57,7 +57,7 @@ class LiveChat {
             loginBoard.reset();
             spinner.insert(messageBoard.content);
             board.self.replaceChild(messageBoard.self, loginBoard.self);
-            this._connectChannel(channelUrl);
+            this._enterChannel(channelUrl);
           });
         }
       });
@@ -133,12 +133,16 @@ class LiveChat {
     });
   }
 
-  connectChannel(channelUrl) {
-    this._connectChannel(channelUrl);
+  enterChannel(channelUrl, callback) {
+    this._enterChannel(channelUrl,callback);
   }
 
-  _connectChannel(channelUrl) {
-    sendbird.connectChannel(channelUrl, () => {
+  exitChannel(callback) {
+    sendbird.exitChannel(callback);
+  }
+
+  _enterChannel(channelUrl, callback) {
+    sendbird.enterChannel(channelUrl, () => {
       sendbird.getMessageList((messageList) => {
         spinner.remove(messageBoard.content);
         messageBoard.renderMessage(messageList, true, false);
@@ -154,6 +158,10 @@ class LiveChat {
           }
         });
       });
+
+      if (callback) {
+        callback();
+      }
     });
   }
 

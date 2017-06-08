@@ -51,7 +51,7 @@ class Sendbird {
   /*
   Channel
    */
-  connectChannel(channelUrl, action) {
+  enterChannel(channelUrl, action) {
     this.self.OpenChannel.getChannel(channelUrl, (channel, error) => {
       if (error) {
         console.error(error);
@@ -65,6 +65,17 @@ class Sendbird {
         this.channel = channel;
         action();
       });
+    });
+  }
+
+  exitChannel(callback) {
+    this.channel.exit((response, error) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      this.channel = null;
+      callback();
     });
   }
 

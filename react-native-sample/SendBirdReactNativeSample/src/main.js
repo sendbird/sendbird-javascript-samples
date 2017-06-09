@@ -36,18 +36,24 @@ var ROUTES = {
 
 export default class Main extends Component {
 
+  _handleAppStateChange = (currentAppState) => {
+    if (currentAppState === 'active') {
+        console.log('appstate - foreground');
+        if(sb){
+            sb.setForegroundState();
+        }
+    } else if (currentAppState === 'background') {
+        console.log('appstate - background');
+        if(sb){
+            sb.setBackgroundState();
+        }
+    }
+  }
+
   componentDidMount() {
     sb = new SendBird({appId: APP_ID});
 
-    AppState.addEventListener('change', function(currentAppState){
-      if (currentAppState === 'active') {
-        console.log('foreground');
-        sb.setForegroundState();
-      } else if (currentAppState === 'background') {
-        console.log('background');
-        sb.setBackgroundState();
-      }
-    });
+    AppState.addEventListener('change', this._handleAppStateChange);
     var Notifications = require('react-native-push-notification');
     Notifications.configure({
         onRegister: function(token) {
@@ -90,6 +96,10 @@ export default class Main extends Component {
         requestPermissions: true,
     });
     
+  }
+
+  componentWillUnmount() {
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
   render() {

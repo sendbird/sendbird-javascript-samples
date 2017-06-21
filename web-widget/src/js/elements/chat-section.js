@@ -65,6 +65,10 @@ class ChatSection extends Element {
     this.self.insertBefore(target, this.self.firstChild);
   }
 
+  setWidth(width) {
+    this._setWidth(this.self, width);
+  }
+
   /*
   Chat
    */
@@ -339,7 +343,6 @@ class ChatSection extends Element {
   }
 
   setImageSize(target, message) {
-
     var imageResize = (imageTarget, width, height) => {
       let scaleWidth = IMAGE_MAX_SIZE / width;
       let scaleHeight = IMAGE_MAX_SIZE / height;
@@ -462,6 +465,13 @@ class ChatSection extends Element {
     messageContent.appendChild(messageItem);
     messageSet.appendChild(messageContent);
     return messageSet;
+  }
+
+  createAdminMessageItem(message) {
+    var admin = this.createDiv();
+    this._setClass(admin, [className.MESSAGE_SET, className.ADMIN_MESSAGE]);
+    this._setContent(admin, message.message);
+    return admin;
   }
 
   setUnreadCount(target, count) {

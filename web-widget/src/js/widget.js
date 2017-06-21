@@ -135,8 +135,9 @@ class SBWidget {
     this.widgetBtn.reset();
   }
 
-  responsiveChatSection(channelUrl) {
-    let maxSize = parseInt(this.chatSection.self.offsetWidth / CHAT_BOARD_WIDTH);
+  responsiveChatSection(channelUrl, isShow) {
+    let _bodyWidth = document.getElementsByTagName('BODY')[0].offsetWidth - 360;
+    let maxSize = parseInt(_bodyWidth / CHAT_BOARD_WIDTH);
     let currentSize = this.activeChannelSetList.length;
     if (currentSize >= maxSize) {
       let extraChannelSet = getLastItem(this.activeChannelSetList);
@@ -156,10 +157,17 @@ class SBWidget {
           this.extraChannelSetList.splice(idx, 1);
         }
       }
+      this.chatSection.setWidth(maxSize * CHAT_BOARD_WIDTH);
     } else {
       let popChannelUrl = this.extraChannelSetList.pop();
       if (popChannelUrl) {
         this._connectChannel(popChannelUrl, true);
+        this.chatSection.setWidth((currentSize + 1) * CHAT_BOARD_WIDTH);
+      } else {
+        if (isShow) {
+          currentSize += 1;
+        }
+        this.chatSection.setWidth(currentSize * CHAT_BOARD_WIDTH);
       }
     }
   }
@@ -184,7 +192,7 @@ class SBWidget {
       this.listBoard.hideLogoutBtn();
 
       var chatBoard = this.chatSection.createChatBoard(NEW_CHAT_BOARD_ID);
-      this.responsiveChatSection();
+      this.responsiveChatSection(null, true);
 
       this.chatSection.createNewChatBoard(chatBoard);
       this.chatSection.addClickEvent(chatBoard.startBtn, () => {
@@ -322,10 +330,8 @@ class SBWidget {
     }
     this.listBoard.addListOnFirstIndex(target);
 
-    if (message.isUserMessage() || message.isFileMessage()) {
-      this.listBoard.setChannelLastMessage(channel.url, message.isUserMessage() ? message.message : message.name);
-      this.listBoard.setChannelLastMessageTime(channel.url, this.sb.getMessageTime(message));
-    }
+    this.listBoard.setChannelLastMessage(channel.url, message.isFileMessage() ? message.name : message.message);
+    this.listBoard.setChannelLastMessageTime(channel.url, this.sb.getMessageTime(message));
 
     let targetBoard = this.chatSection.getChatBoard(channel.url);
     if (targetBoard) {
@@ -425,7 +431,7 @@ class SBWidget {
   _connectChannel(channelUrl, doNotCall) {
     var chatBoard = this.chatSection.createChatBoard(channelUrl, doNotCall);
     if (!doNotCall) {
-      this.responsiveChatSection(channelUrl);
+      this.responsiveChatSection(channelUrl, true);
     }
     this.chatSection.addClickEvent(chatBoard.closeBtn, () => {
       this.chatSection.closeChatBoard(chatBoard);
@@ -656,15 +662,18 @@ class SBWidget {
         newMessage = this.chatSection.createMessageItemTime(message.time);
         prevMessage = null;
       } else {
-        let isCurrentUser = this.sb.isCurrentUser(message.sender);
-        let isContinue = prevMessage ? (message.sender.userId == prevMessage.sender.userId) : false;
-        let unreadCount = channel.getReadReceipt(message);
-        if (message.isUserMessage()) {
-          newMessage = this.chatSection.createMessageItem(message, isCurrentUser, isContinue, unreadCount);
-        } else if (message.isFileMessage()) {
-          newMessage = this.chatSection.createMessageItem(message, isCurrentUser, isContinue, unreadCount);
-        } else {
-          // do something...
+        let isContinue = false;
+        if (message.isAdminMessage()) {
+          newMessage = this.chatSection.createAdminMessageItem(message);
+        } else { // isUserMessage() || isFileMessage()
+          isContinue = (prevMessage && prevMessage.sender) ? (message.sender.userId == prevMessage.sender.userId) : false;
+          let isCurrentUser = this.sb.isCurrentUser(message.sender);
+          let unreadCount = channel.getReadReceipt(message);
+          if (message.isUserMessage()) {
+            newMessage = this.chatSection.createMessageItem(message, isCurrentUser, isContinue, unreadCount);
+          } else if (message.isFileMessage()) {
+            newMessage = this.chatSection.createMessageItem(message, isCurrentUser, isContinue, unreadCount);
+          }
         }
         prevMessage = message;
       }

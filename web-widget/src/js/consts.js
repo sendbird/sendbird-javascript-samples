@@ -55,6 +55,7 @@ export const className = {
   LEAVE_POPUP: 'leave-popup',
   LEAVE_BTN: 'leave-btn',
   CANCEL_BTN: 'cancel-btn',
+  ADMIN_MESSAGE: 'admin-message',
 
   POPUP: 'popup',
   MEMBERS: 'members',

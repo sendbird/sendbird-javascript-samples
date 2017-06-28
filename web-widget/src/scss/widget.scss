@@ -544,7 +544,7 @@
     position: absolute;
     right: 60px;
     bottom: 0;
-    width: calc(100vw - 360px);
+    width: auto;
     max-height: 520px;
 
     .chat-board {
@@ -703,7 +703,7 @@
     .content {
       @include reset();
       width: 100%;
-      height: calc(100% - 24px - 1px);
+      height: calc(100% - 36px - 1px);
       background-color: $color-white;
 
       .sb-spinner {
@@ -1066,6 +1066,11 @@
       text-align: center;
       font-size: 11px;
       color: $color-gray-dark;
+    }
+    .message-set.admin-message {
+      text-align: center;
+      font-size: 12px;
+      color: $color-gray-darker;
     }
 
 

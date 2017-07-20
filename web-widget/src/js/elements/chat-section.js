@@ -1,6 +1,6 @@
 import { className, MAX_COUNT } from '../consts.js';
 import Element from './elements.js';
-import { show, hide, getFullHeight, removeClass } from '../utils.js';
+import { show, hide, getFullHeight, removeClass, xssEscape } from '../utils.js';
 
 const EMPTY_STRING = '';
 
@@ -337,7 +337,7 @@ class ChatSection extends Element {
     } else {
       let typingUser = channel.getTypingMembers();
       spinner.insert(typing);
-      this._addContent(typing, (typingUser.length > 1) ? MESSAGE_TYPING_SEVERAL : typingUser[0].nickname + MESSAGE_TYPING_MEMBER);
+      this._addContent(typing, (typingUser.length > 1) ? MESSAGE_TYPING_SEVERAL : xssEscape(typingUser[0].nickname) + MESSAGE_TYPING_MEMBER);
       show(typing);
     }
   }
@@ -368,7 +368,7 @@ class ChatSection extends Element {
       img.addEventListener('load', (res) => {
         res.path ? imageResize(target, res.path[0].width, res.path[0].height) : imageResize(target, res.target.width, res.target.height);
       });
-      img.src = message.url;
+      img.src = xssEscape(message.url);
     }
   }
 
@@ -395,7 +395,7 @@ class ChatSection extends Element {
 
     var senderNickname = this.createDiv();
     this._setClass(senderNickname, [className.NICKNAME]);
-    this._setContent(senderNickname, message.sender.nickname);
+    this._setContent(senderNickname, xssEscape(message.sender.nickname));
     if (isContinue) {
       senderNickname.style.display = DISPLAY_NONE;
     }
@@ -407,19 +407,19 @@ class ChatSection extends Element {
     var itemText = this.createDiv();
     if (message.isUserMessage()) {
       this._setClass(itemText, [className.TEXT]);
-      this._setContent(itemText, message.message);
+      this._setContent(itemText, xssEscape(message.message));
     } else if (message.isFileMessage()) {
       if (message.type.match(/^image\/gif$/)) {
         this._setClass(itemText, [className.FILE_MESSAGE]);
         let image = this.createImg();
         this._setClass(image, [className.IMAGE]);
-        image.src = message.url;
+        image.src = xssEscape(message.url);
         this.setImageSize(image, message);
         itemText.appendChild(image);
       } else {
         this._setClass(itemText, [className.FILE_MESSAGE]);
         let file = this.createA();
-        file.href = message.url;
+        file.href = xssEscape(message.url);
         file.target = 'blank';
         if (message.type.match(/^image\/.+$/)) {
           this._setClass(file, [className.IMAGE]);
@@ -434,7 +434,7 @@ class ChatSection extends Element {
 
           var fileName = this.createDiv();
           this._setClass(fileName, [className.FILE_NAME]);
-          this._setContent(fileName, message.name);
+          this._setContent(fileName, xssEscape(message.name));
           fileText.appendChild(fileName);
 
           var fileDownload = this.createDiv();
@@ -470,7 +470,7 @@ class ChatSection extends Element {
   createAdminMessageItem(message) {
     var admin = this.createDiv();
     this._setClass(admin, [className.MESSAGE_SET, className.ADMIN_MESSAGE]);
-    this._setContent(admin, message.message);
+    this._setContent(admin, xssEscape(message.message));
     return admin;
   }
 
@@ -553,7 +553,7 @@ class ChatSection extends Element {
 
     var userNickname = this.createDiv();
     this._setClass(userNickname, [className.NICKNAME]);
-    this._setContent(userNickname, user.nickname);
+    this._setContent(userNickname, xssEscape(user.nickname));
     userItem.appendChild(userNickname);
 
     li.appendChild(userItem);

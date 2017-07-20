@@ -1,4 +1,5 @@
 import { MAX_COUNT } from './consts.js';
+import { xssEscape } from './utils.js';
 
 const GLOBAL_HANDLER = 'GLOBAL_HANDLER';
 const GET_MESSAGE_LIMIT = 20;
@@ -215,7 +216,7 @@ class Sendbird {
     let currentUserId = this.sb.currentUser.userId;
     channel.members.forEach(function(member) {
       if (member.userId != currentUserId) {
-        nicknameList.push(member.nickname);
+        nicknameList.push(xssEscape(member.nickname));
       }
     });
     return nicknameList.toString();

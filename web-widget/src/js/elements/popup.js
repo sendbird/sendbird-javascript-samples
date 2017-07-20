@@ -1,6 +1,6 @@
 import { className, MAX_COUNT } from '../consts.js';
 import Element from './elements.js';
-import { addClass, show, hide } from '../utils.js';
+import { addClass, show, hide, xssEscape } from '../utils.js';
 
 const EMPTY_STRING = '';
 const TITLE_POPUP_MEMBER_LIST = 'Member List';
@@ -116,7 +116,7 @@ class Popup extends Element {
 
     var userNickname = this.createDiv();
     this._setClass(userNickname, [className.NICKNAME]);
-    this._setContent(userNickname, member.nickname);
+    this._setContent(userNickname, xssEscape(member.nickname));
     div.appendChild(userNickname);
 
     li.appendChild(div);

@@ -86,3 +86,18 @@ export function insertMessageInList(target, index, item) {
 export function getLastItem(target) {
   return target.length < 1 ? null : target[target.length-1];
 }
+
+export function xssEscape(target) {
+  return target
+    .split('&').join('&amp;')
+    .split('#').join('&#35;')
+    .split('<').join('&lt;')
+    .split('>').join('&gt;')
+    .split('"').join('&quot;')
+    .split('\'').join('&apos;')
+    .split('+').join('&#43;')
+    .split('-').join('&#45;')
+    .split('(').join('&#40;')
+    .split(')').join('&#41;')
+    .split('%').join('&#37;');
+}

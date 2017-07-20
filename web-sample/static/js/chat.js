@@ -90,36 +90,17 @@ $(document).on('click', '.chat-canvas__list-text', function(e){
   });
 });
 
-function debounce(func, wait, immediate) {
-	var timeout;
-	return function() {
-		var context = this, args = arguments;
-		var later = function() {
-			timeout = null;
-			if (!immediate) func.apply(context, args);
-		};
-		var callNow = immediate && !timeout;
-		clearTimeout(timeout);
-		timeout = setTimeout(later, wait);
-		if (callNow) func.apply(context, args);
-	};
-};
-
 
 function modalConfirm(title, desc, submit, close){
-
-  console.log("modalConfirmmodalConfirmmodalConfirmmodalConfirmmodalConfirmmodalConfirm");
-
   $('.modal-confirm-title').html(title);
   $('.modal-confirm-desc').html(desc);
 
-  $('.modal-confirm-submit').unbind('click');
-  $('.modal-confirm-close').unbind('click');
+  // $('.modal-confirm-submit').unbind('click');
+  // $('.modal-confirm-close').unbind('click');
 
   $('.modal-confirm-close').click(function(){
     if (close) {
-      close_modal = debounce(close, 1000, true);
-      close_modal();
+      close();
     }
     $('.modal-confirm').hide();
     $('.modal-confirm-close').unbind('click');
@@ -127,8 +108,7 @@ function modalConfirm(title, desc, submit, close){
 
   $('.modal-confirm-submit').click(function(){
     if (submit) {
-      submit_modal = debounce(submit, 1000, true);
-      submit_modal();
+      submit();
     }
     $('.modal-confirm').hide();
     $('.modal-confirm-submit').unbind('click');
@@ -187,29 +167,6 @@ function modalInput(title, desc, submit, close){
   });
 }
 
-function showChatUI(){
-  $('.chat').show();
-  if(typeof moxie !== 'undefined' && moxie){
-  console.log("existing");
-  var fileInput = new moxie.file.FileInput({
-    browse_button: 'chat_file_input2', // or document.getElementById('file-picker')
-    accept: [
-                {title: "Images", extensions: "jpg,gif,png"} // accept only images
-            ]
-  });
-  fileInput.onchange = function(e) {
-     // do something to files array
-     target_file = e.target.files[0];
-     reader = new moxie.file.FileReader();
-     reader.onload = function(e){
-       var send_file = {'name':target_file.name,'type':target_file.type,'base64':e.target.result.split(',')[1]};
-       currChannelInfo.sendFileMessage(send_file, SendMessageHandler);
-     }
-     reader.readAsDataURL(target_file);
-  };
-  fileInput.init(); // initialize
-  }
-}
 
 
 function getChannelList(isFirstPage) {
@@ -242,7 +199,7 @@ function createChannelList(channels) {
   for (var i in channels) {
     var channel = channels[i];
     var item = '<div class="modal-open-chat-list__item" onclick="joinChannel(\'%channelUrl%\')">%channelImage% &nbsp;%channelName%</div>';
-    item = item.replace(/%channelUrl%/, channel.url).replace(/%channelName%/, channel.name);
+    item = item.replace(/%channelUrl%/, channel.url).replace(/%channelName%/, xssEscape(channel.name));
     item = item.replace(/%channelImage%/, '<img src="'+channel.coverUrl+'" /> ');
 
     channelListHtml += item;
@@ -277,18 +234,18 @@ function joinChannel(channelUrl) {
       currChannelUrl = channelUrl;
 
       $('.chat-empty').hide();
-      initChatTitle(currChannelInfo.name, 0);
+      initChatTitle(xssEscape(currChannelInfo.name), 0);
 
       $('.chat-canvas').html('');
       $('.chat-input-text__field').val('');
-      showChatUI();
+      $('.chat').show();
 
       navInit();
       popupInit();
 
       isOpenChat = true;
       loadMoreChatMessage(scrollPositionBottom);
-      setWelcomeMessage(currChannelInfo.name);
+      setWelcomeMessage(xssEscape(currChannelInfo.name));
       addChannel();
       $('.chat-input-text__field').attr('disabled', false);
 
@@ -321,7 +278,7 @@ function addChannel() {
       '     onclick="joinChannel(\'' + currChannelInfo.url + '\')"' +
       '     data-channel-url="' + currChannelInfo.url + '"' +
       '>' +
-      (currChannelInfo.name.length > 12 ? currChannelInfo.name.substring(0, 12) + '...' : currChannelInfo["name"]) +
+      (currChannelInfo.name.length > 12 ? xssEscape(currChannelInfo.name.substring(0, 12)) + '...' : xssEscape(currChannelInfo["name"])) +
       '</div>'
     );
   }
@@ -400,7 +357,7 @@ function getMemberList(channel) {
           '<div class="modal-member-list__item">' +
           '<div class="modal-member-list__icon modal-member-list__icon--online"></div>' +
           '  <div class="modal-member-list__name">' +
-          (member.nickname.length > 13 ? member.nickname.substring(0, 12) + '...' : member.nickname) +
+          (member.nickname.length > 13 ? xssEscape(member.nickname.substring(0, 12)) + '...' : xssEscape(member.nickname)) +
           '  </div>' +
           '</div>';
       });
@@ -428,7 +385,7 @@ function getMemberList(channel) {
         '<div class="modal-member-list__item">' +
         '<div class="modal-member-list__icon"><img src="'+member.profileUrl+'" /></div>' +
         '  <div class="modal-member-list__name '+isOnline+'">' +
-        (member.nickname.length > 13 ? member.nickname.substring(0, 12) + '...' : member.nickname) +
+        (member.nickname.length > 13 ? xssEscape(member.nickname.substring(0, 12)) + '...' : xssEscape(member.nickname)) +
         '  </div>' +
         '<div class="modal-member-list__lastseenat">'+dateTimeString+'</div>' +
         '</div>';
@@ -509,7 +466,7 @@ function getUserList(isFirstPage) {
         if (!isCurrentUser(user.userId)) {
           $('.modal-messaging-list').append(
             '<div class="modal-messaging-list__item" onclick="userClick($(this))">' +
-            (user.nickname.length > 12 ? user.nickname.substring(0, 12) + '...' : user.nickname) +
+            (user.nickname.length > 12 ? xssEscape(user.nickname.substring(0, 12)) + '...' : xssEscape(user.nickname)) +
             '  <div class="modal-messaging-list__icon" data-guest-id="' + user.userId + '"></div>' +
             '</div>'
           );
@@ -555,7 +512,6 @@ function startMessaging() {
   }
 
   var startMessagingProcess = function(){
-    console.log("startMessagingProcessstartMessagingProcessstartMessagingProcessstartMessagingProcessstartMessagingProcess");
     var users = [];
     $.each($('.modal-messaging-list__icon--select'), function(index, user) {
       users.push(UserList[$(user).data("guest-id")]);
@@ -575,7 +531,7 @@ function startMessaging() {
 
       $.each(members, function(index, member) {
         if (!isCurrentUser(member.userId)) {
-          channelTitle += member.nickname + ', ';
+          channelTitle += xssEscape(member.nickname) + ', ';
         }
       });
 
@@ -596,7 +552,7 @@ function startMessaging() {
       initChatTitle(channelTitle, titleType);
       $('.chat-canvas').html('');
       $('.chat-input-text__field').val('');
-      showChatUI();
+      $('.chat').show();
 
       navInit();
       popupInit();
@@ -735,7 +691,7 @@ function updateGroupChannelLastMessage(message){
   var lastMessage = '';
   var lastMessageDateString = '';
   if (message) {
-    lastMessage = message.message;
+    lastMessage = xssEscape(message.message);
     var calcSeconds = (new Date().getTime() - message.createdAt)/1000;
     var parsedValue;
 
@@ -861,7 +817,7 @@ function groupChannelListMembersAndProfileImageUpdate(targetChannel){
       membersProfileImageUrl.push(member.profileUrl);
     }
 
-    membersNickname += member.nickname + ', ';
+    membersNickname += xssEscape(member.nickname) + ', ';
   }
   membersNickname = membersNickname.substring(0, membersNickname.length - 2);
 
@@ -920,7 +876,7 @@ function joinGroupChannel(channelUrl, callback) {
 
     $.each(members, function(index, member) {
       if (!isCurrentUser(member.userId)) {
-        channelTitle += member.nickname + ', ';
+        channelTitle += xssEscape(member.nickname) + ', ';
       }
     });
 
@@ -942,7 +898,7 @@ function joinGroupChannel(channelUrl, callback) {
     initChatTitle(channelTitle, titleType);
     $('.chat-canvas').html('');
     $('.chat-input-text__field').val('');
-    showChatUI();
+    $('.chat').show();
 
     navInit();
     popupInit();
@@ -1015,7 +971,7 @@ function getGroupChannelList() {
 
       members.forEach(function(member){
         if (currentUser.userId != member.userId) {
-          channelMemberList += member.nickname + ', ';
+          channelMemberList += xssEscape(member.nickname) + ', ';
         }
       });
 
@@ -1050,7 +1006,7 @@ function makeMemberList(members) {
     item = {};
     if (!isCurrentUser(member['user_id'])) {
       item["user_id"] = member["user_id"];
-      item["name"] = member["name"];
+      item["name"] = xssEscape(member["name"]);
       memberList.push(item);
     }
   });
@@ -1174,12 +1130,15 @@ function startSendBird(userId, nickName) {
     }
 
     if (isCurrentChannel && channel.isGroupChannel()) {
-      channel.markAsRead();    
-      unreadCountUpdate(channel);
+      channel.markAsRead();
+    } else {
+      if (channel.isGroupChannel()) {
+        unreadCountUpdate(channel);
+      }
     }
 
     if (!document.hasFocus()) {
-      notifyMessage(channel, message.message);
+      notifyMessage(channel, xssEscape(message.message));
     }
 
     if (message.isUserMessage() && isCurrentChannel) {
@@ -1187,6 +1146,9 @@ function startSendBird(userId, nickName) {
     }
 
     if (message.isFileMessage() && isCurrentChannel) {
+      $('.chat-input-file').removeClass('file-upload');
+      $('#chat_file_input').val('');
+
       if (message.type.match(/^image\/.+$/)) {
         setImageMessage(message);
       } else {
@@ -1216,6 +1178,7 @@ function startSendBird(userId, nickName) {
       updateGroupChannelLastMessage(message);
     }
 
+
     if (message.isUserMessage()) {
       setChatMessage(message);
     }
@@ -1230,6 +1193,7 @@ function startSendBird(userId, nickName) {
         setFileMessage(message);
       }
     }
+
   };
 
   ChannelHandler.onMessageDeleted = function (channel, messageId) {
@@ -1255,7 +1219,7 @@ function startSendBird(userId, nickName) {
 
   ChannelHandler.onUserLeft = function (channel, user) {
     console.log('ChannelHandler.onUserLeft: ', channel, user);
-    setSysMessage({'message': '"' + user.nickname + '" user is left.'});
+    setSysMessage({'message': '"' + xssEscape(user.nickname) + '" user is left.'});
 
     if (channel.isGroupChannel()){
       groupChannelListMembersAndProfileImageUpdate(channel);
@@ -1285,13 +1249,13 @@ function startSendBird(userId, nickName) {
       navInit();
       popupInit();
     } else {
-      setSysMessage({'message': '"' + user.nickname + '" user is banned.'});
+      setSysMessage({'message': '"' + xssEscape(user.nickname) + '" user is banned.'});
     }
   };
 
   ChannelHandler.onUserUnbanned = function (channel, user) {
     console.log('ChannelHandler.onUserUnbanned: ', channel, user);
-    setSysMessage({'message': '"' + user.nickname + '" user is unbanned.'});
+    setSysMessage({'message': '"' + xssEscape(user.nickname) + '" user is unbanned.'});
   };
 
   ChannelHandler.onChannelFrozen = function (channel) {
@@ -1317,16 +1281,6 @@ function startSendBird(userId, nickName) {
   sb.addChannelHandler('channel', ChannelHandler);
 }
 
-// var startTyping = function(user){
-//   typingUser[user.userId] = user.nickname;
-//   showTypingUser();
-// };
-//
-// var endTyping = function(user){
-//   delete(typingUser[user.userId]);
-//   showTypingUser();
-// };
-
 var showTypingUser = function(channel){
   if (!channel.isGroupChannel()) {
     return;
@@ -1342,7 +1296,7 @@ var showTypingUser = function(channel){
 
   var nicknames = '';
   for (var i in typingUser) {
-    var nickname = typingUser[i].nickname;
+    var nickname = xssEscape(typingUser[i].nickname);
     nicknames += nickname + ', ';
   }
   if (nicknames.length > 2) {
@@ -1405,7 +1359,7 @@ function setChatMessage(message) {
   updateChannelMessageCache(currChannelInfo, message);
   scrollPositionBottom();
 }
-  
+
 var PreviousMessageListQuery = null;
 function loadMoreChatMessage(func) {
   if (!PreviousMessageListQuery) {
@@ -1420,19 +1374,21 @@ function loadMoreChatMessage(func) {
     var moreMessage = messages;
     var msgList = '';
     messages.forEach(function(message){
-      if(message.isUserMessage()){
-        msgList += messageList(message);  
-      } else if(message.isAdminMessage()){
-        console.log(message);
-        msgList += adminMessageList(message);
-      } else if(message.isFileMessage()){
+      switch (message.MESSAGE_TYPE) {
+        case message.MESSAGE_TYPE_USER:
+          msgList += messageList(message);
+          break;
+        case message.MESSAGE_TYPE_FILE:
+          $('.chat-input-file').removeClass('file-upload');
+          $('#chat_file_input').val('');
+
           if (message.type.match(/^image\/.+$/)) {
             msgList +=imageMessageList(message);
           } else {
             msgList +=fileMessageList(message);
           }
-      } else{
-        console.log("unknown type of message :" + message);
+          break;
+        default:
       }
     });
 
@@ -1454,6 +1410,7 @@ function messageList(message) {
   var msgList = '';
   var user = message.sender;
   var channel = currChannelInfo;
+
   if (isCurrentUser(user.userId)) {
     // var readReceiptHtml = '';
     // if (channel.isGroupChannel()) {
@@ -1464,13 +1421,13 @@ function messageList(message) {
     var msg = '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user" data-userid="%userid%">' +
-      nameInjectionCheck(user.nickname) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">%message%</label>' +
       readReceiptHtml +
       '</div>';
-    msg = msg.replace('%message%', convertLinkMessage(message.message));
+    msg = msg.replace('%message%', convertLinkMessage(xssEscape(message.message)));
     msg = msg.replace('%userid%', user.userId).replace('%messageid%', message.messageId);
 
     msgList += msg;
@@ -1478,14 +1435,14 @@ function messageList(message) {
     var msg = '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">' +
-      nameInjectionCheck(user.nickname) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">' +
-      convertLinkMessage(message.message) +
+      convertLinkMessage(xssEscape(message.message)) +
       '  </label>' +
       '</div>';
-      msgList += msg.replace('%userid%', user.userId).replace('%nickname%', user.nickname).replace('%messageid%', message.messageId);
+      msgList += msg.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)).replace('%messageid%', message.messageId);
   }
 
   return msgList;
@@ -1531,14 +1488,6 @@ function updateChannelMessageCacheAll(channel) {
   }
 }
 
-function adminMessageList(message){
-   return '<div class="chat-canvas__list">' +
-    '  <label class="chat-canvas__list-broadcast">' +
-    message.message +
-    '  </label>' +
-    '</div>';
-}
-
 function fileMessageList(message) {
   var msgList = '';
   var user = message.sender;
@@ -1546,24 +1495,24 @@ function fileMessageList(message) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      nameInjectionCheck(user.nickname) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +
       '    <label class="chat-canvas__list-text-file">FILE</label>' +
-      '    <a href="' + message.url + '" target="_blank">' + message.name + '</a>' +
+      '    <a href="' + xssEscape(message.url) + '" target="_blank">' + xssEscape(message.name) + '</a>' +
       '  </label>' +
       '</div>';
   } else {
     msgList += '' +
       '<div class="chat-canvas__list">' +
-      '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">'.replace('%userid%', user.userId).replace('%nickname%', user.nickname) +
-      nameInjectionCheck(user.nickname) +
+      '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">'.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +
       '    <label class="chat-canvas__list-text-file">FILE</label>' +
-      '    <a href="' + message.url + '" target="_blank">' + message.name + '</a>' +
+      '    <a href="' + xssEscape(message.url) + '" target="_blank">' + xssEscape(message.name) + '</a>' +
       '  </label>' +
       '</div>';
   }
@@ -1582,28 +1531,28 @@ function imageMessageList(obj) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      nameInjectionCheck(user.nickanme) +
+      xssEscape(user.nickanme) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +
-      message.name +
+      xssEscape(message.name) +
       '  </label>' +
-      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + message.url + '\', \'_blank\');">' +
-      '    <img src="' + message.url + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
+      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + xssEscape(message.url) + '\', \'_blank\');">' +
+      '    <img src="' + xssEscape(message.url) + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
       '  </div>' +
       '</div>';
   } else {
     msgList += '' +
       '<div class="chat-canvas__list">' +
-      '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">'.replace('%userid%', user.userId).replace('%nickname%', user.nickname) +
-      nameInjectionCheck(user.nickanme) +
+      '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">'.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)) +
+      xssEscape(user.nickanme) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +
-      message.name +
+      xssEscape(message.name) +
       '  </label>' +
-      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + message.url + '\', \'_blank\');">' +
-      '    <img src="' + message.url + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
+      '  <div class="chat-canvas__list-file" onclick="window.open(\'' + xssEscape(message.url) + '\', \'_blank\');">' +
+      '    <img src="' + xssEscape(message.url) + '" class="chat-canvas__list-file-img" onload="afterImageLoad(this)">' +
       '  </div>' +
       '</div>';
   }
@@ -1675,7 +1624,7 @@ function setSysMessage(obj) {
   $('.chat-canvas').append(
     '<div class="chat-canvas__list-notice">' +
     '  <label class="chat-canvas__list-system">' +
-    obj['message'] +
+    xssEscape(obj['message']) +
     '  </label>' +
     '</div>'
   );
@@ -1686,7 +1635,7 @@ function setBroadcastMessage(obj) {
   $('.chat-canvas').append(
     '<div class="chat-canvas__list">' +
     '  <label class="chat-canvas__list-broadcast">' +
-    obj['message'] +
+    xssEscape(obj['message']) +
     '  </label>' +
     '</div>'
   );
@@ -1734,7 +1683,7 @@ function showChannel(channel, unread, targetUrl) {
   var channelMemberList = '';
   $.each(members, function(index, member) {
     if (currentUser.userId != member.userId) {
-      channelMemberList += member.nickname + ', ';
+      channelMemberList += xssEscape(member.nickname) + ', ';
     }
   });
   channelMemberList = channelMemberList.slice(0, -2);
@@ -1784,7 +1733,7 @@ function init() {
 
   $('.init-check').show();
   startSendBird(userId, nickname);
-  $('.left-nav-user-nickname').html(nickname);
+  $('.left-nav-user-nickname').html(xssEscape(nickname));
 }
 
 $(document).ready(function() {
@@ -1802,5 +1751,4 @@ window.onfocus = function() {
     }
   });
 };
-
 

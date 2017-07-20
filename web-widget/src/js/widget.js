@@ -4,7 +4,7 @@ import ChatSection from './elements/chat-section.js';
 import Popup from './elements/popup.js';
 import Spinner from './elements/spinner.js';
 import Sendbird from './sendbird.js';
-import { hide, show, addClass, removeClass, hasClass, getFullHeight, insertMessageInList, getLastItem, isEmptyString } from './utils.js';
+import { hide, show, addClass, removeClass, hasClass, getFullHeight, insertMessageInList, getLastItem, isEmptyString, xssEscape } from './utils.js';
 import { className, TYPE_STRING, MAX_COUNT } from './consts.js';
 
 const WIDGET_ID = 'sb_widget';
@@ -330,7 +330,7 @@ class SBWidget {
     }
     this.listBoard.addListOnFirstIndex(target);
 
-    this.listBoard.setChannelLastMessage(channel.url, message.isFileMessage() ? message.name : message.message);
+    this.listBoard.setChannelLastMessage(channel.url, message.isFileMessage() ? xssEscape(message.name) : xssEscape(message.message));
     this.listBoard.setChannelLastMessageTime(channel.url, this.sb.getMessageTime(message));
 
     let targetBoard = this.chatSection.getChatBoard(channel.url);

@@ -716,7 +716,7 @@
       .user-content {
         @include reset();
         width: 100%;
-        height: calc(100% - 64px);
+        height: calc(100% - 52px);
         background-color: $color-white;
         overflow-y: scroll;
         overflow-x: hidden;

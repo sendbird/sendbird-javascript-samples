@@ -14,6 +14,6 @@
     "react-native-cacheable-image": "1.5.1",
     "react-native-image-picker": "0.25.5",
     "react-native-push-notification": "2.2.1",
-    "sendbird": "3.0.35"
+    "sendbird": "3.0.36"
   }
 }

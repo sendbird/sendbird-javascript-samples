@@ -13,7 +13,8 @@ class Element {
       TIME: 'time',
       LABEL: 'label',
       A: 'a',
-      IMG: 'img'
+      IMG: 'img',
+      VIDEO: 'video'
     };
     this.eventName = {
       CLICK: 'click',
@@ -62,6 +63,10 @@ class Element {
 
   createLi() {
     return document.createElement(this.tagName.LI);
+  }
+
+  createVideo() {
+    return document.createElement(this.tagName.VIDEO);
   }
 
   _setClass(...args) {

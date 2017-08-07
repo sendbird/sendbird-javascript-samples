@@ -144,10 +144,7 @@ class Sendbird {
   }
 
   sendFileMessage(channel, file, action) {
-    let thumbSize = [];
-    if (file.type.match(/^image\/.+$/)) {
-      thumbSize = [{'maxWidth': 160, 'maxHeight': 160}];
-    }
+    let thumbSize = [{'maxWidth': 160, 'maxHeight': 160}];
     channel.sendFileMessage(file, '', '', thumbSize, (message, error) => {
       if (error) {
         console.error(error);

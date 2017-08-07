@@ -626,6 +626,11 @@ class SBWidget {
             if (isBottom) {
               this.chatSection.scrollToBottom(target.messageContent);
             }
+          } else {
+            let textMessage = target.input.textContent || this.chatSection.textKr;
+            if (textMessage.length === 0) {
+              channelSet.channel.endTyping();
+            }
           }
         });
         this.chatSection.addPasteEvent(target.input, (event) => {

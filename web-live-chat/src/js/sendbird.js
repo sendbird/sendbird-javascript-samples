@@ -115,6 +115,12 @@ class Sendbird {
     channelHandler.onMessageReceived = (channel, message) => {
       messageReceivedFunc(channel, message);
     };
+    channelHandler.onMessageDeleted = (channel, messageId) => {
+      var deletedMessage = document.getElementById(messageId);
+      if (deletedMessage) {
+        deletedMessage.remove();
+      }
+    };
     this.self.addChannelHandler(GLOBAL_HANDLER, channelHandler);
   }
 }

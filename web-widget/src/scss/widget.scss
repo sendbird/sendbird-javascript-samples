@@ -964,6 +964,34 @@
           padding: 6px;
           word-wrap: break-word;
           @include border-radius(5px);
+
+          .preview-name {
+            font-size: 11px;
+            font-weight: 300;
+          }
+          .preview-title {
+            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 180px;
+            height: 13px;
+          }
+          .preview-description {
+            margin-top: 4px;
+            font-size: 11px;
+            font-weight: 300;
+          }
+          .preview-iamge {
+            width: 180px !important;
+            height: 90px !important;
+            background-size: 180px 180px;
+            background-position-x: center;
+            background-position-y: 30%;
+            margin-top: 4px;
+          }
         }
         .file-message {
           @include reset();

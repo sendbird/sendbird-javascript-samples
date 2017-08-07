@@ -342,33 +342,34 @@ class ChatSection extends Element {
     }
   }
 
+  _imageResize(imageTarget, width, height) {
+    let scaleWidth = IMAGE_MAX_SIZE / width;
+    let scaleHeight = IMAGE_MAX_SIZE / height;
+
+    let scale = (scaleWidth <= scaleHeight) ? scaleWidth : scaleHeight;
+    if (scale > 1) {
+      scale = 1;
+    }
+
+    let resizeWidth = (width * scale);
+    let resizeHeight = (height * scale);
+
+    this._setBackgroundSize(imageTarget, resizeWidth + 'px ' + resizeHeight + 'px');
+    this._setWidth(imageTarget, resizeWidth);
+    this._setHeight(imageTarget, resizeHeight);
+    return {'resizeWidth': resizeWidth, 'resizeHeight': resizeHeight};
+  }
+
   setImageSize(target, message) {
-    var imageResize = (imageTarget, width, height) => {
-      let scaleWidth = IMAGE_MAX_SIZE / width;
-      let scaleHeight = IMAGE_MAX_SIZE / height;
-
-      let scale = (scaleWidth <= scaleHeight) ? scaleWidth : scaleHeight;
-      if (scale > 1) {
-        scale = 1;
-      }
-
-      let resizeWidth = (width * scale);
-      let resizeHeight = (height * scale);
-
-      this._setBackgroundSize(imageTarget, resizeWidth + 'px ' + resizeHeight + 'px');
-      this._setWidth(imageTarget, resizeWidth);
-      this._setHeight(imageTarget, resizeHeight);
-    };
-
     this._setBackgroundImage(target, (message.thumbnails.length > 0) ? message.thumbnails[0].url : message.url);
     if (message.thumbnails.length > 0) {
-      imageResize(target, message.thumbnails[0].real_width, message.thumbnails[0].real_height);
+      this._imageResize(target, message.thumbnails[0].real_width, message.thumbnails[0].real_height);
     } else {
       var img = new Image();
       img.addEventListener('load', (res) => {
-        res.path ? imageResize(target, res.path[0].width, res.path[0].height) : imageResize(target, res.target.width, res.target.height);
+        res.path ? this._imageResize(target, res.path[0].width, res.path[0].height) : this._imageResize(target, res.target.width, res.target.height);
       });
-      img.src = xssEscape(message.url);
+      img.src = message.url;
     }
   }
 
@@ -407,19 +408,68 @@ class ChatSection extends Element {
     var itemText = this.createDiv();
     if (message.isUserMessage()) {
       this._setClass(itemText, [className.TEXT]);
-      this._setContent(itemText, xssEscape(message.message));
+      var urlexp = new RegExp('(http|https)://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?', 'i');
+      var _message = message.message;
+      if (urlexp.test(_message)) {
+        _message = '<a href="' + _message + (isCurrentUser ? '" target="_blank" style="color: #FFFFFF;">' : '" target="_blank" style="color: #444444;">') + _message + '</a>';
+        if (message.customType === 'url_preview') {
+          let previewData = JSON.parse(message.data);
+
+          var _siteName = this.createDiv();
+          this._setClass(_siteName, [className.PREVIEW_NAME]);
+          this._setContent(_siteName, '@' + previewData.site_name);
+
+          var _title = this.createDiv();
+          this._setClass(_title, [className.PREVIEW_TITLE]);
+          this._setContent(_title, previewData.title);
+
+          var _description = this.createDiv();
+          this._setClass(_description, [className.PREVIEW_DESCRIPTION]);
+          this._setContent(_description, previewData.description);
+
+          var _image = this.createDiv();
+          this._setClass(_image, [className.PREVIEW_IMAGE]);
+          this._setBackgroundImage(_image, previewData.image);
+
+          _message += '<hr>' + _siteName.outerHTML + _title.outerHTML + _description.outerHTML + _image.outerHTML;
+        }
+      } else {
+        _message = xssEscape(_message);
+      }
+      this._setContent(itemText, _message);
     } else if (message.isFileMessage()) {
       if (message.type.match(/^image\/gif$/)) {
         this._setClass(itemText, [className.FILE_MESSAGE]);
         let image = this.createImg();
         this._setClass(image, [className.IMAGE]);
-        image.src = xssEscape(message.url);
+        image.src = message.url;
         this.setImageSize(image, message);
         itemText.appendChild(image);
+      } else if (message.type.match(/^video\/.+$/)) {
+        this._setClass(itemText, [className.FILE_MESSAGE]);
+        let video = this.createVideo();
+        video.controls = true;
+        video.preload = 'auto';
+        var resize = {'resizeWidth': 160, 'resizeHeight': 160};
+        if (message.thumbnails && message.thumbnails.length > 0) {
+          video.poster = message.thumbnails[0].url;
+          resize = this._imageResize(video, message.thumbnails[0].real_width, message.thumbnails[0].real_height);
+          video.width = resize.resizeWidth;
+          video.height = resize.resizeHeight;
+        } else {
+          var _self = this;
+          video.addEventListener( "loadedmetadata", function () {
+            resize = _self._imageResize(video, this.videoWidth, this.videoHeight);
+            video.width = resize.resizeWidth;
+            video.height = resize.resizeHeight;
+          });
+        }
+        video.src = message.url;
+        itemText.appendChild(video);
       } else {
         this._setClass(itemText, [className.FILE_MESSAGE]);
         let file = this.createA();
-        file.href = xssEscape(message.url);
+        file.href = message.url;
         file.target = 'blank';
         if (message.type.match(/^image\/.+$/)) {
           this._setClass(file, [className.IMAGE]);

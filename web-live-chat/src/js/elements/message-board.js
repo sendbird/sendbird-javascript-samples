@@ -172,6 +172,7 @@ class MessageBoard extends Element{
   _createMessageItem(message) {
     let item = this._createDiv();
     this._setClass(item, [this.classes.MESSAGE_ITEM]);
+    item.setAttribute('id', message.messageId);
 
     let text = this._createDiv();
     this._setClass(text, [this.classes.MESSAGE_TEXT]);

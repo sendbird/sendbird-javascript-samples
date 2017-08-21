@@ -8,6 +8,7 @@ import {
   StyleSheet
 } from 'react-native'
 
+const CachedImage = require('react-native-cached-image');
 import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';
@@ -146,7 +147,7 @@ export default class OpenChannel extends Component {
               <TouchableHighlight onPress={() => this._onChannelPress(rowData)}>
                 <View style={styles.listItem}>
                   <View style={styles.listIcon}>
-                    <Image style={styles.channelIcon} source={{uri: rowData.coverUrl.replace('http://', 'https://')}} />
+                    <CachedImage style={styles.channelIcon} key={rowData.coverUrl} source={{uri: rowData.coverUrl.replace('http://', 'https://')}} />
                   </View>
                   <View style={styles.listInfo}>
                     <Text style={styles.titleLabel}># {rowData.name}</Text>

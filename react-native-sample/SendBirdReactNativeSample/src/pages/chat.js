@@ -15,7 +15,7 @@ import {
   ListView
 } from 'react-native'
 
-import CacheableImage from 'react-native-cacheable-image'
+const CachedImage = require('react-native-cached-image');
 import {PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import moment from 'moment';
@@ -186,10 +186,10 @@ export default class Chat extends Component {
             response.uri,
             () => {
               _SELF.state.channel.sendFileMessage(source, function(message, error){
-          	if (error) {
+          	    if (error) {
                   console.log(error);
             	  return;
-          	}
+          	    }
 
                 var _messages = [];
                 _messages.push(message);
@@ -202,7 +202,7 @@ export default class Chat extends Component {
                   messages: _newMessageList,
                   dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
                 });
-          	_SELF.state.lastMessage = message;
+          	    _SELF.state.lastMessage = message;
               });
             }
           );
@@ -248,7 +248,7 @@ export default class Chat extends Component {
           _SELF.props.navigator.pop();
         });
     } else{
-      _SELF.props.route.refresh();
+//      _SELF.props.route.refresh();
       _SELF.props.navigator.pop();
     }
   }
@@ -362,7 +362,7 @@ export default class Chat extends Component {
                     <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
                       <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
                         <View style={styles.listIcon}>
-                          <CacheableImage style={styles.senderIcon} key={rowData.sender.profileUrl} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
+                          <CachedImage style={styles.senderIcon} key={rowData.sender.url} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
                         </View>
                         <View style={styles.senderContainer}>
                           <Text style={[styles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
@@ -376,11 +376,11 @@ export default class Chat extends Component {
                     <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
                       <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
                         <View style={styles.listIcon}>
-                          <CacheableImage style={styles.senderIcon} key={rowData.sender.profileUrl} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
+                          <CachedImage style={styles.senderIcon} key={rowData.sender.url} source={{uri: rowData.sender.profileUrl.replace('http://', 'https://')}} />
                         </View>
                         <View style={styles.senderContainer}>
                           <Text style={[styles.senderText, {color: '#3e3e55'}]}>{rowData.sender.nickname}</Text>
-                          <CacheableImage style={{width: 100, height: 70}} key={rowData.url} source={{uri: rowData.url.replace('http://', 'https://')}} />
+                          <CachedImage style={{width: 100, height: 70}} key={rowData.url} source={{uri: rowData.url.replace('http://', 'https://')}} />
                         </View>
                       </View>
                     </TouchableHighlight>

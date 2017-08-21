@@ -9,6 +9,7 @@ import {
   StyleSheet
 } from 'react-native'
 
+const CachedImage = require('react-native-cached-image');
 import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import moment from 'moment';
@@ -144,6 +145,8 @@ export default class GroupChannel extends Component {
   }
 
   _refreshChannelList() {
+
+    console.log("_refreshChannelList_refreshChannelList_refreshChannelList_refreshChannelList_refreshChannelList");
     var _SELF = this;
     var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
     listQuery.next(function(channelList, error){
@@ -221,7 +224,7 @@ export default class GroupChannel extends Component {
               <TouchableHighlight onPress={() => this._onChannelPress(rowData)}>
                 <View style={styles.listItem}>
                   <View style={styles.listIcon}>
-                    <Image style={styles.channelIcon} source={{uri: rowData.coverUrl.replace('http://', 'https://')}} />
+                    <CachedImage style={styles.channelIcon} key={rowData.coverUrl} source={{uri: rowData.coverUrl.replace('http://', 'https://')}} />
                   </View>
                   <View style={styles.listInfo}>
                     <Text style={styles.titleLabel}>{this._channelTitle(rowData.members)}</Text>

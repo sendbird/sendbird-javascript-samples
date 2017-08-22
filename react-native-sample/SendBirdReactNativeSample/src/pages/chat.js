@@ -248,7 +248,7 @@ export default class Chat extends Component {
           _SELF.props.navigator.pop();
         });
     } else{
-//      _SELF.props.route.refresh();
+      _SELF.props.route.refresh();
       _SELF.props.navigator.pop();
     }
   }

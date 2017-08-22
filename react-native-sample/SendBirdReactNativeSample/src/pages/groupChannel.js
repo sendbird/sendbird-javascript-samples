@@ -130,7 +130,7 @@ export default class GroupChannel extends Component {
         ]
       )
     } else {
-      _SELF.props.navigator.push({name: 'chat', channel: channel, _onHideChannel: this._onHideChannel, refresh: this._refreshChannelList});
+      _SELF.props.navigator.push({name: 'chat', channel: channel, _onHideChannel: _SELF._onHideChannel, refresh: _SELF._refreshChannelList});
     }
   }
 
@@ -145,8 +145,6 @@ export default class GroupChannel extends Component {
   }
 
   _refreshChannelList() {
-
-    console.log("_refreshChannelList_refreshChannelList_refreshChannelList_refreshChannelList_refreshChannelList");
     var _SELF = this;
     var listQuery = sb.GroupChannel.createMyGroupChannelListQuery();
     listQuery.next(function(channelList, error){

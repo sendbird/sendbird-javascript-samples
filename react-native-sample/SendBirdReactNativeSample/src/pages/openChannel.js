@@ -139,6 +139,7 @@ export default class OpenChannel extends Component {
 
         <View style={styles.listContainer}>
           <ListView
+            removeClippedSubviews={false}
             enableEmptySections={true}
             onEndReached={() => this._getChannelList()}
             onEndReachedThreshold={PULLDOWN_DISTANCE}

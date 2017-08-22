@@ -153,7 +153,6 @@ export default class GroupChannel extends Component {
         return;
       }
       _SELF.setState({ listQuery: listQuery, channelList: channelList, dataSource: ds.cloneWithRows(channelList)});
-
     });
   }
 
@@ -214,6 +213,7 @@ export default class GroupChannel extends Component {
 
         <View style={styles.listContainer}>
           <ListView
+            removeClippedSubviews={false}
             enableEmptySections={true}
             onEndReached={() => this._getChannelList()}
             onEndReachedThreshold={PULLDOWN_DISTANCE}

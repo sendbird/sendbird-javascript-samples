@@ -8,7 +8,7 @@ import {
   StyleSheet
 } from 'react-native'
 
-const CachedImage = require('react-native-cached-image');
+import { CachedImage } from 'react-native-cached-image';
 import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';

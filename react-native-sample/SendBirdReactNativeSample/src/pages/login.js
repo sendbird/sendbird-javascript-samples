@@ -72,7 +72,7 @@ export default class Login extends Component {
         console.log(error);
         return;
       }
-      
+
       if (Platform.OS === 'ios') {
         if (sb.getPendingAPNSToken()){
           sb.registerAPNSPushTokenForCurrentUser(sb.getPendingAPNSToken(), function(result, error){
@@ -130,7 +130,7 @@ export default class Login extends Component {
 
   render() {
     return (
-      <LoginView behavior='padding' style={styles.container} >        
+      <LoginView behavior='padding' style={styles.container} >
         <View style={styles.loginContainer}>
           <TextInput
             style={styles.input}

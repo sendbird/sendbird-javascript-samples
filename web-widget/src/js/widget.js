@@ -272,6 +272,12 @@ class SBWidget {
         (channel, message) => {
           this.messageReceivedAction(channel, message);
         },
+        (channel, message) => {
+          this.messageUpdatedAction(channel, message);
+        },
+        (channel, messageId) => {
+          this.messageDeletedAction(channel, messageId);
+        },
         (channel) => {
           this.updateUnreadMessageCount(channel);
         },
@@ -342,6 +348,63 @@ class SBWidget {
       this.setMessageItem(channelSet.channel, targetBoard, [message], false, isBottom, lastMessage);
       channel.markAsRead();
       this.updateUnreadMessageCount(channel);
+    }
+  }
+
+  messageUpdatedAction(channel, message) {
+    let targetBoard = this.chatSection.getChatBoard(channel.url);
+    if (targetBoard) {
+      let channelSet = this.getChannelSet(channel.url);
+      let newMessages = channelSet.message.map((msg) => {
+        if (msg.messageId === message.messageId) {
+          return message
+        } else {
+          return msg
+        }
+      });
+      channelSet.message = newMessages;
+
+      let lastMessage = getLastItem(channelSet.message);
+      if (lastMessage.messageId === message.messageId) {
+        let target = this.listBoard.getChannelItem(channel.url);
+        if (!target) {
+          target = this.createChannelItem(channel);
+          this.listBoard.checkEmptyList();
+        }
+        this.listBoard.addListOnFirstIndex(target);
+        this.listBoard.setChannelLastMessage(channel.url, message.isFileMessage() ? xssEscape(message.name) : xssEscape(message.message));
+      }
+      let updatedMessage = document.getElementById(`${message.messageId}`).querySelector('div>div>div.text');
+      if (updatedMessage) {
+        updatedMessage.innerHTML = message.message;
+      }
+    }
+  }
+
+  messageDeletedAction(channel, messageId) {
+    let targetBoard = this.chatSection.getChatBoard(channel.url);
+    if (targetBoard) {
+      let channelSet = this.getChannelSet(channel.url);
+      let lastMessage = getLastItem(channelSet.message);
+      if (lastMessage.messageId.toString() === messageId.toString()) {
+        channelSet.message.pop();
+        lastMessage = getLastItem(channelSet.message);
+        let target = this.listBoard.getChannelItem(channel.url);
+        if (!target) {
+          target = this.createChannelItem(channel);
+          this.listBoard.checkEmptyList();
+        }
+        this.listBoard.addListOnFirstIndex(target);
+        this.listBoard.setChannelLastMessage(channel.url, lastMessage.isFileMessage() ? xssEscape(lastMessage.name) : xssEscape(lastMessage.message));
+      } else {
+        let newMessages = channelSet.message.filter((msg) => {
+          return msg.messageId.toString() !== messageId.toString()
+        });
+        channelSet.message = newMessages;
+      }
+      
+      let updatedMessage = document.getElementById(`${messageId}`)
+      updatedMessage.remove();
     }
   }
 

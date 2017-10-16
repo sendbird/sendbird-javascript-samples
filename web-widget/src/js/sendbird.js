@@ -177,15 +177,23 @@ class Sendbird {
    */
   createHandlerGlobal(...args) {
     let messageReceivedFunc = args[0];
-    let ChannelChangedFunc = args[1];
-    let typingStatusFunc = args[2];
-    let readReceiptFunc = args[3];
-    let userLeftFunc = args[4];
-    let userJoinFunc = args[5];
+    let messageUpdatedFunc = args[1];
+    let messageDeletedFunc = args[2];
+    let ChannelChangedFunc = args[3];
+    let typingStatusFunc = args[4];
+    let readReceiptFunc = args[5];
+    let userLeftFunc = args[6];
+    let userJoinFunc = args[7];
 
     let channelHandler = new this.sb.ChannelHandler();
     channelHandler.onMessageReceived = function(channel, message) {
       messageReceivedFunc(channel, message);
+    };
+    channelHandler.onMessageUpdated = function (channel, message) {
+      messageUpdatedFunc(channel, message);
+    };
+    channelHandler.onMessageDeleted = function (channel, messageId) {
+      messageDeletedFunc(channel, messageId);
     };
     channelHandler.onChannelChanged = function(channel) {
       ChannelChangedFunc(channel);

@@ -15,7 +15,7 @@ import {
   ListView
 } from 'react-native'
 
-const CachedImage = require('react-native-cached-image');
+import { CachedImage } from 'react-native-cached-image';
 import {PULLDOWN_DISTANCE} from '../consts';
 import TopBar from '../components/topBar';
 import moment from 'moment';
@@ -31,9 +31,9 @@ import SendBird from 'sendbird';
 var sb = null;
 var ImagePicker = require('react-native-image-picker');
 var ipOptions = {
-  title: 'Select Image File To Send',  
+  title: 'Select Image File To Send',
   mediaType: 'photo',
-  noData: true 
+  noData: true
 };
 
 export default class Chat extends Component {
@@ -70,7 +70,7 @@ export default class Chat extends Component {
     var _SELF = this;
     if (!_SELF.state.hasRendered){
       _SELF.state.hasRendered = true;
-      _SELF._getChannelMessage(false);    
+      _SELF._getChannelMessage(false);
       if (_SELF.state.channel.channelType == 'group') {
           _SELF.state.channel.markAsRead();
       }
@@ -80,7 +80,7 @@ export default class Chat extends Component {
       ChannelHandler.onMessageReceived = function(channel, message){
         if (channel.url == _SELF.state.channel.url) {
           var _messages = [];
-          _messages.push(message);          
+          _messages.push(message);
           var _newMessageList = _messages.concat(_SELF.state.messages);
           _SELF.setState({
             messages: _newMessageList,
@@ -109,9 +109,9 @@ export default class Chat extends Component {
 
     if(refresh){
       _SELF.state.messageQuery = _SELF.props.route.channel.createPreviousMessageListQuery();
-      _SELF.state.messages = [];      
+      _SELF.state.messages = [];
     }
-    
+
     if (!this.state.messageQuery.hasMore) {
       return;
     }
@@ -123,15 +123,15 @@ export default class Chat extends Component {
 
       var _messages = [];
       for (var i = 0 ; i < response.length ; i++) {
-        var _curr = response[i];    
+        var _curr = response[i];
         if (i > 0) {
           var _prev = response[i-1];
           if (_curr.createdAt - _prev.createdAt > (1000 * 60 * 60)) {
-            if (i > 1 && !_messages[i-2].hasOwnProperty('isDate')) {              
+            if (i > 1 && !_messages[i-2].hasOwnProperty('isDate')) {
               _messages.splice((i-1), 0, {isDate: true, createdAt: _prev.createdAt});
             }
           }
-        } 
+        }
         _messages.push(_curr);
         _SELF.state.lastMessage = _curr;
       }
@@ -150,7 +150,7 @@ export default class Chat extends Component {
     if (Platform.OS === 'android'){
       sb.disableStateChange();
     }
-    ImagePicker.showImagePicker(ipOptions, (response) => {            
+    ImagePicker.showImagePicker(ipOptions, (response) => {
       if (Platform.OS === 'android'){
         sb.enableStateChange();
       }
@@ -165,7 +165,7 @@ export default class Chat extends Component {
       }
       else {
         let source = {uri:response.uri};
-        
+
         if (response.name){
           source['name'] = response.fileName
         } else{
@@ -174,7 +174,7 @@ export default class Chat extends Component {
         }
 
         if (response.type){
-          source['type'] = response.type; 
+          source['type'] = response.type;
         }
 
         const CHECK_IMAGE_URI_INTERVAL = Platform.OS === 'android' ? 300 : 100;
@@ -186,10 +186,10 @@ export default class Chat extends Component {
             response.uri,
             () => {
               _SELF.state.channel.sendFileMessage(source, function(message, error){
-          	    if (error) {
+                if (error) {
                   console.log(error);
-            	  return;
-          	    }
+                return;
+                }
 
                 var _messages = [];
                 _messages.push(message);
@@ -202,14 +202,14 @@ export default class Chat extends Component {
                   messages: _newMessageList,
                   dataSource: _SELF.state.dataSource.cloneWithRows(_newMessageList)
                 });
-          	    _SELF.state.lastMessage = message;
+                _SELF.state.lastMessage = message;
               });
             }
           );
         }, CHECK_IMAGE_URI_INTERVAL);
 
       };
-         
+
     });
   }
 
@@ -226,7 +226,7 @@ export default class Chat extends Component {
 
       var _messages = [];
       _messages.push(message);
-      if (_SELF.state.lastMessage && message.createdAt - _SELF.state.lastMessage.createdAt  > (1000 * 60 * 60)) {        
+      if (_SELF.state.lastMessage && message.createdAt - _SELF.state.lastMessage.createdAt  > (1000 * 60 * 60)) {
         _messages.push({isDate: true, createdAt: message.createdAt});
       }
 
@@ -337,7 +337,7 @@ export default class Chat extends Component {
   }
 
   render() {
-    return (      
+    return (
         <ChatView behavior="padding" style={styles.container}>
         <TopBar
           onBackPress={this._onBackPress.bind(this)}
@@ -370,8 +370,8 @@ export default class Chat extends Component {
                         </View>
                       </View>
                     </TouchableHighlight>
-                  )                                                
-                } else if (rowData.messageType == 'file') {                
+                  )
+                } else if (rowData.messageType == 'file') {
                   return (
                     <TouchableHighlight underlayColor='#f7f8fc' onPress={() => this._onUserPress(rowData.sender)}>
                       <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}]}>
@@ -384,7 +384,7 @@ export default class Chat extends Component {
                         </View>
                       </View>
                     </TouchableHighlight>
-                  )                  
+                  )
                 } else if (rowData.messageType == 'admin') {
                   return (
                       <View style={[styles.adListItem, {transform: [{ scaleY: -1 }]}, {flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}]}>
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     padding: 5,
     margin: 5,
   },
-  
+
   listIcon: {
     justifyContent: 'flex-start',
     paddingLeft: 10,

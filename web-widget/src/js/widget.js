@@ -4,7 +4,23 @@ import ChatSection from './elements/chat-section.js';
 import Popup from './elements/popup.js';
 import Spinner from './elements/spinner.js';
 import Sendbird from './sendbird.js';
-import { hide, show, addClass, removeClass, hasClass, getFullHeight, insertMessageInList, getLastItem, isEmptyString, xssEscape } from './utils.js';
+import { 
+  hide, 
+  show, 
+  addClass, 
+  removeClass, 
+  hasClass, 
+  getFullHeight, 
+  insertMessageInList, 
+  getLastItem, 
+  isEmptyString, 
+  xssEscape, 
+  createNotificationSound,
+  requestNotification,
+  setCookie,
+  getCookie,
+  deleteCookie 
+} from './utils.js';
 import { className, TYPE_STRING, MAX_COUNT } from './consts.js';
 
 const WIDGET_ID = 'sb_widget';
@@ -36,7 +52,7 @@ class SBWidget {
     this.widget = document.getElementById(WIDGET_ID);
     if (this.widget) {
       document.addEventListener(EVENT_TYPE_CLICK, (event) => {
-        this._initClickEvent(event)
+        this._initClickEvent(event);
       });
       this._init();
       this._start(appId);
@@ -54,7 +70,7 @@ class SBWidget {
     this.widget = document.getElementById(WIDGET_ID);
     if (this.widget) {
       document.addEventListener(EVENT_TYPE_CLICK, (event) => {
-        this._initClickEvent(event)
+        this._initClickEvent(event);
       });
       this._init();
       this._start(appId);
@@ -106,6 +122,9 @@ class SBWidget {
         return this.type == TIME_MESSAGE_TYPE;
       }
     };
+
+    requestNotification();
+    this.notificationSound = createNotificationSound();
   }
 
   _getGoogleFont() {
@@ -234,6 +253,7 @@ class SBWidget {
 
     this.listBoard.addLogoutClickEvent(() => {
       this.sb.disconnect(() => {
+        deleteCookie();
         this.sb.reset();
         this.toggleBoard(false);
         this.widgetBtn.toggleIcon(false);
@@ -251,6 +271,7 @@ class SBWidget {
         this.listBoard.nickname.disabled = true;
 
         this._connect(this.listBoard.getUserId(), this.listBoard.getNickname());
+        setCookie(this.listBoard.getUserId(), this.listBoard.getNickname());
       }
     });
     this.listBoard.addKeyDownEvent(this.listBoard.nickname, (event) => {
@@ -258,6 +279,12 @@ class SBWidget {
         this.listBoard.btnLogin.click();
       }
     });
+
+    const cookie = getCookie();
+    if (cookie.userId) {
+      this._connect(cookie.userId, cookie.nickname);
+      this.toggleBoard(true);
+    }
   }
 
   _connect(userId, nickname, callback) {
@@ -348,6 +375,21 @@ class SBWidget {
       this.setMessageItem(channelSet.channel, targetBoard, [message], false, isBottom, lastMessage);
       channel.markAsRead();
       this.updateUnreadMessageCount(channel);
+    } 
+    if (!targetBoard) {
+      if ('Notification' in window) {
+        var notification = new Notification(
+          "New Message", 
+          {
+            "body": message.isFileMessage() ? message.name : message.message, 
+            "icon": "http://qnimate.com/wp-content/uploads/2014/07/web-notification-api-300x150.jpg"
+          }
+        );
+        notification.onclick = function() {
+          window.focus();
+        }
+        this.notificationSound.play();
+      }
     }
   }
 

@@ -233,7 +233,8 @@ class Sendbird {
 
   getLastMessage(channel) {
     if (channel.lastMessage) {
-      return channel.lastMessage.isUserMessage() ? channel.lastMessage.message : channel.lastMessage.name;
+      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage() 
+      ? channel.lastMessage.message : channel.lastMessage.name;
     }
     return '';
   }

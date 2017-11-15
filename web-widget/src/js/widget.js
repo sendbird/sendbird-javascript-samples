@@ -283,7 +283,9 @@ class SBWidget {
     const cookie = getCookie();
     if (cookie.userId) {
       this._connect(cookie.userId, cookie.nickname);
+      this.listBoard.showChannelList();
       this.toggleBoard(true);
+      this.chatSection.responsiveSize(false, this.responsiveChatSection.bind(this));
     }
   }
 

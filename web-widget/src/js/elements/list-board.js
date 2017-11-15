@@ -1,4 +1,4 @@
-import { className, MAX_COUNT, MAX_FONT_ZISE } from '../consts.js';
+import { className, MAX_COUNT, MAX_FONT_SIZE } from '../consts.js';
 import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace } from '../utils.js';
 import Element from './elements.js';
 
@@ -332,7 +332,7 @@ class ListBoard extends Element {
   setUnreadCount(target, count) {
     count = parseInt(count);
     this._setContent(target, (count > 9) ? MAX_COUNT : count.toString());
-    this._setFontSize(target, (count > 9) ? MAX_FONT_ZISE : null);
+    this._setFontSize(target, (count > 9) ? MAX_FONT_SIZE : null);
     (count > 0) ? show(target) : hide(target);
   }
 

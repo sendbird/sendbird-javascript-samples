@@ -95,6 +95,6 @@ export const styleValue = {
 };
 
 export const MAX_COUNT = '+9';
-export const MAX_FONT_ZISE = '11';
+export const MAX_FONT_SIZE = '11';
 
 export const TYPE_STRING = 'string';

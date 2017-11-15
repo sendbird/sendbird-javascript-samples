@@ -1,11 +1,20 @@
+var path = require('path');
+
 module.exports = {
-  context: __dirname + '/src',
+  context: path.resolve(__dirname + '/src'),
   entry: {
     liveChat: './js/chat.js'
   },
   output: {
-    path: __dirname + '/build',
-    filename: '[name].SendBird.js'
+    path: path.resolve(__dirname + '/build'),
+    filename: '[name].SendBird.js',
+    publicPath: "build"
+  },
+  devtool: "cheap-eval-source-map",
+  devServer: {
+    publicPath: '/build/',
+    compress: true,
+    port: 9000
   },
   module: {
     rules: [

@@ -7,7 +7,7 @@ import {
   StyleSheet
 } from 'react-native'
 
-import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
+import { PULLDOWN_DISTANCE } from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';
 var sb = null;

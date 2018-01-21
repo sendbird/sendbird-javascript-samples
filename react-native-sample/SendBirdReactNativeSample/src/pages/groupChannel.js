@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  Image,
   ListView,
   TouchableHighlight,
   Alert,
@@ -10,7 +9,7 @@ import {
 } from 'react-native'
 
 import { CachedImage } from 'react-native-cached-image';
-import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
+import { PULLDOWN_DISTANCE } from '../consts';
 import TopBar from '../components/topBar';
 import moment from 'moment';
 import SendBird from 'sendbird';
@@ -68,7 +67,6 @@ export default class GroupChannel extends Component {
     if(!channel) return;
 
     var _SELF = this;
-    var _exist = false;
     var _list = _SELF.state.channelList.filter(function(ch) {
       return channel.url != ch.url
     });

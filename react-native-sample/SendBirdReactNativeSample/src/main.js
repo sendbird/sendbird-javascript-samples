@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  AppRegistry,
   StyleSheet,
   AppState,
   Platform
@@ -16,7 +15,7 @@ import GroupChannel from './pages/groupChannel';
 import InviteUser from './pages/inviteUser';
 import Members from './pages/members'
 
-import {APP_ID} from './consts'
+import { APP_ID } from './consts'
 import SendBird from 'sendbird'
 var sb = null;
 
@@ -74,7 +73,7 @@ export default class Main extends Component {
             console.log( 'NOTIFICATION:', notification );
         },
 
-        // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications) 
+        // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
         senderID: "984140644677",
 
         // IOS ONLY (optional): default: all - Permissions to register.
@@ -95,7 +94,7 @@ export default class Main extends Component {
           */
         requestPermissions: true,
     });
-    
+
   }
 
   componentWillUnmount() {

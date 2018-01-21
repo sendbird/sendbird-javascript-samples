@@ -2,14 +2,13 @@ import React, { Component } from 'react'
 import {
   View,
   Text,
-  Image,
   ListView,
   TouchableHighlight,
   StyleSheet
 } from 'react-native'
 
 import { CachedImage } from 'react-native-cached-image';
-import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
+import { PULLDOWN_DISTANCE } from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';
 var sb = null;

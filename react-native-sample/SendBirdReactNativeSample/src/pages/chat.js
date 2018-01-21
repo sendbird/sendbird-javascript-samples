@@ -7,19 +7,19 @@ import {
   TouchableHighlight,
   StyleSheet,
   PixelRatio,
-  Modal,
   Alert,
   Platform,
-  Keyboard,
   KeyboardAvoidingView,
   ListView
 } from 'react-native'
 
 import { CachedImage } from 'react-native-cached-image';
-import {PULLDOWN_DISTANCE} from '../consts';
+import { PULLDOWN_DISTANCE } from '../consts';
 import TopBar from '../components/topBar';
 import moment from 'moment';
 import Button from 'react-native-button';
+import SendBird from 'sendbird';
+import ImagePicker from 'react-native-image-picker';
 
 // Android does keyboard height adjustment natively.
 const ChatView = Platform.select({
@@ -27,9 +27,7 @@ const ChatView = Platform.select({
   android: () => View,
 })();
 
-import SendBird from 'sendbird';
 var sb = null;
-var ImagePicker = require('react-native-image-picker');
 var ipOptions = {
   title: 'Select Image File To Send',
   mediaType: 'photo',
@@ -353,7 +351,7 @@ export default class Chat extends Component {
             renderRow={(rowData) => {
               if (rowData.hasOwnProperty('isDate')) {
                 return (
-                  <View style={[styles.listItem, {transform: [{ scaleY: -1 }]}, {flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}]}>
+                  <View style={[styles.listItem, styles.transformScaleY, styles.centerColumn]}>
                     <Text style={styles.dateText}>{moment(rowData.createdAt).calendar()}</Text>
                   </View>
                 )
@@ -387,7 +385,7 @@ export default class Chat extends Component {
                   )
                 } else if (rowData.messageType == 'admin') {
                   return (
-                      <View style={[styles.adListItem, {transform: [{ scaleY: -1 }]}, {flexDirection: 'column', justifyContent: 'center', alignItems: 'center'}]}>
+                      <View style={[styles.adListItem, styles.transformScaleY, styles.centerColumn]}>
                         <View style={styles.senderContainer}>
                           <Text style={[styles.senderText, {color: '#343434', fontWeight: 'bold'}]}>{rowData.message}</Text>
                         </View>
@@ -407,7 +405,7 @@ export default class Chat extends Component {
           >{'+'}</Button>
           <TextInput
             style={styles.textInput}
-            placeholder={'Please type mesasge...'}
+            placeholder={'Please type message...'}
             ref='textInput'
             onChangeText={this._onChangeText}
             value={this.state.text}
@@ -479,6 +477,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#e6e9f0',
     padding: 5,
     margin: 5,
+  },
+
+  centerColumn: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+  },
+
+  transformScaleY: {
+    transform: [{ scaleY: -1 }],
   },
 
   listIcon: {

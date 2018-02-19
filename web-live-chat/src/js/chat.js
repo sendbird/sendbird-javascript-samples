@@ -57,6 +57,11 @@ class LiveChat {
             loginBoard.reset();
             spinner.insert(messageBoard.content);
             board.self.replaceChild(messageBoard.self, loginBoard.self);
+            sendbird.connectionHandler({
+              spinner, messageBoard, 
+              'enterChannel': this._enterChannel, 
+              channelUrl
+            });
             this._enterChannel(channelUrl);
           });
         }
@@ -157,7 +162,7 @@ class LiveChat {
             }
           }
         });
-      });
+      }, true);
 
       if (callback) {
         callback();

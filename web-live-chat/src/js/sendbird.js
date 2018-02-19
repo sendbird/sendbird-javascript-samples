@@ -82,8 +82,8 @@ class Sendbird {
   /*
   Message
    */
-  getMessageList(action) {
-    if (!this.messageListQuery) {
+  getMessageList(action, isInit) {
+    if (!this.messageListQuery || isInit) {
       this.messageListQuery = this.channel.createPreviousMessageListQuery();
     }
     if (this.messageListQuery.hasMore && !this.messageListQuery.isLoading) {
@@ -122,6 +122,26 @@ class Sendbird {
       }
     };
     this.self.addChannelHandler(GLOBAL_HANDLER, channelHandler);
+  }
+
+  connectionHandler({ spinner, messageBoard, enterChannel, channelUrl }) {
+    let ConnectionHandler = new this.self.ConnectionHandler();
+    ConnectionHandler.onReconnectStarted = function(id) {
+      console.log('onReconnectStarted');
+      
+      // messageBoard.clear();
+      spinner.insert(messageBoard.content);
+    };
+
+    ConnectionHandler.onReconnectSucceeded = function(id) {
+      console.log('onReconnectSucceeded');
+      enterChannel(channelUrl);
+    };
+
+    ConnectionHandler.onReconnectFailed = function(id) {
+      console.log('onReconnectFailed');
+    };
+    this.self.addConnectionHandler('CONNECTION_HANDLER', ConnectionHandler);
   }
 }
 

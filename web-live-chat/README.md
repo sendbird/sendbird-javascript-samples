@@ -120,8 +120,6 @@ liveChat.exitChannel(function() {
                 |-- chat-board.js           - board element
                 |-- login-board.js          - login element
                 |-- message-board.js        - message element
-            |-- consts.js                   - const variables
-            |-- utils.js                    - util functions
             |-- sendbird.js                 - sendbird functions
             |-- chat.js                     - chat functions
         |-- scss

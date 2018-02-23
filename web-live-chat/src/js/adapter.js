@@ -1,32 +1,42 @@
+'use strict';
+
 const GLOBAL_HANDLER = 'GLOBAL_HANDLER';
 const GET_MESSAGE_LIMIT = 30;
 
-class Sendbird {
+export const KeyCode = {
+  ENTER : 13,
+  KR : 229
+};
+
+class SendbirdAdapter {
   constructor(appId) {
-    this.self = new window.SendBird({ appId: appId });
+    this.api = new window.SendBird({ appId: appId });
     this.messageListQuery = null;
     this.channel = null;
   }
 
   reset() {
     this.channel = null;
-    this.self.removeChannelHandler(GLOBAL_HANDLER);
+    this.api.removeChannelHandler(GLOBAL_HANDLER);
   }
 
   /*
   User
    */
   isConnected() {
-    return !!this.self.currentUser;
+    return !!this.api.currentUser;
+  }
+  isCurrentUser(user) {
+    return this.api.currentUser.userId == user.userId;
   }
 
   connect(userId, nickname, action) {
-    this.self.connect(userId.trim(), (user, error) => {
+    this.api.connect(userId.trim(), (user, error) => {
       if (error) {
         console.error(error);
         return;
       }
-      this.self.updateCurrentUserInfo(nickname.trim(), '', (response, error) => {
+      this.api.updateCurrentUserInfo(nickname.trim(), '', (response, error) => {
         if (error) {
           console.error(error);
           return;
@@ -35,24 +45,19 @@ class Sendbird {
       });
     });
   }
-
   disconnect(action) {
     if(this.isConnected()) {
-      this.self.disconnect(() => {
+      this.api.disconnect(() => {
         action();
       });
     }
-  }
-
-  isCurrentUser(user) {
-    return this.self.currentUser.userId == user.userId;
   }
 
   /*
   Channel
    */
   enterChannel(channelUrl, action) {
-    this.self.OpenChannel.getChannel(channelUrl, (channel, error) => {
+    this.api.OpenChannel.getChannel(channelUrl, (channel, error) => {
       if (error) {
         console.error(error);
         return;
@@ -110,39 +115,35 @@ class Sendbird {
   /*
   Handler
    */
-  createHandler(messageReceivedFunc) {
-    let channelHandler = new this.self.ChannelHandler();
-    channelHandler.onMessageReceived = (channel, message) => {
-      messageReceivedFunc(channel, message);
-    };
+  createHandler(onMessageReceived) {
+    let channelHandler = new this.api.ChannelHandler();
+    channelHandler.onMessageReceived = onMessageReceived;
     channelHandler.onMessageDeleted = (channel, messageId) => {
       var deletedMessage = document.getElementById(messageId);
       if (deletedMessage) {
         deletedMessage.remove();
       }
     };
-    this.self.addChannelHandler(GLOBAL_HANDLER, channelHandler);
+    this.api.addChannelHandler(GLOBAL_HANDLER, channelHandler);
   }
 
-  connectionHandler({ spinner, messageBoard, enterChannel, channelUrl }) {
-    let ConnectionHandler = new this.self.ConnectionHandler();
+  connectionHandler(channelUrl, liveChat) {
+    let ConnectionHandler = new this.api.ConnectionHandler();
     ConnectionHandler.onReconnectStarted = function(id) {
       console.log('onReconnectStarted');
-      
-      // messageBoard.clear();
-      spinner.insert(messageBoard.content);
+      liveChat.$spinner.attachTo(liveChat.$messageBoard.$content);
     };
 
     ConnectionHandler.onReconnectSucceeded = function(id) {
       console.log('onReconnectSucceeded');
-      enterChannel(channelUrl);
+      liveChat.enterChannel(channelUrl);
     };
 
     ConnectionHandler.onReconnectFailed = function(id) {
       console.log('onReconnectFailed');
     };
-    this.self.addConnectionHandler('CONNECTION_HANDLER', ConnectionHandler);
+    this.api.addConnectionHandler('CONNECTION_HANDLER', ConnectionHandler);
   }
 }
 
-export { Sendbird as default };
+export { SendbirdAdapter as default };

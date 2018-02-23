@@ -1,26 +1,15 @@
+'use strict';
 import Element from './element.js';
-import { TITLE_BOARD_TOP } from '../consts.js';
 
 class ChatBoard extends Element {
-  constructor(chat) {
+  constructor(parent) {
     super();
-    this._create();
-    chat.appendChild(this.self);
-  }
+    this.setClass('chat-board');
 
-  reset() {
-  }
-
-  _create() {
-    let board = this._createDiv();
-    this._setClass(board, [this.classes.CHAT_BOARD]);
-
-    let top = this._createDiv();
-    this._setClass(top, [this.classes.TOP]);
-    this._setContent(top, TITLE_BOARD_TOP);
-
-    board.appendChild(top);
-    this.self = board;
+    let top = new Element();
+    top.setClass('top');
+    top.val('Chat Live');
+    parent.appendElement(this.appendElement(top));
   }
 }
 

@@ -1,6 +1,7 @@
+'use strict';
+
 import Element from './element.js';
-import { EMPTY_STRING, KEY_CODE } from '../consts.js';
-import { hasClass, addClass, removeClass, getPaddingTop, getFullHeight, xssEscape } from '../utils.js';
+import KeyCode from '../adapter.js';
 
 const MESSAGE_PREFIX = ' : ';
 const LAST_MESSAGE_YESTERDAY = 'YESTERDAY';
@@ -10,245 +11,124 @@ const MAX_HEIGHT_INPUT_OUTER = 50;
 const MAX_HEIGHT_INPUT_INNER = 39;
 const MIN_HEIGHT_INPUT_INNER = 14;
 
-class MessageBoard extends Element{
+class MessageBoard extends Element {
   constructor() {
     super();
-    this._create();
-    this.senderColor = {};
-    this.kr = null;
-  }
+    this.setClass('message-board');
 
-  reset() {
-    this.senderColor = {};
-    this.kr = null;
-  }
+    let $content = new Element();
+    $content.setClass('content');
+    this.appendElement($content);
 
-  _create() {
-    let board = this._createDiv();
-    this._setClass(board, [this.classes.MESSAGE_BOARD]);
+    let $contentInput = new Element();
+    $contentInput.setClass('content-input');
 
-    let content = this._createDiv();
-    this._setClass(content, [this.classes.CONTENT]);
-    board.appendChild(content);
+    let $input = new Element();
+    $input.setClass('input');
+    $input.attr('contenteditable', true);
 
-    let contentInput = this._createDiv();
-    this._setClass(contentInput, [this.classes.CONTENT_INPUT]);
-
-    let input = this._createDiv();
-    this._setClass(input, [this.classes.INPUT]);
-    input.setAttribute('contenteditable', true);
-    this._setFocusEvent(input, () => {
-      if (!hasClass(contentInput, this.classes.ACTIVE)) {
-        addClass(contentInput, this.classes.ACTIVE);
-      }
+    $input.on('focus', () => {
+      if(!$contentInput.hasClass("active"))
+        $contentInput.addClass("active");
     });
-    this._setFocusOutEvent(input, () => {
-      if (hasClass(contentInput, this.classes.ACTIVE)) {
-        removeClass(contentInput, this.classes.ACTIVE);
-      }
+    $input.on('blur', () => {
+      if($contentInput.hasClass("active"))
+        $contentInput.removeClass("active");
     });
-    this._setKeydownEvent(input, (event) => {
-      this._responsiveTextInput();
-      if (event.keyCode == KEY_CODE.KR) {
-        this.kr = this.input.textContent;
+    $input.on('keydown', (event) => {
+      this.responsiveInput();
+      if (event.keyCode == KeyCode.KR) {
+        this.kr = this.$input.val();
       }
-      if (event.keyCode == KEY_CODE.ENTER && !event.shiftKey) {
+      if (event.keyCode == KeyCode.ENTER && !event.shiftKey) {
         event.preventDefault();
-        this.icon.click();
+        this.$icon.click();
         this.clearInput();
       }
     });
-    this._setKeyupEvent(input, () => {
-      this._responsiveTextInput();
+    $input.on('keyup', () => {
+      this.responsiveInput();
     });
-    this._setPasteEvent(input, (event) => {
-      let clipboardData;
-      let pastedData;
-
+    $input.on('paste', (event) => {
       event.stopPropagation();
       event.preventDefault();
 
-      clipboardData = event.clipboardData || window.clipboardData;
-      pastedData = clipboardData.getData('Text');
-
-      input.textContent += pastedData;
+      const clipboardData = event.clipboardData || window.clipboardData;
+      $input.appendContent(clipboardData.getData('Text'));
     });
-    contentInput.appendChild(input);
+    $contentInput.appendElement($input);
 
-    let icon = this._createDiv();
-    this._setClass(icon, [this.classes.ICON]);
-    contentInput.appendChild(icon);
+    let $inputForm = new Element('input');
+    $inputForm.setClass('input-form');
+    $inputForm.attr('type', 'hidden');
+    $contentInput.appendElement($inputForm);
 
-    board.appendChild(contentInput);
+    let $icon = new Element();
+    $icon.setClass([ 'icon' ]);
+    $contentInput.appendElement($icon);
+    this.appendElement($contentInput);
 
-    this.self = board;
-    this.content = content;
-    this.input = input;
-    this.icon = icon;
+    this.$content = $content;
+    this.$input = $input;
+    this.$form = $inputForm;
+    this.$icon = $icon;
+    this.reset();
   }
 
   getMessage() {
-    if (this.input.textContent || this.kr) {
-      let textMessage = this.input.textContent || this.kr;
-      return textMessage.trim();
-    }
+    return this.$input.val().trim() || this.kr;
   }
+  createMessageElement(message) {
+    let $item = new Element();
+    $item.setClass('message-item');
+    $item.attr('id', message.messageId);
 
-  clearInput() {
-    let items = this.input.querySelectorAll(this.tags.DIV);
-    for (var i = 0 ; i < items.length ; i++) {
-      let item = items[i];
-      item.remove();
-    }
-    this._setContent(this.input, EMPTY_STRING);
-    this.kr = null;
-    this._iconToggle();
-  }
+    let $text = new Element();
+    $text.setClass('message-text');
 
-  iconClickEvent(action) {
-    this._setClickEvent(this.icon, action);
-  }
-
-  _responsiveTextInput() {
-    let outerHeight = this.input.scrollHeight;
-    let paddingTop = getPaddingTop(this.input);
-    let innerHeight = (outerHeight - (paddingTop * 2));
-    let expectPadding = (MAX_HEIGHT_INPUT_OUTER - innerHeight);
-
-    if (innerHeight < MIN_HEIGHT_INPUT_INNER) {
-      this._setPaddingTopBottom(this.input, ((MAX_HEIGHT_INPUT_OUTER - MIN_HEIGHT_INPUT_INNER)/2));
-    } else if (innerHeight > MAX_HEIGHT_INPUT_INNER) {
-      this._setPaddingTopBottom(this.input, ((MAX_HEIGHT_INPUT_OUTER - MAX_HEIGHT_INPUT_INNER)/2));
-    } else {
-      this._setPaddingTopBottom(this.input, (expectPadding/2));
-    }
-    this._iconToggle();
-  }
-
-  _iconToggle() {
-    if (this.input.textContent.length > 0) {
-      if (!hasClass(this.icon, this.classes.ACTIVE)) {
-        addClass(this.icon, this.classes.ACTIVE);
-      }
-    } else {
-      removeClass(this.icon, this.classes.ACTIVE);
-    }
-  }
-
-  setScrollEvent(action) {
-    let _self = this;
-    _self._setScrollEvent(_self.content, () => {
-      if (_self.content.scrollTop == 0) {
-        action();
-      }
-      if (_self.isBottom()) {
-        this._removeToBottomBtn();
-      }
-    });
-  }
-
-  renderMessage(messageList, isScrollToBottom, isLoadMore) {
-    let firstChild = this.content.firstChild;
-    var moveScroll = 0;
-    var i;
-    for (i = 0 ; i < messageList.length ; i++) {
-      let message = messageList[i];
-      if (message.isUserMessage()) {
-        let item = this._createMessageItem(message);
-        isLoadMore ? this.content.insertBefore(item, firstChild) : this.content.appendChild(item);
-        moveScroll += getFullHeight(item);
-      } else {
-        // do something...
-      }
-    }
-    if (isLoadMore) {
-      this.content.scrollTop = moveScroll;
-    }
-    if (isScrollToBottom) {
-      this._scrollToBottom();
-    }
-  }
-
-  _createMessageItem(message) {
-    let item = this._createDiv();
-    this._setClass(item, [this.classes.MESSAGE_ITEM]);
-    item.setAttribute('id', message.messageId);
-
-    let text = this._createDiv();
-    this._setClass(text, [this.classes.MESSAGE_TEXT]);
-
-    let nickname = this._createLabel();
+    let $nickname = new Element('label');
     let nicknameColor = this.senderColor[message.sender.userId];
     if (!nicknameColor) {
       nicknameColor = Math.floor((Math.random() * 12) + 1);
       nicknameColor = (nicknameColor < 10) ? '0' + nicknameColor.toString() : nicknameColor.toString();
       this.senderColor[message.sender.userId] = nicknameColor;
     }
-    this._setClass(nickname, [this.classes.NICKNAME, this.classes.NICKNAME_COLOR + nicknameColor]);
-    this._setContent(nickname, xssEscape(message.sender.nickname));
+    $nickname.setClass('nickname', 'nickname-color-' + nicknameColor);
+    $nickname.val(message.sender.nickname + MESSAGE_PREFIX);
 
-    text.appendChild(nickname);
-    this._addContent(text, MESSAGE_PREFIX + xssEscape(message.message));
-
-    item.appendChild(text);
-
-    let time = this._createDiv();
-    this._setClass(time, [this.classes.TIME]);
-    this._setContent(time, this._getTime(message));
-    item.appendChild(time);
-
-    return item;
-  }
-
-  createBottomBtn() {
-    let btn = this._createDiv();
-    this._setClass(btn, [this.classes.BTN]);
-    this._setContent(btn, MORE_MESSAGE_BELOW);
-    if (!this.bottomBtn) {
-      this.self.appendChild(btn);
-      this.bottomBtn = btn;
-    }
-    this._setClickEvent(btn, () => {
-      this._scrollToBottom();
-      this._removeToBottomBtn();
+    $text.appendElement($nickname);
+    $text.appendContent(message.message, {
+      xssProtectionEnabled : true,
+      showEndOfLine : true
     });
-  }
+    $item.appendElement($text);
 
-  _removeToBottomBtn() {
-    if (this.bottomBtn) {
-      this.self.removeChild(this.bottomBtn);
-      this.bottomBtn = null;
-    }
+    let $time = new Element();
+    $time.setClass('time');
+    $time.val(this.getTime(message));
+    $item.appendElement($time);
+    return $item;
   }
-
-  isBottom() {
-    return this.content.scrollTop == this.content.scrollHeight - this.content.clientHeight;
-  }
-
-  _scrollToBottom() {
-    this.content.scrollTop = this.content.scrollHeight - this.content.clientHeight;
-  }
-
-  _getTime(message) {
+  getTime(message) {
     const months = [
       'JAN', 'FEB', 'MAR', 'APR', 'MAY',
       'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
       'NOV', 'DEC'
     ];
-
     var _getDay = (val) => {
-      let day = parseInt(val);
-      if (day == 1) {
+      let day = parseInt(val) % 10;
+      let digit = day % 10;
+      switch(digit) {
+      case 1:
         return day + 'st';
-      } else if (day == 2) {
-        return day + 'en';
-      } else if (day == 3) {
+      case 2:
+        return day + 'nd';
+      case 3:
         return day + 'rd';
-      } else {
+      default:
         return day + 'th';
       }
     };
-
     var _checkTime = (val) => {
       return (+val < 10) ? '0' + val : val;
     };
@@ -258,15 +138,96 @@ class MessageBoard extends Element{
       var _date = new Date(message.createdAt);
       if (_nowDate.getDate() - _date.getDate() == 1) {
         return LAST_MESSAGE_YESTERDAY;
-      } else if (_nowDate.getFullYear() == _date.getFullYear()
+      }
+      else if (_nowDate.getFullYear() == _date.getFullYear()
         && _nowDate.getMonth() == _date.getMonth()
         && _nowDate.getDate() == _date.getDate()) {
         return _checkTime(_date.getHours()) + ':' + _checkTime(_date.getMinutes());
-      } else {
+      }
+      else {
         return months[_date.getMonth()] + ' ' + _getDay(_date.getDate());
       }
     }
     return '';
+  }
+  render(messageList, isScrollBottom, isLoadingMore) {
+    var moveScroll = 0;
+    for (let i in messageList) {
+      let message = messageList[i];
+      if (message.isUserMessage()) {
+        let $item = this.createMessageElement(message);
+        if(isLoadingMore) {
+          let firstChild = this.$content.first();
+          this.$content.insertBefore($item, firstChild);
+        }
+        else this.$content.appendElement($item);
+        moveScroll += $item.getFullHeight();
+      }
+      else {
+        // put code here for other message type
+      }
+    }
+    if (isLoadingMore)
+      this.$content.scrollY(moveScroll);
+    if (isScrollBottom)
+      this.$content.scrollToBottom();
+  }
+  reset() {
+    this.senderColor = {};
+    this.kr = null;
+  }
+
+  toggleIcon() {
+    if (this.$input.val()) {
+      if(!this.$icon.hasClass('active'))
+        this.$icon.addClass('active');
+    }
+    else this.$icon.removeClass('active');
+  }
+  responsiveInput() {
+    let outerHeight = this.$input.getScrollHeight();
+    let paddingTop = this.$input.getPadding().top;
+    let innerHeight = (outerHeight - (paddingTop * 2));
+    let expectPadding = (MAX_HEIGHT_INPUT_OUTER - innerHeight);
+
+    if (innerHeight < MIN_HEIGHT_INPUT_INNER) {
+      this.$input.setVerticalPadding((MAX_HEIGHT_INPUT_OUTER - MIN_HEIGHT_INPUT_INNER)/2);
+    }
+    else if (innerHeight > MAX_HEIGHT_INPUT_INNER) {
+      this.$input.setVerticalPadding((MAX_HEIGHT_INPUT_OUTER - MAX_HEIGHT_INPUT_INNER)/2);
+    }
+    else {
+      this.$input.setVerticalPadding(expectPadding / 2);
+    }
+    this.toggleIcon();
+  }
+  clearInput() {
+    let items = this.$input.findByTag('div');
+    for(let i = 0; i < items.length; i++)
+      items[i].remove();
+    this.$input.val("");
+    this.kr = null;
+    this.toggleIcon();
+  }
+  createBottomBar() {
+    let _this = this;
+    let $btn = new Element();
+    $btn.setClass('btn');
+    $btn.val(MORE_MESSAGE_BELOW);
+    $btn.on('click', () => {
+      _this.$content.scrollToBottom();
+      _this.removeBottomBar();
+    });
+    if (!this.$bottom) {
+      this.appendElement($btn);
+      this.$bottom = $btn;
+    }
+  }
+  removeBottomBar() {
+    if (this.$bottom) {
+      this.removeElement(this.$bottom);
+      this.$bottom = null;
+    }
   }
 
 }

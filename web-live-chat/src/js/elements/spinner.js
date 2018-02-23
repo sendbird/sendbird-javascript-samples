@@ -1,30 +1,25 @@
-import { EMPTY_STRING } from '../consts.js';
+'use strict';
+
 import Element from './element.js';
+
+const SPINNER_COUNT = 3;
 
 class Spinner extends Element {
   constructor() {
     super();
-    this._create();
-  }
-
-  _create() {
-    let spinner = this._createDiv();
-    this._setClass(spinner, [this.classes.SPINNER]);
-    var i;
-    for (i = 0 ; i < 3 ; i++) {
-      spinner.appendChild(this._createDiv());
+    this.setClass('sb-spinner');
+    for(let i = 0 ; i < SPINNER_COUNT ; i++) {
+      this.appendElement(new Element());
     }
-    this.self = spinner;
   }
 
-  insert(target) {
-    this._setContent(target, EMPTY_STRING);
-    target.appendChild(this.self);
+  attachTo($target) {
+    $target.val("");
+    $target.appendElement(this);
   }
-
-  remove(target) {
-    if (target.firstElementChild) {
-      target.removeChild(this.self);
+  remove($target) {
+    if ($target.first()) {
+      $target.removeElement(this);
     }
   }
 }

@@ -5,7 +5,7 @@ React-Native sample using [SendBird SDK](https://github.com/smilefam/SendBird-SD
 ## NOTICE!
 
 This sample is deprecated and not supported any longer.  
-You can see latest React Native sample in [SendBird React Native Redux sample](https://github.com/smilefam/SendBird-SDK-JavaScript/react-native-redux-sample).
+You can see latest React Native sample in [SendBird React Native Redux sample](https://github.com/smilefam/SendBird-JavaScript/tree/master/react-native-redux-sample).
 
 ## Run the sample
 

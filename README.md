@@ -34,8 +34,3 @@ Or, you can manually download the JS SDK files [here](https://github.com/smilefa
 ## Previous versions
 
 To view the version 2 sample, checkout the `v2` branch instead of `master.`
-
-
-## Contributing
-
-The SendBird JavaScript samples are fully open-source. All contributions and suggestions are welcome!

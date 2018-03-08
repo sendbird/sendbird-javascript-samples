@@ -1,15 +1,8 @@
-import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  Image,
-  ListView,
-  TouchableHighlight,
-  StyleSheet
-} from 'react-native'
+import React, { Component } from 'react';
+import { View, Text, ListView, TouchableHighlight, StyleSheet } from 'react-native';
 
 import { CachedImage } from 'react-native-cached-image';
-import {APP_ID, PULLDOWN_DISTANCE} from '../consts';
+import { APP_ID, PULLDOWN_DISTANCE } from '../consts';
 import TopBar from '../components/topBar';
 import SendBird from 'sendbird';
 var sb = null;
@@ -19,7 +12,7 @@ export default class OpenChannel extends Component {
   constructor(props) {
     super(props);
     sb = SendBird.getInstance();
-    ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     this.state = {
       channelList: [],
       dataSource: ds.cloneWithRows([]),
@@ -43,9 +36,9 @@ export default class OpenChannel extends Component {
     sb.addChannelHandler('ChannelHandlerInList', ChannelHandler);
 
     var ConnectionHandler = new sb.ConnectionHandler();
-    ConnectionHandler.onReconnectSucceeded = function(){
+    ConnectionHandler.onReconnectSucceeded = function() {
       _SELF._refreshChannelList();
-    }
+    };
     sb.addConnectionHandler('ConnectionHandlerInList', ConnectionHandler);
   }
 
@@ -57,30 +50,32 @@ export default class OpenChannel extends Component {
   _refreshChannelList() {
     var _SELF = this;
     var listQuery = sb.OpenChannel.createOpenChannelListQuery();
-    listQuery.next(function(channelList, error){
+    listQuery.next(function(channelList, error) {
       if (error) {
         console.log(error);
         return;
       }
-      _SELF.setState({ listQuery: listQuery, channelList: channelList, dataSource: ds.cloneWithRows(channelList)});
-
+      _SELF.setState({ listQuery: listQuery, channelList: channelList, dataSource: ds.cloneWithRows(channelList) });
     });
   }
 
   _channelUpdate(channel) {
     var _SELF = this;
     var _list = _SELF.state.channelList.map(function(ch) {
-      if (channel.url == ch.url ) {
-        return channel
+      if (channel.url == ch.url) {
+        return channel;
       }
-      return ch
+      return ch;
     });
-    _SELF.setState({
-      channelList: _list
-    }, () => {
-      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-      _SELF.setState({dataSource: ds.cloneWithRows(_SELF.state.channelList)});
-    });
+    _SELF.setState(
+      {
+        channelList: _list
+      },
+      () => {
+        var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+        _SELF.setState({ dataSource: ds.cloneWithRows(_SELF.state.channelList) });
+      }
+    );
   }
 
   _refresh(channel) {
@@ -97,8 +92,8 @@ export default class OpenChannel extends Component {
           alert('Enter openChannel Fail.');
         }
       }
-      _SELF.props.navigator.push({name: 'chat', channel: channel, refresh: _SELF._refreshChannelList});
-    })
+      _SELF.props.navigator.push({ name: 'chat', channel: channel, refresh: _SELF._refreshChannelList });
+    });
   }
 
   _getChannelList() {
@@ -112,7 +107,7 @@ export default class OpenChannel extends Component {
         return;
       }
 
-      _SELF.setState({channelList: _SELF.state.channelList.concat(response)}, () => {
+      _SELF.setState({ channelList: _SELF.state.channelList.concat(response) }, () => {
         _SELF.setState({
           dataSource: _SELF.state.dataSource.cloneWithRows(_SELF.state.channelList)
         });
@@ -125,17 +120,13 @@ export default class OpenChannel extends Component {
   }
 
   _onCreateOpenChannel() {
-    this.props.navigator.push({name: 'createChannel', refresh: this._refreshChannelList});
+    this.props.navigator.push({ name: 'createChannel', refresh: this._refreshChannelList });
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <TopBar
-          onBackPress={this._onBackPress}
-          onCreateOpenChannel={this._onCreateOpenChannel}
-          title='Open Channel'
-           />
+        <TopBar onBackPress={this._onBackPress} onCreateOpenChannel={this._onCreateOpenChannel} title="Open Channel" />
 
         <View style={styles.listContainer}>
           <ListView
@@ -144,11 +135,15 @@ export default class OpenChannel extends Component {
             onEndReached={() => this._getChannelList()}
             onEndReachedThreshold={PULLDOWN_DISTANCE}
             dataSource={this.state.dataSource}
-            renderRow={(rowData) =>
+            renderRow={rowData => (
               <TouchableHighlight onPress={() => this._onChannelPress(rowData)}>
                 <View style={styles.listItem}>
                   <View style={styles.listIcon}>
-                    <CachedImage style={styles.channelIcon} key={rowData.coverUrl} source={{uri: rowData.coverUrl.replace('http://', 'https://')}} />
+                    <CachedImage
+                      style={styles.channelIcon}
+                      key={rowData.coverUrl}
+                      source={{ uri: rowData.coverUrl.replace('http://', 'https://') }}
+                    />
                   </View>
                   <View style={styles.listInfo}>
                     <Text style={styles.titleLabel}># {rowData.name}</Text>
@@ -156,11 +151,11 @@ export default class OpenChannel extends Component {
                   </View>
                 </View>
               </TouchableHighlight>
-            }
-         />
+            )}
+          />
         </View>
       </View>
-    )
+    );
   }
 }
 
@@ -202,11 +197,11 @@ const styles = StyleSheet.create({
   titleLabel: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#60768b',
+    color: '#60768b'
   },
   memberLabel: {
     fontSize: 13,
     fontWeight: '400',
-    color: '#abb8c4',
+    color: '#abb8c4'
   }
 });

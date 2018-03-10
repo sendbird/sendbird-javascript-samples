@@ -407,7 +407,7 @@ export default class Chat extends Component {
           >{'+'}</Button>
           <TextInput
             style={styles.textInput}
-            placeholder={'Please type mesasge...'}
+            placeholder={'Please type message...'}
             ref='textInput'
             onChangeText={this._onChangeText}
             value={this.state.text}

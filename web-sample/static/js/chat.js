@@ -1411,38 +1411,46 @@ function messageList(message) {
   var user = message.sender;
   var channel = currChannelInfo;
 
-  if (isCurrentUser(user.userId)) {
-    // var readReceiptHtml = '';
-    // if (channel.isGroupChannel()) {
-    //   readReceiptHtml = '  <label class="chat-canvas__list-readreceipt"></label>';
-    // }
-    var readReceiptHtml = '  <label class="chat-canvas__list-readreceipt"></label>';
+  if(user){
+    if (isCurrentUser(user.userId)) {
+      // var readReceiptHtml = '';
+      // if (channel.isGroupChannel()) {
+      //   readReceiptHtml = '  <label class="chat-canvas__list-readreceipt"></label>';
+      // }
+      var readReceiptHtml = '  <label class="chat-canvas__list-readreceipt"></label>';
 
-    var msg = '' +
-      '<div class="chat-canvas__list">' +
-      '  <label class="chat-canvas__list-name chat-canvas__list-name__user" data-userid="%userid%">' +
-      xssEscape(user.nickname) +
-      '  </label>' +
-      '  <label class="chat-canvas__list-separator">:</label>' +
-      '  <label class="chat-canvas__list-text" data-messageid="%messageid%">%message%</label>' +
-      readReceiptHtml +
-      '</div>';
+      var msg = '' +
+        '<div class="chat-canvas__list">' +
+        '  <label class="chat-canvas__list-name chat-canvas__list-name__user" data-userid="%userid%">' +
+        xssEscape(user.nickname) +
+        '  </label>' +
+        '  <label class="chat-canvas__list-separator">:</label>' +
+        '  <label class="chat-canvas__list-text" data-messageid="%messageid%">%message%</label>' +
+        readReceiptHtml +
+        '</div>';
+      msg = msg.replace('%message%', convertLinkMessage(xssEscape(message.message)));
+      msg = msg.replace('%userid%', user.userId).replace('%messageid%', message.messageId);
+
+      msgList += msg;
+    } else {
+      var msg = '' +
+        '<div class="chat-canvas__list">' +
+        '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">' +
+        xssEscape(user.nickname) +
+        '  </label>' +
+        '  <label class="chat-canvas__list-separator">:</label>' +
+        '  <label class="chat-canvas__list-text" data-messageid="%messageid%">' +
+        convertLinkMessage(xssEscape(message.message)) +
+        '  </label>' +
+        '</div>';
+        msgList += msg.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)).replace('%messageid%', message.messageId);
+    }
+    
+  }else{ 
+  //messageType = "admin"
+    var msg = ' <div class="chat-canvas__list">  <label class="chat-canvas__list-broadcast"> %message% </label></div>';
     msg = msg.replace('%message%', convertLinkMessage(xssEscape(message.message)));
-    msg = msg.replace('%userid%', user.userId).replace('%messageid%', message.messageId);
-
     msgList += msg;
-  } else {
-    var msg = '' +
-      '<div class="chat-canvas__list">' +
-      '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">' +
-      xssEscape(user.nickname) +
-      '  </label>' +
-      '  <label class="chat-canvas__list-separator">:</label>' +
-      '  <label class="chat-canvas__list-text" data-messageid="%messageid%">' +
-      convertLinkMessage(xssEscape(message.message)) +
-      '  </label>' +
-      '</div>';
-      msgList += msg.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)).replace('%messageid%', message.messageId);
   }
 
   return msgList;

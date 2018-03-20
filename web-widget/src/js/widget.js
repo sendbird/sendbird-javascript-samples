@@ -4,22 +4,22 @@ import ChatSection from './elements/chat-section.js';
 import Popup from './elements/popup.js';
 import Spinner from './elements/spinner.js';
 import Sendbird from './sendbird.js';
-import { 
-  hide, 
-  show, 
-  addClass, 
-  removeClass, 
-  hasClass, 
-  getFullHeight, 
-  insertMessageInList, 
-  getLastItem, 
-  isEmptyString, 
-  xssEscape, 
+import {
+  hide,
+  show,
+  addClass,
+  removeClass,
+  hasClass,
+  getFullHeight,
+  insertMessageInList,
+  getLastItem,
+  isEmptyString,
+  xssEscape,
   createNotificationSound,
   requestNotification,
   setCookie,
   getCookie,
-  deleteCookie 
+  deleteCookie
 } from './utils.js';
 import { className, TYPE_STRING, MAX_COUNT } from './consts.js';
 
@@ -377,13 +377,13 @@ class SBWidget {
       this.setMessageItem(channelSet.channel, targetBoard, [message], false, isBottom, lastMessage);
       channel.markAsRead();
       this.updateUnreadMessageCount(channel);
-    } 
+    }
     if (!targetBoard) {
       if ('Notification' in window) {
         var notification = new Notification(
-          "New Message", 
+          "New Message",
           {
-            "body": message.isFileMessage() ? message.name : message.message, 
+            "body": message.isFileMessage() ? message.name : message.message,
             "icon": "http://qnimate.com/wp-content/uploads/2014/07/web-notification-api-300x150.jpg"
           }
         );
@@ -446,7 +446,7 @@ class SBWidget {
         });
         channelSet.message = newMessages;
       }
-      
+
       let updatedMessage = document.getElementById(`${messageId}`)
       updatedMessage.remove();
     }
@@ -537,6 +537,7 @@ class SBWidget {
 
   _connectChannel(channelUrl, doNotCall) {
     var chatBoard = this.chatSection.createChatBoard(channelUrl, doNotCall);
+    this.chatSection.channelUrl = channelUrl;
     if (!doNotCall) {
       this.responsiveChatSection(channelUrl, true);
     }
@@ -624,7 +625,7 @@ class SBWidget {
             addClass(this.popup.invitePopup.inviteBtn, className.DISABLED);
             this.spinner.insert(this.popup.invitePopup.inviteBtn);
             let selectedUserIds = this.popup.getSelectedUserIds(this.popup.invitePopup.list);
-            let channelSet = this.getChannelSet(channelUrl);
+            let channelSet = this.getChannelSet(this.chatSection.channelUrl);
             this.sb.inviteMember(channelSet.channel, selectedUserIds, () => {
               this.spinner.remove(this.popup.invitePopup.inviteBtn);
               this.closeInvitePopup();

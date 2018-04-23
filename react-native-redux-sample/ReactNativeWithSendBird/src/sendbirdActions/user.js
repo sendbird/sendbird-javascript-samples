@@ -3,6 +3,7 @@ import {
     Platform,
     AsyncStorage
 } from 'react-native';
+import FCM, {NotificationActionType} from "react-native-fcm";
 
 // const APP_ID = '078105E7-BD8C-43C9-A583-59E334353965'; // test
 const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
@@ -22,62 +23,25 @@ export const sbConnect = (userId, nickname) => {
             if (error) {
                 reject('SendBird Login Failed.');
             } else {
-                const PushNotification = require('react-native-push-notification');
-                PushNotification.configure({
-                    // (optional) Called when Token is generated (iOS and Android)
-                    onRegister: function(token) {
-                        if (Platform.OS === 'ios') {
-                            sb.registerAPNSPushTokenForCurrentUser(token['token'], function(result, error){
-                                console.log("registerAPNSPushTokenForCurrentUser");
-                                console.log(result);
-                            });
-                        } else {
-                            sb.registerGCMPushTokenForCurrentUser(token['token'], function(result, error){
+                if(Platform.OS === 'ios') {
+                    FCM.getAPNSToken().then(token => {
+                        if(token) {
+                            sb.registerAPNSPushTokenForCurrentUser(token, function(result, error){
                                 console.log("registerAPNSPushTokenForCurrentUser");
                                 console.log(result);
                             });
                         }
-                    },
-
-                    // (required) Called when a remote or local notification is opened or received
-                    onNotification: function(notification) {
-                        if(notification.sendbird) {
-                            const sendbirdNotification = JSON.parse(notification.sendbird);
-                            console.log(sendbirdNotification);
-                            AsyncStorage.setItem('payload',
-                                JSON.stringify({
-                                    "channelType" : sendbirdNotification.channel_type,
-                                    "channel" : sendbirdNotification.channel
-                                }),
-                                () => {});
+                    });
+                } else {
+                    FCM.getFCMToken().then(token => {
+                        if(token) {
+                            sb.registerGCMPushTokenForCurrentUser(token, function(result, error){
+                                console.log("registerAPNSPushTokenForCurrentUser");
+                                console.log(result);
+                            });
                         }
-                        
-                        // required on iOS only (see fetchCompletionHandler docs: https://facebook.github.io/react-native/docs/pushnotificationios.html)
-                        if(PushNotificationIOS)
-                            notification.finish(PushNotificationIOS.FetchResult.NoData);
-                    },
-
-                    // ANDROID ONLY: GCM Sender ID (optional - not required for local notifications, but is need to receive remote push notifications)
-                    senderID: "984140644677",
-
-                    // IOS ONLY (optional): default: all - Permissions to register.
-                    permissions: {
-                        alert: true,
-                        badge: true,
-                        sound: true
-                    },
-
-                    // Should the initial notification be popped automatically
-                    // default: true
-                    popInitialNotification: true,
-
-                    /**
-                     * (optional) default: true
-                     * - Specified if permissions (ios) and token (android and ios) will requested or not,
-                     * - if not, you must call PushNotificationsHandler.requestPermissions() later
-                     */
-                    requestPermissions: true,
-                });
+                    });
+                }
                 resolve(sbUpdateProfile(nickname));
             }
         })

@@ -2,9 +2,9 @@ package com.reactnativewithsendbird;
 
 import android.app.Application;
 
+import com.evollu.react.fcm.FIRMessagingPackage;
 import com.facebook.react.ReactApplication;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.imagepicker.ImagePickerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.facebook.react.ReactNativeHost;
@@ -26,11 +26,11 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
-            new VectorIconsPackage(),
-            new ReactNativePushNotificationPackage(),
-            new ImagePickerPackage(),
-            new RNFetchBlobPackage()
+        new MainReactPackage(),
+        new VectorIconsPackage(),
+        new FIRMessagingPackage(),
+        new ImagePickerPackage(),
+        new RNFetchBlobPackage()
       );
     }
 

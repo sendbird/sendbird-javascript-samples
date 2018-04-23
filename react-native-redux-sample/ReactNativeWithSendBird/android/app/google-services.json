@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "45411407729",
+    "firebase_url": "https://yrdy-1078.firebaseio.com",
+    "project_id": "yrdy-1078",
+    "storage_bucket": "yrdy-1078.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45411407729:android:f78fa0e5edf2bb5f",
+        "android_client_info": {
+          "package_name": "com.reactnativewithsendbird"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-fbl74lc8l00amlfngnm99ka3hsa6jatg.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-5eic3olseii1l45rp46u4ff6itipjno1.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "45411407729-jjelgac8298ug989b94ltmqp4bhr5jpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAth1oIDq8leNpjJwTc6SjgnsuikF-gKLM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

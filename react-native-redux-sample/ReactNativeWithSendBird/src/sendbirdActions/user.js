@@ -8,6 +8,61 @@ import FCM, {NotificationActionType} from "react-native-fcm";
 // const APP_ID = '078105E7-BD8C-43C9-A583-59E334353965'; // test
 const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
 
+export const sbRegisterPushToken = (token) => {
+    return new Promise((resolve, reject) => {
+        const sb = SendBird.getInstance();
+        if(sb) {
+            if(Platform.OS === 'ios') {
+                sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
+                    if(!error) {
+                        resolve();
+                    }
+                    else reject(error);
+                });
+            } else {
+                sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
+                    if(!error) {
+                        resolve();
+                    }
+                    else reject(error);
+                });
+            }
+        } else {
+            reject('SendBird is not initialized');
+        }
+    });
+};
+export const sbUnregisterPushToken = () => {
+    return new Promise((resolve, reject) => {
+        AsyncStorage.getItem('pushToken', (err, token) => {
+            if(token) {
+                const sb = SendBird.getInstance();
+                if(sb) {
+                    if(Platform.OS === 'ios') {
+                        sb.unregisterAPNSPushTokenForCurrentUser(token, (result, error) => {
+                            if(!error) {
+                                resolve();
+                            }
+                            else reject(error);
+                        });
+                    } else {
+                        sb.unregisterGCMPushTokenForCurrentUser(token, (result, error) => {
+                            if(!error) {
+                                resolve();
+                            }
+                            else reject(error);
+                        });
+                    }
+                } else {
+                    reject('SendBird is not initialized');
+                }
+            } else {
+                resolve();
+            }
+        });
+    });
+};
+
 export const sbConnect = (userId, nickname) => {
     return new Promise((resolve, reject) => {
         if (!userId) {

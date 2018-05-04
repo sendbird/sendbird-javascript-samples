@@ -30,7 +30,7 @@ export default (state = INITAL_STATE, action) => {
             return { 
                 ...state, 
                 isLoading: false,
-                list: action.list 
+                list: [...state.list, ...action.list]
             };
         case OPEN_CHANNEL_LIST_FAIL: 
             return { ...state, isLoading: false };

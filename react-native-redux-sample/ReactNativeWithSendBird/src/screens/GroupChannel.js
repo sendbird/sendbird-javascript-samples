@@ -72,7 +72,7 @@ class GroupChannel extends Component {
                     channelUrl: channel.url, 
                     title: sbGetChannelTitle(channel), 
                     memberCount: channel.memberCount,
-                    isOpenChannel: channel.isOpenChannel() ,
+                    isOpenChannel: channel.isOpenChannel(),
                     _initListState: this._initJoinState
                 }
             );
@@ -97,7 +97,7 @@ class GroupChannel extends Component {
                 this.props.getGroupChannelList(this.state.groupChannelListQuery);
             });
         } else {
-            this.props.getGroupChannelList(this.state.groupChannelListQuery);        
+            this.props.getGroupChannelList(this.state.groupChannelListQuery);
         }
     }
     
@@ -242,7 +242,7 @@ class GroupChannel extends Component {
                     extraData={this.state}
                     keyExtractor={(item, index) => item.url}
                     onEndReached={() => this._getGroupChannelList(false)}
-                    onEndReachedThreshold={0.1}
+                    onEndReachedThreshold={0}
                     onScroll={this._handleScroll}
                 />
             </View>

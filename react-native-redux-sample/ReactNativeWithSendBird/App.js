@@ -11,6 +11,10 @@ import FCM, {
 } from "react-native-fcm";
 import SendBird from 'sendbird';
 
+import {
+  sbRegisterPushToken
+} from './src/sendbirdActions';
+
 import store from "./src/store";
 
 import Start from "./src/screens/Start";
@@ -120,20 +124,14 @@ export default class App extends Component {
     });
 
     FCM.on(FCMEvent.RefreshToken, token => {
+      AsyncStorage.setItem('pushToken', token);
       sb = SendBird.getInstance();
-      const user = AsyncStorage.getItem('user');
-      if(user) {
-        this._registerPushToken(token);
-      } else {
-        AsyncStorage.setItem('pushToken', token);
-      }
+      AsyncStorage.getItem('user', (err, user) => {
+        if(user) {
+          this._registerPushToken(token);
+        }
+      });
     });
-
-    const pushToken = AsyncStorage.getItem('pushToken');
-    if(pushToken) {
-      this._registerPushToken(pushToken);
-      AsyncStorage.removeItem('pushToken');
-    }
     AppState.addEventListener("change", this._handleAppStateChange);
   }
   componentWillUnmount() {
@@ -148,18 +146,9 @@ export default class App extends Component {
   }
 
   _registerPushToken = (token) => {
-    const sb = SendBird.getInstance();
-    if(sb) {
-      if(Platform.OS === 'ios') {
-        sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
-          if(error) throw error;
-        });
-      } else {
-        sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
-          if(error) throw error;
-        });
-      }
-    }
+    sbRegisterPushToken(token)
+      .then(res => {})
+      .catch(err => {});
   }
   _handleAppStateChange = (nextAppState) => {
     const sb = SendBird.getInstance();

@@ -194,17 +194,18 @@ class Chat extends Component {
       const { textMessage } = this.state;
       this.setState({ textMessage: "" }, () => {
         this.props.onSendButtonPress(channelUrl, isOpenChannel, textMessage);
-        this.flatList.scrollToIndex({
-          index: 0,
-          viewOffset: 0
-        });
+        if(this.props && this.props.list && this.props.list.length > 0) {
+          this.flatList.scrollToIndex({
+            index: 0,
+            viewOffset: 0
+          });
+        }
       });
     }
   };
 
   _onPhotoAddPress = () => {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
-
     ImagePicker.showImagePicker(
       {
         title: "Select Image File To Send",
@@ -290,7 +291,7 @@ class Chat extends Component {
             extraData={this.state}
             keyExtractor={(item, index) => item.messageId + ''}
             onEndReached={() => this._getMessageList(false)}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0}
           />
         </View>
         <View style={styles.messageInputViewStyle}>

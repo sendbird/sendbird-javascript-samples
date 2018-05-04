@@ -1,1 +1,1 @@
-#import <FirebaseCore/FIRAnalyticsConfiguration.h>
+../../../../FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRAnalyticsConfiguration.h

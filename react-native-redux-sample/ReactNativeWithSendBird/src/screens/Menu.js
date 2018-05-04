@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { sendbirdLogout, initMenu } from '../actions';
+import {
+    sbUnregisterPushToken
+  } from '../sendbirdActions';
 import { NavigationActions } from 'react-navigation'
 import { Button, HR, Spinner } from '../components';
 
@@ -49,7 +52,11 @@ class Menu extends Component {
 
     _onDisconnectButtonPress = () => {
         this.setState({ isLoading: true }, () => {
-            this.props.sendbirdLogout();
+            sbUnregisterPushToken()
+                .then(res => {
+                    this.props.sendbirdLogout();
+                })
+                .catch(err => {});
         });
     }
 

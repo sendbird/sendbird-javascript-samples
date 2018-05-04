@@ -37,8 +37,7 @@ const MessageInput = (props) => {
                     selectionColor={'#212529'}
                     underlineColorAndroid='transparent'
                     value={props.textMessage}
-                    onChangeText={props.onChangeText} 
-                    onFocus={props.onFocus}
+                    onChangeText={props.onChangeText}
                 />
             </View>
             <Icon

@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { View, Text, TextInput, Image, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { initLogin, sendbirdLogin } from '../actions'
+import {
+    sbRegisterPushToken
+  } from '../sendbirdActions';
 import { NavigationActions } from 'react-navigation'
 import { Button, Spinner } from '../components';
 
@@ -26,15 +29,22 @@ class Login extends Component {
     componentWillReceiveProps(props) {
         let { user, error } = props;
         if (user) {
-            const resetAction = NavigationActions.reset({
-                index: 0,
-                actions: [
-                    NavigationActions.navigate({ routeName: 'Menu' })
-                ]
-            })
-            this.setState({ userId: '', nickname: '', isLoading: false }, () => {
-                this.props.navigation.dispatch(resetAction);
-            })
+            AsyncStorage.getItem('pushToken', (err, pushToken) => {
+                if(pushToken) {
+                    sbRegisterPushToken(pushToken)
+                        .then(res => {})
+                        .catch(err => {});
+                }
+                const resetAction = NavigationActions.reset({
+                    index: 0,
+                    actions: [
+                        NavigationActions.navigate({ routeName: 'Menu' })
+                    ]
+                });
+                this.setState({ userId: '', nickname: '', isLoading: false }, () => {
+                    this.props.navigation.dispatch(resetAction);
+                });
+            });
         }
 
         if (error) {

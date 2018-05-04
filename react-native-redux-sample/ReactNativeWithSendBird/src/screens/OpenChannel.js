@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, FlatList, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
-import { 
+import {
     initOpenChannel,
     getOpenChannelList,
     onOpenChannelPress,
@@ -9,11 +9,11 @@ import {
     clearSeletedOpenChannel,
     openChannelProgress
 } from '../actions'
-import { 
-    Button, 
-    ListItem, 
-    Avatar, 
-    Spinner 
+import {
+    Button,
+    ListItem,
+    Avatar,
+    Spinner
 } from '../components';
 import { sbCreateOpenChannelListQuery } from '../sendbirdActions';
 
@@ -23,21 +23,21 @@ class OpenChannel extends Component {
         return {
             title: 'Open Channel',
             headerLeft: (
-                <Button 
-                    containerViewStyle={{marginLeft: 0, marginRight: 0}}
-                    buttonStyle={{paddingLeft: 14}}
+                <Button
+                    containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+                    buttonStyle={{ paddingLeft: 14 }}
                     icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
-                    onPress={ () => navigation.goBack() }
+                    onPress={() => navigation.goBack()}
                 />
             ),
             headerRight: (
-                <Button 
-                    containerViewStyle={{marginLeft: 0, marginRight: 0}}
-                    buttonStyle={{paddingRight: 14}}
+                <Button
+                    containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+                    buttonStyle={{ paddingRight: 14 }}
                     iconRight={{ name: 'plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
-                    onPress={ () => { navigation.navigate('OpenChannelCreate') } }
+                    onPress={() => { navigation.navigate('OpenChannelCreate') }}
                 />
             )
         }
@@ -67,10 +67,10 @@ class OpenChannel extends Component {
         if (channel) {
             this.props.clearSeletedOpenChannel();
             this.props.navigation.navigate(
-                'Chat', 
-                { 
-                    channelUrl: channel.url, 
-                    title: channel.name, 
+                'Chat',
+                {
+                    channelUrl: channel.url,
+                    title: channel.name,
                     memberCount: channel.participantCount,
                     isOpenChannel: channel.isOpenChannel(),
                     _initListState: this._initEnterState
@@ -93,13 +93,13 @@ class OpenChannel extends Component {
         if (init) {
             const openChannelListQuery = sbCreateOpenChannelListQuery();
             this.setState({ openChannelListQuery }, () => {
-                this.props.getOpenChannelList(this.state.openChannelListQuery);        
+                this.props.getOpenChannelList(this.state.openChannelListQuery);
             });
         } else {
             this.props.getOpenChannelList(this.state.openChannelListQuery);
         }
     }
-    
+
     _onListItemPress = (channelUrl) => {
         if (!this.state.enterChannel) {
             this.setState({ enterChannel: true }, () => {
@@ -108,29 +108,29 @@ class OpenChannel extends Component {
         }
     }
 
-    _handleScroll = (e) => {
-        if (e.nativeEvent.contentOffset.y < -100 && !this.props.isLoading) {
-            this._initOpenChannelList();
-        }
-    }
-    
+    // _handleScroll = (e) => {
+    //     if (e.nativeEvent.contentOffset.y < -100 && !this.props.isLoading) {
+    //         this._initOpenChannelList();
+    //     }
+    // }
+
     _renderList = (rowData) => {
         const channel = rowData.item;
         return (
             <ListItem
                 component={TouchableHighlight}
-                containerStyle={{backgroundColor: '#fff'}}
+                containerStyle={{ backgroundColor: '#fff' }}
                 key={channel.url}
                 avatar={(
-                    <Avatar 
-                        source={channel.coverUrl ? {uri: channel.coverUrl} : require('../img/icon_sb_68.png')} 
+                    <Avatar
+                        source={channel.coverUrl ? { uri: channel.coverUrl } : require('../img/icon_sb_68.png')}
                     />
                 )}
                 title={channel.name.length > 30 ? channel.name.substring(0, 26) + '...' : channel.name}
-                titleStyle={{fontWeight: '500', fontSize: 16}}
+                titleStyle={{ fontWeight: '500', fontSize: 16 }}
                 subtitle={channel.participantCount + ' Participant'}
-                subtitleStyle={{fontWeight: '300', fontSize: 11}}
-                onPress={ () => this._onListItemPress(channel.url) }
+                subtitleStyle={{ fontWeight: '300', fontSize: 11 }}
+                onPress={() => this._onListItemPress(channel.url)}
             />
         )
     }
@@ -143,10 +143,10 @@ class OpenChannel extends Component {
                     renderItem={this._renderList}
                     data={this.props.list}
                     extraData={this.state}
+                    inverted={false}
                     keyExtractor={(item, index) => item.url}
                     onEndReached={() => this._getOpenChannelList(false)}
-                    onEndReachedThreshold={0.1}
-                    onScroll={this._handleScroll}
+                    onEndReachedThreshold={0}
                 />
             </View>
         )
@@ -156,14 +156,14 @@ class OpenChannel extends Component {
 const styles = {
 };
 
-function mapStateToProps({ openChannel })  {
+function mapStateToProps({ openChannel }) {
     const { isLoading, list, createdChannel, channel } = openChannel;
     return { isLoading, list, createdChannel, channel };
 }
 
 export default connect(
     mapStateToProps,
-    { 
+    {
         initOpenChannel,
         getOpenChannelList,
         onOpenChannelPress,

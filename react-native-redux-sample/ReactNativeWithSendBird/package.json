@@ -1,6 +1,6 @@
 {
   "name": "ReactNativeWithSendBird",
-  "version": "0.0.3",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -23,7 +23,7 @@
     "react-redux": "5.0.7",
     "redux": "3.7.2",
     "redux-thunk": "2.2.0",
-    "sendbird": "3.0.54"
+    "sendbird": "3.0.61"
   },
   "devDependencies": {
     "babel-jest": "22.4.1",

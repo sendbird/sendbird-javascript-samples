@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ListView, TouchableHighlight } from 'react-native';
+import { View, FlatList, TouchableHighlight } from 'react-native';
 import { connect } from 'react-redux';
 import { 
     initOpenChannel,
@@ -26,7 +26,7 @@ class OpenChannel extends Component {
                 <Button 
                     containerViewStyle={{marginLeft: 0, marginRight: 0}}
                     buttonStyle={{paddingLeft: 14}}
-                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 14 }}
+                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
                     onPress={ () => navigation.goBack() }
                 />
@@ -35,7 +35,7 @@ class OpenChannel extends Component {
                 <Button 
                     containerViewStyle={{marginLeft: 0, marginRight: 0}}
                     buttonStyle={{paddingRight: 14}}
-                    iconRight={{ name: 'plus', type: 'font-awesome', color: '#7d62d9', size: 14 }}
+                    iconRight={{ name: 'plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
                     onPress={ () => { navigation.navigate('OpenChannelCreate') } }
                 />
@@ -48,8 +48,7 @@ class OpenChannel extends Component {
         this.state = {
             enterChannel: false,
             openChannelListQuery: null,
-            list: [],
-            openChannelList: ds.cloneWithRows([])
+            list: []
         }
     }
 
@@ -59,26 +58,14 @@ class OpenChannel extends Component {
 
     componentWillReceiveProps(props) {
         const { list, channel, createdChannel } = props;
-    
-        if (list !== this.props.list) {
-            if (list.length === 0) {
-                this.setState({ list: [], openChannelList: ds.cloneWithRows([]) });    
-            } else {
-                const newList = [...this.state.list, ...list];
-                this.setState({ list: newList, openChannelList: ds.cloneWithRows(newList) });
-            }
-        }
-        
         if (createdChannel) {
-            const newList = [...[createdChannel], ...this.state.list];
-            this.setState({ list: newList, openChannelList: ds.cloneWithRows(newList) }, () => {
+            const newList = [...[createdChannel], ...list];
+            this.setState({ list: newList }, () => {
                 this.props.clearCreatedOpenChannel();
             });
         }
-
         if (channel) {
             this.props.clearSeletedOpenChannel();
-
             this.props.navigation.navigate(
                 'Chat', 
                 { 
@@ -128,21 +115,22 @@ class OpenChannel extends Component {
     }
     
     _renderList = (rowData) => {
+        const channel = rowData.item;
         return (
             <ListItem
                 component={TouchableHighlight}
                 containerStyle={{backgroundColor: '#fff'}}
-                key={rowData.url}
+                key={channel.url}
                 avatar={(
                     <Avatar 
-                        source={rowData.coverUrl ? {uri: rowData.coverUrl} : require('../img/icon_sb_68.png')} 
+                        source={channel.coverUrl ? {uri: channel.coverUrl} : require('../img/icon_sb_68.png')} 
                     />
                 )}
-                title={rowData.name.length > 30 ? rowData.name.substring(0, 26) + '...' : rowData.name}
+                title={channel.name.length > 30 ? channel.name.substring(0, 26) + '...' : channel.name}
                 titleStyle={{fontWeight: '500', fontSize: 16}}
-                subtitle={rowData.participantCount + ' Participant'}
+                subtitle={channel.participantCount + ' Participant'}
                 subtitleStyle={{fontWeight: '300', fontSize: 11}}
-                onPress={ () => this._onListItemPress(rowData.url) }
+                onPress={ () => this._onListItemPress(channel.url) }
             />
         )
     }
@@ -151,12 +139,13 @@ class OpenChannel extends Component {
         return (
             <View>
                 <Spinner visible={this.props.isLoading} />
-                <ListView
-                    enableEmptySections={true}
-                    renderRow={this._renderList}
-                    dataSource={this.state.openChannelList}
+                <FlatList
+                    renderItem={this._renderList}
+                    data={this.props.list}
+                    extraData={this.state}
+                    keyExtractor={(item, index) => item.url}
                     onEndReached={() => this._getOpenChannelList(false)}
-                    onEndReachedThreshold={-50}
+                    onEndReachedThreshold={0.1}
                     onScroll={this._handleScroll}
                 />
             </View>
@@ -166,10 +155,6 @@ class OpenChannel extends Component {
 
 const styles = {
 };
-
-const ds = new ListView.DataSource({
-    rowHasChanged: (r1, r2) => r1 !== r2
-});
 
 function mapStateToProps({ openChannel })  {
     const { isLoading, list, createdChannel, channel } = openChannel;

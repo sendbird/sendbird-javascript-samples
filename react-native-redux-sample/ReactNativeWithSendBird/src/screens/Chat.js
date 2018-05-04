@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ListView, Text, Alert, AsyncStorage } from "react-native";
+import { View, FlatList, Text, Alert, AsyncStorage, BackHandler } from "react-native";
 import { NavigationActions } from "react-navigation";
 import { connect } from "react-redux";
 import {
@@ -29,7 +29,7 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 0, paddingRight: 0 }}
-          iconRight={{ name: "user-plus", type: "font-awesome", color: "#7d62d9", size: 14 }}
+          iconRight={{ name: "user-plus", type: "font-awesome", color: "#7d62d9", size: 18 }}
           backgroundColor="transparent"
           onPress={() => {
             navigation.navigate("GroupChannelInvite", {
@@ -46,7 +46,7 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: "chevron-left", type: "font-awesome", color: "#7d62d9", size: 14 }}
+          icon={{ name: "chevron-left", type: "font-awesome", color: "#7d62d9", size: 18 }}
           backgroundColor="transparent"
           onPress={() => {
             params.handleHeaderLeft();
@@ -58,8 +58,8 @@ class Chat extends Component {
           {_renderInviteButton()}
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-            buttonStyle={{ paddingLeft: 0, paddingRight: 0 }}
-            iconRight={{ name: "users", type: "font-awesome", color: "#7d62d9", size: 14 }}
+            buttonStyle={{ paddingLeft: 4, paddingRight: 4 }}
+            iconRight={{ name: "users", type: "font-awesome", color: "#7d62d9", size: 18 }}
             backgroundColor="transparent"
             onPress={() => {
               navigation.navigate("Member", { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
@@ -68,7 +68,7 @@ class Chat extends Component {
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
             buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-            iconRight={{ name: "user-times", type: "font-awesome", color: "#7d62d9", size: 14 }}
+            iconRight={{ name: "user-times", type: "font-awesome", color: "#7d62d9", size: 18 }}
             backgroundColor="transparent"
             onPress={() => {
               navigation.navigate("BlockUser");
@@ -81,6 +81,7 @@ class Chat extends Component {
 
   constructor(props) {
     super(props);
+    this.flatList = null;
     this.state = {
       channel: null,
       isLoading: false,
@@ -99,9 +100,13 @@ class Chat extends Component {
       sbGetGroupChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     }
 
+    BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
     if (isFromPayload) {
       AsyncStorage.removeItem("payload", () => {});
     }
+  }
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
   }
 
   _componentInit = () => {
@@ -129,6 +134,7 @@ class Chat extends Component {
     this.setState({ isLoading: true }, () => {
       this.props.channelExit(channelUrl, isOpenChannel);
     });
+    return true;
   };
 
   componentWillReceiveProps(props) {
@@ -188,7 +194,10 @@ class Chat extends Component {
       const { textMessage } = this.state;
       this.setState({ textMessage: "" }, () => {
         this.props.onSendButtonPress(channelUrl, isOpenChannel, textMessage);
-        this.refs.chatSection.scrollTo({ y: 0 });
+        this.flatList.scrollToIndex({
+          index: 0,
+          viewOffset: 0
+        });
       });
     }
   };
@@ -203,9 +212,7 @@ class Chat extends Component {
         noData: true
       },
       response => {
-        if (response.didCancel || response.error || response.customButton) {
-          console.log(response.didCancel, response.error, response.customButton);
-        } else {
+        if (!response.didCancel && !response.error && !response.customButton) {
           let source = { uri: response.uri };
           if (response.name) {
             source["name"] = response.fileName;
@@ -224,34 +231,36 @@ class Chat extends Component {
   };
 
   _renderFileMessageItem = rowData => {
-    if (rowData.isUserMessage()) {
-      return <TextItem isUser={rowData.isUser} message={rowData.message} />;
-    } else if (sbIsImageMessage(rowData)) {
-      return <ImageItem isUser={rowData.isUser} message={rowData.url.replace("http://", "https://")} />;
+    const message = rowData.item;
+    if (message.isUserMessage()) {
+      return <TextItem isUser={message.isUser} message={message.message} />;
+    } else if (sbIsImageMessage(message)) {
+      return <ImageItem isUser={message.isUser} message={message.url.replace("http://", "https://")} />;
     } else {
-      return <FileItem isUser={rowData.isUser} message={rowData.name} />;
+      return <FileItem isUser={message.isUser} message={message.name} />;
     }
   };
 
   _renderList = rowData => {
+    const message = rowData.item;
     const { isOpenChannel } = this.props.navigation.state.params;
     const { channel } = this.state;
-    if (rowData.isUserMessage() || rowData.isFileMessage()) {
+    if (message.isUserMessage() || message.isFileMessage()) {
       return (
         <Message
-          key={rowData.messageId ? rowData.messageId : rowData.reqId}
-          isShow={rowData.sender.isShow}
-          isUser={rowData.isUser}
-          profileUrl={rowData.sender.profileUrl.replace("http://", "https://")}
-          onPress={() => this._onUserBlockPress(rowData.sender.userId)}
-          nickname={rowData.sender.nickname}
-          time={rowData.time}
-          readCount={isOpenChannel || !channel ? 0 : channel.getReadReceipt(rowData)}
+          key={message.messageId ? message.messageId : message.reqId}
+          isShow={message.sender.isShow}
+          isUser={message.isUser}
+          profileUrl={message.sender.profileUrl.replace("http://", "https://")}
+          onPress={() => this._onUserBlockPress(message.sender.userId)}
+          nickname={message.sender.nickname}
+          time={message.time}
+          readCount={isOpenChannel || !channel ? 0 : channel.getReadReceipt(message)}
           message={this._renderFileMessageItem(rowData)}
         />
       );
-    } else if (rowData.isAdminMessage()) {
-      return <AdminMessage message={rowData.message} />;
+    } else if (message.isAdminMessage()) {
+      return <AdminMessage message={message.message} />;
     } else {
       return <View />;
     }
@@ -274,13 +283,14 @@ class Chat extends Component {
       <View style={styles.containerViewStyle}>
         <Spinner visible={this.state.isLoading} />
         <View style={styles.messageListViewStyle}>
-          <ListView
-            ref="chatSection"
-            enableEmptySections={true}
-            renderRow={this._renderList}
-            dataSource={this.props.list}
+          <FlatList
+            ref={elem => this.flatList = elem}
+            renderItem={this._renderList}
+            data={this.props.list}
+            extraData={this.state}
+            keyExtractor={(item, index) => item.messageId + ''}
             onEndReached={() => this._getMessageList(false)}
-            onEndReachedThreshold={-100}
+            onEndReachedThreshold={0.1}
           />
         </View>
         <View style={styles.messageInputViewStyle}>
@@ -297,13 +307,9 @@ class Chat extends Component {
   }
 }
 
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2
-});
-
 function mapStateToProps({ chat }) {
-  const { title, memberCount, exit, typing } = chat;
-  list = ds.cloneWithRows(sbAdjustMessageList(chat.list));
+  let { title, memberCount, list, exit, typing } = chat;
+  list = sbAdjustMessageList(list);
   return { title, memberCount, list, exit, typing };
 }
 
@@ -333,7 +339,7 @@ const styles = {
     height: 14
   },
   containerViewStyle: {
-    backgroundColor: "#fff",
+    backgroundColor: '#f1f2f6',
     flex: 1
   },
   messageListViewStyle: {
@@ -342,7 +348,7 @@ const styles = {
   },
   messageInputViewStyle: {
     flex: 1,
-    marginBottom: 8,
+    marginBottom: 0,
     flexDirection: "column",
     justifyContent: "center"
   }

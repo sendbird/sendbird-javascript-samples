@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Text, Image, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, Image, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { initLogin, sendbirdLogin } from '../actions'
 import { NavigationActions } from 'react-navigation'
-import { Input, Button, Spinner } from '../components';
+import { Button, Spinner } from '../components';
 
 class Login extends Component {
     static navigationOptions = {
@@ -71,19 +71,29 @@ class Login extends Component {
                 </View>
 
                 <View style={styles.inputViewStyle}>
-                    <Input 
+                    <TextInput 
                         label='User ID'
+                        placeholder='User ID'
+                        style={styles.inputStyle}
                         value={this.state.userId}
-                        maxLength={12}
+                        duration={100}
+                        autoCorrect={false}
+                        maxLength={16}
+                        underlineColorAndroid='transparent'
                         onChangeText={this._onUserIdChanged}
                     />
                 </View>
 
                 <View style={styles.inputViewStyle}>
-                    <Input 
+                    <TextInput 
                         label='Nickname'
+                        placeholder='Nickname'
+                        style={styles.inputStyle}
                         value={this.state.nickname}
-                        maxLength={12}
+                        duration={100}
+                        autoCorrect={false}
+                        maxLength={16}
+                        underlineColorAndroid='transparent'
                         onChangeText={this._onNicknameChanged}
                     />
                 </View>
@@ -99,8 +109,8 @@ class Login extends Component {
                 
                 <Text style={styles.errorTextStyle}>{this.props.error}</Text>
 
-                <View style={[styles.inputViewStyle, styles.footerViewStyle]}>
-                    <Text style={styles.footerTextStyle}>Sample UI v2.1.1 / SDK v.3.0.55</Text>
+                <View style={[styles.footerViewStyle]}>
+                    <Text style={styles.footerTextStyle}>Sample UI v2.1.2 / SDK v.3.0.61</Text>
                 </View>
             </View>
         );
@@ -120,7 +130,8 @@ const styles = {
         flex: 1
     },
     logoViewStyle: {
-        marginTop: 80, 
+        marginTop: 80,
+        marginBottom: 20,
         alignItems: 'center'
     },
     logoTextTitle: {
@@ -134,8 +145,18 @@ const styles = {
         fontWeight: '500'
     },
     inputViewStyle: {
-        paddingLeft: 28,
-        paddingRight: 28
+        borderWidth: 1,
+        borderColor: '#ddd',
+        borderRadius: 5,
+        paddingLeft: 8,
+        paddingRight: 8,
+        marginLeft: 28,
+        marginRight: 28,
+        marginTop: 8
+    },
+    inputStyle: {
+        fontSize:13,
+        backgroundColor:'#fff'
     },
     buttonStyle: {
         paddingLeft: 12, 
@@ -148,6 +169,8 @@ const styles = {
         color: '#e03131'
     },
     footerViewStyle: {
+        paddingLeft: 28,
+        paddingRight: 28,
         marginTop: 15, 
         flexDirection: 'column'   
     },

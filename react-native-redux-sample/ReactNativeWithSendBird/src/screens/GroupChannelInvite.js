@@ -35,7 +35,7 @@ class GroupChannelInvite extends Component {
                 <Button 
                     containerViewStyle={{marginLeft: 0, marginRight: 0}}
                     buttonStyle={{paddingLeft: 14}}
-                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 14 }}
+                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
                     onPress={ () => navigation.goBack() }
                 />

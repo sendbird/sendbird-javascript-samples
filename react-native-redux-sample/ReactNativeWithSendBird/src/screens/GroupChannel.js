@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, ListView, TouchableHighlight, Text, Alert } from 'react-native';
+import { View, FlatList, TouchableHighlight, Text, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { 
     initGroupChannel, 
@@ -33,7 +33,7 @@ class GroupChannel extends Component {
                 <Button 
                     containerViewStyle={{marginLeft: 0, marginRight: 0}}
                     buttonStyle={{paddingLeft: 14}}
-                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 14 }}
+                    icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
                     onPress={ () => navigation.goBack() }
                 />
@@ -42,7 +42,7 @@ class GroupChannel extends Component {
                 <Button 
                     containerViewStyle={{marginLeft: 0, marginRight: 0}}
                     buttonStyle={{paddingLeft: 0, paddingRight: 14}}
-                    iconRight={{ name: 'user-plus', type: 'font-awesome', color: '#7d62d9', size: 14 }}
+                    iconRight={{ name: 'user-plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
                     backgroundColor='transparent'
                     onPress={ () => { navigation.navigate('GroupChannelInvite', { title: 'Group Channel Create', channelUrl: null }) } }
                 />
@@ -64,7 +64,6 @@ class GroupChannel extends Component {
 
     componentWillReceiveProps(props) {
         const { channel } = props;
-
         if (channel) {
             this.props.clearSelectedGroupChannel();
             this.props.navigation.navigate(
@@ -95,7 +94,7 @@ class GroupChannel extends Component {
         if (init) {
             const groupChannelListQuery = sbCreateGroupChannelListQuery();
             this.setState({ groupChannelListQuery }, () => {
-                this.props.getGroupChannelList(this.state.groupChannelListQuery);        
+                this.props.getGroupChannelList(this.state.groupChannelListQuery);
             });
         } else {
             this.props.getGroupChannelList(this.state.groupChannelListQuery);        
@@ -201,33 +200,33 @@ class GroupChannel extends Component {
     }
     
     _renderList = (rowData) => {
+        const channel = rowData.item;
         let swipeoutBtns = [
             {
                 text: 'Leave',
                 type: 'delete',
-                onPress: () => { this._onChannelLeave(rowData.url) },
+                onPress: () => { this._onChannelLeave(channel.url) },
             },
             {
                 text: 'Hide',
                 type: 'default',
-                onPress: () => { this._onChannelHide(rowData.url) },
+                onPress: () => { this._onChannelHide(channel.url) },
             }
         ]
         return (
             <Swipeout
                 right={swipeoutBtns}
-                autoClose={true}
-            >
+                autoClose={true}>
                 <ListItem
                     component={TouchableHighlight}
                     containerStyle={{backgroundColor: '#fff'}}
-                    key={rowData.url}
-                    avatar={<Avatar source={{uri: rowData.coverUrl}} />}
-                    title={this._renderTitle(rowData)}
+                    key={channel.url}
+                    avatar={<Avatar source={{uri: channel.coverUrl}} />}
+                    title={this._renderTitle(channel)}
                     titleStyle={{fontWeight: '500', fontSize: 16}}
-                    subtitle={this._renderLastMessage(rowData)}
+                    subtitle={this._renderLastMessage(channel)}
                     subtitleStyle={{fontWeight: '300', fontSize: 11}}
-                    onPress={ () => this._onListItemPress(rowData.url) }
+                    onPress={ () => this._onListItemPress(channel.url) }
                 />
             </Swipeout>
         )
@@ -237,12 +236,13 @@ class GroupChannel extends Component {
         return (
             <View>
                 <Spinner visible={this.props.isLoading} />
-                <ListView
-                    enableEmptySections={true}
-                    renderRow={this._renderList}
-                    dataSource={this.props.list}
+                <FlatList
+                    renderItem={this._renderList}
+                    data={this.props.list}
+                    extraData={this.state}
+                    keyExtractor={(item, index) => item.url}
                     onEndReached={() => this._getGroupChannelList(false)}
-                    onEndReachedThreshold={-50}
+                    onEndReachedThreshold={0.1}
                     onScroll={this._handleScroll}
                 />
             </View>
@@ -250,13 +250,8 @@ class GroupChannel extends Component {
     }
 }
 
-const ds = new ListView.DataSource({
-    rowHasChanged: (r1, r2) => r1 !== r2
-});
-
 function mapStateToProps({ groupChannel })  {
-    const { isLoading, channel } = groupChannel;
-    list = ds.cloneWithRows(groupChannel.list);
+    const { isLoading, list, channel } = groupChannel;
     return { isLoading, list, channel };
 }
 

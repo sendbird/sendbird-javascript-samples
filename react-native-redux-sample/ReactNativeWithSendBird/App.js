@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Platform, AppState, StyleSheet, AsyncStorage, Text, View } from "react-native";
+import { Platform, AppState, AsyncStorage } from "react-native";
 import { StackNavigator } from "react-navigation";
 import { Provider } from "react-redux";
 import FCM, {
@@ -40,6 +40,7 @@ const MainNavigator = StackNavigator(
     GroupChannelInvite: { screen: GroupChannelInvite }
   },
   {
+    initialRouteName: 'Start',
     navigationOptions: ({ navigation }) => ({
       headerTitleStyle: { fontWeight: "500" }
     })
@@ -48,28 +49,16 @@ const MainNavigator = StackNavigator(
 let sb = null;
 
 function showLocalNotificationWithAction(notif) {
-  const data = JSON.parse(notif.sendbird);
-  FCM.presentLocalNotification({
-    title: data.sender ? data.sender.name : 'SendBird',
-    body: data.message,
-    priority: "high",
-    show_in_foreground: true,
-    click_action: "org.reactjs.native.example.ReactNativeWithSendBird" // for ios
-  });
-}
-function registerPushToken(token) {
-  if(sb) {
-    if(Platform.OS === 'ios') {
-      sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
-          console.log("registerAPNSPushTokenForCurrentUser");
-          console.log(result);
-      });
-    } else {
-      sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
-          console.log("registerAPNSPushTokenForCurrentUser");
-          console.log(result);
-      });
-    }
+  try {
+    const data = JSON.parse(notif.sendbird);
+    FCM.presentLocalNotification({
+      title: data.sender ? data.sender.name : 'SendBird',
+      body: data.message,
+      priority: "high",
+      show_in_foreground: true,
+      click_action: "org.reactjs.native.example.ReactNativeWithSendBird" // for ios
+    });
+  } catch(e) {
   }
 }
 
@@ -88,29 +77,15 @@ FCM.on(FCMEvent.Notification, notif => {
       showLocalNotificationWithAction(notif);
     }
   } catch(e) {
-    console.log(e);
   }
 });
 
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
   }
-  _handleAppStateChange = currentAppState => {
-    sb = SendBird.getInstance();
-    if (currentAppState === "active") {
-      if (sb) {
-        console.log("appstate - foreground");
-        sb.setForegroundState();
-      }
-    } else if (currentAppState === "background") {
-      if (sb) {
-        console.log("appstate - background");
-        sb.setBackgroundState();
-      }
-    }
-  };
   componentDidMount() {
+    console.disableYellowBox = true;
     FCM.requestPermissions();
     FCM.on(FCMEvent.Notification, notif => {
       console.log('foreground notif', notif);
@@ -141,7 +116,6 @@ class App extends Component {
           showLocalNotificationWithAction(notif);
         }
       } catch(e) {
-        console.log(e);
       }
     });
 
@@ -149,7 +123,7 @@ class App extends Component {
       sb = SendBird.getInstance();
       const user = AsyncStorage.getItem('user');
       if(user) {
-        registerPushToken(token);
+        this._registerPushToken(token);
       } else {
         AsyncStorage.setItem('pushToken', token);
       }
@@ -157,7 +131,7 @@ class App extends Component {
 
     const pushToken = AsyncStorage.getItem('pushToken');
     if(pushToken) {
-      registerPushToken(pushToken);
+      this._registerPushToken(pushToken);
       AsyncStorage.removeItem('pushToken');
     }
     AppState.addEventListener("change", this._handleAppStateChange);
@@ -172,5 +146,29 @@ class App extends Component {
       </Provider>
     );
   }
+
+  _registerPushToken = (token) => {
+    const sb = SendBird.getInstance();
+    if(sb) {
+      if(Platform.OS === 'ios') {
+        sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
+          if(error) throw error;
+        });
+      } else {
+        sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
+          if(error) throw error;
+        });
+      }
+    }
+  }
+  _handleAppStateChange = (nextAppState) => {
+    const sb = SendBird.getInstance();
+    if(sb) {
+      if (AppState.currentState.match(/inactive|background/) && nextAppState === 'active') {
+        sb.setForegroundState();
+      } else if (AppState.currentState === 'active' && nextAppState.match(/inactive|background/)) {
+        sb.setBackgroundState();
+      }
+    }
+  }
 }
-export default App;

@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { Platform, AppState, AsyncStorage } from "react-native";
+import {
+  Platform,
+  AppState,
+  AsyncStorage,
+  PushNotificationIOS
+} from "react-native";
 import { StackNavigator } from "react-navigation";
 import { Provider } from "react-redux";
 import FCM, {
@@ -60,9 +65,9 @@ function showLocalNotificationWithAction(notif) {
       body: data.message,
       priority: "high",
       show_in_foreground: true,
-      click_action: "org.reactjs.native.example.ReactNativeWithSendBird" // for ios
+      click_action: "com.sendbird.sample.reactnative" // for ios
     });
-  } catch(e) {
+  } catch (e) {
   }
 }
 
@@ -70,17 +75,17 @@ function showLocalNotificationWithAction(notif) {
 FCM.on(FCMEvent.Notification, notif => {
   console.log('background notif', notif);
   try {
-    const sendbirdNotification = JSON.parse(notif.sendbird);
-    if(sendbirdNotification) {
+    const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
+    if (sendbirdNotification) {
       AsyncStorage.setItem('payload',
         JSON.stringify({
-            "channelType" : sendbirdNotification.channel_type,
-            "channel" : sendbirdNotification.channel
+          "channelType": sendbirdNotification.channel_type,
+          "channel": sendbirdNotification.channel
         }),
-        () => {});
+        () => { });
       showLocalNotificationWithAction(notif);
     }
-  } catch(e) {
+  } catch (e) {
   }
 });
 
@@ -107,19 +112,19 @@ export default class App extends Component {
             notif.finish(WillPresentNotificationResult.All);
             break;
         }
-      }
-      try {
-        const sendbirdNotification = JSON.parse(notif.sendbird);
-        if(sendbirdNotification) {
-          AsyncStorage.setItem('payload',
-            JSON.stringify({
-                "channelType" : sendbirdNotification.channel_type,
-                "channel" : sendbirdNotification.channel
-            }),
-            () => {});
-          showLocalNotificationWithAction(notif);
+        try {
+          const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
+          if (sendbirdNotification) {
+            AsyncStorage.setItem('payload',
+              JSON.stringify({
+                "channelType": sendbirdNotification.channel_type,
+                "channel": sendbirdNotification.channel
+              }),
+              () => { });
+            showLocalNotificationWithAction(notif);
+          }
+        } catch (e) {
         }
-      } catch(e) {
       }
     });
 
@@ -127,14 +132,20 @@ export default class App extends Component {
       AsyncStorage.setItem('pushToken', token);
       sb = SendBird.getInstance();
       AsyncStorage.getItem('user', (err, user) => {
-        if(user) {
+        if (user) {
           this._registerPushToken(token);
         }
       });
     });
+
+    if(Platform.OS === 'ios') {
+      PushNotificationIOS.setApplicationIconBadgeNumber(0);
+    }
+    console.log('app is launched');
     AppState.addEventListener("change", this._handleAppStateChange);
   }
   componentWillUnmount() {
+    console.log('app is killed');
     AppState.removeEventListener("change", this._handleAppStateChange);
   }
   render() {
@@ -147,15 +158,20 @@ export default class App extends Component {
 
   _registerPushToken = (token) => {
     sbRegisterPushToken(token)
-      .then(res => {})
-      .catch(err => {});
+      .then(res => { })
+      .catch(err => { });
   }
   _handleAppStateChange = (nextAppState) => {
     const sb = SendBird.getInstance();
-    if(sb) {
-      if (AppState.currentState.match(/inactive|background/) && nextAppState === 'active') {
+    if (sb) {
+      if (nextAppState === 'active') {
+        if(Platform.OS === 'ios') {
+          PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        }
+        console.log('app is into foreground');
         sb.setForegroundState();
-      } else if (AppState.currentState === 'active' && nextAppState.match(/inactive|background/)) {
+      } else if (nextAppState === 'background') {
+        console.log('app is into background');
         sb.setBackgroundState();
       }
     }

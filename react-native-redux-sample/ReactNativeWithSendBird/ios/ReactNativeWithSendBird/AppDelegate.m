@@ -9,7 +9,7 @@
 
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
-#import "RNFIRMessaging.h"
+#import <RNFIRMessaging.h>
 
 @implementation AppDelegate
 

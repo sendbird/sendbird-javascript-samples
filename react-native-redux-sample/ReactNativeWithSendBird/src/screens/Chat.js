@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { View, FlatList, Text, Alert, AsyncStorage, BackHandler } from "react-native";
+import { Platform, View, FlatList, Text, Alert, AsyncStorage, BackHandler } from "react-native";
 import { NavigationActions } from "react-navigation";
+import Permissions from 'react-native-permissions';
 import { connect } from "react-redux";
 import {
   openChannelProgress,
@@ -206,29 +207,48 @@ class Chat extends Component {
 
   _onPhotoAddPress = () => {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
-    ImagePicker.showImagePicker(
-      {
-        title: "Select Image File To Send",
-        mediaType: "photo",
-        noData: true
-      },
-      response => {
-        if (!response.didCancel && !response.error && !response.customButton) {
-          let source = { uri: response.uri };
-          if (response.name) {
-            source["name"] = response.fileName;
-          } else {
-            paths = response.uri.split("/");
-            source["name"] = paths[paths.length - 1];
+    Permissions.checkMultiple([ 'photo' ]).then(response => {
+      if(response.photo === 'authorized') {
+        ImagePicker.showImagePicker(
+          {
+            title: "Select Image File To Send",
+            mediaType: "photo",
+            noData: true
+          },
+          response => {
+            if (!response.didCancel && !response.error && !response.customButton) {
+              let source = { uri: response.uri };
+              if (response.name) {
+                source["name"] = response.fileName;
+              } else {
+                paths = response.uri.split("/");
+                source["name"] = paths[paths.length - 1];
+              }
+              if (response.type) {
+                source["type"] = response.type;
+              } else {
+                /** For react-native-image-picker library doesn't return type in iOS,
+                 *  it is necessary to force the type to be an image/jpeg (or whatever you're intended to be).
+                */
+                if (Platform.OS === "ios") {
+                  source["type"] = 'image/jpeg';
+                }
+              }
+              this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
+            }
           }
-
-          if (response.type) {
-            source["type"] = response.type;
-          }
-          this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
-        }
+        );
+      } else if(response.photo === 'undetermined') {
+        Permissions.request('photo').then(response => {
+          this._onPhotoAddPress();
+        });
+      } else {
+        Alert.alert('Permission denied',
+          'You declined the permission to access to your photo.',
+          [ { text: 'OK' } ],
+          { cancelable: false });
       }
-    );
+    });
   };
 
   _renderFileMessageItem = rowData => {

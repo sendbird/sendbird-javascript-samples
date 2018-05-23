@@ -1,4 +1,4 @@
-# Sample JavaScript Web Basic Sample
+# JavaScript Web Basic Sample
 
 ## NOTICE!
 

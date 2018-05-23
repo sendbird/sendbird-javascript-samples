@@ -1,0 +1,24 @@
+{
+  "name": "SendBird-JavaScript",
+  "version": "1.0.0",
+  "description": "The samples in this repository are fully functional messaging applications built using the [SendBird](https://sendbird.com) JS SDK.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smilefam/SendBird-JavaScript.git"
+  },
+  "keywords": [],
+  "author": "SendBird",
+  "license": "ISC",
+  "bugs": {
+    "url": "support@sendbird.com"
+  },
+  "homepage": "https://github.com/smilefam/SendBird-JavaScript#readme",
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}

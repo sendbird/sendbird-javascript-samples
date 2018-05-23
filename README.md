@@ -1,16 +1,17 @@
 # SendBird JavaScript Sample
 
 The samples in this repository are fully functional messaging applications built using the [SendBird](https://sendbird.com) JS SDK.
-  1. **Web widget sample:** Facebook-chat-like chat widget to regular websites.  
+  1. **Web Basic sample:** Slack-like full screen chat sample for desktop browsers.
+  1. **Web Widget sample:** Facebook-chat-like chat widget to regular websites.  
+  1. **Web Live Chat sample:** Twitch-chat-like chat sample for desktop browsers.  
   1. **React Native sample:** Mobile chat sample for iOS and Android.
-  1. **Web sample:** Slack-like full screen chat sample for desktop browsers.
 
 
 ## Table of Contents
 
   1. [Installing the SendBird JS SDK](#installing-the-sendbird-js-sdk)
   1. [Previous versions](#previous-versions)
-  1. [Contributing](#contributing)
+  
   
 ## Installing the SendBird JS SDK
   
@@ -21,7 +22,7 @@ Using [Bower](http://bower.io):
 
 Using [npm](https://www.npmjs.com/package/sendbird):
 
-      npm install sendbird
+      npm install --save sendbird
 
 > We now support both React Native and NodeJS.
 
@@ -33,4 +34,5 @@ Or, you can manually download the JS SDK files [here](https://github.com/smilefa
 
 ## Previous versions
 
-To view the version 2 sample, checkout the `v2` branch instead of `master.`
+To view the version 2 sample, checkout the `v2` branch instead of `master`.  
+To view the basic sample used `jQuery`, checkout the [Legacy tag](https://github.com/smilefam/SendBird-JavaScript/tree/Legacy(WebBasic)) instead of `master`.    

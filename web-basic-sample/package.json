@@ -1,0 +1,36 @@
+{
+  "name": "Sample-JS-Web-Basic",
+  "version": "1.0.0",
+  "description": "SendBird Web Basic Sample",
+  "main": "index.js",
+  "scripts": {
+    "dev": "./node_modules/.bin/webpack --mode=development",
+    "dev:w": "./node_modules/.bin/webpack --mode=none -w",
+    "build": "./node_modules/.bin/webpack --mode=production",
+    "start:dev": "./node_modules/.bin/webpack-dev-server"
+  },
+  "author": "SendBird",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.6.1",
+    "css-loader": "^0.28.11",
+    "eslint": "^4.19.1",
+    "eslint-loader": "^2.0.0",
+    "express": "^4.16.3",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "node-sass": "^4.8.3",
+    "prettier": "^1.12.1",
+    "sass-loader": "^7.0.1",
+    "style-loader": "^0.21.0",
+    "webpack": "^4.6.0",
+    "webpack-cli": "^2.0.15",
+    "webpack-dev-server": "^3.1.3"
+  },
+  "dependencies": {
+    "moment": "^2.22.1",
+    "sendbird": "^3.0.59"
+  }
+}

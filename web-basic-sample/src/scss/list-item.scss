@@ -1,0 +1,84 @@
+@import 'mixins';
+@import 'variables';
+
+.list-item {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 20px;
+  cursor: pointer;
+  @include hover {
+    background-color: $color-purple-darker;
+  }
+  & > .item-top {
+    display: flex;
+    color: $color-purple-text-light;
+    & > .item-count {
+      width: 18px;
+      height: 18px;
+      box-sizing: border-box;
+      border: 1px solid $color-purple-text-light;
+      align-items: center;
+      align-content: center;
+      text-align: center;
+      margin-right: 8px;
+      font-size: 13px;
+      line-height: 17px;
+    }
+    & > .item-title {
+      width: 100%;
+      max-width: 150px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+  & > .item-bottom {
+    display: flex;
+    color: $color-purple-text-dark;
+    justify-content: space-between;
+    flex-direction: column;
+    font-size: 14px;
+    margin-top: 4px;
+    padding-left: 26px;
+    & > .item-message {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      & > .item-message-text {
+        width: 130px;
+        max-width: 130px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        color: $color-purple-text-light;
+        opacity: 0.7;
+      }
+      & > .item-message-unread {
+        display: none;
+        width: 16px;
+        height: 16px;
+        background-color: $color-red;
+        text-align: center;
+        color: $color-white;
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 16px;
+        @include border-radius(50%);
+      }
+      & > .item-message-unread.active {
+        display: block;
+      }
+    }
+    & > .item-time {
+      display: flex;
+      font-size: 11px;
+    }
+  }
+}
+
+.list-item.active {
+  & > .item-top {
+    color: $color-purple-text;
+    font-weight: 600;
+  }
+}

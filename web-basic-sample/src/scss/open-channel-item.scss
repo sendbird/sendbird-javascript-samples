@@ -1,0 +1,32 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.channel-item {
+  display: flex;
+  flex-direction: column;
+  padding: 8px 50px 8px 20px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid $color-gray-dark;
+  cursor: pointer;
+  @include hover-focus {
+    cursor: pointer;
+    border: 1px solid $color-purple-light;
+    @include icon($ic-enter, 24px 24px, calc(100% - 20px) center);
+    @include border-radius(2px);
+  }
+
+  & > .item-title {
+    display: flex;
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  & > .item-desc {
+    display: flex;
+    font-size: 14px;
+    font-weight: 300;
+    color: #353535;
+    margin-top: 6px;
+  }
+}

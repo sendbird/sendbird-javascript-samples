@@ -43,10 +43,8 @@ a, a:link, a:visited, a:hover, a:active {
   border: 1px solid #2C2D30;
   border-radius: 4px;
   cursor: pointer;
-  opacity: 0.6;
 }
 .item:hover {
-  opacity: 1;
   border: 1px solid #6742d6;
 }
 

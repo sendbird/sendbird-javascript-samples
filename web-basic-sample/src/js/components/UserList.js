@@ -83,16 +83,19 @@ class UserList extends List {
 
   _getUserList(isInit = false) {
     Spinner.start(this.element);
+    const sendbirdAction = SendBirdAction.getInstance();
     const listContent = this.getContentElement();
-    SendBirdAction.getInstance()
+    sendbirdAction
       .getUserList(isInit)
       .then(userList => {
         userList.forEach(user => {
-          const handler = () => {
-            this._toggleUserId(item.userId);
-          };
-          const item = new UserItem({ user, handler });
-          listContent.appendChild(item.element);
+          if (!sendbirdAction.isCurrentUser(user)) {
+            const handler = () => {
+              this._toggleUserId(item.userId);
+            };
+            const item = new UserItem({ user, handler });
+            listContent.appendChild(item.element);
+          }
         });
         Spinner.remove();
       })

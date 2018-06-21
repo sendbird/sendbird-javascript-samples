@@ -27,7 +27,7 @@ npm start
 ```
 
 ## Customizing the sample
-If you wanna change something on the sample, you have to build `webpack` after modify code.  
+If you want to put some changes into the sample, you should build it using `webpack`.  
 
 1. Install packages
 
@@ -46,8 +46,7 @@ npm run start:dev
 ``` 
 
 3. Build the sample
-When the modification is complete, you'll need to bundle the file using the `webpack`.
-The bundled files are created in the `dist` folder.  
+When the modification is complete, you'll need to bundle the file using `webpack`. The bundled files are created in the `dist` folder.  
 Please check `webpack.config.js` for settings.    
 
 ```bash

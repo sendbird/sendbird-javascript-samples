@@ -161,3 +161,22 @@ export function deleteCookie() {
     document.cookie = 'sendbirdNickname=' + userInfo.nickname + ';expires=Thu, 01 Jan 1970 00:00:01 GMT;';
   }
 }
+
+export function convertLinkMessage(msg, linkColor) {
+  var returnString = '';
+
+  try {
+    msg = msg.replace(/</g, '&lt;');
+    msg = msg.replace(/>/g, '&gt;');
+  } catch(e) {
+    msg = '';
+  }
+
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+  returnString = msg.replace(exp, '<a target="_blank" style="color: '+linkColor+';" href="$1">$1</a>');
+
+  var exp2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+
+  return returnString.replace(exp2, '$1<a target="_blank" style="color: '+linkColor+';" href="http://$2">$2</a>');
+}

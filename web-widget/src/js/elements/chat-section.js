@@ -1,6 +1,6 @@
 import { className, MAX_COUNT } from '../consts.js';
 import Element from './elements.js';
-import { show, hide, getFullHeight, removeClass, xssEscape } from '../utils.js';
+import { show, hide, getFullHeight, removeClass, xssEscape, convertLinkMessage } from '../utils.js';
 
 const EMPTY_STRING = '';
 
@@ -411,7 +411,9 @@ class ChatSection extends Element {
       var urlexp = new RegExp('(http|https)://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?', 'i');
       var _message = message.message;
       if (urlexp.test(_message)) {
-        _message = '<a href="' + _message + (isCurrentUser ? '" target="_blank" style="color: #FFFFFF;">' : '" target="_blank" style="color: #444444;">') + _message + '</a>';
+        var linkColor = isCurrentUser ? '#FFFFFF' : '#444444';
+        _message = convertLinkMessage(_message, linkColor);
+
         if (message.customType === 'url_preview') {
           let previewData = JSON.parse(message.data);
 

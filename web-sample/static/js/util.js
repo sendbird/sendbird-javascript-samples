@@ -141,12 +141,13 @@ function convertLinkMessage(msg) {
     msg = '';
   }
 
-  var urlexp = new RegExp('(http|ftp|https)://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?', 'i');
-  if (urlexp.test(msg)) {
-    returnString += '<img src="/static/img/icon-link.svg" style="margin-right: 6px;"><a href="' + msg + '" target="_blank">' + msg + '</a>';
-  } else {
-    returnString += msg;
-  }
+  var linkIcon = '<img src="/static/img/icon-link.svg" style="margin-right: 6px;">';
 
-  return returnString;
+  var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+
+  returnString = msg.replace(exp, linkIcon + '<a target="_blank" href="$1">$1</a>');
+
+  var exp2 = /(^|[^\/])(www\.[\S]+(\b|$))/gim;
+
+  return returnString.replace(exp2, '$1'+ linkIcon +'<a target="_blank" href="http://$2">$2</a>');
 }

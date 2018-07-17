@@ -112,7 +112,8 @@ class Element {
 
   _setClickEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.CLICK, () => {
+      target.addEventListener(this.eventName.CLICK, (e) => {
+        e.stopPropagation();
         action();
       });
     });

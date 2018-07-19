@@ -71,7 +71,7 @@ class Element {
 
   _setClass(...args) {
     args.reduce((target, classes) => {
-      return target.className += classes.join(' ');
+      return (target.className += classes.join(' '));
     });
   }
 
@@ -112,8 +112,7 @@ class Element {
 
   _setClickEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.CLICK, (e) => {
-        e.stopPropagation();
+      target.addEventListener(this.eventName.CLICK, () => {
         action();
       });
     });
@@ -121,7 +120,7 @@ class Element {
 
   _setPasteEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.PASTE, (event) => {
+      target.addEventListener(this.eventName.PASTE, event => {
         action(event);
       });
     });
@@ -129,7 +128,7 @@ class Element {
 
   _setKeyupEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.KEYUP, (event) => {
+      target.addEventListener(this.eventName.KEYUP, event => {
         action(event);
       });
     });
@@ -137,7 +136,7 @@ class Element {
 
   _setKeydownEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.KEYDOWN, (event) => {
+      target.addEventListener(this.eventName.KEYDOWN, event => {
         action(event);
       });
     });
@@ -160,7 +159,7 @@ class Element {
   }
 
   _isBottom(target, list) {
-    return (target.scrollTop + target.offsetHeight) >= list.offsetHeight;
+    return target.scrollTop + target.offsetHeight >= list.offsetHeight;
   }
 
   enabledToggle(target, isEnabled) {
@@ -172,7 +171,6 @@ class Element {
       target.style.cursor = styleValue.CURSOR_DEFAULT;
     }
   }
-
 }
 
 export { Element as default };

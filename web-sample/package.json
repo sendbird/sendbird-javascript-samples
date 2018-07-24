@@ -1,0 +1,14 @@
+{
+  "name": "Sample-JS-Web-Basic",
+  "version": "1.0.0",
+  "description": "SendBird Web Basic Sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SendBird",
+  "license": "ISC",
+  "devDependencies": {
+    "express": "^4.16.3"
+  }
+}

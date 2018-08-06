@@ -873,6 +873,7 @@
 
         .text {
           @include reset();
+          display: inline-block;
           width: calc(100% - 8px);
           min-height: 24px;
           max-height: 90px;

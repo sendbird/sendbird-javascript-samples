@@ -38,7 +38,7 @@ class Sendbird {
   }
 
   disconnect(action) {
-    if(this.isConnected()) {
+    if (this.isConnected()) {
       this.sb.disconnect(() => {
         action();
       });
@@ -113,7 +113,7 @@ class Sendbird {
   Message
    */
   getTotalUnreadCount(action) {
-    this.sb.GroupChannel.getTotalUnreadMessageCount((unreadCount) => {
+    this.sb.GroupChannel.getTotalUnreadMessageCount(unreadCount => {
       action(unreadCount);
     });
   }
@@ -123,7 +123,7 @@ class Sendbird {
       channelSet.query = channelSet.channel.createPreviousMessageListQuery();
     }
     if (channelSet.query.hasMore && !channelSet.query.isLoading) {
-      channelSet.query.load(GET_MESSAGE_LIMIT, false, function(messageList, error){
+      channelSet.query.load(GET_MESSAGE_LIMIT, false, function(messageList, error) {
         if (error) {
           console.error(error);
           return;
@@ -136,7 +136,6 @@ class Sendbird {
   sendTextMessage(channel, textMessage, action) {
     channel.sendUserMessage(textMessage, (message, error) => {
       if (error) {
-        console.error(error);
         return;
       }
       action(message);
@@ -144,7 +143,7 @@ class Sendbird {
   }
 
   sendFileMessage(channel, file, action) {
-    let thumbSize = [{'maxWidth': 160, 'maxHeight': 160}];
+    let thumbSize = [{ maxWidth: 160, maxHeight: 160 }];
     channel.sendFileMessage(file, '', '', thumbSize, (message, error) => {
       if (error) {
         console.error(error);
@@ -189,10 +188,10 @@ class Sendbird {
     channelHandler.onMessageReceived = function(channel, message) {
       messageReceivedFunc(channel, message);
     };
-    channelHandler.onMessageUpdated = function (channel, message) {
+    channelHandler.onMessageUpdated = function(channel, message) {
       messageUpdatedFunc(channel, message);
     };
-    channelHandler.onMessageDeleted = function (channel, messageId) {
+    channelHandler.onMessageDeleted = function(channel, messageId) {
       messageDeletedFunc(channel, messageId);
     };
     channelHandler.onChannelChanged = function(channel) {
@@ -204,10 +203,10 @@ class Sendbird {
     channelHandler.onReadReceiptUpdated = function(channel) {
       readReceiptFunc(channel);
     };
-    channelHandler.onUserLeft = function (channel, user) {
+    channelHandler.onUserLeft = function(channel, user) {
       userLeftFunc(channel, user);
     };
-    channelHandler.onUserJoined = function (channel, user) {
+    channelHandler.onUserJoined = function(channel, user) {
       userJoinFunc(channel, user);
     };
     this.sb.addChannelHandler(GLOBAL_HANDLER, channelHandler);
@@ -228,25 +227,22 @@ class Sendbird {
   }
 
   getMemberCount(channel) {
-    return (channel.memberCount > 9) ? MAX_COUNT : channel.memberCount.toString();
+    return channel.memberCount > 9 ? MAX_COUNT : channel.memberCount.toString();
   }
 
   getLastMessage(channel) {
     if (channel.lastMessage) {
-      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage() 
-      ? channel.lastMessage.message : channel.lastMessage.name;
+      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage()
+        ? channel.lastMessage.message
+        : channel.lastMessage.name;
     }
     return '';
   }
 
   getMessageTime(message) {
-    const months = [
-      'JAN', 'FEB', 'MAR', 'APR', 'MAY',
-      'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
-      'NOV', 'DEC'
-    ];
+    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
-    var _getDay = (val) => {
+    var _getDay = val => {
       let day = parseInt(val);
       if (day == 1) {
         return day + 'st';
@@ -259,8 +255,8 @@ class Sendbird {
       }
     };
 
-    var _checkTime = (val) => {
-      return (+val < 10) ? '0' + val : val;
+    var _checkTime = val => {
+      return +val < 10 ? '0' + val : val;
     };
 
     if (message) {
@@ -269,9 +265,11 @@ class Sendbird {
       var _date = new Date(message.createdAt);
       if (_nowDate.getDate() - _date.getDate() == 1) {
         return LAST_MESSAGE_YESTERDAY;
-      } else if (_nowDate.getFullYear() == _date.getFullYear()
-        && _nowDate.getMonth() == _date.getMonth()
-        && _nowDate.getDate() == _date.getDate()) {
+      } else if (
+        _nowDate.getFullYear() == _date.getFullYear() &&
+        _nowDate.getMonth() == _date.getMonth() &&
+        _nowDate.getDate() == _date.getDate()
+      ) {
         return _checkTime(_date.getHours()) + ':' + _checkTime(_date.getMinutes());
       } else {
         return months[_date.getMonth()] + ' ' + _getDay(_date.getDate());
@@ -287,7 +285,6 @@ class Sendbird {
   getChannelUnreadCount(channel) {
     return channel.unreadMessageCount;
   }
-
 }
 
 export { Sendbird as default };

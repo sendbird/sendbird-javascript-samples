@@ -84,26 +84,26 @@ class Element {
   }
 
   _setBackgroundImage(target, url) {
-    target.style.backgroundImage = 'url(' + url + ')';
+    target.style.cssText += `background-image: url(${url});`;
   }
   _setBackgroundSize(target, size) {
-    target.style.backgroundSize = size;
+    target.style.cssText += `background-size: ${size};`;
   }
 
   _setFontSize(target, size) {
-    target.style.fontSize = size ? size + 'px' : null;
+    target.style.cssText += `font-size: ${size ? size + 'px' : null};`;
   }
 
   _setHeight(target, height) {
-    target.style.height = height + 'px';
+    target.style.cssText += `height: ${height}px;`;
   }
 
   _setWidth(target, width) {
-    target.style.width = width + 'px';
+    target.style.cssText += `width: ${width}px;`;
   }
 
   _setRight(target, right) {
-    target.style.right = right + 'px';
+    target.style.cssText += `right: ${right}px;`;
   }
 
   _setDataset(target, name, data) {
@@ -165,10 +165,10 @@ class Element {
   enabledToggle(target, isEnabled) {
     if (isEnabled || isEnabled === undefined) {
       removeClass(target, className.DISABLED);
-      target.style.cursor = styleValue.CURSOR_INIT;
+      target.style.cssText += `cursor: ${styleValue.CURSOR_INIT};`;
     } else {
       addClass(target, className.DISABLED);
-      target.style.cursor = styleValue.CURSOR_DEFAULT;
+      target.style.cssText += `cursor: ${styleValue.CURSOR_DEFAULT};`;
     }
   }
 }

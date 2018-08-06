@@ -46,7 +46,7 @@ class ChatSection extends Element {
 
   responsiveSize(isMax, action) {
     if (isMax !== undefined) {
-      this.self.style.right = isMax ? CHAT_SECTION_RIGHT_MIN : CHAT_SECTION_RIGHT_MAX;
+      this.self.style.cssText += `right: ${isMax ? CHAT_SECTION_RIGHT_MIN : CHAT_SECTION_RIGHT_MAX}`;
     }
     action();
   }
@@ -57,8 +57,8 @@ class ChatSection extends Element {
 
   moveToFirstIndex(target) {
     let items = this._getListBoardArray();
-    items.filter((item) => {
-      if (item.id == target.id) {
+    items.filter(item => {
+      if (item.id === target.id) {
         this.self.removeChild(item);
       }
     });
@@ -180,7 +180,7 @@ class ChatSection extends Element {
 
   removeMemberPopup() {
     let items = this.self.querySelectorAll('.' + className.CHAT_BOARD);
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       let item = items[i];
       removeClass(item.memberBtn, className.ACTIVE);
     }
@@ -188,7 +188,7 @@ class ChatSection extends Element {
 
   removeInvitePopup() {
     let items = this.self.querySelectorAll('.' + className.CHAT_BOARD);
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       let item = items[i];
       removeClass(item.inviteBtn, className.ACTIVE);
     }
@@ -208,7 +208,7 @@ class ChatSection extends Element {
   getChatBoard(channelUrl) {
     let items = this.self.querySelectorAll('.' + className.CHAT_BOARD);
     let targetBoard;
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       let item = items[i];
       if (item.id == channelUrl) {
         targetBoard = item;
@@ -222,7 +222,7 @@ class ChatSection extends Element {
     var items = this.self.querySelectorAll('.' + className.CHAT_BOARD);
     let chatBoard = this.getChatBoard(channelUrl);
     let index = -1;
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       if (items[i] == chatBoard) {
         index = i;
         break;
@@ -290,7 +290,7 @@ class ChatSection extends Element {
 
   clearInputText(target, channelUrl) {
     let items = target.querySelectorAll(this.tagName.DIV);
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       let item = items[i];
       item.remove();
     }
@@ -321,11 +321,8 @@ class ChatSection extends Element {
   responsiveHeight(channelUrl) {
     let targetBoard = this.getChatBoard(channelUrl);
     let messageContent = targetBoard.messageContent;
-    let changeHeight = (getFullHeight(targetBoard.typing) + getFullHeight(targetBoard.input));
-    this._setHeight(
-      messageContent,
-      (MESSAGE_CONTENT_HEIGHT_DEFAULT - (changeHeight - MESSAGE_INPUT_HEIGHT_DEFAULT))
-    );
+    let changeHeight = getFullHeight(targetBoard.typing) + getFullHeight(targetBoard.input);
+    this._setHeight(messageContent, MESSAGE_CONTENT_HEIGHT_DEFAULT - (changeHeight - MESSAGE_INPUT_HEIGHT_DEFAULT));
   }
 
   showTyping(channel, spinner) {
@@ -337,7 +334,10 @@ class ChatSection extends Element {
     } else {
       let typingUser = channel.getTypingMembers();
       spinner.insert(typing);
-      this._addContent(typing, (typingUser.length > 1) ? MESSAGE_TYPING_SEVERAL : xssEscape(typingUser[0].nickname) + MESSAGE_TYPING_MEMBER);
+      this._addContent(
+        typing,
+        typingUser.length > 1 ? MESSAGE_TYPING_SEVERAL : xssEscape(typingUser[0].nickname) + MESSAGE_TYPING_MEMBER
+      );
       show(typing);
     }
   }
@@ -346,28 +346,30 @@ class ChatSection extends Element {
     let scaleWidth = IMAGE_MAX_SIZE / width;
     let scaleHeight = IMAGE_MAX_SIZE / height;
 
-    let scale = (scaleWidth <= scaleHeight) ? scaleWidth : scaleHeight;
+    let scale = scaleWidth <= scaleHeight ? scaleWidth : scaleHeight;
     if (scale > 1) {
       scale = 1;
     }
 
-    let resizeWidth = (width * scale);
-    let resizeHeight = (height * scale);
+    let resizeWidth = width * scale;
+    let resizeHeight = height * scale;
 
     this._setBackgroundSize(imageTarget, resizeWidth + 'px ' + resizeHeight + 'px');
     this._setWidth(imageTarget, resizeWidth);
     this._setHeight(imageTarget, resizeHeight);
-    return {'resizeWidth': resizeWidth, 'resizeHeight': resizeHeight};
+    return { resizeWidth: resizeWidth, resizeHeight: resizeHeight };
   }
 
   setImageSize(target, message) {
-    this._setBackgroundImage(target, (message.thumbnails.length > 0) ? message.thumbnails[0].url : message.url);
+    this._setBackgroundImage(target, message.thumbnails.length > 0 ? message.thumbnails[0].url : message.url);
     if (message.thumbnails.length > 0) {
       this._imageResize(target, message.thumbnails[0].real_width, message.thumbnails[0].real_height);
     } else {
       var img = new Image();
-      img.addEventListener('load', (res) => {
-        res.path ? this._imageResize(target, res.path[0].width, res.path[0].height) : this._imageResize(target, res.target.width, res.target.height);
+      img.addEventListener('load', res => {
+        res.path
+          ? this._imageResize(target, res.path[0].width, res.path[0].height)
+          : this._imageResize(target, res.target.width, res.target.height);
       });
       img.src = message.url;
     }
@@ -378,7 +380,7 @@ class ChatSection extends Element {
     messageSet.id = message.messageId;
     this._setClass(messageSet, isCurrentUser ? [className.MESSAGE_SET, className.USER] : [className.MESSAGE_SET]);
     if (isContinue) {
-      messageSet.style.marginTop = MARGIN_TOP_MESSAGE;
+      messageSet.style.cssText += `margin-top: ${MARGIN_TOP_MESSAGE}`;
     }
 
     var senderImg = this.createDiv();
@@ -386,9 +388,9 @@ class ChatSection extends Element {
     var senderProfile = message.sender.profileUrl;
     if (isContinue) {
       senderProfile = '';
-      senderImg.style.height = MESSAGE_NONE_IMAGE_HEIGHT;
+      senderImg.style.cssText += `height: ${MESSAGE_NONE_IMAGE_HEIGHT};`;
     }
-    senderImg.style.backgroundImage = 'url(' + senderProfile + ')';
+    senderImg.style.cssText += `background-image: url(${senderProfile});`;
     messageSet.appendChild(senderImg);
 
     var messageContent = this.createDiv();
@@ -398,7 +400,7 @@ class ChatSection extends Element {
     this._setClass(senderNickname, [className.NICKNAME]);
     this._setContent(senderNickname, xssEscape(message.sender.nickname));
     if (isContinue) {
-      senderNickname.style.display = DISPLAY_NONE;
+      senderNickname.style.cssText += `display: ${DISPLAY_NONE};`;
     }
     messageContent.appendChild(senderNickname);
 
@@ -408,10 +410,20 @@ class ChatSection extends Element {
     var itemText = this.createDiv();
     if (message.isUserMessage()) {
       this._setClass(itemText, [className.TEXT]);
-      var urlexp = new RegExp('(http|https)://[a-z0-9\-_]+(\.[a-z0-9\-_]+)+([a-z0-9\-\.,@\?^=%&;:/~\+#]*[a-z0-9\-@\?^=%&;/~\+#])?', 'i');
+      var urlexp = new RegExp(
+        '(http|https)://[a-z0-9-_]+(.[a-z0-9-_]+)+([a-z0-9-.,@?^=%&;:/~+#]*[a-z0-9-@?^=%&;/~+#])?',
+        'i'
+      );
       var _message = message.message;
       if (urlexp.test(_message)) {
-        _message = '<a href="' + _message + (isCurrentUser ? '" target="_blank" style="color: #FFFFFF;">' : '" target="_blank" style="color: #444444;">') + _message + '</a>';
+        _message =
+          '<a href="' +
+          _message +
+          (isCurrentUser
+            ? '" target="_blank" style="color: #FFFFFF;">'
+            : '" target="_blank" style="color: #444444;">') +
+          _message +
+          '</a>';
         if (message.customType === 'url_preview') {
           let previewData = JSON.parse(message.data);
 
@@ -450,7 +462,7 @@ class ChatSection extends Element {
         let video = this.createVideo();
         video.controls = true;
         video.preload = 'auto';
-        var resize = {'resizeWidth': 160, 'resizeHeight': 160};
+        var resize = { resizeWidth: 160, resizeHeight: 160 };
         if (message.thumbnails && message.thumbnails.length > 0) {
           video.poster = message.thumbnails[0].url;
           resize = this._imageResize(video, message.thumbnails[0].real_width, message.thumbnails[0].real_height);
@@ -458,7 +470,7 @@ class ChatSection extends Element {
           video.height = resize.resizeHeight;
         } else {
           var _self = this;
-          video.addEventListener( "loadedmetadata", function () {
+          video.addEventListener('loadedmetadata', function() {
             resize = _self._imageResize(video, this.videoWidth, this.videoHeight);
             video.width = resize.resizeWidth;
             video.height = resize.resizeHeight;
@@ -526,15 +538,15 @@ class ChatSection extends Element {
 
   setUnreadCount(target, count) {
     count = parseInt(count);
-    this._setContent(target, (count > 9) ? MAX_COUNT : (count == 0) ? '' : count.toString());
-    (count > 0) ? show(target, DISPLAY_TYPE_INLINE_BLOCK) : hide(target);
+    this._setContent(target, count > 9 ? MAX_COUNT : count == 0 ? '' : count.toString());
+    count > 0 ? show(target, DISPLAY_TYPE_INLINE_BLOCK) : hide(target);
   }
 
   updateReadReceipt(channelSet, target) {
     var items = target.querySelectorAll('.' + className.MESSAGE_SET);
-    for (var j = 0 ; j < channelSet.message.length ; j++) {
+    for (var j = 0; j < channelSet.message.length; j++) {
       let message = channelSet.message[j];
-      for (var i = 0 ; i < items.length ; i++) {
+      for (var i = 0; i < items.length; i++) {
         let item = items[i];
         if (item.id == message.messageId) {
           this.setUnreadCount(item.unread, channelSet.channel.getReadReceipt(message));
@@ -613,7 +625,7 @@ class ChatSection extends Element {
   getSelectedUserIds(target) {
     let items = target.querySelectorAll('.' + className.ACTIVE);
     var userIds = [];
-    for (var i = 0 ; i < items.length ; i++) {
+    for (var i = 0; i < items.length; i++) {
       let item = items[i];
       userIds.push(item.getAttribute('data-user-id'));
     }
@@ -635,7 +647,6 @@ class ChatSection extends Element {
   scrollToBottom(target) {
     target.scrollTop = target.scrollHeight - target.clientHeight;
   }
-
 }
 
 export { ChatSection as default };

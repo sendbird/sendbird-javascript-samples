@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:294925777006:android:f90ce592427fc273",
+        "mobilesdk_app_id": "1:294925777006:android:f78fa0e5edf2bb5f",
         "android_client_info": {
-          "package_name": "tabiko.poc.yoga"
+          "package_name": "com.reactnativewithsendbird"
         }
       },
       "oauth_client": [

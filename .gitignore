@@ -2,4 +2,4 @@
 web-widget/node_modules
 package-lock.json
 .idea
-.node_modules
+node_modules/

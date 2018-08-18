@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { 
     INIT_CHAT_SCREEN,
     CREATE_CHAT_HANDLER_SUCCESS,
@@ -268,9 +269,10 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
         if (isOpenChannel) {
             sbGetOpenChannel(channelUrl)
             .then((channel) => {
+                Alert.alert(source.uri);
                 sendFileMessage(dispatch, channel, source);
             })
-            .catch((error) => dispatch({ type: SEND_MESSAGE_FAIL }))
+            .catch((error) => { return dispatch({ type: SEND_MESSAGE_FAIL }) })
         } else {
             sbGetGroupChannel(channelUrl)
             .then((channel) => {
@@ -283,6 +285,7 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
 
 const sendFileMessage = (dispatch, channel, file) => {
     const messageTemp = sbSendFileMessage(channel, file, (message, error) => {
+        // Alert.alert(JSON.stringify(error));
         if (error) {
             dispatch({ type: SEND_MESSAGE_FAIL });
             return;

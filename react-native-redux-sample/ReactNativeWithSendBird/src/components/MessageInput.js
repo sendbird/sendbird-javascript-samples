@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TextInput, Dimensions, Platform } from 'react-native';
+import { View, Text, TextInput, Dimensions, Platform } from 'react-native';
 import { Icon } from 'react-native-elements';
 
 const { width } = Dimensions.get('window');
@@ -27,24 +27,29 @@ const MessageInput = (props) => (
         <Icon
             containerStyle={styles.iconContainerStyle}
             iconStyle={styles.iconStyle}
-            name='microphone'
-            type='foundation'
-            color={'#494e57'}
+            name={props.isRecording ? 'stop' : 'microphone'}
+            type={'foundation'}
+            color={props.isRecording ? 'red' : '#494e57'}
             size={20}
-            // onPress={props.onImageIconPress}
+            onPress={props.onAudioIconPress}
         />
         <View style={styles.inputViewStyle}>
-            <TextInput
-                style={styles.inputStyle}
-                placeholder={'Your message'}
-                autoCapitalize='none'
-                autoCorrect={false}
-                selectionColor={'#212529'}
-                underlineColorAndroid='transparent'
-                value={props.textMessage}
-                onChangeText={props.onChangeText}
-                onSubmitEditing={props.onSubmitEditing}
-            />
+            { props.isRecording
+            ?   <Text style={styles.recordingTextStyle}>
+                    {'is recording..'}
+                </Text>
+            :   <TextInput
+                    style={styles.inputStyle}
+                    placeholder={'Your message'}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    selectionColor={'#212529'}
+                    underlineColorAndroid='transparent'
+                    value={props.textMessage}
+                    onChangeText={props.onChangeText}
+                    onSubmitEditing={props.onSubmitEditing}
+                />
+            }
         </View>
         <Icon
             containerStyle={{marginLeft: 0}}
@@ -69,6 +74,13 @@ const styles = {
     iconStyle: {
         margin: 0,
         padding: 0
+    },
+    recordingTextStyle: {
+        justifyContent: 'center',
+        fontSize: 12,
+        color: 'grey',
+        minHeight: 36,
+        width: width - ( 50 * 3)
     },
     inputViewStyle: {
         paddingLeft: 8,

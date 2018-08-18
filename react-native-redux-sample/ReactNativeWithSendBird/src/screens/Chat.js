@@ -16,6 +16,7 @@ import {
 import { NavigationActions } from "react-navigation";
 import Permissions from 'react-native-permissions';
 import { connect } from "react-redux";
+import Sound, { AudioRecorder, AudioUtils } from 'react-native-audio';
 import {
   openChannelProgress,
   groupChannelProgress,
@@ -103,6 +104,10 @@ class Chat extends Component {
       textMessage: "",
       isImageListOpened: false,
       photos: [],
+
+      // audio
+      isRecording: false,
+      audioPath: AudioUtils.DocumentDirectoryPath + '/test.aac',
     };
   }
 
@@ -279,6 +284,94 @@ class Chat extends Component {
     });
   };
 
+  _prepareRecordingPath = (audioPath) => {
+    AudioRecorder.prepareRecordingAtPath(audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: "Low",
+      AudioEncoding: "aac",
+      AudioEncodingBitRate: 32000
+    });
+  }
+
+  _onAudioIconPress = () => {
+    const { isRecording } = this.state;
+
+    if (isRecording) {
+      this._stop();
+      return;
+    }
+    
+    Permissions.checkMultiple([ 'microphone' ]).then(response => {
+      if (response.microphone === 'authorized') {
+        this.setState({ hasPermission: true });
+      }
+      this._record();
+    })
+    .catch(err => alert(err));
+  }
+
+  _record = async () => {
+    const { isRecording, stoppedRecording, audioPath, hasPermission } = this.state;
+
+    if (isRecording) {
+      alert('Already recording!');
+      return;
+    }
+
+    if (!hasPermission) {
+      alert('Can\'t record, no permission granted!');
+      return;
+    }
+
+    this._prepareRecordingPath(audioPath);
+    this.setState({ isRecording: true });
+
+    try {
+      const filePath = await AudioRecorder.startRecording();
+      // alert('audio recording started');
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  _stop = async () => {
+    const { } = this.props;
+    const { isRecording } = this.state;
+
+    if (!isRecording) {
+      alert('Can\'t stop, not recording!');
+      return;
+    }
+    
+    this.setState({ isRecording: false });
+
+    try {
+      const filePath = await AudioRecorder.stopRecording();
+      // alert('audio recording stopped');
+      // alert(filePath);
+      this._uploadAudio(filePath);
+      // if (Platform.OS === 'android') {
+      //   this._finishRecording(true, filePath);
+      // }
+      return filePath;
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  _uploadAudio = (uri) => {
+    const { onFileButtonPress, navigation } = this.props;
+    const { channelUrl, isOpenChannel } = navigation.state.params;
+
+    const source = {
+      uri: uri,
+      type: 'audio/aac',
+      name: 'test.aac'
+    };
+    onFileButtonPress(channelUrl, isOpenChannel, source);
+  }
+
   _renderFileMessageItem = rowData => {
     const message = rowData.item;
     if (message.isUserMessage()) {
@@ -387,7 +480,7 @@ class Chat extends Component {
   render() {
     const { list: chatItems } = this.props;
     const { isLoading, photos } = this.state;
-    
+
     return (
       <KeyboardAvoidingView style={styles.containerViewStyle} enabled>
         <Spinner visible={isLoading} />
@@ -405,7 +498,9 @@ class Chat extends Component {
         <View style={styles.messageInputViewStyle}>
           {this._renderTyping()}
           <MessageInput
+            isRecording={this.state.isRecording}
             onLeftPress={this._onPhotoAddPress}
+            onAudioIconPress={this._onAudioIconPress}
             onImageIconPress={this._onImageIconPress}
             onRightPress={this._onSendButtonPress}
             textMessage={this.state.textMessage}

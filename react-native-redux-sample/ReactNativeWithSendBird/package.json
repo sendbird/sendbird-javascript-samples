@@ -20,6 +20,7 @@
     "react-native-loading-spinner-overlay": "0.5.2",
     "react-native-md-textinput": "2.0.4",
     "react-native-permissions": "1.1.1",
+    "react-native-sound": "^0.10.9",
     "react-native-swipeout": "2.3.3",
     "react-native-vector-icons": "4.5.0",
     "react-navigation": "1.2.1",

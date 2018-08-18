@@ -10,4 +10,6 @@ target 'ReactNativeWithSendBird' do
 
   pod 'RNAudio', :path => '../node_modules/react-native-audio'
 
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
 end

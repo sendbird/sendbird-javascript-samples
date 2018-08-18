@@ -107,7 +107,7 @@ class Chat extends Component {
 
       // audio
       isRecording: false,
-      audioPath: AudioUtils.DocumentDirectoryPath + '/test.aac',
+      audioPath: AudioUtils.DocumentDirectoryPath + '/audio.aac',
     };
   }
 
@@ -369,7 +369,7 @@ class Chat extends Component {
     const source = {
       uri: uri,
       type: 'audio/aac',
-      name: 'test.aac'
+      name: 'audio.aac'
     };
     onFileButtonPress(channelUrl, isOpenChannel, source);
   }
@@ -381,7 +381,7 @@ class Chat extends Component {
     } else if (sbIsImageMessage(message)) {
       return <ImageItem isUser={message.isUser} message={message.url.replace("http://", "https://")} />;
     } else if (sbIsAudioMessage(message)) {
-      return <AudioItem message={message.url.replace("http://", "https://")} />;
+      return <AudioItem message={message.url} />;
     } else {
       return <FileItem isUser={message.isUser} message={message.name} />;
     }

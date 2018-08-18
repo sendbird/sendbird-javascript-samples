@@ -48,31 +48,27 @@ class AudioItem extends Component {
 
     componentDidMount() {
         Clipboard.setString(this.props.message);
+        this._sound = new Sound(this.props.message, '', (error) => {
+            if (error) {
+                alert('failed to load the sound' + error);
+            }
+        });
     }
 
     _play = () => {
         this.setState({ isPlaying: true });
-
-      // These timeouts are a hacky workaround for some issues with react-native-sound.
-      // See https://github.com/zmxv/react-native-sound/issues/89.
-      setTimeout(() => {
-        const sound = new Sound(this.props.message, '', (error) => {
-          if (error) {
-            alert('failed to load the sound' + error);
-          }
-        });
+        // These timeouts are a hacky workaround for some issues with react-native-sound.
+        // See https://github.com/zmxv/react-native-sound/issues/89.
 
         setTimeout(() => {
-          sound.play((success) => {
+          this._sound.play((success) => {
             if (success) {
-              alert('successfully finished playing');
+                this.setState({ isPlaying: false })
             } else {
               alert('playback failed due to audio decoding errors');
             }
           });
-          this.setState({ isPlaying: false })
-        }, 100);
-      }, 100);
+        }, 300);
     }
 
     _onIconPress = () => {

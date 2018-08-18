@@ -8,4 +8,6 @@ target 'ReactNativeWithSendBird' do
   # Pods for ReactNativeWithSendBird
   pod 'Firebase/Messaging'
 
+  pod 'RNAudio', :path => '../node_modules/react-native-audio'
+
 end

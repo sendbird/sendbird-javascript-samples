@@ -1,5 +1,18 @@
 import React, { Component } from "react";
-import { Platform, View, FlatList, Text, KeyboardAvoidingView, Alert, AsyncStorage, BackHandler } from "react-native";
+import {
+  Platform,
+  View,
+  FlatList,
+  Text,
+  KeyboardAvoidingView,
+  CameraRoll,
+  Alert,
+  AsyncStorage,
+  BackHandler,
+  ScrollView,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import { NavigationActions } from "react-navigation";
 import Permissions from 'react-native-permissions';
 import { connect } from "react-redux";
@@ -87,7 +100,9 @@ class Chat extends Component {
       channel: null,
       isLoading: false,
       previousMessageListQuery: null,
-      textMessage: ""
+      textMessage: "",
+      isImageListOpened: false,
+      photos: [],
     };
   }
 
@@ -105,7 +120,10 @@ class Chat extends Component {
     if (isFromPayload) {
       AsyncStorage.removeItem("payload", () => {});
     }
+    // obtain the gallery photos
+    this._obtainGalleryPhotos();
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
   }
@@ -127,6 +145,16 @@ class Chat extends Component {
     if (!isOpenChannel) {
       this.state.textMessage ? this.props.typingStart(channelUrl) : this.props.typingEnd(channelUrl);
     }
+  }
+
+  /**
+   * Obtain the gallery photo items
+   */
+  _obtainGalleryPhotos = async () => {
+    const params = { first: 5 };
+    
+    const photos = await CameraRoll.getPhotos(params);
+    this.setState({ photos: photos.edges });
   }
 
   _onBackButtonPress = () => {
@@ -299,16 +327,76 @@ class Chat extends Component {
     );
   };
 
+  /**
+   * Callback when Image Item pressed
+   * send the image to the sendbird
+   */
+  _onImageItemPress = (photo) => () => {
+    const { onFileButtonPress, navigation } = this.props;
+    const { channelUrl, isOpenChannel } = navigation.state.params;
+
+    const source = {
+      uri: photo.node.image.uri,
+      type: photo.node.type,
+      name: photo.node.group_name
+    };
+    onFileButtonPress(channelUrl, isOpenChannel, source);
+  }
+
+  /**
+   * Render the image item component individually
+   */
+  _renderImageItem = (photo, index) => (
+    <TouchableOpacity onPress={this._onImageItemPress(photo)}>
+      <Image
+        key={index}
+        style={styles.imageStyle}
+        source={{ uri: photo.node.image.uri }}
+        resizeMode={'cover'}
+      />
+    </TouchableOpacity>
+  )
+
+  /**
+   * Render the image contents
+   */
+  _renderImageList = () => {
+    const { photos, isImageListOpened } = this.state;
+    const isAnyPhotoExist = photos.length > 0;
+
+    if (isAnyPhotoExist && isImageListOpened) {
+      return (
+        <ScrollView style={styles.imageListStyle} horizontal>
+          {photos.map(this._renderImageItem)}
+        </ScrollView>
+      );
+    }
+    return null;
+  }
+
+  /**
+   * Callback when the image icon is pressed
+   * Toggle show/hidden the image list picker below the chat input box
+   */
+  _onImageIconPress = () => {
+    this.setState((prevState) => ({
+      isImageListOpened: !prevState.isImageListOpened
+    }));
+  }
+
   render() {
+    const { list: chatItems } = this.props;
+    const { isLoading, photos } = this.state;
+    
     return (
       <KeyboardAvoidingView style={styles.containerViewStyle} enabled>
-        <Spinner visible={this.state.isLoading} />
+        <Spinner visible={isLoading} />
         <FlatList
           style={styles.messageListViewStyle}
           contentContainerStyle={styles.messageListContentStyle}
           ref={elem => this.flatList = elem}
           renderItem={this._renderList}
-          data={this.props.list}
+          data={chatItems}
           extraData={this.state}
           keyExtractor={(item, index) => item.messageId + ''}
           onEndReached={() => this._getMessageList(false)}
@@ -318,11 +406,13 @@ class Chat extends Component {
           {this._renderTyping()}
           <MessageInput
             onLeftPress={this._onPhotoAddPress}
+            onImageIconPress={this._onImageIconPress}
             onRightPress={this._onSendButtonPress}
             textMessage={this.state.textMessage}
             onChangeText={this._onTextMessageChanged}
             onSubmitEditing={this._onSendButtonPress}
           />
+          {this._renderImageList()}
         </View>
       </KeyboardAvoidingView>
     );
@@ -364,6 +454,13 @@ const styles = {
     backgroundColor: '#f1f2f6',
     flex: 1
   },
+  imageListStyle: {
+    height: 100
+  },
+  imageStyle: {
+    width: 100,
+    height: 100,
+  },
   messageListViewStyle: {
     flex: 1,
     transform: [{ scaleY: -1 }]
@@ -372,7 +469,6 @@ const styles = {
     paddingVertical: 24
   },
   messageInputViewStyle: {
-    height: 50,
     marginBottom: 0,
     flexDirection: "column",
     justifyContent: "center"

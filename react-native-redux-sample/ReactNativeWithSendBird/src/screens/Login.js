@@ -85,10 +85,10 @@ class Login extends Component {
 
     render() {
         return (
-            <ScrollView style={styles.containerStyle}>
+            <ScrollView>
                 <KeyboardAvoidingView
                     style={styles.containerStyle}
-                    behavior={'position'}
+                    behavior={'padding'}
                     enabled
                 >
                     <Spinner visible={this.state.isLoading} />
@@ -103,6 +103,7 @@ class Login extends Component {
 
                     <View style={styles.inputViewStyle}>
                         <TextInput 
+                            keyboardType={'numeric'}
                             label='User ID'
                             placeholder='User ID'
                             style={styles.inputStyle}

@@ -38,6 +38,7 @@ const MessageInput = (props) => {
                     underlineColorAndroid='transparent'
                     value={props.textMessage}
                     onChangeText={props.onChangeText}
+                    onSubmitEditing={props.onSubmitEditing}
                 />
             </View>
             <Icon

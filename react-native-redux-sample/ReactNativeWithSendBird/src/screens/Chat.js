@@ -294,14 +294,7 @@ class Chat extends Component {
     });
   }
 
-  _onAudioIconPress = () => {
-    const { isRecording } = this.state;
-    
-    if (isRecording) {
-      this._stop();
-      return;
-    }
-    
+  _onAudioIconPress = () => {    
     Permissions.checkMultiple([ 'microphone' ]).then(response => {
       if (response.microphone === 'authorized') {
         this.setState({ hasPermission: true }, this._record);
@@ -319,47 +312,40 @@ class Chat extends Component {
     .catch(err => alert(err));
   }
 
-  _record = async () => {
-    const { isRecording, stoppedRecording, audioPath, hasPermission } = this.state;
-
-    if (isRecording) {
-      alert('Already recording!');
-      return;
-    }
+  _record = () => {
+    const { isRecording, audioPath, hasPermission } = this.state;
 
     if (!hasPermission) {
       alert('Can\'t record, no permission granted!');
       return;
     }
 
-    this._prepareRecordingPath(audioPath);
-    this.setState({ isRecording: true });
-
-    try {
-      const filePath = await AudioRecorder.startRecording();
-    } catch (error) {
-      alert(error);
-    }
-  }
-
-  _stop = async () => {
-    const { } = this.props;
-    const { isRecording } = this.state;
-
-    if (!isRecording) {
-      alert('Can\'t stop, not recording!');
+    if (isRecording) {
+      this._stop();
       return;
     }
-    
-    this.setState({ isRecording: false });
 
-    try {
-      const filePath = await AudioRecorder.stopRecording();
-      this._uploadAudio('file://'.concat(filePath));
-      return filePath;
-    } catch (error) {
-      alert(error);
-    }
+    this._prepareRecordingPath(audioPath);
+    this.setState({ isRecording: true }, () => {
+      setTimeout(async () => {
+        try {
+          const filePath = await AudioRecorder.startRecording();
+        } catch (error) {
+          alert(error);
+        }
+      }, 200);
+    });
+  }
+
+  _stop = () => {
+    this.setState({ isRecording: false }, async () => {
+      try {
+        const filePath = await AudioRecorder.stopRecording();
+        this._uploadAudio('file://'.concat(filePath));
+      } catch (error) {
+        alert(error);
+      }
+    });
   }
 
   _uploadAudio = (uri) => {

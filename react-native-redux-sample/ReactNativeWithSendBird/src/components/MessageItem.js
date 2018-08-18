@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { View, Text, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image, Clipboard } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { CachedImage } from 'react-native-cached-image';
+import Sound from 'react-native-sound';
 
 const TextItem = (props) => {
     return (
@@ -37,6 +38,63 @@ class FileItem extends Component {
                 <Text style={{marginLeft: 8}}>{ this._renderMessage() }</Text>
             </View>
         )
+    }
+}
+
+class AudioItem extends Component {
+    state = {
+        isPlaying: false
+    }
+
+    componentDidMount() {
+        Clipboard.setString(this.props.message);
+    }
+
+    _play = () => {
+        this.setState({ isPlaying: true });
+
+      // These timeouts are a hacky workaround for some issues with react-native-sound.
+      // See https://github.com/zmxv/react-native-sound/issues/89.
+      setTimeout(() => {
+        const sound = new Sound(this.props.message, '', (error) => {
+          if (error) {
+            alert('failed to load the sound' + error);
+          }
+        });
+
+        setTimeout(() => {
+          sound.play((success) => {
+            if (success) {
+              alert('successfully finished playing');
+            } else {
+              alert('playback failed due to audio decoding errors');
+            }
+          });
+          this.setState({ isPlaying: false })
+        }, 100);
+      }, 100);
+    }
+
+    _onIconPress = () => {
+        this._play();
+    }
+
+    render() {
+        return (
+            <TouchableOpacity onPress={this._onIconPress}>
+                <View style={{flexDirection: 'row'}}>
+                    <Icon
+                        containerStyle={{marginLeft: 0}}
+                        iconStyle={{margin: 0, padding: 0}}
+                        name={this.state.isPlaying ? 'stop' :  'play-circle-filled'}
+                        type='material-icons'
+                        color={'#ffffff'}
+                        size={24}
+                    />
+                    <Text style={{marginLeft: 8}}>{this.state.isPlaying ? 'playing...' :  'Play'}</Text>
+                </View>
+            </TouchableOpacity>
+        );
     }
 }
 
@@ -94,4 +152,4 @@ const styles = {
 
 }
 
-export { TextItem, FileItem, ImageItem };
+export { AudioItem, TextItem, FileItem, ImageItem };

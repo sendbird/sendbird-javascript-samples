@@ -21,6 +21,10 @@ export const sbIsImageMessage = (message) => {
     return message.type.match(/^image\/.+$/);
 }
 
+export const sbIsAudioMessage = (message) => {
+    return message.type.match(/^audio\/.+$/);
+}
+
 export const sbAdjustMessageList = (list) => {
     return list.map((message, i) => {
         message['time'] = sbUnixTimestampToDate(message.createdAt);

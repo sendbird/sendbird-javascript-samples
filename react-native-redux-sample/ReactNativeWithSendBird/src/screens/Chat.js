@@ -31,10 +31,10 @@ import {
   typingEnd,
   channelExit
 } from "../actions";
-import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from "../components";
+import { Button, Spinner, TextItem, AudioItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from "../components";
 import { BarIndicator } from "react-native-indicators";
 import ImagePicker from "react-native-image-picker";
-import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbMarkAsRead } from "../sendbirdActions";
+import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbIsAudioMessage, sbMarkAsRead } from "../sendbirdActions";
 
 class Chat extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -296,7 +296,7 @@ class Chat extends Component {
 
   _onAudioIconPress = () => {
     const { isRecording } = this.state;
-
+    
     if (isRecording) {
       this._stop();
       return;
@@ -304,9 +304,17 @@ class Chat extends Component {
     
     Permissions.checkMultiple([ 'microphone' ]).then(response => {
       if (response.microphone === 'authorized') {
-        this.setState({ hasPermission: true });
+        this.setState({ hasPermission: true }, this._record);
+      } else if(response.microphone === 'undetermined') {
+        Permissions.request('microphone').then(response => {
+          this.setState({ hasPermission: true }, this._record);
+        });
+      } else {
+        Alert.alert('Permission denied',
+          'You declined the permission to access to record the audio.',
+          [ { text: 'OK' } ],
+          { cancelable: false });
       }
-      this._record();
     })
     .catch(err => alert(err));
   }
@@ -329,7 +337,6 @@ class Chat extends Component {
 
     try {
       const filePath = await AudioRecorder.startRecording();
-      // alert('audio recording started');
     } catch (error) {
       alert(error);
     }
@@ -348,12 +355,7 @@ class Chat extends Component {
 
     try {
       const filePath = await AudioRecorder.stopRecording();
-      // alert('audio recording stopped');
-      // alert(filePath);
-      this._uploadAudio(filePath);
-      // if (Platform.OS === 'android') {
-      //   this._finishRecording(true, filePath);
-      // }
+      this._uploadAudio('file://'.concat(filePath));
       return filePath;
     } catch (error) {
       alert(error);
@@ -378,6 +380,8 @@ class Chat extends Component {
       return <TextItem isUser={message.isUser} message={message.message} />;
     } else if (sbIsImageMessage(message)) {
       return <ImageItem isUser={message.isUser} message={message.url.replace("http://", "https://")} />;
+    } else if (sbIsAudioMessage(message)) {
+      return <AudioItem message={message.url.replace("http://", "https://")} />;
     } else {
       return <FileItem isUser={message.isUser} message={message.name} />;
     }

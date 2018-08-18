@@ -269,7 +269,6 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
         if (isOpenChannel) {
             sbGetOpenChannel(channelUrl)
             .then((channel) => {
-                Alert.alert(source.uri);
                 sendFileMessage(dispatch, channel, source);
             })
             .catch((error) => { return dispatch({ type: SEND_MESSAGE_FAIL }) })
@@ -285,7 +284,6 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
 
 const sendFileMessage = (dispatch, channel, file) => {
     const messageTemp = sbSendFileMessage(channel, file, (message, error) => {
-        // Alert.alert(JSON.stringify(error));
         if (error) {
             dispatch({ type: SEND_MESSAGE_FAIL });
             return;

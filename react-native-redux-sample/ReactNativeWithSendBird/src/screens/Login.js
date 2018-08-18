@@ -67,6 +67,22 @@ class Login extends Component {
         });
     }
 
+    /**
+     * Get the ref instance
+     * to focus 
+     */
+    _getNicknameInput = (ref) => {
+        this._nicknameInput = ref;
+    }
+
+    /**
+     * Focus to the next input
+     * after user id is submitting
+     */
+    _onUserIdSubmitting = () => {
+        this._nicknameInput.focus();
+    }
+
     render() {
         return (
             <ScrollView style={styles.containerStyle}>
@@ -96,11 +112,13 @@ class Login extends Component {
                             maxLength={16}
                             underlineColorAndroid='transparent'
                             onChangeText={this._onUserIdChanged}
+                            onSubmitEditing={this._onUserIdSubmitting}
                         />
                     </View>
 
                     <View style={styles.inputViewStyle}>
                         <TextInput 
+                            ref={this._getNicknameInput}
                             label='Nickname'
                             placeholder='Nickname'
                             style={styles.inputStyle}
@@ -110,6 +128,7 @@ class Login extends Component {
                             maxLength={16}
                             underlineColorAndroid='transparent'
                             onChangeText={this._onNicknameChanged}
+                            onSubmitEditing={this._onButtonPress}
                         />
                     </View>
 

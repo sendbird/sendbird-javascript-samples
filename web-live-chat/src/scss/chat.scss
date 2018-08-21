@@ -240,13 +240,15 @@
         max-height: 39px;
         overflow-y: scroll;
         padding-right: 45px !important;
-        padding: 18px 10px;
+        padding: 9px 10px;
         display: inline-block;
         outline: none !important;
         word-wrap: break-word;
         background-color: $color-white;
         color: $color-text-message;
         font-size: 13px;
+        border: none;
+        line-height: 7px;
       }
       > .input:empty::before {
         width: calc(100% - 35px);

@@ -1,7 +1,7 @@
 'use strict';
 
 import Element from './element.js';
-import KeyCode from '../adapter.js';
+import {KeyCode} from '../adapter.js';
 
 const TEXT_INPUT_USER_ID = 'USER ID';
 const TEXT_INPUT_NICKNAME = 'NICKNAME';
@@ -44,22 +44,27 @@ class LoginBoard extends Element {
     this.appendElement($login);
 
     let updateLoginButtonState = () => {
-      if(this.$userId.val().trim() && this.$nickname.val().trim())
+      if(this.$userId.val().trim() && this.$nickname.val().trim()) {
         $login.removeClass('disabled');
-      else $login.addClass('disabled');
+      } else {
+        $login.addClass('disabled');
+      }
     };
     let userIdEventHandler = (event) => {
-      if (event && event.keyCode == KeyCode.ENTER)
+      if (event && event.keyCode === KeyCode.ENTER) {
         this.$nickname.focus();
-      else updateLoginButtonState();
+      } else {
+        updateLoginButtonState();
+      }
     };
     let nicknameEventHandler = (event) => {
-      if (event && event.keyCode == KeyCode.ENTER) {
+      if (event && event.keyCode === KeyCode.ENTER) {
         if(!this.$login.hasClass('disabled')) {
           this.$login.click();
         }
+      } else {
+        updateLoginButtonState();
       }
-      else updateLoginButtonState();
     };
 
     this.$userId.on('keyup', userIdEventHandler);
@@ -67,31 +72,36 @@ class LoginBoard extends Element {
     this.$nickname.on('keyup', nicknameEventHandler);
     this.$nickname.on('change', nicknameEventHandler);
   }
+
   disable() {
     this.$userId.disable();
     this.$nickname.disable();
     this.$login.addClass('disabled');
   }
+
   reset() {
     this.$userId.enable();
-    this.$userId.val("");
+    this.$userId.val('');
     this.$nickname.enable();
-    this.$nickname.val("");
+    this.$nickname.val('');
 
     this.$login.val(TEXT_LOGIN_BTN);
     this.toggle(false);
   }
+
   toggle(isEnabled) {
     if (isEnabled || isEnabled === undefined) {
       this.$login.removeClass('disabled');
       this.$login.setStyle('cursor', '');
-    }
-    else {
+    } else {
       this.$login.addClass('disabled');
       this.$login.setStyle('cursor', 'defaeult');
     }
   }
-  onLogin(hdlr) { this.$login.on('click', hdlr); }
+
+  onLogin(hdlr) {
+    this.$login.on('click', hdlr);
+  }
 }
 
 export { LoginBoard as default };

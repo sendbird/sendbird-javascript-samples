@@ -57,7 +57,7 @@ class LiveChat {
       this.$messageBoard = new MessageBoard();
 
       this.$messageBoard.$content.on('scroll', (e) => {
-        if(_this.$messageBoard.$content.getScrollY() == 0) {
+        if(_this.$messageBoard.$content.getScrollY() === 0) {
           _this.adapter.getMessageList((messageList) => {
             _this.$messageBoard.render(messageList, false, true);
           });
@@ -89,7 +89,7 @@ class LiveChat {
       }
     });
 
-    if(this.$chat) {
+    if (this.$chat) {
       let _this = this;
       this.$loginBoard = new LoginBoard();
       this.$loginBoard.onLogin(() => {
@@ -111,8 +111,7 @@ class LiveChat {
         }
       });
       this.$chatBoard.appendElement(this.$loginBoard);
-    }
-    else {
+    } else {
       console.error(ERROR_MESSAGE);
     }
   }
@@ -132,8 +131,7 @@ class LiveChat {
         _this.$chatBoard.appendElement(_this.$messageBoard);
         callback();
       });
-    }
-    else {
+    } else {
       console.error(ERROR_MESSAGE);
     }
   }
@@ -146,19 +144,24 @@ class LiveChat {
         _this.$messageBoard.render(messageList, true, false);
 
         _this.adapter.createHandler((channel, message) => {
-          if (channel.url == channelUrl) {
+          if (channel.url === channelUrl) {
             let isBottom = _this.$messageBoard.isScrollBottom();
             _this.$messageBoard.render([message], isBottom, false);
             if (!isBottom) {
               _this.$messageBoard.createBottomBar();
+            } else {
+              _this.clearOverflowedMessages();
             }
-            else _this.clearOverflowedMessages();
           }
         });
       }, true);
-      if(callback) callback();
+
+      if(callback) {
+        callback();
+      }
     });
   }
+
   exitChannel(callback) {
     this.adapter.exitChannel(callback);
   }
@@ -172,6 +175,7 @@ class LiveChat {
       }
     }
   }
+
   loadGoogleFont() {
     var wf = document.createElement('script');
     wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +

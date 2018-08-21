@@ -1,15 +1,11 @@
 'use strict';
 
 import Element from './element.js';
-import KeyCode from '../adapter.js';
+import { KeyCode } from '../adapter.js';
 
 const MESSAGE_PREFIX = ' : ';
 const LAST_MESSAGE_YESTERDAY = 'YESTERDAY';
 const MORE_MESSAGE_BELOW = 'More message below.';
-
-const MAX_HEIGHT_INPUT_OUTER = 50;
-const MAX_HEIGHT_INPUT_INNER = 39;
-const MIN_HEIGHT_INPUT_INNER = 14;
 
 class MessageBoard extends Element {
   constructor() {
@@ -23,31 +19,28 @@ class MessageBoard extends Element {
     let $contentInput = new Element();
     $contentInput.setClass('content-input');
 
-    let $input = new Element();
+    let $input = new Element('input');
     $input.setClass('input');
     $input.attr('contenteditable', true);
 
     $input.on('focus', () => {
-      if(!$contentInput.hasClass("active"))
-        $contentInput.addClass("active");
+      if(!$contentInput.hasClass('active'))
+        $contentInput.addClass('active');
     });
     $input.on('blur', () => {
-      if($contentInput.hasClass("active"))
-        $contentInput.removeClass("active");
+      if($contentInput.hasClass('active'))
+        $contentInput.removeClass('active');
     });
     $input.on('keydown', (event) => {
-      this.responsiveInput();
-      if (event.keyCode == KeyCode.KR) {
-        this.kr = this.$input.val();
-      }
-      if (event.keyCode == KeyCode.ENTER && !event.shiftKey) {
+      this.toggleIcon();
+      if (event.keyCode === KeyCode.ENTER) {
         event.preventDefault();
         this.$icon.click();
         this.clearInput();
       }
     });
     $input.on('keyup', () => {
-      this.responsiveInput();
+      this.toggleIcon();
     });
     $input.on('paste', (event) => {
       event.stopPropagation();
@@ -58,11 +51,6 @@ class MessageBoard extends Element {
     });
     $contentInput.appendElement($input);
 
-    let $inputForm = new Element('input');
-    $inputForm.setClass('input-form');
-    $inputForm.attr('type', 'hidden');
-    $contentInput.appendElement($inputForm);
-
     let $icon = new Element();
     $icon.setClass([ 'icon' ]);
     $contentInput.appendElement($icon);
@@ -70,14 +58,14 @@ class MessageBoard extends Element {
 
     this.$content = $content;
     this.$input = $input;
-    this.$form = $inputForm;
     this.$icon = $icon;
     this.reset();
   }
 
   getMessage() {
-    return this.$input.val().trim() || this.kr;
+    return this.$input.val().trim();
   }
+
   createMessageElement(message) {
     let $item = new Element();
     $item.setClass('message-item');
@@ -109,12 +97,14 @@ class MessageBoard extends Element {
     $item.appendElement($time);
     return $item;
   }
+
   getTime(message) {
     const months = [
       'JAN', 'FEB', 'MAR', 'APR', 'MAY',
       'JUN', 'JUL', 'AUG', 'SEP', 'OCT',
       'NOV', 'DEC'
     ];
+
     var _getDay = (val) => {
       let day = parseInt(val) % 10;
       let digit = day % 10;
@@ -129,6 +119,7 @@ class MessageBoard extends Element {
         return day + 'th';
       }
     };
+
     var _checkTime = (val) => {
       return (+val < 10) ? '0' + val : val;
     };
@@ -136,79 +127,69 @@ class MessageBoard extends Element {
     if (message) {
       var _nowDate = new Date();
       var _date = new Date(message.createdAt);
-      if (_nowDate.getDate() - _date.getDate() == 1) {
+      if (_nowDate.getDate() - _date.getDate() === 1) {
         return LAST_MESSAGE_YESTERDAY;
-      }
-      else if (_nowDate.getFullYear() == _date.getFullYear()
-        && _nowDate.getMonth() == _date.getMonth()
-        && _nowDate.getDate() == _date.getDate()) {
+      } else if (_nowDate.getFullYear() === _date.getFullYear()
+        && _nowDate.getMonth() === _date.getMonth()
+        && _nowDate.getDate() === _date.getDate()) {
         return _checkTime(_date.getHours()) + ':' + _checkTime(_date.getMinutes());
-      }
-      else {
+      } else {
         return months[_date.getMonth()] + ' ' + _getDay(_date.getDate());
       }
     }
     return '';
   }
+
   render(messageList, isScrollBottom, isLoadingMore) {
     var moveScroll = 0;
     for (let i in messageList) {
       let message = messageList[i];
       if (message.isUserMessage()) {
         let $item = this.createMessageElement(message);
-        if(isLoadingMore) {
+        if (isLoadingMore) {
           let firstChild = this.$content.first();
           this.$content.insertBefore($item, firstChild);
+        } else {
+          this.$content.appendElement($item);
         }
-        else this.$content.appendElement($item);
         moveScroll += $item.getFullHeight();
-      }
-      else {
+      } else {
         // put code here for other message type
       }
     }
-    if (isLoadingMore)
+
+    if (isLoadingMore) {
       this.$content.scrollY(moveScroll);
-    if (isScrollBottom)
+    }
+
+    if (isScrollBottom) {
       this.$content.scrollToBottom();
+    }
   }
+
   reset() {
     this.senderColor = {};
-    this.kr = null;
   }
 
   toggleIcon() {
-    if (this.$input.val()) {
-      if(!this.$icon.hasClass('active'))
+    if (this.$input.val() && this.$input.val().length > 0) {
+      if (!this.$icon.hasClass('active')) {
         this.$icon.addClass('active');
+      }
+    } else {
+      this.$icon.removeClass('active');
     }
-    else this.$icon.removeClass('active');
   }
-  responsiveInput() {
-    let outerHeight = this.$input.getScrollHeight();
-    let paddingTop = this.$input.getPadding().top;
-    let innerHeight = (outerHeight - (paddingTop * 2));
-    let expectPadding = (MAX_HEIGHT_INPUT_OUTER - innerHeight);
 
-    if (innerHeight < MIN_HEIGHT_INPUT_INNER) {
-      this.$input.setVerticalPadding((MAX_HEIGHT_INPUT_OUTER - MIN_HEIGHT_INPUT_INNER)/2);
-    }
-    else if (innerHeight > MAX_HEIGHT_INPUT_INNER) {
-      this.$input.setVerticalPadding((MAX_HEIGHT_INPUT_OUTER - MAX_HEIGHT_INPUT_INNER)/2);
-    }
-    else {
-      this.$input.setVerticalPadding(expectPadding / 2);
-    }
-    this.toggleIcon();
-  }
   clearInput() {
     let items = this.$input.findByTag('div');
-    for(let i = 0; i < items.length; i++)
+    for(let i = 0; i < items.length; i++) {
       items[i].remove();
-    this.$input.val("");
-    this.kr = null;
+    }
+    this.$input.val('');
     this.toggleIcon();
   }
+
   createBottomBar() {
     let _this = this;
     let $btn = new Element();
@@ -223,6 +204,7 @@ class MessageBoard extends Element {
       this.$bottom = $btn;
     }
   }
+
   removeBottomBar() {
     if (this.$bottom) {
       this.removeElement(this.$bottom);

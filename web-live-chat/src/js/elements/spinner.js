@@ -17,6 +17,7 @@ class Spinner extends Element {
     $target.val("");
     $target.appendElement(this);
   }
+
   remove($target) {
     if ($target.first()) {
       $target.removeElement(this);

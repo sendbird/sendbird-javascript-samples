@@ -27,7 +27,7 @@ class SendbirdAdapter {
     return !!this.api.currentUser;
   }
   isCurrentUser(user) {
-    return this.api.currentUser.userId == user.userId;
+    return this.api.currentUser.userId === user.userId;
   }
 
   connect(userId, nickname, action) {
@@ -45,6 +45,7 @@ class SendbirdAdapter {
       });
     });
   }
+
   disconnect(action) {
     if(this.isConnected()) {
       this.api.disconnect(() => {

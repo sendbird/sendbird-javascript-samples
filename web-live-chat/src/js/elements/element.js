@@ -12,90 +12,93 @@ class Element {
     if(!arg || typeof arg === 'string') {
       let tag = (this.supportedTags.indexOf(arg) >= 0) ? arg : 'div';
       this.$ = document.createElement(tag);
-    }
-    else if(arg instanceof HTMLElement) {
+    } else if(arg instanceof HTMLElement) {
       this.$ = arg;
     }
   }
+
   setClass(...args) {
     if(this.$) {
       return this.$.className = args.join(' ');
     }
   }
+
   hasClass(className) {
     if(this.$) {
-      if(this.$.classList)
+      if(this.$.classList) {
         return this.$.classList.contains(className);
-      else return new RegExp('(^| )' + className + '( |$)', 'gi').test(this.$.className);
+      } else {
+        return new RegExp('(^| )' + className + '( |$)', 'gi').test(this.$.className);
+      }
+    } else {
+      return false;
     }
-    else return false;
   }
+
   addClass(className) {
     if(this.$) {
-      let classList = this.$.className.split(" ");
+      let classList = this.$.className.split(' ');
       if(!(className in classList)) {
         classList.push(className);
-        this.$.className = classList.join(" ");
+        this.$.className = classList.join(' ');
       }
     }
     return this.$;
   }
+
   removeClass(className) {
     if(this.$) {
-      if(this.$.classList)
+      if(this.$.classList) {
         this.$.classList.remove(className);
-      else this.$.className = this.$.className
+      } else {
+        this.$.className = this.$.className
           .replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), '');
+      }
     }
     return this.$;
   }
-  findByTag(tag) { return this.$.querySelectorAll(tag); }
-  getTag() { return this.$ ? this.$.tagName.toUpperCase() : ""; }
-  setStyle(style, value, unit = "") {
-    if(this.$)
+
+  findByTag(tag) {
+    return this.$.querySelectorAll(tag);
+  }
+
+  getTag() {
+    return this.$ ? this.$.tagName.toUpperCase() : '';
+  }
+
+  setStyle(style, value, unit = '') {
+    if(this.$) {
       this.$.style[style] = value + unit;
+    }
   }
-  setWidth(val) { this.setStyle('width', val + "px"); }
-  setHeight(val) { this.setStyle('height', val + "px"); }
-  setPadding(top, right, bottom, left) {
-    this.setHorizontalPadding(left, right);
-    this.setVerticalPadding(top, bottom);
-  }
-  setHorizontalPadding(left, right) {
-    this.setStyle('paddingLeft', left + "px");
-    this.setStyle('paddingRight', right + "px");
-  }
-  setVerticalPadding(top, bottom) {
-    this.setStyle('paddingTop', top + "px");
-    this.setStyle('paddingBottom', bottom + "px");
-  }
-  show(display) {
-    if(this.$)
-      this.setStyle('display', display || 'block');
-  }
-  hide() {
-    if(this.$)
-      this.setStyle('display', 'none');
-  }
+
   focus() {
-    if(this.$)
+    if(this.$) {
       this.$.focus();
+    }
   }
+
   blur() {
-    if(this.$)
+    if(this.$) {
       this.$.blur();
+    }
   }
+
   click() {
-    if(this.$)
+    if(this.$) {
       this.$.click();
+    }
   }
+
   attr(key, val) {
     if(this.$) {
-      if(val !== undefined)
+      if(val !== undefined) {
         this.$.setAttribute(key, val);
+      }
       return this.$.getAttribute(key);
     }
   }
+
   protectFromXSS(text) {
     return text
       .replace(/\&/g, '&amp;')
@@ -110,51 +113,71 @@ class Element {
       .replace(/\)/g, '&#41;')
       .replace(/\%/g, '&#37;');
   }
+
   val(newVal, options) {
     if(this.$) {
-      if(!options) options = {};
-      if(this.getTag() == "INPUT") {
-        if(newVal !== undefined)
+      if (!options) options = {};
+
+      if (this.getTag() === 'INPUT') {
+        if (newVal !== undefined) {
           this.$.value = newVal;
-        return this.$.value || "";
-      }
-      else {
-        if(newVal !== undefined) {
-          if(options.xssProtectionEnabled)
+        }
+        return this.$.value || '';
+      } else {
+        if (newVal !== undefined) {
+          if (options.xssProtectionEnabled) {
             newVal = this.protectFromXSS(newVal);
-          if(options.showEndOfLine)
-            newVal = newVal.replace(/\n/g, "<br />");
+          }
+          if(options.showEndOfLine) {
+            newVal = newVal.replace(/\n/g, '<br />');
+          }
           this.$.innerHTML = newVal;
         }
         return this.$.innerHTML;
       }
+    } else {
+      return '';
     }
-    else return "";
   }
+
   appendContent(text, options) {
     if(this.$) {
       if(!options) options = {};
-      if(options.xssProtectionEnabled)
+      if(options.xssProtectionEnabled) {
         text = this.protectFromXSS(text);
-      if(options.showEndOfLine)
-        text = text.replace(/\n/g, "<br />");
+      }
+      if(options.showEndOfLine) {
+        text = text.replace(/\n/g, '<br />');
+      }
       this.val(this.val() + text);
     }
     return this.val();
   }
+
   enable() {
-    if(this.$)
+    if(this.$) {
       this.$.disabled = false;
+    }
   }
+
   disable() {
-    if(this.$)
+    if(this.$) {
       this.$.disabled = true;
+    }
   }
-  first() { return this.$.firstChild; }
-  last() { return this.$.lastChild; }
+
+  first() {
+    return this.$.firstChild;
+  }
+
+  last() {
+    return this.$.lastChild;
+  }
+
   children() {
     return this.$.children;
   }
+
   insertBefore(elem, before) {
     if(this.$) {
       if(elem instanceof Element) elem = elem.$;
@@ -163,14 +186,18 @@ class Element {
     }
     return this.$;
   }
+
   appendElement(elem) {
     if(this.$) {
-      if(elem instanceof HTMLElement)
+      if(elem instanceof HTMLElement) {
         this.$.appendChild(elem);
-      else this.$.appendChild(elem.$);
+      } else {
+        this.$.appendChild(elem.$);
+      }
     }
     return this.$;
   }
+
   replaceElement(from, to) {
     if(this.$) {
       if(from instanceof Element) from = from.$;
@@ -178,71 +205,86 @@ class Element {
       this.$.replaceChild(to, from);
     }
   }
+
   removeElement(elem) {
     if(this.$) {
-      if(elem instanceof HTMLElement)
+      if(elem instanceof HTMLElement) {
         this.$.removeChild(elem);
-      else this.$.removeChild(elem.$);
+      } else {
+        this.$.removeChild(elem.$);
+      }
     }
   }
+
   removeFirst() {
-    if(this.$.children.length > 0)
+    if(this.$.children.length > 0) {
       this.$.removeChild(this.$.firstChild);
+    }
   }
+
   removeLast() {
-    if(this.$.children.length > 0)
+    if(this.$.children.length > 0) {
       this.$.removeChild(this.$.lastChild);
+    }
   }
+
   getFullWidth() {
     let width = this.$.offsetWidth;
     let style = getComputedStyle(this.$);
     width += parseInt(style.marginLeft) + parseInt(style.marginRight);
     return width;
   }
+
   getFullHeight() {
     let height = this.$.offsetHeight;
     let style = getComputedStyle(this.$);
     height += parseInt(style.marginTop) + parseInt(style.marginBottom);
     return height;
   }
-  getPadding() {
-    try {
-      return {
-        top : parseFloat(window.getComputedStyle(this.$, null).getPropertyValue('padding-top')),
-        bottom : parseFloat(window.getComputedStyle(this.$, null).getPropertyValue('padding-bottom')),
-        left : parseFloat(window.getComputedStyle(this.$, null).getPropertyValue('padding-left')),
-        right : parseFloat(window.getComputedStyle(this.$, null).getPropertyValue('padding-right'))
-      };
-    }
-    catch(e) {
-      return {
-        top : parseFloat(this.$.currentStyle.paddingTop),
-        bottom : parseFloat(this.$.currentStyle.paddingBottom),
-        left : parseFloat(this.$.currentStyle.paddingLeft),
-        right : parseFloat(this.$.currentStyle.paddingRight)
-      };
-    }
+
+  getScrollHeight() {
+    return this.$.scrollHeight;
   }
-  getScrollHeight() { return this.$.scrollHeight; }
-  getScrollX() { return this.$.scrollLeft; }
-  getScrollY() { return this.$.scrollTop; }
+
+  getScrollX() {
+    return this.$.scrollLeft;
+  }
+
+  getScrollY() {
+    return this.$.scrollTop;
+  }
+
   scroll(x, y) {
     this.scrollX(x);
     this.scrollY(y);
   }
-  scrollX(x) { this.$.scrollLeft = x; }
-  scrollY(y) { this.$.scrollTop = y; }
-  scrollToTop() { this.scrollY(0); }
-  scrollToBottom() { this.scrollY(this.$.scrollHeight - this.$.clientHeight); }
+
+  scrollX(x) {
+    this.$.scrollLeft = x;
+  }
+
+  scrollY(y) {
+    this.$.scrollTop = y;
+  }
+
+  scrollToTop() {
+    this.scrollY(0);
+  }
+
+  scrollToBottom() {
+    this.scrollY(this.$.scrollHeight - this.$.clientHeight);
+  }
+
   isScrollBottom() {
-    return this.getScrollY() == this.$.scrollHeight - this.$.clientHeight;
+    return this.getScrollY() === this.$.scrollHeight - this.$.clientHeight;
   }
 
   on(type, hdlr) {
     if(this.$) {
       type = (this.supportedEvents.indexOf(type) >= 0) ? type : null;
-      if(type)
+      if(type) {
         this.$.addEventListener(type, hdlr);
+      }
     }
   }
 }

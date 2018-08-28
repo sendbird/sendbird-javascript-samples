@@ -1,8 +1,22 @@
 import React, { Component } from "react";
-import { Platform, View, FlatList, Text, Alert, AsyncStorage, BackHandler } from "react-native";
+import {
+  Platform,
+  View,
+  FlatList,
+  Text,
+  KeyboardAvoidingView,
+  CameraRoll,
+  Alert,
+  AsyncStorage,
+  BackHandler,
+  ScrollView,
+  Image,
+  TouchableOpacity
+} from "react-native";
 import { NavigationActions } from "react-navigation";
 import Permissions from 'react-native-permissions';
 import { connect } from "react-redux";
+import Sound, { AudioRecorder, AudioUtils } from 'react-native-audio';
 import {
   openChannelProgress,
   groupChannelProgress,
@@ -17,10 +31,10 @@ import {
   typingEnd,
   channelExit
 } from "../actions";
-import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from "../components";
+import { Button, Spinner, TextItem, AudioItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from "../components";
 import { BarIndicator } from "react-native-indicators";
 import ImagePicker from "react-native-image-picker";
-import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbMarkAsRead } from "../sendbirdActions";
+import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbIsAudioMessage, sbMarkAsRead } from "../sendbirdActions";
 
 class Chat extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -87,7 +101,13 @@ class Chat extends Component {
       channel: null,
       isLoading: false,
       previousMessageListQuery: null,
-      textMessage: ""
+      textMessage: "",
+      isImageListOpened: false,
+      photos: [],
+
+      // audio
+      isRecording: false,
+      audioPath: AudioUtils.DocumentDirectoryPath + '/audio.aac',
     };
   }
 
@@ -105,7 +125,10 @@ class Chat extends Component {
     if (isFromPayload) {
       AsyncStorage.removeItem("payload", () => {});
     }
+    // obtain the gallery photos
+    this._obtainGalleryPhotos();
   }
+
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
   }
@@ -127,6 +150,16 @@ class Chat extends Component {
     if (!isOpenChannel) {
       this.state.textMessage ? this.props.typingStart(channelUrl) : this.props.typingEnd(channelUrl);
     }
+  }
+
+  /**
+   * Obtain the gallery photo items
+   */
+  _obtainGalleryPhotos = async () => {
+    const params = { first: 5 };
+    
+    const photos = await CameraRoll.getPhotos(params);
+    this.setState({ photos: photos.edges });
   }
 
   _onBackButtonPress = () => {
@@ -251,12 +284,90 @@ class Chat extends Component {
     });
   };
 
+  _prepareRecordingPath = (audioPath) => {
+    AudioRecorder.prepareRecordingAtPath(audioPath, {
+      SampleRate: 22050,
+      Channels: 1,
+      AudioQuality: "Low",
+      AudioEncoding: "aac",
+      AudioEncodingBitRate: 32000
+    });
+  }
+
+  _onAudioIconPress = () => {    
+    Permissions.checkMultiple([ 'microphone' ]).then(response => {
+      if (response.microphone === 'authorized') {
+        this.setState({ hasPermission: true }, this._record);
+      } else if(response.microphone === 'undetermined') {
+        Permissions.request('microphone').then(response => {
+          this.setState({ hasPermission: true }, this._record);
+        });
+      } else {
+        Alert.alert('Permission denied',
+          'You declined the permission to access to record the audio.',
+          [ { text: 'OK' } ],
+          { cancelable: false });
+      }
+    })
+    .catch(err => alert(err));
+  }
+
+  _record = () => {
+    const { isRecording, audioPath, hasPermission } = this.state;
+
+    if (!hasPermission) {
+      alert('Can\'t record, no permission granted!');
+      return;
+    }
+
+    if (isRecording) {
+      this._stop();
+      return;
+    }
+
+    this._prepareRecordingPath(audioPath);
+    this.setState({ isRecording: true }, () => {
+      setTimeout(async () => {
+        try {
+          const filePath = await AudioRecorder.startRecording();
+        } catch (error) {
+          alert(error);
+        }
+      }, 200);
+    });
+  }
+
+  _stop = () => {
+    this.setState({ isRecording: false }, async () => {
+      try {
+        const filePath = await AudioRecorder.stopRecording();
+        this._uploadAudio('file://'.concat(filePath));
+      } catch (error) {
+        alert(error);
+      }
+    });
+  }
+
+  _uploadAudio = (uri) => {
+    const { onFileButtonPress, navigation } = this.props;
+    const { channelUrl, isOpenChannel } = navigation.state.params;
+
+    const source = {
+      uri: uri,
+      type: 'audio/aac',
+      name: 'audio.aac'
+    };
+    onFileButtonPress(channelUrl, isOpenChannel, source);
+  }
+
   _renderFileMessageItem = rowData => {
     const message = rowData.item;
     if (message.isUserMessage()) {
       return <TextItem isUser={message.isUser} message={message.message} />;
     } else if (sbIsImageMessage(message)) {
       return <ImageItem isUser={message.isUser} message={message.url.replace("http://", "https://")} />;
+    } else if (sbIsAudioMessage(message)) {
+      return <AudioItem message={message.url} />;
     } else {
       return <FileItem isUser={message.isUser} message={message.name} />;
     }
@@ -299,31 +410,96 @@ class Chat extends Component {
     );
   };
 
+  /**
+   * Callback when Image Item pressed
+   * send the image to the sendbird
+   */
+  _onImageItemPress = (photo) => () => {
+    const { onFileButtonPress, navigation } = this.props;
+    const { channelUrl, isOpenChannel } = navigation.state.params;
+
+    const source = {
+      uri: photo.node.image.uri,
+      type: photo.node.type,
+      name: photo.node.group_name
+    };
+    onFileButtonPress(channelUrl, isOpenChannel, source);
+  }
+
+  /**
+   * Render the image item component individually
+   */
+  _renderImageItem = (photo, index) => (
+    <TouchableOpacity onPress={this._onImageItemPress(photo)}>
+      <Image
+        key={index}
+        style={styles.imageStyle}
+        source={{ uri: photo.node.image.uri }}
+        resizeMode={'cover'}
+      />
+    </TouchableOpacity>
+  )
+
+  /**
+   * Render the image contents
+   */
+  _renderImageList = () => {
+    const { photos, isImageListOpened } = this.state;
+    const isAnyPhotoExist = photos.length > 0;
+
+    if (isAnyPhotoExist && isImageListOpened) {
+      return (
+        <ScrollView style={styles.imageListStyle} horizontal>
+          {photos.map(this._renderImageItem)}
+        </ScrollView>
+      );
+    }
+    return null;
+  }
+
+  /**
+   * Callback when the image icon is pressed
+   * Toggle show/hidden the image list picker below the chat input box
+   */
+  _onImageIconPress = () => {
+    this.setState((prevState) => ({
+      isImageListOpened: !prevState.isImageListOpened
+    }));
+  }
+
   render() {
+    const { list: chatItems } = this.props;
+    const { isLoading, photos } = this.state;
+
     return (
-      <View style={styles.containerViewStyle}>
-        <Spinner visible={this.state.isLoading} />
-        <View style={styles.messageListViewStyle}>
-          <FlatList
-            ref={elem => this.flatList = elem}
-            renderItem={this._renderList}
-            data={this.props.list}
-            extraData={this.state}
-            keyExtractor={(item, index) => item.messageId + ''}
-            onEndReached={() => this._getMessageList(false)}
-            onEndReachedThreshold={0}
-          />
-        </View>
+      <KeyboardAvoidingView style={styles.containerViewStyle} enabled>
+        <Spinner visible={isLoading} />
+        <FlatList
+          style={styles.messageListViewStyle}
+          contentContainerStyle={styles.messageListContentStyle}
+          ref={elem => this.flatList = elem}
+          renderItem={this._renderList}
+          data={chatItems}
+          extraData={this.state}
+          keyExtractor={(item, index) => item.messageId + ''}
+          onEndReached={() => this._getMessageList(false)}
+          onEndReachedThreshold={0}
+        />
         <View style={styles.messageInputViewStyle}>
           {this._renderTyping()}
           <MessageInput
+            isRecording={this.state.isRecording}
             onLeftPress={this._onPhotoAddPress}
+            onAudioIconPress={this._onAudioIconPress}
+            onImageIconPress={this._onImageIconPress}
             onRightPress={this._onSendButtonPress}
             textMessage={this.state.textMessage}
             onChangeText={this._onTextMessageChanged}
+            onSubmitEditing={this._onSendButtonPress}
           />
+          {this._renderImageList()}
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -363,12 +539,21 @@ const styles = {
     backgroundColor: '#f1f2f6',
     flex: 1
   },
+  imageListStyle: {
+    height: 100
+  },
+  imageStyle: {
+    width: 100,
+    height: 100,
+  },
   messageListViewStyle: {
-    flex: 10,
+    flex: 1,
     transform: [{ scaleY: -1 }]
   },
+  messageListContentStyle: {
+    paddingVertical: 24
+  },
   messageInputViewStyle: {
-    flex: 1,
     marginBottom: 0,
     flexDirection: "column",
     justifyContent: "center"

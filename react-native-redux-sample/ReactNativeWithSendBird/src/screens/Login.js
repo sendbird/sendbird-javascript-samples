@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, Image, AsyncStorage } from 'react-native';
+import { View, Text, TextInput, KeyboardAvoidingView, Image, ScrollView, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
 import { initLogin, sendbirdLogin } from '../actions'
 import {
@@ -67,62 +67,88 @@ class Login extends Component {
         });
     }
 
+    /**
+     * Get the ref instance
+     * to focus 
+     */
+    _getNicknameInput = (ref) => {
+        this._nicknameInput = ref;
+    }
+
+    /**
+     * Focus to the next input
+     * after user id is submitting
+     */
+    _onUserIdSubmitting = () => {
+        this._nicknameInput.focus();
+    }
+
     render() {
         return (
-            <View style={styles.containerStyle}>
-                <Spinner visible={this.state.isLoading} />
-                <View style={styles.logoViewStyle}>
-                    <Image 
-                        style={{width: 150, height: 150}}
-                        source={require('../img/icon_sb_512.png')}
-                    />
-                    <Text style={styles.logoTextTitle}>SendBird</Text>
-                    <Text style={styles.logoTextSubTitle}>React Native</Text>
-                </View>
+            <ScrollView>
+                <KeyboardAvoidingView
+                    style={styles.containerStyle}
+                    behavior={'padding'}
+                    enabled
+                >
+                    <Spinner visible={this.state.isLoading} />
+                    <View style={styles.logoViewStyle}>
+                        <Image 
+                            style={{width: 150, height: 150}}
+                            source={require('../img/icon_sb_512.png')}
+                        />
+                        <Text style={styles.logoTextTitle}>SendBird</Text>
+                        <Text style={styles.logoTextSubTitle}>React Native</Text>
+                    </View>
 
-                <View style={styles.inputViewStyle}>
-                    <TextInput 
-                        label='User ID'
-                        placeholder='User ID'
-                        style={styles.inputStyle}
-                        value={this.state.userId}
-                        duration={100}
-                        autoCorrect={false}
-                        maxLength={16}
-                        underlineColorAndroid='transparent'
-                        onChangeText={this._onUserIdChanged}
-                    />
-                </View>
+                    <View style={styles.inputViewStyle}>
+                        <TextInput 
+                            keyboardType={'numeric'}
+                            label='User ID'
+                            placeholder='User ID'
+                            style={styles.inputStyle}
+                            value={this.state.userId}
+                            duration={100}
+                            autoCorrect={false}
+                            maxLength={16}
+                            underlineColorAndroid='transparent'
+                            onChangeText={this._onUserIdChanged}
+                            onSubmitEditing={this._onUserIdSubmitting}
+                        />
+                    </View>
 
-                <View style={styles.inputViewStyle}>
-                    <TextInput 
-                        label='Nickname'
-                        placeholder='Nickname'
-                        style={styles.inputStyle}
-                        value={this.state.nickname}
-                        duration={100}
-                        autoCorrect={false}
-                        maxLength={16}
-                        underlineColorAndroid='transparent'
-                        onChangeText={this._onNicknameChanged}
-                    />
-                </View>
+                    <View style={styles.inputViewStyle}>
+                        <TextInput 
+                            ref={this._getNicknameInput}
+                            label='Nickname'
+                            placeholder='Nickname'
+                            style={styles.inputStyle}
+                            value={this.state.nickname}
+                            duration={100}
+                            autoCorrect={false}
+                            maxLength={16}
+                            underlineColorAndroid='transparent'
+                            onChangeText={this._onNicknameChanged}
+                            onSubmitEditing={this._onButtonPress}
+                        />
+                    </View>
 
-                <View style={styles.buttonStyle}>
-                    <Button
-                        title='CONNECT'
-                        buttonStyle={{backgroundColor: '#6e5baa'}}
-                        onPress={this._onButtonPress}
-                        disabled={this.state.isLoading}
-                    />
-                </View>
-                
-                <Text style={styles.errorTextStyle}>{this.props.error}</Text>
+                    <View style={styles.buttonStyle}>
+                        <Button
+                            title='CONNECT'
+                            buttonStyle={{backgroundColor: '#6e5baa'}}
+                            onPress={this._onButtonPress}
+                            disabled={this.state.isLoading}
+                        />
+                    </View>
+                    
+                    <Text style={styles.errorTextStyle}>{this.props.error}</Text>
 
-                <View style={[styles.footerViewStyle]}>
-                    <Text style={styles.footerTextStyle}>Sample UI v2.1.2 / SDK v.3.0.61</Text>
-                </View>
-            </View>
+                    <View style={[styles.footerViewStyle]}>
+                        <Text style={styles.footerTextStyle}>Sample UI v2.1.2 / SDK v.3.0.61</Text>
+                    </View>
+                </KeyboardAvoidingView>
+            </ScrollView>
         );
     }
 }

@@ -1,3 +1,4 @@
+import { Alert } from 'react-native';
 import { 
     INIT_CHAT_SCREEN,
     CREATE_CHAT_HANDLER_SUCCESS,
@@ -270,7 +271,7 @@ export const onFileButtonPress = (channelUrl, isOpenChannel, source) => {
             .then((channel) => {
                 sendFileMessage(dispatch, channel, source);
             })
-            .catch((error) => dispatch({ type: SEND_MESSAGE_FAIL }))
+            .catch((error) => { return dispatch({ type: SEND_MESSAGE_FAIL }) })
         } else {
             sbGetGroupChannel(channelUrl)
             .then((channel) => {

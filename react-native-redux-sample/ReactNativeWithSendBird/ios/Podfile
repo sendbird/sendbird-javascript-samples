@@ -12,4 +12,8 @@ target 'ReactNativeWithSendBird' do
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'
 
+  pod 'JCoreRN', :path => '../node_modules/jcore-react-native'
+
+  pod 'JPushRN', :path => '../node_modules/jpush-react-native'
+
 end

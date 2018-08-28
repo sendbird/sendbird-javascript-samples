@@ -104,6 +104,11 @@ android {
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
+        manifestPlaceholders = [
+                JPUSH_APPKEY: "11cd6e39fc266822d437adbf",
+                APP_CHANNEL : "default"
+        ]
+
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -149,6 +154,8 @@ android {
 }
 
 dependencies {
+    compile project(':jcore-react-native')
+    compile project(':jpush-react-native')
     compile project(':react-native-sound')
     compile project(':react-native-audio')
     compile fileTree(dir: "libs", include: ["*.jar"])

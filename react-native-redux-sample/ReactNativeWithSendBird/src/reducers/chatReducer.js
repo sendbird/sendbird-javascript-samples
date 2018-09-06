@@ -34,6 +34,16 @@ const INITAL_STATE = {
     typing: ''
 }
 
+const uniqueList = (list) => {
+    return list.reduce((uniqList, currentValue) => {
+        let ids = uniqList.map(item => { return item.messageId });
+        if (ids.indexOf(currentValue.messageId) < 0) {
+            uniqList.push(currentValue);
+        }
+        return uniqList;
+    }, []);
+}
+
 export default (state = INITAL_STATE, action) => {
     switch(action.type) {
         case INIT_CHAT_SCREEN: 
@@ -46,8 +56,8 @@ export default (state = INITAL_STATE, action) => {
             return { ...state, title: action.title, memberCount: action.memberCount }
         case CHANNEL_TITLE_CHANGED_FAIL:
             return { ...state }
-        case MESSAGE_LIST_SUCCESS:
-            return { ...state, list: [...state.list, ...action.list] };
+        case MESSAGE_LIST_SUCCESS: 
+            return { ...state, list: uniqueList([...state.list, ...action.list]) };
         case MESSAGE_LIST_FAIL:
             return { ...state };
         case SEND_MESSAGE_TEMPORARY:
@@ -71,7 +81,7 @@ export default (state = INITAL_STATE, action) => {
             return { ...state, exit: false };
         
         case MESSAGE_RECEIVED:
-            return { ...state, list: [...[action.payload], ...state.list]}
+            return { ...state, list: uniqueList([...[action.payload], ...state.list]) }
         case MESSAGE_UPDATED:
             const updatedMessage = action.payload;
             const updatedList = state.list.map((message) => {

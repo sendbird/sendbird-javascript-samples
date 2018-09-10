@@ -23,6 +23,9 @@ $ic-arrow-normal: 'icon-arrow-nomal.png';
 $ic-arrow: 'icon-arrow.png';
 $ic-back: 'icon-back.png';
 
+$ic-search: 'icon-search-nomal.png';
+$ic-search-over: 'icon-search-over.png';
+
 @mixin icon($url, $size: cover, $position: center) {
   background-image: url($ic-prefix + $url);
   background-position: $position;

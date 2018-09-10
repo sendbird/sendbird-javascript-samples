@@ -1,16 +1,19 @@
 import styles from '../../scss/list.scss';
 import { createDivEl, isScrollBottom } from '../utils';
+import { OpenChannelSearchBox } from './OpenChannelSearchBox';
 
 let instance = null;
 
 class List {
-  constructor(title) {
+  constructor(title, createSearchBox = false) {
     if (instance) {
       return instance;
     }
+    this.createSearchBox = createSearchBox;
     this.element = this._create(title);
     this.scrollEventHandler = null;
     this.closeEventHandler = null;
+    this.searchKeyword = '';
   }
 
   _create(title) {
@@ -29,6 +32,8 @@ class List {
     const listTopButtonExit = createDivEl({ className: styles['button-exit'] });
     listTopButton.appendChild(listTopButtonExit);
     listTopButtonExit.addEventListener('click', () => {
+      this.searchKeyword = '';
+      OpenChannelSearchBox.clearText();
       const listContent = document.querySelector(`.${styles['list-content']}`);
       if (this.closeEventHandler) {
         this.closeEventHandler();
@@ -38,6 +43,11 @@ class List {
     });
     this.buttonRootElement = listTopButton;
 
+    if (this.createSearchBox) {
+      const searchBox = new OpenChannelSearchBox();
+      listBody.appendChild(searchBox.element);
+    }
+
     const hr = createDivEl({ className: styles['list-hr'] });
     listBody.appendChild(hr);
 
@@ -46,7 +56,7 @@ class List {
     listContent.addEventListener('scroll', () => {
       if (isScrollBottom(listContent)) {
         if (this.scrollEventHandler) {
-          this.scrollEventHandler();
+          this.scrollEventHandler(false, this.searchKeyword);
         }
       }
     });

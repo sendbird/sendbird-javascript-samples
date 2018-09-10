@@ -25,15 +25,18 @@ class SendBirdAction {
   connect(userId, nickname) {
     return new Promise((resolve, reject) => {
       const sb = SendBird.getInstance();
-      sb.connect(userId, (user, error) => {
-        if (error) {
-          reject(error);
-        } else {
-          sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (user, error) => {
-            error ? reject(error) : resolve(user);
-          });
+      sb.connect(
+        userId,
+        (user, error) => {
+          if (error) {
+            reject(error);
+          } else {
+            sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (user, error) => {
+              error ? reject(error) : resolve(user);
+            });
+          }
         }
-      });
+      );
     });
   }
 
@@ -122,10 +125,11 @@ class SendBirdAction {
   /**
    * Open Channel
    */
-  getOpenChannelList(isInit = false) {
+  getOpenChannelList(isInit = false, urlKeyword = '') {
     if (isInit || isNull(this.openChannelQuery)) {
       this.openChannelQuery = new this.sb.OpenChannel.createOpenChannelListQuery();
       this.openChannelQuery.limit = 20;
+      this.openChannelQuery.urlKeyword = urlKeyword;
     }
     return new Promise((resolve, reject) => {
       if (this.openChannelQuery.hasNext && !this.openChannelQuery.isLoading) {

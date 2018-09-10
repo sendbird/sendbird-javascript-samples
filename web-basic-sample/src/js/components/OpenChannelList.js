@@ -10,20 +10,31 @@ let instance = null;
 
 class OpenChannelList extends List {
   constructor() {
-    super('Open Channel List');
+    super('Open Channel List', true);
     if (instance) {
       return instance;
     }
 
     this.scrollEventHandler = this._getOpenChannelList;
+    this.searchKeyword = '';
     instance = this;
   }
 
-  _getOpenChannelList(isInit = false) {
+  _getOpenChannelList(isInit = false, urlKeyword = '') {
     Spinner.start(this.element);
+
+    if (urlKeyword !== this.searchKeyword) {
+      this.searchKeyword = urlKeyword;
+      isInit = true;
+    }
+
     const listContent = this.getContentElement();
+    if (isInit) {
+      listContent.innerHTML = '';
+    }
+
     SendBirdAction.getInstance()
-      .getOpenChannelList(isInit)
+      .getOpenChannelList(isInit, urlKeyword)
       .then(openChannelList => {
         openChannelList.forEach(channel => {
           const handler = () => {

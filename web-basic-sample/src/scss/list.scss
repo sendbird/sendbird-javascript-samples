@@ -65,6 +65,36 @@
       margin: 8px 20px;
       border-top: 1px solid $color-gray;
     }
+
+    & > .list-search {
+      box-sizing: border-box;
+      padding: 10px 20px;
+      overflow: hidden;
+      & > .search-input {
+        font-size: 18px;
+        font-family: $font-family-exo2;
+        box-sizing: border-box;
+        width: calc(100% - 40px);
+        height: 42px;
+        margin: 0 20px;
+        padding-left: 44px;
+        outline: none;
+        border: 1px solid $color-gray;
+        @include border-radius(4px);
+        @include icon($ic-search, 26px 26px, 8px center);
+        @include hover-focus {
+          @include icon($ic-search-over, 26px 26px, 8px center);
+          border: 1px solid $color-purple-light;
+          font-weight: 300;
+        }
+        &::placeholder {
+          color: $color-gray;
+          font-size: 18px;
+          font-weight: 300;
+        }
+      }
+    }
+
     & > .list-content {
       box-sizing: border-box;
       padding: 10px 20px;

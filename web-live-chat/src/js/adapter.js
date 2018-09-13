@@ -93,7 +93,7 @@ class SendbirdAdapter {
       this.messageListQuery = this.channel.createPreviousMessageListQuery();
     }
     if (this.messageListQuery.hasMore && !this.messageListQuery.isLoading) {
-      this.messageListQuery.load(GET_MESSAGE_LIMIT, false, (messageList, error) => {
+      this.messageListQuery.load(GET_MESSAGE_LIMIT, !isInit, (messageList, error) => {
         if (error) {
           console.error(error);
           return;

@@ -106,7 +106,7 @@ class MessageBoard extends Element {
     ];
 
     var _getDay = (val) => {
-      let day = parseInt(val) % 10;
+      let day = parseInt(val);
       let digit = day % 10;
       switch(digit) {
       case 1:

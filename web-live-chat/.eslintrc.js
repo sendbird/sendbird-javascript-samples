@@ -14,6 +14,7 @@ module.exports = {
     'semi': 1,
     'no-console': 1,
     'camelcase': 1,
-    'no-unused-vars': 1
+    'no-unused-vars': 1,
+    'no-useless-escape': 1
   }
 };

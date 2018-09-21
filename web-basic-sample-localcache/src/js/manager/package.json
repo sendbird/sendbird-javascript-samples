@@ -1,0 +1,27 @@
+{
+  "name": "sendbird-syncmanager-javascript",
+  "version": "0.9.0",
+  "description": "SendBird data sync manager for JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "build": "./node_modules/.bin/webpack --config ./conf/webpack.conf.js",
+    "test": "npm run build && ./node_modules/.bin/webpack --config ./conf/webpack.test.conf.js && ./node_modules/.bin/karma start ./conf/karma.conf.js --debug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/smilefam/SendBird-SyncManager-JavaScript.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/smilefam/SendBird-SyncManager-JavaScript/issues"
+  },
+  "homepage": "https://github.com/smilefam/SendBird-SyncManager-JavaScript#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "webpack": "^4.18.0",
+    "webpack-cli": "^3.1.0"
+  }
+}

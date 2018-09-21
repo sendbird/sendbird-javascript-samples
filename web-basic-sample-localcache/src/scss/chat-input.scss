@@ -1,0 +1,74 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.chat-input {
+  display: flex;
+  padding: 20px;
+  border-top: 1px solid $color-chat-border;
+  background-color: $color-white;
+
+  & > .typing-field {
+    display: none;
+    position: absolute;
+    bottom: 79px;
+    left: 220px;
+    width: calc(100vw - 220px - 240px);
+    padding: 6px 20px;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: $color-black-text;
+    opacity: 0.4;
+    vertical-align: middle;
+    font-size: 13px;
+    font-style: italic;
+  }
+
+  & > .input-file {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    border: 1px solid $color-chat-border;
+    border-right: 0;
+    background-color: $color-white;
+    cursor: pointer;
+    @include border-left-radius(4px);
+    @include icon($ic-attach-file-normal, 20px 20px, center center);
+    @include hover-focus {
+      border: 1px solid $color-black-border;
+      @include icon($ic-attach-file, 20px 20px, center center);
+    }
+  }
+
+  & > .input-text {
+    display: flex;
+    font-size: 15px;
+    width: 100%;
+    height: 38px;
+    padding: 7px 8px 6px 8px;
+    box-sizing: border-box;
+    border: 1px solid $color-chat-border;
+    background-color: $color-white;
+    @include border-right-radius(4px);
+    @include hover-focus-active {
+      border: 1px solid $color-black-border;
+    }
+
+    & > .input-text-area {
+      width: 100%;
+      outline: none;
+      border: 0;
+      resize: none;
+      line-height: 1.4;
+      background-color: $color-white;
+      overflow: hidden;
+      @include hover-focus {
+        outline: none;
+        border: 0;
+        resize: none;
+        padding-top: 2px;
+        line-height: 1.4;
+      }
+    }
+  }
+}

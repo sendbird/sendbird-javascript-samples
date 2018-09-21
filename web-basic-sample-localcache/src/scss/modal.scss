@@ -1,0 +1,74 @@
+@import 'mixins';
+@import 'variables';
+
+.modal-root {
+  display: flex;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  & > .modal-body {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 450px;
+    background-color: $color-white;
+    margin: auto;
+    padding: 24px;
+    @include border-radius(4px);
+    @include transform-translate(0, -50%);
+
+    & > .modal-title {
+      display: flex;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    & > .modal-desc {
+      display: flex;
+      color: $color-black-text;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    & > .modal-content {
+      display: flex;
+      margin: 10px 0;
+    }
+
+    & > .modal-bottom {
+      display: flex;
+      justify-content: flex-end;
+      & > .modal-cancel {
+        display: flex;
+        margin-right: 12px;
+        color: $color-black-text-light;
+        border: 1px solid $color-black-text-light;
+        cursor: pointer;
+        padding: 6px;
+        @include border-radius(4px);
+        @include hover-focus {
+          color: $color-purple-light;
+          border: 1px solid $color-purple-light;
+        }
+      }
+      & > .modal-submit {
+        display: flex;
+        color: $color-white;
+        background-color: $color-blue;
+        border: 1px solid $color-blue;
+        cursor: pointer;
+        padding: 6px;
+        font-weight: 600;
+        @include border-radius(4px);
+        @include hover-focus {
+          background-color: $color-blue-dark;
+          border: 1px solid $color-blue-dark;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,10 @@
+@import 'normalize';
+@import 'variables';
+@import 'mixins';
+@import 'icons';
+
+body {
+  display: flex;
+  font-family: $font-family-exo2;
+  -webkit-font-smoothing: antialiased;
+}

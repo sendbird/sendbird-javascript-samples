@@ -7,7 +7,7 @@ This is full screen chat sample like Slack using [SendBird SDK](https://github.c
   - [Customizing the sample](#customizing-the-sample)
 
 ## [Demo](https://sample.sendbird.com/basic/syncmanager)
-You can try out a live demo from the link [here](https://sample.sendbird.com/basic/syncmanager).
+You can try out a live demo from the link [here](https://sample.sendbird.com/basic/sync-manager).
 
 
 ## Run the sample

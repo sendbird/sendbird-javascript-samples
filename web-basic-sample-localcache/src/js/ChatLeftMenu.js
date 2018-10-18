@@ -85,6 +85,7 @@ class ChatLeftMenu {
         case 'remove': {
           if(this.activeChannelUrl === channel.url) {
             this.activeChannelUrl = null;
+            Chat.getInstance().render();
           }
           const element = this.getItem(channel.url);
           this.groupChannelList.removeChild(element);
@@ -92,10 +93,13 @@ class ChatLeftMenu {
           break;
         }
         case 'clear': {
+          if(this.activeChannelUrl) {
+            Chat.getInstance().render();
+          }
           this.activeChannelUrl = null;
           const elements = this.groupChannelList.getElementsByClassName(LeftListItem.getItemRootClassName());
           for (let i in elements) {
-            this.groupCHannelList.removeChild(elements[i]);
+            this.groupChannelList.removeChild(elements[i]);
           }
           this.toggleGroupChannelDefaultItem();
           break;

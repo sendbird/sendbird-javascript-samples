@@ -95,6 +95,7 @@ class Chat {
         this._addEventHandler();
         this._createChatElement(this.channel);
         this.body.appendChild(this.element);
+        this.main.loadInitialMessages();
       })
       .catch(error => {
         errorAlert(error.message);

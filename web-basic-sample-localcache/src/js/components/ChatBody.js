@@ -13,6 +13,8 @@ class ChatBody {
     this.readReceiptManageList = [];
     this.scrollHeight = 0;
     this.collection = null;
+    this.limit = 50;
+    this.hasNext = true;
     this.element = createDivEl({ className: styles['chat-body'] });
     this._initElement();
   }
@@ -23,9 +25,11 @@ class ChatBody {
     if(this.collection) {
       manager.removeMessageCollection(this.collection);
     }
-    this.collection = manager.createMessageCollection(this.channel, { limit: 50 });
+    this.collection = manager.createMessageCollection(this.channel, { limit: this.limit });
     this.collection.subscribe('chat_body_message', changeLog => {
+      const messageElements = this.element.querySelectorAll('.chat-message');
       const message = changeLog.item;
+      const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
       switch(changeLog.action) {
         case 'insert': {
           const index = this.collection.findIndex(message, this.collection.messages);
@@ -34,8 +38,7 @@ class ChatBody {
             if(index === this.collection.messages.length) {
               this.element.appendChild(messageItem.element);
             } else {
-              this.element.insertBefore(messageItem.element, this.element.childNodes[index]);
-              this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
+              this.element.insertBefore(messageItem.element, messageElements[index]);
             }
             if ((message.isUserMessage() || message.isFileMessage()) && SendBirdAction.getInstance().isCurrentUser(message.sender)) {
               this.readReceiptManage(message);
@@ -63,17 +66,22 @@ class ChatBody {
           break;
         }
       }
+      if(keepScrollToBottom) {
+        this.scrollToBottom();
+      }
     });
 
     this.element.addEventListener('scroll', () => {
-      if (this.element.scrollTop === 0) {
+      if (this.element.scrollTop === 0 && this.hasNext) {
+        const currentMessageCount = this.collection.messages.length;
         this.updateCurrentScrollHeight();
-        this.loadPreviousMessages(() => {});
+        this.loadPreviousMessages(() => {
+          const fetchedMessageCount = this.collection.messages.length;
+          if(fetchedMessageCount - currentMessageCount < this.limit) {
+            this.hasNext = false;
+          }
+        });
       }
-    });
-    this.loadPreviousMessages(() => {
-      sendbirdAction.markAsRead(this.channel);
-      this.scrollToBottom();
     });
   }
 

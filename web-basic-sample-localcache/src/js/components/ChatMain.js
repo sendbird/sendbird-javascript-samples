@@ -4,6 +4,7 @@ import { ChatInput } from './ChatInput';
 import { Chat } from '../Chat';
 import { createDivEl } from '../utils';
 import { ChatMenu } from './ChatMenu';
+import { SendBirdAction } from '../SendBirdAction';
 
 class ChatMain {
   constructor(channel) {
@@ -54,6 +55,14 @@ class ChatMain {
 
   updateMenu(channel) {
     this.menu.updateMenu(channel);
+  }
+
+  loadInitialMessages() {
+    const sendbirdAction = SendBirdAction.getInstance();
+    this.body.loadPreviousMessages(() => {
+      sendbirdAction.markAsRead(this.channel);
+      this.body.scrollToBottom();
+    });
   }
 }
 

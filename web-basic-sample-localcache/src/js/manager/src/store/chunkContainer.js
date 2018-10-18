@@ -1,6 +1,6 @@
 
 import LocalDB from './engine/localdb.min.js';
-import { createId, deepEqual } from '../util/tools.js';
+import { deepEqual, createId } from '../util/tools.js';
 
 let _cache = {};
 

@@ -2,13 +2,23 @@
 This is full screen chat sample like Slack using [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript) for desktop browsers. SyncManager is included and applied.
 
 - [SendBird JavaScript Web Basic Sample with SyncManager](#sendbird-javascript-web-basic-sample-with-syncmanager)
+  - [SyncManager](#syncmanager)
   - [Demo](#demo)
   - [Run the sample](#run-the-sample)
   - [Customizing the sample](#customizing-the-sample)
 
-## [Demo](https://sample.sendbird.com/basic/syncmanager)
-You can try out a live demo from the link [here](https://sample.sendbird.com/basic/sync-manager).
+## SyncManager
 
+`SyncManager` is a support add-on for [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). Major benefits of `SyncManager` are,
+
+ * Local cache integrated: store channel/message data in local storage for fast view loading.
+ * Event-driven data handling: subscribe channel/message event like `insert`, `update`, `remove` at a single spot in order to apply data event to view.
+
+Check out [Basic Sample with SyncManager](https://github.com/smilefam/SendBird-JavaScript/tree/master/web-basic-sample-localcache) which is same as [Basic Sample](https://sample.sendbird.com/basic) with `SyncManager` integrated.  
+For more information about `SyncManager`, please refer to [SyncManager README](https://github.com/smilefam/SendBird-JavaScript/blob/master/web-basic-sample-localcache/src/js/manager/README.md).
+
+## Demo
+You can try out a live demo from the link [here](https://sample.sendbird.com/basic/sync-manager).
 
 ## Run the sample
 1. Install packages

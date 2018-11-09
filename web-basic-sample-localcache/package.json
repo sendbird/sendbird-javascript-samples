@@ -32,6 +32,6 @@
   },
   "dependencies": {
     "moment": "^2.22.1",
-    "sendbird": "^3.0.81"
+    "sendbird": "3.0.87"
   }
 }

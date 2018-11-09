@@ -1,6 +1,9 @@
-
-import { APP_ID as appId } from './const';
-import { isNull } from './utils';
+import {
+  APP_ID as appId
+} from './const';
+import {
+  isNull
+} from './utils';
 
 import SendBird from 'sendbird';
 
@@ -11,7 +14,9 @@ class SendBirdAction {
     if (instance) {
       return instance;
     }
-    this.sb = new SendBird({ appId });
+    this.sb = new SendBird({
+      appId
+    });
     this.userQuery = null;
     this.groupChannelQuery = null;
     this.previousMessageQuery = null;
@@ -58,7 +63,7 @@ class SendBirdAction {
 
   getUserList(isInit = false) {
     if (isInit || isNull(this.userQuery)) {
-      this.userQuery = new this.sb.createUserListQuery();
+      this.userQuery = new this.sb.createApplicationUserListQuery();
       this.userQuery.limit = 30;
     }
     return new Promise((resolve, reject) => {
@@ -220,22 +225,35 @@ class SendBirdAction {
     }
   }
 
-  sendUserMessage({ channel, message, handler }) {
+  sendUserMessage({
+    channel,
+    message,
+    handler
+  }) {
     return channel.sendUserMessage(message, (message, error) => {
       if (handler) handler(message, error);
     });
   }
 
-  sendFileMessage({ channel, file, handler }) {
+  sendFileMessage({
+    channel,
+    file,
+    handler
+  }) {
     return channel.sendFileMessage(file, (message, error) => {
       if (handler) handler(message, error);
     });
   }
 
-  deleteMessage({ channel, message }) {
+  deleteMessage({
+    channel,
+    message
+  }) {
     return new Promise((resolve, reject) => {
       if (!this.isCurrentUser(message.sender)) {
-        reject({ message: 'You have not ownership in this message.' });
+        reject({
+          message: 'You have not ownership in this message.'
+        });
       }
       channel.deleteMessage(message, (response, error) => {
         error ? reject(error) : resolve(response);
@@ -248,4 +266,6 @@ class SendBirdAction {
   }
 }
 
-export { SendBirdAction };
+export {
+  SendBirdAction
+};

@@ -1,12 +1,18 @@
-import { MAX_COUNT } from './consts.js';
-import { xssEscape } from './utils.js';
+import {
+  MAX_COUNT
+} from './consts.js';
+import {
+  xssEscape
+} from './utils.js';
 
 const GLOBAL_HANDLER = 'GLOBAL_HANDLER';
 const GET_MESSAGE_LIMIT = 20;
 
 class Sendbird {
   constructor(appId) {
-    this.sb = new window.SendBird({ appId: appId });
+    this.sb = new window.SendBird({
+      appId: appId
+    });
     this.channelListQuery = null;
     this.userListQuery = null;
   }
@@ -59,7 +65,7 @@ class Sendbird {
       this.channelListQuery.limit = 20;
     }
     if (this.channelListQuery.hasNext && !this.channelListQuery.isLoading) {
-      this.channelListQuery.next(function(channelList, error) {
+      this.channelListQuery.next(function (channelList, error) {
         if (error) {
           console.error(error);
           return;
@@ -70,7 +76,7 @@ class Sendbird {
   }
 
   getChannelInfo(channelUrl, action) {
-    this.sb.GroupChannel.getChannel(channelUrl, function(channel, error) {
+    this.sb.GroupChannel.getChannel(channelUrl, function (channel, error) {
       if (error) {
         console.error(error);
         return;
@@ -80,7 +86,7 @@ class Sendbird {
   }
 
   createNewChannel(userIds, action) {
-    this.sb.GroupChannel.createChannelWithUserIds(userIds, true, '', '', '', function(channel, error) {
+    this.sb.GroupChannel.createChannelWithUserIds(userIds, true, '', '', '', function (channel, error) {
       if (error) {
         console.error(error);
         return;
@@ -123,7 +129,7 @@ class Sendbird {
       channelSet.query = channelSet.channel.createPreviousMessageListQuery();
     }
     if (channelSet.query.hasMore && !channelSet.query.isLoading) {
-      channelSet.query.load(GET_MESSAGE_LIMIT, false, function(messageList, error) {
+      channelSet.query.load(GET_MESSAGE_LIMIT, false, function (messageList, error) {
         if (error) {
           console.error(error);
           return;
@@ -143,7 +149,10 @@ class Sendbird {
   }
 
   sendFileMessage(channel, file, action) {
-    let thumbSize = [{ maxWidth: 160, maxHeight: 160 }];
+    let thumbSize = [{
+      maxWidth: 160,
+      maxHeight: 160
+    }];
     channel.sendFileMessage(file, '', '', thumbSize, (message, error) => {
       if (error) {
         console.error(error);
@@ -158,7 +167,7 @@ class Sendbird {
    */
   getUserList(action) {
     if (!this.userListQuery) {
-      this.userListQuery = this.sb.createUserListQuery();
+      this.userListQuery = this.sb.createApplicationUserListQuery();
     }
     if (this.userListQuery.hasNext && !this.userListQuery.isLoading) {
       this.userListQuery.next((userList, error) => {
@@ -185,28 +194,28 @@ class Sendbird {
     let userJoinFunc = args[7];
 
     let channelHandler = new this.sb.ChannelHandler();
-    channelHandler.onMessageReceived = function(channel, message) {
+    channelHandler.onMessageReceived = function (channel, message) {
       messageReceivedFunc(channel, message);
     };
-    channelHandler.onMessageUpdated = function(channel, message) {
+    channelHandler.onMessageUpdated = function (channel, message) {
       messageUpdatedFunc(channel, message);
     };
-    channelHandler.onMessageDeleted = function(channel, messageId) {
+    channelHandler.onMessageDeleted = function (channel, messageId) {
       messageDeletedFunc(channel, messageId);
     };
-    channelHandler.onChannelChanged = function(channel) {
+    channelHandler.onChannelChanged = function (channel) {
       ChannelChangedFunc(channel);
     };
-    channelHandler.onTypingStatusUpdated = function(channel) {
+    channelHandler.onTypingStatusUpdated = function (channel) {
       typingStatusFunc(channel);
     };
-    channelHandler.onReadReceiptUpdated = function(channel) {
+    channelHandler.onReadReceiptUpdated = function (channel) {
       readReceiptFunc(channel);
     };
-    channelHandler.onUserLeft = function(channel, user) {
+    channelHandler.onUserLeft = function (channel, user) {
       userLeftFunc(channel, user);
     };
-    channelHandler.onUserJoined = function(channel, user) {
+    channelHandler.onUserJoined = function (channel, user) {
       userJoinFunc(channel, user);
     };
     this.sb.addChannelHandler(GLOBAL_HANDLER, channelHandler);
@@ -218,7 +227,7 @@ class Sendbird {
   getNicknamesString(channel) {
     let nicknameList = [];
     let currentUserId = this.sb.currentUser.userId;
-    channel.members.forEach(function(member) {
+    channel.members.forEach(function (member) {
       if (member.userId != currentUserId) {
         nicknameList.push(xssEscape(member.nickname));
       }
@@ -232,9 +241,9 @@ class Sendbird {
 
   getLastMessage(channel) {
     if (channel.lastMessage) {
-      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage()
-        ? channel.lastMessage.message
-        : channel.lastMessage.name;
+      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage() ?
+        channel.lastMessage.message :
+        channel.lastMessage.name;
     }
     return '';
   }
@@ -287,4 +296,7 @@ class Sendbird {
   }
 }
 
-export { Sendbird as default };
+export {
+  Sendbird as
+  default
+};

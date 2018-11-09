@@ -86,6 +86,7 @@ FCM.on(FCMEvent.Notification, notif => {
       showLocalNotificationWithAction(notif);
     }
   } catch (e) {
+    console.log(e);
   }
 });
 
@@ -98,33 +99,34 @@ export default class App extends Component {
     FCM.requestPermissions();
     FCM.on(FCMEvent.Notification, notif => {
       console.log('foreground notif', notif);
-      if (Platform.OS === "ios") {
-        switch (notif._notificationType) {
-          case NotificationType.Remote:
-            notif.finish(RemoteNotificationResult.NewData);
-            break;
+      try {
+        if (Platform.OS === "ios") {
+          switch (notif._notificationType) {
+            case NotificationType.Remote:
+              notif.finish(RemoteNotificationResult.NewData);
+              break;
 
-          case NotificationType.NotificationResponse:
-            notif.finish();
-            break;
+            case NotificationType.NotificationResponse:
+              notif.finish();
+              break;
 
-          case NotificationType.WillPresent:
-            notif.finish(WillPresentNotificationResult.All);
-            break;
-        }
-        try {
-          const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
-          if (sendbirdNotification) {
-            AsyncStorage.setItem('payload',
-              JSON.stringify({
-                "channelType": sendbirdNotification.channel_type,
-                "channel": sendbirdNotification.channel
-              }),
-              () => { });
-            showLocalNotificationWithAction(notif);
+            case NotificationType.WillPresent:
+              notif.finish(WillPresentNotificationResult.All);
+              break;
           }
-        } catch (e) {
         }
+        const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
+        if (sendbirdNotification) {
+          AsyncStorage.setItem('payload',
+            JSON.stringify({
+              "channelType": sendbirdNotification.channel_type,
+              "channel": sendbirdNotification.channel
+            }),
+            () => { });
+          showLocalNotificationWithAction(notif);
+        }
+      } catch (e) {
+        console.log(e);
       }
     });
 
@@ -137,8 +139,16 @@ export default class App extends Component {
         }
       });
     });
-
-    if(Platform.OS === 'ios') {
+    if (Platform.OS === "ios") {
+      FCM.getAPNSToken().then(token => {
+        AsyncStorage.setItem('pushToken', token);
+        sb = SendBird.getInstance();
+        AsyncStorage.getItem('user', (err, user) => {
+          if (user) {
+            this._registerPushToken(token);
+          }
+        });
+      });
       PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
     console.log('app is launched');

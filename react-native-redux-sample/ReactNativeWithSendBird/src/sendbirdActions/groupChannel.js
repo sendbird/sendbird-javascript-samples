@@ -34,16 +34,16 @@ export const sbLeaveGroupChannel = (channelUrl) => {
     return new Promise((resolve, reject) => {
         const sb = SendBird.getInstance();
         sbGetGroupChannel(channelUrl)
-        .then((channel) => {
-            channel.leave((response, error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(response);
-                }
+            .then((channel) => {
+                channel.leave((response, error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(response);
+                    }
+                })
             })
-        })
-        .catch((error) => reject(error));
+            .catch((error) => reject(error));
     });
 }
 
@@ -51,22 +51,22 @@ export const sbHideGroupChannel = (channelUrl) => {
     return new Promise((resolve, reject) => {
         const sb = SendBird.getInstance();
         sbGetGroupChannel(channelUrl)
-        .then((channel) => {
-            channel.hide((response, error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(response);
-                }
+            .then((channel) => {
+                channel.hide((response, error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(response);
+                    }
+                })
             })
-        })
-        .catch((error) => reject(error));
+            .catch((error) => reject(error));
     });
 }
 
 export const sbCreateUserListQuery = () => {
     const sb = SendBird.getInstance();
-    return sb.createUserListQuery();
+    return sb.createApplicationUserListQuery();
 }
 
 export const sbGetUserList = (userListQuery) => {
@@ -78,7 +78,7 @@ export const sbGetUserList = (userListQuery) => {
                 resolve(users);
             }
         });
-    });   
+    });
 }
 
 export const sbCreateGroupChannel = (inviteUserIdList, isDistinct) => {
@@ -97,17 +97,17 @@ export const sbCreateGroupChannel = (inviteUserIdList, isDistinct) => {
 export const sbInviteGroupChannel = (inviteUserIdList, channelUrl) => {
     return new Promise((resolve, reject) => {
         sbGetGroupChannel(channelUrl)
-        .then((channel) => {
-            channel.inviteWithUserIds(inviteUserIdList, (channel, error) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(channel);
-                }
-            });
-        })
-        .catch((error) => {
-            reject(error);
-        })
+            .then((channel) => {
+                channel.inviteWithUserIds(inviteUserIdList, (channel, error) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(channel);
+                    }
+                });
+            })
+            .catch((error) => {
+                reject(error);
+            })
     })
 }

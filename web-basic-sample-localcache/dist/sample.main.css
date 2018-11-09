@@ -96,6 +96,78 @@
     box-shadow: 0 2.5em 0 -1.3em; }
   40% {
     box-shadow: 0 2.5em 0 0; } }
+.user-item {
+  display: flex;
+  padding: 8px 20px 8px 20px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid #dedede;
+  justify-content: space-between;
+  cursor: pointer; }
+  .user-item:hover, .user-item:focus {
+    cursor: pointer;
+    border: 1px solid #6742d6;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    -o-border-radius: 2px; }
+  .user-item > .user-info {
+    display: flex;
+    align-items: center; }
+    .user-item > .user-info > .user-profile {
+      display: flex;
+      width: 40px;
+      height: 40px;
+      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/image-profile.svg");
+      background-position: center center;
+      background-size: 40px 40px;
+      background-repeat: no-repeat; }
+    .user-item > .user-info > .user-nickname {
+      margin: 0 10px;
+      font-size: 18px;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -ms-text-overflow: ellipsis;
+      white-space: nowrap; }
+    .user-item > .user-info > .user-online {
+      display: flex;
+      width: 8px;
+      height: 8px;
+      border: 1px solid #abb8c4;
+      background-color: #abb8c4;
+      opacity: 0.4;
+      border-radius: 50%;
+      -webkit-border-radius: 50%;
+      -moz-border-radius: 50%;
+      -ms-border-radius: 50%;
+      -o-border-radius: 50%; }
+    .user-item > .user-info > .user-online.active {
+      border: 1px solid #00C853;
+      background-color: #00C853;
+      opacity: 1; }
+  .user-item > .user-state {
+    display: flex;
+    align-items: center; }
+    .user-item > .user-state > .user-time {
+      display: flex;
+      color: #abb8c4;
+      margin-right: 10px; }
+    .user-item > .user-state > .user-select {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      opacity: 0.4;
+      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/icon-check-unselect.png");
+      background-position: center center;
+      background-size: 30px 30px;
+      background-repeat: no-repeat; }
+    .user-item > .user-state > .user-select.active {
+      opacity: 1;
+      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/icon-check-select.png");
+      background-position: center center;
+      background-size: 30px 30px;
+      background-repeat: no-repeat; }
 .list-root {
   min-width: 980px;
   width: 100vw;
@@ -199,78 +271,6 @@
       max-height: calc(100vh - 205px);
       overflow-y: auto;
       overflow-x: hidden; }
-.user-item {
-  display: flex;
-  padding: 8px 20px 8px 20px;
-  border: 1px solid transparent;
-  border-bottom: 1px solid #dedede;
-  justify-content: space-between;
-  cursor: pointer; }
-  .user-item:hover, .user-item:focus {
-    cursor: pointer;
-    border: 1px solid #6742d6;
-    border-radius: 2px;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px; }
-  .user-item > .user-info {
-    display: flex;
-    align-items: center; }
-    .user-item > .user-info > .user-profile {
-      display: flex;
-      width: 40px;
-      height: 40px;
-      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/image-profile.svg");
-      background-position: center center;
-      background-size: 40px 40px;
-      background-repeat: no-repeat; }
-    .user-item > .user-info > .user-nickname {
-      margin: 0 10px;
-      font-size: 18px;
-      max-width: 250px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -ms-text-overflow: ellipsis;
-      white-space: nowrap; }
-    .user-item > .user-info > .user-online {
-      display: flex;
-      width: 8px;
-      height: 8px;
-      border: 1px solid #abb8c4;
-      background-color: #abb8c4;
-      opacity: 0.4;
-      border-radius: 50%;
-      -webkit-border-radius: 50%;
-      -moz-border-radius: 50%;
-      -ms-border-radius: 50%;
-      -o-border-radius: 50%; }
-    .user-item > .user-info > .user-online.active {
-      border: 1px solid #00C853;
-      background-color: #00C853;
-      opacity: 1; }
-  .user-item > .user-state {
-    display: flex;
-    align-items: center; }
-    .user-item > .user-state > .user-time {
-      display: flex;
-      color: #abb8c4;
-      margin-right: 10px; }
-    .user-item > .user-state > .user-select {
-      display: flex;
-      width: 30px;
-      height: 30px;
-      opacity: 0.4;
-      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/icon-check-unselect.png");
-      background-position: center center;
-      background-size: 30px 30px;
-      background-repeat: no-repeat; }
-    .user-item > .user-state > .user-select.active {
-      opacity: 1;
-      background-image: url("https://dxstmhyqfqr1o.cloudfront.net/web-basic/icon-check-select.png");
-      background-position: center center;
-      background-size: 30px 30px;
-      background-repeat: no-repeat; }
 .chat-main-root {
   display: flex;
   flex-direction: row;

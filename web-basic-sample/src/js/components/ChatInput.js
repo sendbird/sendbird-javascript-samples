@@ -93,9 +93,11 @@ class ChatInput {
       }
     });
     this.input.addEventListener('focusin', () => {
+      this.channel._autoMarkAsRead = true;
       inputText.style.border = '1px solid #2C2D30';
     });
     this.input.addEventListener('focusout', () => {
+      this.channel._autoMarkAsRead = false;
       inputText.style.border = '';
     });
 

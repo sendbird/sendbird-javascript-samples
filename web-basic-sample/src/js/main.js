@@ -40,6 +40,9 @@ const createConnectionHandler = () => {
 const createChannelEvent = () => {
   const channelEvent = new SendBirdEvent();
   channelEvent.onChannelChanged = channel => {
+    if(channel._autoMarkAsRead) {
+      channel.markAsRead();
+    }
     chatLeft.updateItem(channel, true);
   };
   channelEvent.onUserEntered = (openChannel, user) => {

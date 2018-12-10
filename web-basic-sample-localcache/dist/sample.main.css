@@ -755,6 +755,35 @@
         resize: none;
         padding-top: 2px;
         line-height: 1.4; }
+.chat-user-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer; }
+  .chat-user-item > .user-image {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    background-size: 36px 36px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%; }
+  .chat-user-item > .user-nickname {
+    width: 154px;
+    max-width: 154px;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis; }
+  .chat-user-item > .user-nickname.is-user {
+    font-weight: 600;
+    color: #673AB7; }
 .chat-menu-root {
   display: flex;
   flex-direction: column;
@@ -834,35 +863,6 @@
       max-height: calc(100% - 56px);
       overflow-y: auto;
       overflow-x: hidden; }
-.chat-user-item {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 10px 20px;
-  cursor: pointer; }
-  .chat-user-item > .user-image {
-    display: flex;
-    width: 36px;
-    height: 36px;
-    margin-right: 10px;
-    background-size: 36px 36px;
-    background-position: center center;
-    background-repeat: no-repeat;
-    border-radius: 50%;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    -ms-border-radius: 50%;
-    -o-border-radius: 50%; }
-  .chat-user-item > .user-nickname {
-    width: 154px;
-    max-width: 154px;
-    white-space: nowrap;
-    overflow: hidden;
-    -ms-text-overflow: ellipsis;
-    text-overflow: ellipsis; }
-  .chat-user-item > .user-nickname.is-user {
-    font-weight: 600;
-    color: #673AB7; }
 /*! normalize.css v7.0.0 | MIT License | github.com/necolas/normalize.css */
 /* Document
    ========================================================================== */

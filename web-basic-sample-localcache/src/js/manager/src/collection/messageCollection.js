@@ -1,12 +1,14 @@
 import Mutex from '../util/mutex.js';
 import SyncManagerException from '../util/exception.js';
 import ChangeLog from '../util/changeLog.js';
-import { MessageChunk } from '../store/chunkContainer.js';
+import { MessageChunk } from '../store/ChunkContainer.js';
 
 const _yieldTaskNumber = new WeakMap();
 const _broadcast = new WeakMap();
 const _messageContainer = new WeakMap();
 const _chunkContainer = new WeakMap();
+
+const _resetMutex = new Mutex();
 
 export default class MessageCollection {
   constructor({ manager, broadcast, messageContainer, chunkContainer, channel, filter }) {
@@ -27,7 +29,7 @@ export default class MessageCollection {
     this.currentChunk = null;
     this.messages = [];
     this.handlers = {};
-    this.mutex = new Mutex();
+    this.viewMutex = new Mutex();
 
     let _taskNumberSeed = 0;
     _yieldTaskNumber.set(this, () => {
@@ -47,10 +49,14 @@ export default class MessageCollection {
     }
   }
   _reset() {
-    this.loadPreviousMessages(err => {
-      if(!err) {
-        this.manager.syncChangeLog(this.channel);
-      }
+    _resetMutex.lock(unlock => {
+      this.loadPreviousMessages(err => {
+        if(!err) {
+          this.manager.syncChangeLog(this.channel, () => {
+            unlock();
+          });
+        }
+      });
     });
   }
   _setCurrentChunk(chunk) {
@@ -72,9 +78,16 @@ export default class MessageCollection {
   findIndex(message, list = []) {
     let index = list.length;
     for(let i = 0; i < list.length; i++) {
-      if(list[i].createdAt >= message.createdAt) {
-        index = i;
-        break;
+      if(!this.filter.reverse) {
+        if(list[i].createdAt >= message.createdAt) {
+          index = i;
+          break;
+        }
+      } else {
+        if(list[i].createdAt <= message.createdAt) {
+          index = i;
+          break;
+        }
       }
     }
     return index;
@@ -88,26 +101,29 @@ export default class MessageCollection {
           limit: this.filter.limit,
           orderBy: 'createdAt',
           desc: true
-        },
-        (err, messages) => {
-          if(!err) {
-            this.currentChunk.previousCacheOffset += messages.length;
-            if(this.filter.reverse) {
-              messages = messages.reverse();
-            }
-            for(let i in messages) {
+        })
+        .then(messages => {
+          this.currentChunk.previousCacheOffset += messages.length;
+          if(!this.filter.reverse) {
+            messages = messages.reverse();
+          }
+          for(let i in messages) {
+            const index = this.messages.map(m => m.messageId).indexOf(messages[i].messageId);
+            const isDirty = index < 0 || !this.messages[index].isEqual(messages[i]);
+            if(isDirty) {
               this._addViewItem(messages[i]);
             }
           }
-          callback(err, messages);
-        });
+          callback(null, messages);
+        })
+        .catch(callback);
     };
 
     if(!this.currentChunk) {
       const chunkContainer = _chunkContainer.get(this);
       const ts = new Date().getTime();
-      chunkContainer.getLatestChunkByTimestamp(this.channel.url, this.filter, ts, (err, item) => {
-        if(!err) {
+      chunkContainer.getLatestChunkByTimestamp(this.channel.url, this.filter, ts)
+        .then(item => {
           this.currentChunk = item;
           if(this.currentChunk) {
             this.currentChunk.previousCacheOffset = 0;
@@ -115,18 +131,16 @@ export default class MessageCollection {
           } else {
             callback(null, []);
           }
-        } else {
-          callback(err, null);
-        }
-      });
+        })
+        .catch(callback);
     } else {
       _fetchChunkMessages(callback);
     }
   }
   loadPreviousMessages(callback) {
+    if(!callback) callback = () => {};
     if(!this.isLoading) {
       this.isLoading = true;
-      if(!callback) callback = () => {};
       this._loadPreviousMessagesFromCache((err, cachedMessages) => {
         if(!err) {
           const ts = (this.currentChunk && this.currentChunk.isSynced) ? this.currentChunk.startAt : new Date().getTime();
@@ -181,22 +195,42 @@ export default class MessageCollection {
                   }
   
                   /// upsert messages
-                  for(let i in messages) {
-                    const cachedMessage = messageContainer.getItem(messages[i].messageId);
-                    const hasMessage = this.messages.map(m => m.messageId).indexOf(messages[i].messageId) >= 0;
-                    const message = messageContainer.upsert(messages[i]);
-                    const isDirty = !cachedMessage || !cachedMessage.isEqual(message);
-                    if(isDirty) {
-                      broadcast.update(message, this);
-                    }
-                    if(!hasMessage || isDirty) {
-                      this._addViewItem(message);
-                    }
-                  }
-                  this.currentChunk.previousCacheOffset = this.messages.length;
+                  const operations = [];
+                  messages.forEach(message => {
+                    operations.push(new Promise((resolve, reject) => {
+                      messageContainer.getItem(message.messageId)
+                        .then(cachedMessage => {
+                          const hasMessage = this.messages.map(m => m.messageId).indexOf(message.messageId) >= 0;
+                          messageContainer.upsert(message)
+                            .then(message => {
+                              const isDirty = !cachedMessage || !cachedMessage.isEqual(message);
+                              if(isDirty) {
+                                broadcast.update(message, this);
+                              }
+                              if(!hasMessage || isDirty) {
+                                this._addViewItem(message);
+                              }
+                              resolve();
+                            })
+                            .catch(reject);
+                        })
+                        .catch(reject);
+                    }));
+                  });
+                  Promise.all(operations)
+                    .then(() => {
+                      this.currentChunk.previousCacheOffset = this.messages.length;
+                      this.isLoading = false;
+                      callback(null);
+                    })
+                    .catch(err => {
+                      this.isLoading = false;
+                      callback(err);
+                    });
+                } else {
+                  this.isLoading = false;
+                  callback(err);
                 }
-                this.isLoading = false;
-                callback(err);
               });
           } else {
             // not connected
@@ -237,7 +271,7 @@ export default class MessageCollection {
     }
   }
   _addViewItem(message) {
-    this.mutex.lock(unlock => {
+    this.viewMutex.lock(unlock => {
       const taskNumber = _yieldTaskNumber.get(this)();
       const currentIndex = this.getIndex(message, this.messages);
       const newIndex = this.findIndex(message, this.messages);
@@ -265,7 +299,7 @@ export default class MessageCollection {
     });
   }
   _removeViewItem(messageId) {
-    this.mutex.lock(unlock => {
+    this.viewMutex.lock(unlock => {
       for(let i in this.messages) {
         if(messageId === this.messages[i].messageId) {
           const deletedMessages = this.messages.splice(i, 1);
@@ -289,7 +323,7 @@ export default class MessageCollection {
   _clearViewItem() {
     this.currentChunk = null;
     this.messages = [];
-    this.mutex.lock(unlock => {
+    this.viewMutex.lock(unlock => {
       const taskNumber = _yieldTaskNumber.get(this)();
       const action = ChangeLog.Action.CLEAR;
       for(const key in this.handlers) {
@@ -309,8 +343,8 @@ export default class MessageCollection {
       if(message.messageId) {
         const broadcast = _broadcast.get(this);
         const messageContainer = _messageContainer.get(this);
-        messageContainer.upsert(message);
-        broadcast.upsert(message);
+        messageContainer.upsert(message)
+          .then(message => broadcast.upsert(message));
       } else {
         // add view but not in container (for temporary message)
         this._addViewItem(message);
@@ -325,8 +359,8 @@ export default class MessageCollection {
       if(message.messageId) {
         const broadcast = _broadcast.get(this);
         const messageContainer = _messageContainer.get(this);
-        messageContainer.upsert(message);
-        broadcast.update(message);
+        messageContainer.upsert(message)
+          .then(message => broadcast.upsert(message));
       } else {
         this._addViewItem(message);
       }
@@ -340,8 +374,8 @@ export default class MessageCollection {
       if(message.messageId) {
         const broadcast = _broadcast.get(this);
         const messageContainer = _messageContainer.get(this);
-        messageContainer.remove(message);
-        broadcast.remove(message);
+        messageContainer.remove(message)
+          .then(message => broadcast.remove(message));
       } else {
         this._removeViewItem(message);
       }

@@ -1,7 +1,8 @@
 
 import ChannelCollection from './collection/channelCollection';
-import { ChannelContainer } from './store/channelContainer';
+import { ChannelContainer } from './store/ChannelContainer';
 import { ChannelBroadcast } from './broadcast/channelBroadcast';
+import SyncManagerException from './util/exception';
 
 let _channelManager = null;
 const _channelCollections = new WeakMap();
@@ -52,30 +53,37 @@ export default class ChannelManager {
               case 'onMetaCountersCreated':
               case 'onMetaCountersUpdated':
               case 'onMetaCountersDeleted': {
-                const channel = container.upsert(args[0]);
-                broadcast.upsert(channel);
+                container.upsert(args[0])
+                  .then(channel => broadcast.upsert(channel))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
 
               case 'onReadReceiptUpdated': {
-                container.upsert(args[0]);
+                container.upsert(args[0])
+                  .then(() => {})
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
               
               case 'onUserReceivedInvitation':
               case 'onUserJoined': {
-                const channel = container.upsert(args[0]);
-                const user = args[1];
-                if(sb.currentUser && user.userId === sb.currentUser.userId) {
-                  broadcast.upsert(channel);
-                }
+                container.upsert(args[0])
+                  .then(channel => {
+                    const user = args[1];
+                    if(sb.currentUser && user.userId === sb.currentUser.userId) {
+                      broadcast.upsert(channel);
+                    }
+                  })
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
         
               case 'onChannelHidden': {
                 const channel = args[0];
-                container.remove(channel);
-                broadcast.remove(channel);
+                container.remove(channel)
+                  .then(() => broadcast.remove(channel))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
         
@@ -84,11 +92,13 @@ export default class ChannelManager {
                 const channel = args[0];
                 const user = args[1];
                 if(sb.currentUser && user.userId === sb.currentUser.userId) {
-                  container.remove(channel);
-                  broadcast.remove(channel);
+                  container.remove(channel)
+                    .then(() => broadcast.remove(channel))
+                    .catch(err => SyncManagerException.throw(err));
                 } else {
-                  const cachedChannel = container.upsert(channel);
-                  broadcast.upsert(cachedChannel);
+                  container.upsert(channel)
+                    .then(cachedChannel => broadcast.upsert(cachedChannel))
+                    .catch(err => SyncManagerException.throw(err));
                 }
                 break;
               }
@@ -97,19 +107,22 @@ export default class ChannelManager {
                 const channel = args[0];
                 const invitee = args[2];
                 if(sb.currentUser && invitee.userId === sb.currentUser.userId) {
-                  container.remove(channel);
-                  broadcast.remove(channel);
+                  container.remove(channel)
+                    .then(() => broadcast.remove(channel))
+                    .catch(err => SyncManagerException.throw(err));
                 } else {
-                  const cachedChannel = container.upsert(channel);
-                  broadcast.upsert(cachedChannel);
+                  container.upsert(channel)
+                    .then(cachedChannel => broadcast.upsert(cachedChannel))
+                    .catch(err => SyncManagerException.throw(err));
                 }
                 break;
               }
         
               case 'onChannelDeleted': {
                 const channel = args[0];
-                container.remove(channel);
-                broadcast.remove(channel);
+                container.remove(channel)
+                  .then(() => broadcast.remove(channel))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
             }

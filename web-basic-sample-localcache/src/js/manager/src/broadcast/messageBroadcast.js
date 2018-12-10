@@ -1,5 +1,5 @@
 
-import { MessageChunk } from '../store/chunkContainer.js';
+import { MessageChunk } from '../store/ChunkContainer.js';
 
 export const MessageBroadcast = function() {
   let _collections = [];

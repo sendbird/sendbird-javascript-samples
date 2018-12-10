@@ -20,7 +20,9 @@ SyncManager requires `Node.js` v8.x+ installed. Building SyncManager as library 
 // change the path if you put the project into other path
 import SyncManager from './manager/src/syncManager';
 
-SyncManager.init();
+SyncManager.init(options, () => {
+  // do your job here
+});
 ```
 
 ### Connection Lifecycle

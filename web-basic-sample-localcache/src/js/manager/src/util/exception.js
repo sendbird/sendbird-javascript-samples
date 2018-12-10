@@ -4,4 +4,7 @@ export default class SyncManagerException extends Error {
     super(message);
     this.name = 'SyncManagerException';
   }
+  static throw(err) {
+    console.error(err);
+  }
 }

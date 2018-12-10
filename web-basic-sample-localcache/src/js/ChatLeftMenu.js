@@ -6,7 +6,7 @@ import { UserList } from './components/UserList';
 import { Chat } from './Chat';
 import { Spinner } from './components/Spinner';
 
-import SyncManager from './manager/src/syncManager';
+import SyncManager from './manager/src/SyncManager';
 
 let instance = null;
 
@@ -66,6 +66,7 @@ class ChatLeftMenu {
           this.groupChannelList.removeChild(previousElement);
 
           const handler = () => {
+            channel.markAsRead();
             Chat.getInstance().render(channel.url, false);
             this.activeChannelUrl = channel.url;
           };

@@ -1,5 +1,6 @@
 
-import LocalDB from './engine/localdb.min.js';
+import SyncManager from '../SyncManager';
+import LocalDB from './engine/localdb.min';
 import { deepEqual, createId } from '../util/tools.js';
 
 let _cache = {};
@@ -51,7 +52,7 @@ export class MessageChunk {
     return this.startAt <= message.createdAt && message.createdAt <= this.endAt;
   }
   serialize() {
-    return JSON.parse(JSON.stringify(this));
+    return Object.freeze(JSON.parse(JSON.stringify(this)));
   }
   extendWithChunk(chunk) {
     this.extendForwardWithChunk(chunk);
@@ -93,134 +94,149 @@ export class MessageChunk {
  *  - endAt (integer) timestamp of the latest message in chunk
  */
 export const MessageChunkContainer = function() {
-  const _store = new LocalDB({
-    tableName: 'MessageChunk',
-    timestampColumn: 'endAt',
-    dependency: {
-      'Channel': {
-        key: 'channelUrl',
-        constraint: true
-      }
-    },
-    index: [
-      [ 'channelUrl', 'filterKey', 'endAt' ]
-    ]
-  });
-
-  const _upsertToCache = (chunk) => {
+  const _col = SyncManager.LocalDB.collection('MessageChunk');
+  const _upsertToCache = chunk => {
     _cache[chunk.chunkId] = chunk;
-    _store.setItem(chunk.chunkId, _cache[chunk.chunkId].serialize());
-    return _cache[chunk.chunkId];
+    return _col.upsert(_cache[chunk.chunkId].serialize());
   };
-  const _removeFromCache = (chunkId) => {
+  const _removeFromCache = chunkId => {
     if(_cache[chunkId]) {
       delete _cache[chunkId];
     }
-    _store.removeItem(chunkId);
+    return _col.remove(chunkId);
   };
   const _clearCache = () => {
     _cache = {};
-    _store.clear();
+    return _col.clear();
   };
 
-  this.query = (whereClause, options, callback) => {
-    _store.find({
-      condition: whereClause,
-      options: options
-    },
-    chunks => {
-      const cachedChunks = [];
-      for(let i in chunks) {
-        const chunk = MessageChunk.createFromJson(chunks[i]);
-        cachedChunks.push(_upsertToCache(chunk));
+  this.query = (whereClause, options) => {
+    return new Promise((resolve, reject) => {
+      const query = new LocalDB.Query(whereClause);
+      if(options) {
+        query.offset = options.offset || 0;
+        query.limit = options.limit || 20;
+        query.orderBy = options.orderBy || 'endAt';
+        query.desc = options.hasOwnProperty('desc') ? options.desc : true;
       }
-      callback(null, cachedChunks);
+  
+      _col.find(query)
+        .then(chunks => {
+          const cachedChunks = [];
+          for(let i in chunks) {
+            const chunk = MessageChunk.createFromJson(chunks[i]);
+            cachedChunks.push(chunk);
+            _cache[chunk.chunkId] = chunk;
+          }
+          resolve(cachedChunks);
+        })
+        .catch(reject);
     });
   };
-  this.upsert = chunk => _upsertToCache(chunk);
-  this.remove = chunkId => _removeFromCache(chunkId);
+  this.upsert = chunk => {
+    return new Promise((resolve, reject) => {
+      _upsertToCache(chunk)
+        .then(item => resolve(MessageChunk.createFromJson(item)))
+        .catch(reject);
+    });
+  };
+  this.remove = chunkId => {
+    return new Promise((resolve, reject) => {
+      _removeFromCache(chunkId)
+        .then(() => resolve(chunkId))
+        .catch(reject);
+    });
+  };
   this.clear = () => _clearCache();
 
-  this.getLatestChunkByTimestamp = (channelUrl, filter, ts, callback) => {
-    _store.findOne({
-      condition: {
+  this.getLatestChunkByTimestamp = (channelUrl, filter, ts) => {
+    return new Promise((resolve, reject) => {
+      const query = new LocalDB.Query({
         'channelUrl': channelUrl,
         'filterKey': _createFilterKey(filter),
         'startAt': { '<=': ts }
-      },
-      options: {
-        orderBy: 'endAt',
-        desc: true
-      }
-    },
-    (err, item) => {
-      const chunk = item ? MessageChunk.createFromJson(item) : null;
-      if(chunk) {
-        if(!chunk.hasDefaultFilter()) {
-          _store.findOne({
-            condition: {
-              'channelUrl': channelUrl,
-              'filterKey': _createFilterKey(MessageChunk.getDefaultFilter()),
-              'startAt': { '<=': ts }
-            },
-            options: {
-              orderBy: 'endAt',
-              desc: true
-            }
-          },
-          (err, defaultChunk) => {
-            if(!err) {
-              if(defaultChunk) {
-                if(defaultChunk.endAt > chunk.endAt) {
-                  if(defaultChunk.isOverlap(chunk)) {
-                    chunk.extendWithChunk(defaultChunk);
-                    this.upsert(chunk);
-                    callback(null, chunk);
+      });
+      query.limit = 1;
+      query.orderBy = 'endAt';
+      query.desc = true;
+  
+      _col.find(query)
+        .then(chunks => {
+          const chunk = chunks.length > 0 ? MessageChunk.createFromJson(chunks[0]) : null;
+          if(chunk) {
+            if(!chunk.hasDefaultFilter()) {
+              const query = new LocalDB.Query({
+                'channelUrl': channelUrl,
+                'filterKey': _createFilterKey(MessageChunk.getDefaultFilter()),
+                'startAt': { '<=': ts }
+              });
+              query.limit = 1;
+              query.orderBy = 'endAt';
+              query.desc = true;
+  
+              _col.find(query)
+                .then(chunks => {
+                  const defaultChunk = chunks.length > 0 ? MessageChunk.createFromJson(chunks[0]) : null;
+                  if(defaultChunk) {
+                    if(defaultChunk.endAt > chunk.endAt) {
+                      if(defaultChunk.isOverlap(chunk)) {
+                        chunk.extendWithChunk(defaultChunk);
+                        this.upsert(chunk).then(resolve).catch(reject);
+                      } else {
+                        const copiedChunk = new MessageChunk(chunk.channelUrl, chunk.filter);
+                        copiedChunk.startAt = defaultChunk.startAt;
+                        copiedChunk.endAt = defaultChunk.endAt;
+                        this.upsert(copiedChunk).then(resolve).catch(reject);
+                      }
+                    } else {
+                      resolve(chunk);
+                    }
                   } else {
-                    const copiedChunk = new MessageChunk(chunk.channelUrl, chunk.filter);
-                    copiedChunk.startAt = defaultChunk.startAt;
-                    copiedChunk.endAt = defaultChunk.endAt;
-                    this.upsert(copiedChunk);
-                    callback(null, copiedChunk);
+                    resolve(chunk);
                   }
-                } else {
-                  callback(null, chunk);
-                }
-              } else {
-                callback(null, chunk);
-              }
+                })
+                .catch(reject);
             } else {
-              callback(err, null);
+              resolve(chunk);
             }
-          });
-        } else {
-          callback(null, chunk);
-        }
-      } else {
-        callback(err, null);
-      }
+          } else {
+            resolve(null);
+          }
+        })
+        .catch(reject);
     });
   };
-  this.mergePreviousChunkOverlap = (chunk, callback) => {
-    if(!callback) callback = () => {};
-    this.query({
-      'chunkId': { '!==': chunk.chunkId },
-      'channelUrl': chunk.channelUrl,
-      'filterKey': chunk.filterKey,
-      'endAt': { '>=': chunk.startAt }
-    },
-    {
-      limit: Infinity
-    },
-    (err, chunks) => {
-      if(!err && chunks && chunks.length > 0) {
-        for(let i in chunks) {
-          chunk.extendWithChunk(chunks[i]);
-          this.remove(chunks[i].chunkId);
-        }
-        this.upsert(chunk);
-      }
-      callback(err, chunk);
+  this.mergePreviousChunkOverlap = chunk => {
+    return new Promise((resolve, reject) => {
+      const query = new LocalDB.Query({
+        'chunkId': { '!=': chunk.chunkId },
+        'channelUrl': chunk.channelUrl,
+        'filterKey': chunk.filterKey,
+        'endAt': { '>=': chunk.startAt }
+      });
+      query.limit = Infinity;
+  
+      _col.find(query)
+        .then(chunks => {
+          if(chunks.length > 0) {
+            const query = new LocalDB.Query({
+              'chunkId': {
+                '/in' : chunks.map(cnk => cnk.chunkId)
+              }
+            });
+            _col.removeIf(query)
+              .then(() => {
+                for(let i in chunks) {
+                  chunk.extendWithChunk(chunks[i]);
+                }
+                this.upsert(chunk).then(resolve).catch(reject);
+              })
+              .catch(reject);
+          } else {
+            resolve();
+          }
+        })
+        .catch(reject);
     });
   };
   return this;

@@ -7,7 +7,7 @@ import { ChatTopMenu } from './components/ChatTopMenu';
 import { ChatMain } from './components/ChatMain';
 import { Spinner } from './components/Spinner';
 
-import SyncManager from './manager/src/syncManager';
+import SyncManager from './manager/src/SyncManager';
 
 let instance = null;
 

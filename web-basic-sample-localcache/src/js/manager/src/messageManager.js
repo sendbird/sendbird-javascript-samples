@@ -1,8 +1,9 @@
 
 import MessageCollection from './collection/messageCollection';
-import { MessageContainer } from './store/messageContainer';
-import { MessageChunkContainer } from './store/chunkContainer';
+import { MessageContainer } from './store/MessageContainer';
+import { MessageChunkContainer } from './store/ChunkContainer';
 import { MessageBroadcast } from './broadcast/messageBroadcast';
+import SyncManagerException from './util/exception';
 
 let _messageManager = null;
 const _messageCollections = new WeakMap();
@@ -12,6 +13,7 @@ const _broadcast = new WeakMap();
 
 const CONNECTION_HANDLER_KEY = 'syncManager_messageManager_connectionHandler_' + new Date().getTime();
 const CHANNEL_HANDLER_KEY = 'syncManager_messageManager_channelHandler_' + new Date().getTime();
+const INITIAL_CHANGELOG_BUFFER = 15000; // ms
 
 export default class MessageManager {
   constructor(sendBird) {
@@ -45,8 +47,9 @@ export default class MessageManager {
           if(Array.isArray(collections)) {
             switch(event) {
               case 'onMessageReceived': {
-                const message = messageContainer.upsert(args[1]);
-                broadcast.upsert(message);
+                messageContainer.upsert(args[1])
+                  .then(message => broadcast.upsert(message))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
 
@@ -57,14 +60,17 @@ export default class MessageManager {
               }
 
               case 'onMessageUpdated': {
-                const message = messageContainer.upsert(args[1]);
-                broadcast.update(message);
+                messageContainer.upsert(args[1])
+                  .then(message => broadcast.update(message))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
 
               case 'onMessageDeleted': {
-                const messageId = messageContainer.remove(parseInt(args[1]));
-                broadcast.remove(messageId);
+                const messageId = parseInt(args[1]);
+                messageContainer.remove(messageId)
+                  .then(() => broadcast.remove(messageId))
+                  .catch(err => SyncManagerException.throw(err));
                 break;
               }
             }
@@ -104,13 +110,18 @@ export default class MessageManager {
     messageContainer.clear();
     chunkContainer.clear();
   }
-  syncChangeLog(channel) {
-    if(localStorage) {
-      const messageContainer = _messageContainer.get(this);
-      const broadcast = _broadcast.get(this);
+  syncChangeLog(channel, callback) {
+    const messageContainer = _messageContainer.get(this);
+    const broadcast = _broadcast.get(this);
+    const tokenKey = `last-changeLog-token-${channel.url}`;
+    if(!callback) {
+      callback = () => {};
+    }
 
-      const tokenKey = `last-changeLog-token-${channel.url}`;
-      const lastChangeLogToken = localStorage.getItem(tokenKey) || null;
+    /// FIXME: should support React Native
+    const localStorage = window.localStorage;
+    const lastChangeLogToken = localStorage.getItem(tokenKey) || null;
+    if(lastChangeLogToken) {
       channel.getMessageChangeLogsByToken(lastChangeLogToken, (result, err) => {
         if(this.sb.getErrorFirstCallback()) {
           const temp = result;
@@ -118,21 +129,64 @@ export default class MessageManager {
           err = temp;
         }
         if(!err) {
-          for(let i in result.updatedMessages) {
-            const currentMessage = messageContainer.getItem(result.updatedMessages[i].messageId);
-            const message = messageContainer.upsert(result.updatedMessages[i]);
-            const isDirty = !currentMessage || !currentMessage.isEqual(message);
-            if(isDirty) {
-              broadcast.update(message);
-            }
-          }
-          for(let i in result.deletedMessageIds) {
-            messageContainer.remove(result.deletedMessageIds[i]);
-            broadcast.remove(result.deletedMessageIds[i]);
-          }
+          result.updatedMessages.forEach(updatedMessage => {
+            messageContainer.getItem(updatedMessage.messageId)
+              .then(currentMessage => {
+                messageContainer.upsert(updatedMessage)
+                  .then(message => {
+                    const isDirty = !currentMessage || !currentMessage.isEqual(message);
+                    if(isDirty) {
+                      broadcast.update(message);
+                    }
+                  })
+                  .catch(err => SyncManagerException.throw(err));
+              });
+          });
+          result.deletedMessageIds.forEach(deletedMessageId => {
+            messageContainer.remove(deletedMessageId)
+              .then(() => broadcast.remove(deletedMessageId))
+              .catch(err => SyncManagerException.throw(err));
+          });
           localStorage.setItem(tokenKey, result.token);
           if(result.hasMore) {
-            this.syncChangeLog(channel);
+            this.syncChangeLog(channel, callback);
+          } else {
+            callback();
+          }
+        }
+      });
+    } else {
+      const ts = new Date().getTime() - INITIAL_CHANGELOG_BUFFER;
+      channel.getMessageChangeLogsByTimestamp(ts, (result, err) => {
+        if(this.sb.getErrorFirstCallback()) {
+          const temp = result;
+          result = err;
+          err = temp;
+        }
+        if(!err) {
+          result.updatedMessages.forEach(updatedMessage => {
+            messageContainer.getItem(updatedMessage.messageId)
+              .then(currentMessage => {
+                messageContainer.upsert(updatedMessage)
+                  .then(message => {
+                    const isDirty = !currentMessage || !currentMessage.isEqual(message);
+                    if(isDirty) {
+                      broadcast.update(message);
+                    }
+                  })
+                  .catch(err => SyncManagerException.throw(err));
+              });
+          });
+          result.deletedMessageIds.forEach(deletedMessageId => {
+            messageContainer.remove(deletedMessageId)
+              .then(() => broadcast.remove(deletedMessageId))
+              .catch(err => SyncManagerException.throw(err));
+          });
+          localStorage.setItem(tokenKey, result.token);
+          if(result.hasMore) {
+            this.syncChangeLog(channel, callback);
+          } else {
+            callback();
           }
         }
       });

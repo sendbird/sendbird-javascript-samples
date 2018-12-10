@@ -4,10 +4,10 @@ import SendBird from 'sendbird';
 export = SyncManager;
 export as namespace SyncManager;
 
-type GroupChannel = SendBird.SendBirdInstance.GroupChannel;
-type UserMessage = SendBird.SendBirdInstance.UserMessage;
-type FileMessage = SendBird.SendBirdInstance.FileMessage;
-type AdminMessage = SendBird.SendBirdInstance.AdminMessage;
+type GroupChannel = SendBird.GroupChannel;
+type UserMessage = SendBird.UserMessage;
+type FileMessage = SendBird.FileMessage;
+type AdminMessage = SendBird.AdminMessage;
 
 declare const SyncManager: SyncManagerStatic;
 
@@ -15,16 +15,21 @@ interface SyncManagerStatic {
   Channel: ChannelManagerStatic;
   Message: MessageManagerStatic;
   Exception: SyncManagerExceptionStatic;
+  init(callback:() => void): void;
+  init(options: object, callback:() => void): void;
+  start(): void;
+  stop(): void;
+  reset(): void;
 }
 
 // ChannelManager
 interface ChannelManagerStatic {
-  new (sb:SendBird): ChannelManager;
+  new (sb:SendBird.SendBirdInstance): ChannelManager;
   instance: ChannelManager;
 }
 interface ChannelManager {
-  createMyGroupChannelCollection(query:GroupChannelListQuery): ChannelCollection;
-  createPublicGroupChannelCollection(query:PublicGroupChannelListQuery):  ChannelCollection;
+  createMyGroupChannelCollection(query:SendBird.GroupChannelListQuery): ChannelCollection;
+  createPublicGroupChannelCollection(query:SendBird.PublicGroupChannelListQuery):  ChannelCollection;
   removeChannelCollection(collection:ChannelCollection): void;
   start(): void;
   stop(): void;
@@ -47,13 +52,13 @@ interface ChannelChangeLog {
 
 // MessageManager
 interface MessageManagerStatic {
-  new (sb:SendBird): MessageManager;
+  new (sb:SendBird.SendBirdInstance): MessageManager;
   instance: MessageManager;
 }
 interface MessageManager {
   createMessageCollection(channel:GroupChannel, filter:MessageFilter): MessageCollection;
   removeMessageCollection(collection:MessageCollection): void;
-  syncChangeLog(channel:GroupChannel): void;
+  syncChangeLog(channel:GroupChannel, callback:() => void): void;
   start(): void;
   stop(): void;
   reset(): void;

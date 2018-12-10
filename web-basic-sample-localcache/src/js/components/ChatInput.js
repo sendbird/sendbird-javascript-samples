@@ -10,6 +10,7 @@ class ChatInput {
     this.input = null;
     this.typing = null;
     this.element = this._createElement(channel);
+    this.channel._autoMarkAsRead = false;
   }
 
   _createElement(channel) {
@@ -88,9 +89,11 @@ class ChatInput {
       }
     });
     this.input.addEventListener('focusin', () => {
+      this.channel._autoMarkAsRead = true;
       inputText.style.border = '1px solid #2C2D30';
     });
     this.input.addEventListener('focusout', () => {
+      this.channel._autoMarkAsRead = false;
       inputText.style.border = '';
     });
 

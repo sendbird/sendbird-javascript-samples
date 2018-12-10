@@ -7,7 +7,7 @@ import { Spinner } from './components/Spinner';
 import { UPDATE_INTERVAL_TIME } from './const';
 import { LeftListItem } from './components/LeftListItem';
 
-import SyncManager from './manager/src/syncManager';
+import SyncManager from './manager/src/SyncManager';
 
 const sb = new SendBirdAction();
 
@@ -47,15 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
   sb
     .connect(userid, nickname)
     .then(user => {
-      SyncManager.init();
-      Spinner.remove();
-
-      chat = new Chat();
-      chatLeft = new ChatLeftMenu();
-      chatLeft.updateUserInfo(user);
-      createConnectionHandler();
-      updateGroupChannelTime();
-      chatLeft.loadGroupChannelList(true);
+      SyncManager.init(() => {
+        Spinner.remove();
+  
+        chat = new Chat();
+        chatLeft = new ChatLeftMenu();
+        chatLeft.updateUserInfo(user);
+        createConnectionHandler();
+        updateGroupChannelTime();
+        chatLeft.loadGroupChannelList(true);
+      });
     })
     .catch(() => {
       redirectToIndex('SendBird connection failed.');

@@ -175,7 +175,7 @@ export default class ChannelCollection {
     /** channel cache is only for fast-load at first
      *  disabled once latest cached channel is loaded
      */
-    if(!this.isSynced || this.channels.length === 0) {
+    if(this.channels.length === 0) {
       const channelContainer = _channelContainer.get(this);
       const sb = this.manager.sb;
       const where = {};
@@ -301,20 +301,25 @@ export default class ChannelCollection {
           desc: desc,
           offset: this.channels.length,
           limit: this.query.limit
-        },
-        callback);
+        })
+        .then(channels => callback(null, channels))
+        .catch(err => callback(err));
     } else {
       callback(null, []);
     }
   }
   loadChannels(callback) {
+    if(!callback) callback = () => {};
     if(!this.isLoading) {
       this.isLoading = true;
-      if(!callback) callback = () => {};
       this._loadChannelsFromCache((err, cachedChannels) => {
         if(cachedChannels) {
           for(let i in cachedChannels) {
-            this._addViewItem(cachedChannels[i]);
+            const index = this.channels.map(ch => ch.url).indexOf(cachedChannels[i].url);
+            const isDirty = index < 0 || !this.channels[index].isEqual(cachedChannels[i]);
+            if(isDirty) {
+              this._addViewItem(cachedChannels[i]);
+            }
           }
         }
         if(this.query.hasNext) {
@@ -329,44 +334,64 @@ export default class ChannelCollection {
             if(Array.isArray(channels)) {
               const broadcast = _broadcast.get(this);
               const channelContainer = _channelContainer.get(this);
-              for(let i in channels) {
-                const cachedChannel = channelContainer.getItem(channels[i].url);
-                const hasChannel = this.channels.map(ch => ch.url).indexOf(channels[i].url) >= 0;
-                const channel = channelContainer.upsert(channels[i]);
-                
-                const isDirty = !cachedChannel || !cachedChannel.isEqual(channel);
-                if(isDirty) {
-                  broadcast.update(channel, this);
-                }
-                if(!hasChannel || isDirty) {
-                  this._addViewItem(channel);
-                }
-              }
-              if(!this.isSynced) {
-                this.mutex.lock(unlock => {
-                  const loadedChannelUrls = channels.map(ch => ch.url);
-                  for(let i in this.channels) {
-                    if(loadedChannelUrls.indexOf(this.channels[i].url) < 0) {
-                      const taskNumber = _yieldTaskNumber.get(this)();
-                      const action = ChangeLog.Action.REMOVE;
-                      for(const key in this.handlers) {
-                        if(typeof this.handlers[key] === 'function') {
-                          this.handlers[key](new ChangeLog({
-                            taskNumber: taskNumber,
-                            action: action,
-                            item: this.channels[i]
-                          }));
+
+              const operations = [];
+              channels.forEach(channel => {
+                operations.push(new Promise((resolve, reject) => {
+                  channelContainer.getItem(channel.url)
+                    .then(cachedChannel => {
+                      const hasChannel = this.channels.map(ch => ch.url).indexOf(channel.url) >= 0;
+                      channelContainer.upsert(channel)
+                        .then(channel => {
+                          const isDirty = !cachedChannel || !cachedChannel.isEqual(channel);
+                          if(isDirty) {
+                            broadcast.update(channel, this);
+                          }
+                          if(!hasChannel || isDirty) {
+                            this._addViewItem(channel);
+                          }
+                          resolve();
+                        })
+                        .catch(reject);
+                    })
+                    .catch(reject);
+                }));
+              });
+              Promise.all(operations)
+                .then(() => {
+                  if(!this.isSynced) {
+                    this.mutex.lock(unlock => {
+                      const loadedChannelUrls = channels.map(ch => ch.url);
+                      for(let i in this.channels) {
+                        if(loadedChannelUrls.indexOf(this.channels[i].url) < 0) {
+                          const taskNumber = _yieldTaskNumber.get(this)();
+                          const action = ChangeLog.Action.REMOVE;
+                          for(const key in this.handlers) {
+                            if(typeof this.handlers[key] === 'function') {
+                              this.handlers[key](new ChangeLog({
+                                taskNumber: taskNumber,
+                                action: action,
+                                item: this.channels[i]
+                              }));
+                            }
+                          }
                         }
                       }
-                    }
+                      unlock();
+                    });
+                    this.isSynced = isSynced;
                   }
-                  unlock();
+                  this.isLoading = false;
+                  callback(null);
+                })
+                .catch(err => {
+                  this.isLoading = false;
+                  callback(err);
                 });
-                this.isSynced = isSynced;
-              }
+            } else {
+              this.isLoading = false;
+              callback(err);
             }
-            this.isLoading = false;
-            callback(err);
           });
         } else {
           this.isLoading = false;
@@ -392,13 +417,17 @@ export default class ChannelCollection {
         } else {
           this.channels.push(channel);
         }
-      } else if(currentIndex !== newIndex) {
-        action = ChangeLog.Action.MOVE;
-        this.channels.splice(currentIndex, 1);
-        if(newIndex > currentIndex) {
-          this.channels.splice(newIndex - 1, 0, channel);
+      } else {
+        if(currentIndex !== newIndex) {
+          action = ChangeLog.Action.MOVE;
+          this.channels.splice(currentIndex, 1);
+          if(newIndex > currentIndex) {
+            this.channels.splice(newIndex - 1, 0, channel);
+          } else {
+            this.channels.splice(newIndex, 0, channel);
+          }
         } else {
-          this.channels.splice(newIndex, 0, channel);
+          this.channels[currentIndex] = channel;
         }
       }
       for(const key in this.handlers) {

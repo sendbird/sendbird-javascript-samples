@@ -5,7 +5,7 @@ import { SendBirdAction } from '../SendBirdAction';
 import { MESSAGE_REQ_ID } from '../const';
 import { Spinner } from './Spinner';
 
-import SyncManager from '../manager/src/syncManager';
+import SyncManager from '../manager/src/SyncManager';
 
 class ChatBody {
   constructor(channel) {
@@ -69,6 +69,9 @@ class ChatBody {
       if(keepScrollToBottom) {
         this.scrollToBottom();
       }
+      if(this.channel._autoMarkAsRead) {
+        this.channel.markAsRead();
+      }
     });
 
     this.element.addEventListener('scroll', () => {
@@ -80,6 +83,7 @@ class ChatBody {
           if(fetchedMessageCount - currentMessageCount < this.limit) {
             this.hasNext = false;
           }
+          this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
         });
       }
     });

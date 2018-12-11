@@ -1,1 +1,1 @@
-../../../../FirebaseInstanceID/Frameworks/FirebaseInstanceID.framework/Headers/FirebaseInstanceID.h
+#import "FIRInstanceID.h"

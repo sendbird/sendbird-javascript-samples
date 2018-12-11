@@ -94,17 +94,13 @@ class Chat extends Component {
   componentDidMount() {
     this.props.initChatScreen();
     this.props.navigation.setParams({ handleHeaderLeft: this._onBackButtonPress });
-    const { channelUrl, isOpenChannel, isFromPayload } = this.props.navigation.state.params;
+    const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
     if (isOpenChannel) {
       sbGetOpenChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     } else {
       sbGetGroupChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     }
-
     BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
-    if (isFromPayload) {
-      AsyncStorage.removeItem("payload", () => {});
-    }
   }
   componentWillUnmount() {
     BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);

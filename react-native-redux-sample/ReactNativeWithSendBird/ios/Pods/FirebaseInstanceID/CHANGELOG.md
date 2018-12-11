@@ -1,3 +1,33 @@
+# 2018-10-25 -- v3.3.0
+- Fixed a crash caused by keychain operation when accessing default access group. (#1399, #1393)
+- Remove internal APIs that are no longer used.
+
+# 2018-09-25 -- v3.2.2
+- Fixed a crash caused by NSUserDefaults being called on background thread.
+
+# 2018-08-14 -- v3.2.1
+- Fixed an issue that checkin is not cached properly when app first started. (#1561)
+
+# 2018-07-31 -- v3.2.0
+- Added support for global Firebase data collection flag. (#1219)
+- Improved message tracking sent by server API.
+- Fixed an issue that InstanceID doesn't compile in app extensions, allowing its
+dependents like remote config to be working inside the app extensions.
+
+# 2018-06-19 -- v3.1.1
+- Ensure the checkin and tokens are refreshed if firebase project changed.
+- Fixed an issue that checkin should be turned off when FCM's autoInitEnabled flag is off.
+
+# 2018-06-12 -- v3.1.0
+- Added a new API to fetch InstanceID and Token with a completion handler. The completion handler returns a FIRInstanceIDResult with a instanceID and a token properties.
+- Deprecated the token method.
+- Added support to log a new customized label provided by developer.
+
+# 2018-05-08 -- v3.0.0
+- Removed deprecated method `setAPNSToken:type` defined in FIRInstanceID, please use `setAPNSToken:type` defined in FIRMessaging instead.
+- Removed deprecated enum `FIRInstanceIDAPNSTokenType` defined in FIRInstanceID, please use `FIRMessagingAPNSTokenType` defined in FIRMessaging instead.
+- Fixed an issue that FCM scheduled messages were not tracked successfully.
+
 # 2018-03-06 -- v2.0.10
 - Improved documentation on InstanceID usage for GDPR.
 - Improved the keypair handling during GCM to FCM migration. If you are migrating from GCM to FCM, we encourage you to update to this version and above.

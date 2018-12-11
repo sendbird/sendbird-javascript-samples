@@ -2,23 +2,12 @@ import React, { Component } from "react";
 import {
   Platform,
   AppState,
-  AsyncStorage,
   PushNotificationIOS
 } from "react-native";
 import { StackNavigator } from "react-navigation";
 import { Provider } from "react-redux";
-import FCM, {
-  FCMEvent,
-  NotificationType,
-  NotificationActionType,
-  RemoteNotificationResult,
-  WillPresentNotificationResult
-} from "react-native-fcm";
 import SendBird from 'sendbird';
-
-import {
-  sbRegisterPushToken
-} from './src/sendbirdActions';
+import firebase from 'react-native-firebase';
 
 import store from "./src/store";
 
@@ -55,102 +44,21 @@ const MainNavigator = StackNavigator(
     })
   }
 );
-let sb = null;
-
-function showLocalNotificationWithAction(notif) {
-  try {
-    const data = JSON.parse(notif.sendbird);
-    FCM.presentLocalNotification({
-      title: data.sender ? data.sender.name : 'SendBird',
-      body: data.message,
-      priority: "high",
-      show_in_foreground: true,
-      click_action: "com.sendbird.sample.reactnative" // for ios
-    });
-  } catch (e) {
-  }
-}
-
-// these callback will be triggered even when app is killed
-FCM.on(FCMEvent.Notification, notif => {
-  console.log('background notif', notif);
-  try {
-    const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
-    if (sendbirdNotification) {
-      AsyncStorage.setItem('payload',
-        JSON.stringify({
-          "channelType": sendbirdNotification.channel_type,
-          "channel": sendbirdNotification.channel
-        }),
-        () => { });
-      showLocalNotificationWithAction(notif);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-});
 
 export default class App extends Component {
   constructor(props) {
     super(props);
   }
   componentDidMount() {
+    const channel = new firebase.notifications.Android.Channel(
+      'com.reactnativewithsendbird.default_channel_id',
+      'React Native Redux sample',
+      firebase.notifications.Android.Importance.Max
+    )
+    .setDescription('React Native Redux sample notification channel');
+    firebase.notifications().android.createChannel(channel);
+
     console.disableYellowBox = true;
-    FCM.requestPermissions();
-    FCM.on(FCMEvent.Notification, notif => {
-      console.log('foreground notif', notif);
-      try {
-        if (Platform.OS === "ios") {
-          switch (notif._notificationType) {
-            case NotificationType.Remote:
-              notif.finish(RemoteNotificationResult.NewData);
-              break;
-
-            case NotificationType.NotificationResponse:
-              notif.finish();
-              break;
-
-            case NotificationType.WillPresent:
-              notif.finish(WillPresentNotificationResult.All);
-              break;
-          }
-        }
-        const sendbirdNotification = (typeof notif.sendbird === 'string') ? JSON.parse(notif.sendbird) : notif.sendbird;
-        if (sendbirdNotification) {
-          AsyncStorage.setItem('payload',
-            JSON.stringify({
-              "channelType": sendbirdNotification.channel_type,
-              "channel": sendbirdNotification.channel
-            }),
-            () => { });
-          showLocalNotificationWithAction(notif);
-        }
-      } catch (e) {
-        console.log(e);
-      }
-    });
-
-    FCM.on(FCMEvent.RefreshToken, token => {
-      AsyncStorage.setItem('pushToken', token);
-      sb = SendBird.getInstance();
-      AsyncStorage.getItem('user', (err, user) => {
-        if (user) {
-          this._registerPushToken(token);
-        }
-      });
-    });
-    if (Platform.OS === "ios") {
-      FCM.getAPNSToken().then(token => {
-        AsyncStorage.setItem('pushToken', token);
-        sb = SendBird.getInstance();
-        AsyncStorage.getItem('user', (err, user) => {
-          if (user) {
-            this._registerPushToken(token);
-          }
-        });
-      });
-      PushNotificationIOS.setApplicationIconBadgeNumber(0);
-    }
     console.log('app is launched');
     AppState.addEventListener("change", this._handleAppStateChange);
   }
@@ -166,11 +74,6 @@ export default class App extends Component {
     );
   }
 
-  _registerPushToken = (token) => {
-    sbRegisterPushToken(token)
-      .then(res => { })
-      .catch(err => { });
-  }
   _handleAppStateChange = (nextAppState) => {
     const sb = SendBird.getInstance();
     if (sb) {

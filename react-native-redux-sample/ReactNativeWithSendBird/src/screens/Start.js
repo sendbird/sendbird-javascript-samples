@@ -24,31 +24,7 @@ class Start extends Component {
                     sbConnect(user.userId, user.nickname)
                         .then(() => {
                             this.setState({ isLoading: false }, () => {
-                                AsyncStorage.getItem("payload", (err, result) => {
-                                    if(result) {
-                                        const notif = JSON.parse(result);
-                                        const isOpenChannel = () => {
-                                            return notif.channelType !== "group_messaging"
-                                                && notif.channelType !== "messaging";
-                                        };
-                                        const channelType = isOpenChannel() ? "OpenChannel" : "GroupChannel";
-                                        this.props.navigation.dispatch(NavigationActions.reset({
-                                            index : 2,
-                                            actions : [
-                                                NavigationActions.navigate({ routeName : "Menu" }),
-                                                NavigationActions.navigate({ routeName : channelType }),
-                                                NavigationActions.navigate({ routeName : "Chat", params : {
-                                                        channelUrl: notif.channel.channel_url,
-                                                        title: notif.channel.name,
-                                                        isOpenChannel : isOpenChannel(),
-                                                        isFromPayload : true
-                                                    }
-                                                })
-                                            ]
-                                        }));
-                                    }
-                                    else this.redirectTo("Menu");
-                                });
+                                this.redirectTo("Menu");
                             });
                         })
                         .catch((err) => {

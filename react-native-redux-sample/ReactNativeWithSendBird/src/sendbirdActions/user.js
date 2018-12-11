@@ -3,29 +3,51 @@ import {
     Platform,
     AsyncStorage
 } from 'react-native';
-import FCM, {NotificationActionType} from "react-native-fcm";
+import firebase from 'react-native-firebase';
 
 // const APP_ID = '078105E7-BD8C-43C9-A583-59E334353965'; // test
 const APP_ID = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23'; // sample
 
-export const sbRegisterPushToken = (token) => {
+export const sbRegisterPushToken = () => {
     return new Promise((resolve, reject) => {
         const sb = SendBird.getInstance();
         if(sb) {
             if(Platform.OS === 'ios') {
-                sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
-                    if(!error) {
-                        resolve();
-                    }
-                    else reject(error);
-                });
+                // WARNING! FCM token doesn't work in request to APNs.
+                // Use APNs token here instead.
+                firebase.messaging().ios.getAPNSToken()
+                    .then(token => {
+                        if(token) {
+                            sb.registerAPNSPushTokenForCurrentUser(token, (result, error) => {
+                                if(!error) {
+                                    resolve();
+                                }
+                                else reject(error);
+                            });
+                        } else {
+                            resolve();
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             } else {
-                sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
-                    if(!error) {
-                        resolve();
-                    }
-                    else reject(error);
-                });
+                firebase.messaging().getToken()
+                    .then(token => {
+                        if (token) {
+                            sb.registerGCMPushTokenForCurrentUser(token, (result, error) => {
+                                if(!error) {
+                                    resolve();
+                                }
+                                else reject(error);
+                            });
+                        } else {
+                            resolve();
+                        }
+                    })
+                    .catch(error => {
+                        reject(error);
+                    });
             }
         } else {
             reject('SendBird is not initialized');
@@ -34,17 +56,21 @@ export const sbRegisterPushToken = (token) => {
 };
 export const sbUnregisterPushToken = () => {
     return new Promise((resolve, reject) => {
-        AsyncStorage.getItem('pushToken', (err, token) => {
-            if(token) {
+        firebase.messaging().getToken()
+            .then(token => {
                 const sb = SendBird.getInstance();
                 if(sb) {
                     if(Platform.OS === 'ios') {
-                        sb.unregisterAPNSPushTokenForCurrentUser(token, (result, error) => {
-                            if(!error) {
-                                resolve();
-                            }
-                            else reject(error);
-                        });
+                        firebase.messaging().ios.getAPNSToken()
+                            .then(token => {
+                                sb.unregisterAPNSPushTokenForCurrentUser(token, (result, error) => {
+                                    if(!error) {
+                                        resolve();
+                                    }
+                                    else reject(error);
+                                });
+                            })
+                            .catch(err => reject(err));
                     } else {
                         sb.unregisterGCMPushTokenForCurrentUser(token, (result, error) => {
                             if(!error) {
@@ -56,10 +82,8 @@ export const sbUnregisterPushToken = () => {
                 } else {
                     reject('SendBird is not initialized');
                 }
-            } else {
-                resolve();
-            }
-        });
+            })
+            .catch(err => reject(err));
     });
 };
 
@@ -78,25 +102,6 @@ export const sbConnect = (userId, nickname) => {
             if (error) {
                 reject('SendBird Login Failed.');
             } else {
-                if(Platform.OS === 'ios') {
-                    FCM.getAPNSToken().then(token => {
-                        if(token) {
-                            sb.registerAPNSPushTokenForCurrentUser(token, function(result, error){
-                                console.log("registerAPNSPushTokenForCurrentUser");
-                                console.log(result);
-                            });
-                        }
-                    });
-                } else {
-                    FCM.getFCMToken().then(token => {
-                        if(token) {
-                            sb.registerGCMPushTokenForCurrentUser(token, function(result, error){
-                                console.log("registerAPNSPushTokenForCurrentUser");
-                                console.log(result);
-                            });
-                        }
-                    });
-                }
                 resolve(sbUpdateProfile(nickname));
             }
         })

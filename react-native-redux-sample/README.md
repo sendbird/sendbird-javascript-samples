@@ -6,6 +6,7 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 
 - [Node](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
+- [JAVA JDK](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
 - [Cocoapods](https://cocoapods.org/)
 - [XCode](https://developer.apple.com/xcode)
 - [XCode Command Line Tools](https://facebook.github.io/react-native/docs/getting-started.html#xcode)

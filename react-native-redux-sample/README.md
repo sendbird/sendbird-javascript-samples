@@ -32,16 +32,35 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 
 For latest details on setting up React Native to run in your environment please refer to [Building Projects with Native Code](https://facebook.github.io/react-native/docs/getting-started.html)
 
+## Compile to Android (Mac)
+
 ## Run the sample
 
-1. Install React Native CLI.
+1. Download or clone the whole SendBird JavaScript Repro.
+       
+2. Open Android Studio (This assumes you have configured Android Studio to compile React Native code) - at the prompt click "Open an existing Android project" - navigate to the project folder
 
-        npm install -g react-native-cli
-
-2. Navigate to project folder and install required packages.
+        SendBird-JavaScript/react-native-redux-sample/ReactNativeWithSendBird/
+        
+3. Open an Android Studio terminal (main Andriod Studio window - bottom left) and install packages. 
 
         npm install
         react-native link
+
+4. Launch a device emulator by opening the "AVD Manager" or attach a real device. For an emulated device make sure it is running the Oreo API Level 27 image (you can select these settings when creating a new device). 
+
+5. Make sure the emulated device is running (You should have a sample phone on your screen)
+
+5. Start up the sample code. In the terminal `react-native run-android`, and wait for the compling to complete.
+
+6. Navigate to the emulated device. 
+
+
+Note: 
+In order to run React Native sample in real device, follow [React Native official guide](https://facebook.github.io/react-native/docs/running-on-device.html) for your own setup.
+
+
+
 
 3. (iOS only) Pod install.
 

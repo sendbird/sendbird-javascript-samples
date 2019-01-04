@@ -4,13 +4,31 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 
 ## Prerequisite
 
+### Basic Requirements
+
 - [Node](https://nodejs.org/en/)
 - [NPM](https://www.npmjs.com/)
+- React Native cli - `npm install -g react-native-cli`
+
+### Compiling React Native to Android (Mac)
+
+- [Android Studio] (https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
+- [Java SDK 8] (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+### Compiling React Native to Android (Windows)
+
+- [Android Studio](https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
+- [Java SDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Python 2](https://www.howtogeek.com/197947/how-to-install-python-on-windows/)
+
+### Compiling React Native to IOS (Mac only)
+
 - [Cocoapods](https://cocoapods.org/)
 - [XCode](https://developer.apple.com/xcode)
 - [XCode Command Line Tools](https://facebook.github.io/react-native/docs/getting-started.html#xcode)
-- [Android Studio] https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
-- [Java SDK 8.1.0] (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+
+
+For latest details on setting up React Native to run in your environment please refer to [Building Projects with Native Code](https://facebook.github.io/react-native/docs/getting-started.html)
 
 ## Run the sample
 

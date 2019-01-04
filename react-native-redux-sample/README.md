@@ -10,16 +10,18 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 - [NPM](https://www.npmjs.com/)
 - React Native cli - `npm install -g react-native-cli`
 
-### Compiling React Native to Android (Mac)
+### Compiling React Native in Android Studio (Mac)
 
-- [Android Studio] (https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
-- [Java SDK 8] (https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Java SDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+- [Android Studio](https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further [configuration to run React Native](https://facebook.github.io/react-native/docs/getting-started).
 
-### Compiling React Native to Android (Windows)
 
-- [Android Studio](https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
+### Compiling React Native in Android Studio (Windows)
+
 - [Java SDK 8](https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 - [Python 2](https://www.howtogeek.com/197947/how-to-install-python-on-windows/)
+- [Android Studio](https://developer.android.com/studio/) (+Android SDK/Google API) Note: Android Studio may need further configuration to run [React Native](https://facebook.github.io/react-native/docs/getting-started).
+
 
 ### Compiling React Native to IOS (Mac only)
 

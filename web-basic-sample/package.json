@@ -27,7 +27,7 @@
     "style-loader": "^0.21.0",
     "webpack": "^4.6.0",
     "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.8"
+    "webpack-dev-server": "^3.1.11"
   },
   "dependencies": {
     "moment": "^2.22.1",

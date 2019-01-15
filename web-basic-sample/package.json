@@ -7,7 +7,8 @@
     "dev": "./node_modules/.bin/webpack --mode=development",
     "dev:w": "./node_modules/.bin/webpack --mode=none -w",
     "build": "./node_modules/.bin/webpack --mode=production",
-    "start:dev": "./node_modules/.bin/webpack-dev-server"
+    "start:dev": "./node_modules/.bin/webpack-dev-server",
+    "start": "npm run build && node server.js"
   },
   "author": "SendBird",
   "license": "ISC",

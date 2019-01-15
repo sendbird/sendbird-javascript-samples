@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 
-const PORT = 9001;
+const PORT = 9000;
 
-app.use(express.static('build'));
+app.use(express.static('dist'));
 app.use(express.static('./'));
 
 app.get('/', function(req, res) {

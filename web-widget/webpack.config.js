@@ -1,18 +1,17 @@
 var path = require('path');
 
 module.exports = {
-  context: path.resolve(__dirname + '/src'),
   entry: {
-    widget: ['babel-polyfill', './js/widget.js']
+    widget: ['babel-polyfill', './src/js/widget.js']
   },
   output: {
-    path: path.resolve(__dirname + '/build'),
+    path: path.resolve(__dirname + '/dist'),
     filename: '[name].SendBird.js',
-    publicPath: "build"
+    publicPath: "dist"
   },
   devtool: "cheap-eval-source-map",
   devServer: {
-    publicPath: '/build/',
+    publicPath: '/dist/',
     compress: true,
     port: 9000
   },
@@ -48,12 +47,7 @@ module.exports = {
       { // ES6
         test: /\.js$/,
         exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'es2015']
-          }
-        }
+        loader: 'babel-loader'
       }
     ]
   }

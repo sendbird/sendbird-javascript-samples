@@ -51,7 +51,7 @@ If you want to connect other application, you need to change variable `appId` in
 ...
 
   <script src="SendBird.min.js"></script>
-  <script src="build/widget.SendBird.js"></script>
+  <script src="dist/widget.SendBird.js"></script>
   <script>
     var appId = '<APP_ID>';
     sbWidget.start(appId);
@@ -67,7 +67,7 @@ If you want to start this sample with user connect, you can using `startWithConn
 ...
 
   <script src="SendBird.min.js"></script>
-  <script src="build/widget.SendBird.js"></script>
+  <script src="dist/widget.SendBird.js"></script>
   <script>
     var appId = '<APP_ID>';
     var userId = '<USER_ID>';
@@ -93,7 +93,7 @@ sbWidget.showChannel(channelUrl);
 
 ## File Structure
 ```
-    |-- build
+    |-- dist
         |-- widget.SendBird.js              - SendBird Widget Bundle file
     |-- node_modules
         |-- ...                             - (node packages)

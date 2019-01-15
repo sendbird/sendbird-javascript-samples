@@ -20,7 +20,7 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/liv
 3. Import the `liveChat.SendBird.js` file.
 ```javascript
 <script src="SendBird.min.js"></script>
-<script src="build/liveChat.SendBird.js"></script>
+<script src="dist/liveChat.SendBird.js"></script>
 ```
 
 
@@ -52,7 +52,7 @@ If you want to connect other application or channel, you need to change variable
 ...
 
   <script src="SendBird.min.js"></script>
-  <script src="build/liveChat.SendBird.js"></script>
+  <script src="dist/liveChat.SendBird.js"></script>
   <script>
     var appId = '<APP_ID>';
     var channelUrl = '<CHANNEL_URL>';
@@ -68,7 +68,7 @@ If you want to start this sample with user connect, you can using `startWithConn
 ```html
 ...
   <script src="SendBird.min.js"></script>
-  <script src="build/liveChat.SendBird.js"></script>
+  <script src="dist/liveChat.SendBird.js"></script>
   <script>
     var appId = '<APP_ID>';
     var userId = '<USER_ID>';
@@ -108,7 +108,7 @@ liveChat.exitChannel(function() {
 
 ## File Structure
 ```
-    |-- build
+    |-- dist
         |-- liveChat.SendBird.js            - SendBird Chat Bundle file
     |-- node_modules
         |-- ...                             - (node packages)

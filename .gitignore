@@ -3,3 +3,8 @@ web-widget/node_modules
 package-lock.json
 node_modules
 .idea
+web-basic-sample/dist
+web-basic-sample-syncmanager/dist
+web-live-chat/dist
+npm-debug.log
+web-widget/dist

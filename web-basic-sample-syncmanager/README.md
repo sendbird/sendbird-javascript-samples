@@ -60,3 +60,5 @@ When the modification is complete, you'll need to bundle the file using `webpack
 ```bash
 npm run build
 ```
+
+> The `npm start` command contains `npm run build`. Check the scripts part of the package.json file.

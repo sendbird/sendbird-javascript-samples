@@ -18,9 +18,9 @@ export default sbWidget;
 Add `library` and `libraryTarget` in `output` field of `webpack.config.js`.  
 ```javascript
   output: {
-    path: path.resolve(__dirname + '/build'),
+    path: path.resolve(__dirname + '/dist'),
     filename: '[name].SendBird.js',
-    publicPath: "build",
+    publicPath: 'dist',
     library: 'SendBirdWidget',
     libraryTarget: 'umd'
   },
@@ -29,7 +29,7 @@ Add `library` and `libraryTarget` in `output` field of `webpack.config.js`.
 ### Rebuild Widget Sample
 Rebuild widget sample using webapck.  
 ```bash
-  webpack -p
+npm run build
 ```
 
 ## React App

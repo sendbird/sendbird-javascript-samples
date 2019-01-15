@@ -20,7 +20,7 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/wid
 3. Import the `widget.SendBird.js` file.
 ```javascript
 <script src="SendBird.min.js"></script>
-<script src="build/widget.SendBird.js"></script>
+<script src="dist/widget.SendBird.js"></script>
 ```
 
 
@@ -29,19 +29,21 @@ If you refresh your browser window, you need to reconnect to SendBird. To retain
 
 If you wish to issue an `access_token` for your user, modify the `connect function` in `src/sendbird.js`.  
 
-> Require that you have Node installed.
+> Require that you have Node v8.x+ installed.
 1. Install npm
-
-        npm install
+```bash
+npm install
+```
 
 2. Modify files.
-
-        npm run start:dev
+```bash
+npm run start:dev
+```
         
 3. Start sample.
-
-        npm start
-
+```bash
+npm start
+```
 
 ## Advanced  
 ### Connect other APP or Channel  

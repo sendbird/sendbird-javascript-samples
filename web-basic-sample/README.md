@@ -14,7 +14,7 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/bas
 ## Run the sample
 1. Install packages
 
-> Require that you have Node installed.
+> Require that you have Node v8.x+ installed. 
 
 ```bash
 npm install
@@ -31,7 +31,7 @@ If you want to put some changes into the sample, you should build it using `webp
 
 1. Install packages
 
-> Require that you have Node installed.
+> Require that you have Node v8.x+ installed. 
 
 ```bash
 npm install
@@ -52,3 +52,5 @@ Please check `webpack.config.js` for settings.
 ```bash
 npm run build
 ```
+
+> The `npm start` command contains `npm run build`. Check the scripts part of the package.json file.

@@ -36,7 +36,7 @@ If you wish to issue an `access_token` for your user, modify the `connect functi
 
 2. Modify files.
 
-        npm run start-dev
+        npm run start:dev
         
 3. Start sample.
 

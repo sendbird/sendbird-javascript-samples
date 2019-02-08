@@ -1,5 +1,37 @@
 import moment from 'moment';
 
+export function findChannelIndex(newChannel, channels) {
+  const newChannelLastMessageUpdated = newChannel.lastMessage
+    ? newChannel.lastMessage.createdAt
+    : newChannel.createdAt;
+
+  let index = channels.length;
+  for(let i = 0; i < channels.length; i++) {
+    const comparedChannel = channels[i];
+    const comparedChannelLastMessageUpdated = comparedChannel.lastMessage
+      ? comparedChannel.lastMessage.createdAt
+      : comparedChannel.createdAt;
+    if(newChannel.url === comparedChannel.url) {
+      index = i;
+      break;
+    } else if(newChannelLastMessageUpdated > comparedChannelLastMessageUpdated) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+export function findMessageIndex(newMessage, messages) {
+  let index = messages.length;
+  for(let i = 0; i < messages.length; i++) {
+    if(messages[i].createdAt >= newMessage.createdAt) {
+      index = i;
+      break;
+    }
+  }
+  return index;
+}
+
 export const timestampToTime = timestamp => {
   const now = new Date().getTime();
   const nowDate = moment.unix(now.toString().length === 13 ? now / 1000 : now).format('MM/DD');
@@ -74,8 +106,10 @@ export const getVariableFromUrl = () => {
   return vars;
 };
 
-export const errorAlert = (message, reload = true) => {
-  alert(message);
+export const errorAlert = (message, reload = false) => {
+  // alert(message);
+  // eslint-disable-next-line no-console
+  console.error(message);
   if (reload) {
     location.reload(true);
   }

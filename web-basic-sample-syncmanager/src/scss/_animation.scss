@@ -7,6 +7,14 @@
   @keyframes          #{$name}  { @content; }
 }
 
+@mixin transition($options...) {
+  -webkit-transition: $options;
+  -moz-transition:    $options;
+  -ms-transition:     $options;
+  -o-transition:      $options;
+  transition:         $options;
+}
+
 @mixin transform-scale($size) {
   -webkit-transform:  scale($size);
   -moz-transform:     scale($size);

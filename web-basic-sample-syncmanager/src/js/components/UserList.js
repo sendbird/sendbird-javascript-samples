@@ -43,6 +43,7 @@ class UserList extends List {
         this.close();
       })
       .catch(error => {
+        Spinner.remove();
         errorAlert(error.message);
       });
   }
@@ -56,6 +57,7 @@ class UserList extends List {
         this.close();
       })
       .catch(error => {
+        Spinner.remove();
         errorAlert(error.message);
       });
   }
@@ -92,6 +94,7 @@ class UserList extends List {
         Spinner.remove();
       })
       .catch(error => {
+        Spinner.remove();
         errorAlert(error.message);
       });
   }

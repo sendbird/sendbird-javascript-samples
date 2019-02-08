@@ -9,13 +9,12 @@ This is full screen chat sample like Slack using [SendBird SDK](https://github.c
 
 ## SyncManager
 
-`SyncManager` is a support add-on for [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). Major benefits of `SyncManager` are,
-
- * Local cache integrated: store channel/message data in local storage for fast view loading.
- * Event-driven data handling: subscribe channel/message event like `insert`, `update`, `remove` at a single spot in order to apply data event to view.
-
-Check out [Basic Sample with SyncManager](https://github.com/smilefam/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager) which is same as [Basic Sample](https://sample.sendbird.com/basic) with `SyncManager` integrated.  
-For more information about `SyncManager`, please refer to [SyncManager README](https://github.com/smilefam/SendBird-JavaScript/blob/master/web-basic-sample-syncmanager/src/js/manager/README.md).
+`SyncManager` is a support add-on for [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). Major benefits of `SyncManager` are,  
+  
+ * Local cache integrated: store channel/message data in local storage for fast view loading.  
+ * Event-driven data handling: subscribe channel/message event like `insert`, `update`, `remove` at a single spot in order to apply data event to view.  
+  
+Check out [Basic Sample with SyncManager](https://github.com/smilefam/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager) which is similar to [Basic Sample](https://sample.sendbird.com/basic) but `SyncManager` integrated. For more information about `SyncManager`, please refer to [SyncManager README](https://github.com/smilefam/sendbird-syncmanager-javascript/blob/master/README.md).
 
 ## Demo
 You can try out a live demo from the link [here](https://sample.sendbird.com/basic/sync-manager).
@@ -60,5 +59,3 @@ When the modification is complete, you'll need to bundle the file using `webpack
 ```bash
 npm run build
 ```
-
-> The `npm start` command contains `npm run build`. Check the scripts part of the package.json file.

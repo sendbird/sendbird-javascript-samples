@@ -1,5 +1,5 @@
 import styles from '../../scss/chat-menu.scss';
-import { appendToFirst, createDivEl, errorAlert } from '../utils';
+import { appendToFirst, errorAlert, createDivEl } from '../utils';
 import { DISPLAY_FLEX, DISPLAY_NONE } from '../const';
 import { Spinner } from './Spinner';
 import { ChatUserItem } from './ChatUserItem';

@@ -31,6 +31,7 @@ class UserBlockModal extends Modal {
           this.close();
         })
         .catch(error => {
+          Spinner.remove();
           errorAlert(error.message);
         });
     };

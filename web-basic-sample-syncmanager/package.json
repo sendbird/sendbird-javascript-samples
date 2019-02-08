@@ -1,6 +1,6 @@
 {
   "name": "Sample-JS-Web-Basic-SyncManager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "SendBird Web Basic Sample using SyncManager",
   "main": "index.js",
   "scripts": {
@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "moment": "^2.22.1",
-    "sendbird": "^3.0.91"
+    "sendbird": "^3.0.93",
+    "sendbird-syncmanager": "^1.0.0"
   }
 }

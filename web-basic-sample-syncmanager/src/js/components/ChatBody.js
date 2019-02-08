@@ -1,11 +1,10 @@
 import styles from '../../scss/chat-body.scss';
-import { createDivEl, getDataInElement, removeClass } from '../utils';
+import { createDivEl, getDataInElement, removeClass, findMessageIndex } from '../utils';
 import { Message } from './Message';
 import { SendBirdAction } from '../SendBirdAction';
 import { MESSAGE_REQ_ID } from '../const';
-import { Spinner } from './Spinner';
 
-import SyncManager from '../manager/src/SyncManager';
+import SendBirdSyncManager from 'sendbird-syncmanager';
 
 class ChatBody {
   constructor(channel) {
@@ -14,25 +13,24 @@ class ChatBody {
     this.scrollHeight = 0;
     this.collection = null;
     this.limit = 50;
-    this.hasNext = true;
     this.element = createDivEl({ className: styles['chat-body'] });
     this._initElement();
   }
   
   _initElement() {
-    const sendbirdAction = SendBirdAction.getInstance();
-    const manager = new SyncManager.Message(sendbirdAction.sb);
     if(this.collection) {
-      manager.removeMessageCollection(this.collection);
+      this.collection.remove();
     }
-    this.collection = manager.createMessageCollection(this.channel, { limit: this.limit });
-    this.collection.subscribe('chat_body_message', changeLog => {
+    this.collection = new SendBirdSyncManager.MessageCollection(this.channel, { limit: this.limit });
+    this.collection.limit = this.limit;
+
+    const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
+    collectionHandler.onMessageEvent = (action, message) => {
       const messageElements = this.element.querySelectorAll('.chat-message');
-      const message = changeLog.item;
       const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
-      switch(changeLog.action) {
+      switch(action) {
         case 'insert': {
-          const index = this.collection.findIndex(message, this.collection.messages);
+          const index = findMessageIndex(message, this.collection.messages);
           if(index >= 0) {
             const messageItem = new Message({ channel: this.channel, message });
             if(index === this.collection.messages.length) {
@@ -56,7 +54,11 @@ class ChatBody {
           break;
         }
         case 'remove': {
-          this.removeMessage(message.messageId);
+          if(message.messageId) {
+            this.removeMessage(message.messageId);
+          } else {
+            this.removeMessage(message.reqId, true);
+          }
           break;
         }
         case 'clear': {
@@ -69,20 +71,13 @@ class ChatBody {
       if(keepScrollToBottom) {
         this.scrollToBottom();
       }
-      if(this.channel._autoMarkAsRead) {
-        this.channel.markAsRead();
-      }
-    });
+    };
+    this.collection.setCollectionHandler(collectionHandler);
 
     this.element.addEventListener('scroll', () => {
-      if (this.element.scrollTop === 0 && this.hasNext) {
-        const currentMessageCount = this.collection.messages.length;
+      if (this.element.scrollTop === 0) {
         this.updateCurrentScrollHeight();
-        this.loadPreviousMessages(() => {
-          const fetchedMessageCount = this.collection.messages.length;
-          if(fetchedMessageCount - currentMessageCount < this.limit) {
-            this.hasNext = false;
-          }
+        this.collection.fetch('prev', () => {
           this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
         });
       }
@@ -90,9 +85,7 @@ class ChatBody {
   }
 
   loadPreviousMessages(callback) {
-    Spinner.start(this.element);
-    this.collection.loadPreviousMessages(() => {
-      Spinner.remove();
+    this.collection.fetch('prev', () => {
       if(callback) callback();
     });
   }

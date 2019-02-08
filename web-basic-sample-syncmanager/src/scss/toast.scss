@@ -1,0 +1,21 @@
+@import 'variables';
+@import 'animation';
+
+.sb-toast {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+
+  .sb-toast-message {
+    color: $color-white;
+    display:inline-block;
+    font-size: 14px;
+    padding:10px 15px;
+    margin-top:20px;
+    border-radius:5px;
+    background-color: $color-purple-dark;
+  }
+}
+

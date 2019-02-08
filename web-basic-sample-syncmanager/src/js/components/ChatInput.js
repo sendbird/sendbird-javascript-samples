@@ -10,7 +10,6 @@ class ChatInput {
     this.input = null;
     this.typing = null;
     this.element = this._createElement(channel);
-    this.channel._autoMarkAsRead = false;
   }
 
   _createElement(channel) {
@@ -35,18 +34,18 @@ class ChatInput {
     fileInput.addEventListener('change', () => {
       const sendFile = fileInput.files[0];
       if (sendFile) {
-        const tempMessage = SendBirdAction.getInstance().sendFileMessage({
+        const previewMessage = SendBirdAction.getInstance().sendFileMessage({
           channel: this.channel,
           file: sendFile,
           handler: (message, error) => {
-            error
-              ? chat.main.body.removeMessage(message.reqId, true)
-              : chat.main.body.collection.appendMyMessage(message);
+            if(!error) {
+              chat.main.body.collection.appendMessage(message);
+            }
             chat.main.body.scrollToBottom();
           }
         });
-        tempMessage.createdAt = new Date().getTime();
-        chat.main.body.collection.appendMyMessage(tempMessage);
+        previewMessage.createdAt = new Date().getTime();
+        chat.main.body.collection.appendMessage(previewMessage);
       }
     });
 
@@ -68,17 +67,17 @@ class ChatInput {
           const message = this.input.value;
           this.input.value = '';
           if (message) {
-            const tempMessage = SendBirdAction.getInstance().sendUserMessage({
+            const previewMessage = SendBirdAction.getInstance().sendUserMessage({
               channel: this.channel,
               message,
               handler: (message, error) => {
-                error
-                  ? chat.main.body.removeMessage(tempMessage.reqId, true)
-                  : chat.main.body.collection.appendMyMessage(message);
+                if(!error) {
+                  chat.main.body.collection.appendMessage(message);
+                }
                 chat.main.body.scrollToBottom();
               }
             });
-            chat.main.body.collection.appendMyMessage(tempMessage);
+            chat.main.body.collection.appendMessage(previewMessage);
             channel.endTyping();
           }
         } else {
@@ -89,11 +88,9 @@ class ChatInput {
       }
     });
     this.input.addEventListener('focusin', () => {
-      this.channel._autoMarkAsRead = true;
       inputText.style.border = '1px solid #2C2D30';
     });
     this.input.addEventListener('focusout', () => {
-      this.channel._autoMarkAsRead = false;
       inputText.style.border = '';
     });
 

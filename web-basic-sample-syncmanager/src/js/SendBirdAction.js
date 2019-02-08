@@ -6,6 +6,7 @@ import {
 } from './utils';
 
 import SendBird from 'sendbird';
+import SendBirdSyncManager from 'sendbird-syncmanager';
 
 let instance = null;
 
@@ -78,7 +79,8 @@ class SendBirdAction {
   }
 
   isCurrentUser(user) {
-    return user.userId === this.sb.currentUser.userId;
+    const manager = SendBirdSyncManager.getInstance();
+    return user.userId === manager.currentUserId;
   }
 
   getBlockedList(isInit = false) {
@@ -219,7 +221,7 @@ class SendBirdAction {
 
   getReadReceipt(channel, message) {
     if (this.isCurrentUser(message.sender)) {
-      return channel.getReadReceipt(message);
+      return this.sb.currentUser ? channel.getReadReceipt(message) : 0;
     } else {
       return 0;
     }

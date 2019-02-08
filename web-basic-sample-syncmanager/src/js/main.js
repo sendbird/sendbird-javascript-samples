@@ -3,11 +3,11 @@ import { SendBirdAction } from './SendBirdAction';
 import { SendBirdConnection } from './SendBirdConnection';
 import { ChatLeftMenu } from './ChatLeftMenu';
 import { Chat } from './Chat';
-import { Spinner } from './components/Spinner';
 import { UPDATE_INTERVAL_TIME } from './const';
 import { LeftListItem } from './components/LeftListItem';
 
-import SyncManager from './manager/src/SyncManager';
+import SendBirdSyncManager from 'sendbird-syncmanager';
+import { Toast } from './components/Toast';
 
 const sb = new SendBirdAction();
 
@@ -15,20 +15,20 @@ let chat = null;
 let chatLeft = null;
 
 const createConnectionHandler = () => {
+  const manager = SendBirdSyncManager.getInstance();
   const connectionManager = new SendBirdConnection();
   connectionManager.onReconnectStarted = () => {
-    Spinner.start(document.body);
+    Toast.start(document.body, 'Connection is lost. Trying to reconnect...');
+    manager.pauseSync();
     connectionManager.channel = chat.channel;
   };
   connectionManager.onReconnectSucceeded = () => {
-    chatLeft.clear();
     chatLeft.updateUserInfo(SendBirdAction.getInstance().getCurrentUser());
-    Spinner.remove();
+    Toast.remove();
+    manager.resumeSync();
   };
   connectionManager.onReconnectFailed = () => {
     connectionManager.remove();
-    Spinner.remove();
-    redirectToIndex('SendBird Reconnect Failed...');
   };
 };
 
@@ -39,26 +39,27 @@ const updateGroupChannelTime = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-  Spinner.start(document.body);
   const { userid, nickname } = getVariableFromUrl();
   if (isEmpty(userid) || isEmpty(nickname)) {
     redirectToIndex('UserID and Nickname must be required.');
   }
-  sb
-    .connect(userid, nickname)
-    .then(user => {
-      SyncManager.init(() => {
-        Spinner.remove();
   
-        chat = new Chat();
-        chatLeft = new ChatLeftMenu();
+  SendBirdSyncManager.sendBird = sb.sb;
+  SendBirdSyncManager.setup(userid, () => {
+    chat = new Chat();
+    chatLeft = new ChatLeftMenu();
+    updateGroupChannelTime();
+    chatLeft.loadGroupChannelList(true);
+
+    sb
+      .connect(userid, nickname)
+      .then(user => {
         chatLeft.updateUserInfo(user);
         createConnectionHandler();
-        updateGroupChannelTime();
-        chatLeft.loadGroupChannelList(true);
+      })
+      .catch(() => {
+        Toast.start(document.body, 'Connection is not established.');
       });
-    })
-    .catch(() => {
-      redirectToIndex('SendBird connection failed.');
-    });
+  });
+
 });

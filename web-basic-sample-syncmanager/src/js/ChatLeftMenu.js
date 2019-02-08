@@ -1,12 +1,11 @@
 import { LeftListItem } from './components/LeftListItem';
 import { ACTIVE_CLASSNAME, DISPLAY_BLOCK, DISPLAY_NONE } from './const';
-import { addClass, isScrollBottom, isUrl, protectFromXSS, removeClass } from './utils';
+import { addClass, isScrollBottom, isUrl, protectFromXSS, removeClass, findChannelIndex } from './utils';
 import { SendBirdAction } from './SendBirdAction';
 import { UserList } from './components/UserList';
 import { Chat } from './Chat';
-import { Spinner } from './components/Spinner';
 
-import SyncManager from './manager/src/SyncManager';
+import SendBirdSyncManager from 'sendbird-syncmanager';
 
 let instance = null;
 
@@ -23,15 +22,14 @@ class ChatLeftMenu {
     query.includeEmpty = false;
     query.order = 'latest_last_message';
 
-    const manager = new SyncManager.Channel(action.sb);
-    this.channelCollection = manager.createMyGroupChannelCollection(query);
-    this.channelCollection.subscribe('chat_left_menu_group_channel', changeLog => {
-      const channel = changeLog.item;
-      switch(changeLog.action) {
+    this.channelCollection = new SendBirdSyncManager.ChannelCollection(query);
+    const collectionHandler = new SendBirdSyncManager.ChannelCollection.CollectionHandler();
+    collectionHandler.onChannelEvent = (action, channel) => {
+      switch(action) {
         case 'insert': {
-          const index = this.channelCollection.findIndex(channel, this.channelCollection.channels);
+          const index = findChannelIndex(channel, this.channelCollection.channels);
           const handler = () => {
-            Chat.getInstance().render(channel.url, false);
+            Chat.getInstance().render(channel, false);
             this.activeChannelUrl = channel.url;
           };
           const item = new LeftListItem({ channel, handler });
@@ -50,7 +48,7 @@ class ChatLeftMenu {
         case 'update': {
           const item = this.getItem(channel.url);
           const handler = () => {
-            Chat.getInstance().render(channel.url, false);
+            Chat.getInstance().render(channel, false);
             this.activeChannelUrl = channel.url;
           };
           const newItem = new LeftListItem({ channel, handler });
@@ -67,11 +65,11 @@ class ChatLeftMenu {
 
           const handler = () => {
             channel.markAsRead();
-            Chat.getInstance().render(channel.url, false);
+            Chat.getInstance().render(channel, false);
             this.activeChannelUrl = channel.url;
           };
           const newItem = new LeftListItem({ channel, handler });
-          const index = this.channelCollection.findIndex(channel, this.channelCollection.channels);
+          const index = findChannelIndex(channel, this.channelCollection.channels);
           if(index < this.groupChannelList.childNodes.length - 1) {
             this.groupChannelList.insertBefore(newItem.element, this.groupChannelList.childNodes[index]);
           } else {
@@ -106,7 +104,8 @@ class ChatLeftMenu {
           break;
         }
       }
-    });
+    };
+    this.channelCollection.setCollectionHandler(collectionHandler);
 
     this.groupChannelList = document.getElementById('group_list');
     this.groupChannelList.addEventListener('scroll', () => {
@@ -134,9 +133,7 @@ class ChatLeftMenu {
   }
 
   loadGroupChannelList() {
-    Spinner.start(document.body);
-    this.channelCollection.loadChannels(() => {
-      Spinner.remove();
+    this.channelCollection.fetch(() => {
       this.toggleGroupChannelDefaultItem();
     });
   }

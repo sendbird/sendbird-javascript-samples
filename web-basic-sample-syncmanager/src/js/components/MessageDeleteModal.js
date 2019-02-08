@@ -3,7 +3,6 @@ import { createDivEl, errorAlert, protectFromXSS } from '../utils';
 import { SendBirdAction } from '../SendBirdAction';
 import { Spinner } from './Spinner';
 import { Modal } from './Modal';
-import { Chat } from '../Chat';
 
 const title = 'Delete Message';
 const description = 'Are you Sure? Do you want to delete message?';
@@ -22,12 +21,9 @@ class MessageDeleteModal extends Modal {
         .then(() => {
           Spinner.remove();
           this.close();
-
-          const chat = Chat.getInstance();
-          chat.main.body.collection.removeMyMessage(this.message);
-          // chat.main.removeMessage(this.message.messageId);
         })
         .catch(error => {
+          Spinner.remove();
           errorAlert(error.message);
         });
     };

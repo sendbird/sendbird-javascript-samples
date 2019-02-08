@@ -1,13 +1,10 @@
 import styles from '../scss/chat.scss';
-import { createDivEl, errorAlert } from './utils';
+import { createDivEl } from './utils';
 import { SendBirdAction } from './SendBirdAction';
 import { SendBirdChatEvent } from './SendBirdChatEvent';
 import { ChatLeftMenu } from './ChatLeftMenu';
 import { ChatTopMenu } from './components/ChatTopMenu';
 import { ChatMain } from './components/ChatMain';
-import { Spinner } from './components/Spinner';
-
-import SyncManager from './manager/src/SyncManager';
 
 let instance = null;
 
@@ -66,9 +63,7 @@ class Chat {
 
     /// reset manager when ChatMain is obsolete
     if(this.main && this.main.body && this.main.body.collection) {
-      const sendbirdAction = SendBirdAction.getInstance();
-      const manager = new SyncManager.Message(sendbirdAction.sb);
-      manager.removeMessageCollection(this.main.body.collection);
+      this.main.body.collection.remove();
     }
     this.main = new ChatMain(channel);
   }
@@ -82,24 +77,28 @@ class Chat {
     };
   }
 
-  _renderChatElement(channelUrl) {
-    Spinner.start(document.querySelector('.body-center'));
+  _renderChatElement(channel) {
     const sendbirdAction = SendBirdAction.getInstance();
     this._removeEmptyElement();
     this._removeChatElement();
-    ChatLeftMenu.getInstance().activeChannelItem(channelUrl);
+    this.channel = channel;
+
+    ChatLeftMenu.getInstance().activeChannelItem(channel.url);
+    this._addEventHandler();
+    
     sendbirdAction
-      .getChannel(channelUrl)
+      .getChannel(channel.url)
       .then(channel => {
-        this.channel = channel;
-        this._addEventHandler();
-        this._createChatElement(this.channel);
-        this.body.appendChild(this.element);
-        this.main.loadInitialMessages();
-      })
-      .catch(error => {
-        errorAlert(error.message);
-      });
+          this.channel = channel;
+          this._createChatElement(this.channel);
+          this.body.appendChild(this.element);
+          this.main.loadInitialMessages();
+        })
+        .catch(() => {
+          this._createChatElement(this.channel);
+          this.body.appendChild(this.element);
+          this.main.loadInitialMessages();
+        });
   }
 
   _removeChatElement() {
@@ -120,8 +119,8 @@ class Chat {
     }
   }
 
-  render(channelUrl) {
-    channelUrl ? this._renderChatElement(channelUrl) : this.renderEmptyElement();
+  render(channel) {
+    channel ? this._renderChatElement(channel) : this.renderEmptyElement();
   }
 
   refresh(channel) {
@@ -130,7 +129,7 @@ class Chat {
     this.renderEmptyElement();
     const reconnectChannel = channel ? channel : this.channel;
     if (reconnectChannel) {
-      this.render(reconnectChannel.url);
+      this.render(reconnectChannel);
     }
   }
 

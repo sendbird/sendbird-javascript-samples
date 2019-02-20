@@ -29,21 +29,17 @@ class Login extends Component {
     componentWillReceiveProps(props) {
         let { user, error } = props;
         if (user) {
-            AsyncStorage.getItem('pushToken', (err, pushToken) => {
-                if(pushToken) {
-                    sbRegisterPushToken(pushToken)
-                        .then(res => {})
-                        .catch(err => {});
-                }
-                const resetAction = NavigationActions.reset({
-                    index: 0,
-                    actions: [
-                        NavigationActions.navigate({ routeName: 'Menu' })
-                    ]
-                });
-                this.setState({ userId: '', nickname: '', isLoading: false }, () => {
-                    this.props.navigation.dispatch(resetAction);
-                });
+            sbRegisterPushToken()
+                .then(res => {})
+                .catch(err => {});
+            const resetAction = NavigationActions.reset({
+                index: 0,
+                actions: [
+                    NavigationActions.navigate({ routeName: 'Menu' })
+                ]
+            });
+            this.setState({ userId: '', nickname: '', isLoading: false }, () => {
+                this.props.navigation.dispatch(resetAction);
             });
         }
 

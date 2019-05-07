@@ -1,0 +1,119 @@
+{
+  "project_info": {
+    "project_number": "45411407729",
+    "firebase_url": "https://yrdy-1078.firebaseio.com",
+    "project_id": "yrdy-1078",
+    "storage_bucket": "yrdy-1078.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45411407729:android:3819434297699ac5",
+        "android_client_info": {
+          "package_name": "com.reactnativesyncmanagersample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAth1oIDq8leNpjJwTc6SjgnsuikF-gKLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "45411407729-69k100s1mj7sieui5c4ik60si88sp8rt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.reactnativesyncmanagersample"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45411407729:android:f78fa0e5edf2bb5f",
+        "android_client_info": {
+          "package_name": "com.reactnativewithsendbird"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAth1oIDq8leNpjJwTc6SjgnsuikF-gKLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "45411407729-69k100s1mj7sieui5c4ik60si88sp8rt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.reactnativesyncmanagersample"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:45411407729:android:b9a987405c2bcd84",
+        "android_client_info": {
+          "package_name": "com.sendbird.solutionsengineeringtest"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAth1oIDq8leNpjJwTc6SjgnsuikF-gKLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "45411407729-b5dv50f6q3uhrmef6u1bdp0m9o8gdj97.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "45411407729-69k100s1mj7sieui5c4ik60si88sp8rt.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.reactnativesyncmanagersample"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

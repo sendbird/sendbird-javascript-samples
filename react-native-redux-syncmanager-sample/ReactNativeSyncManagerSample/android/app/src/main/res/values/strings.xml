@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ReactNativeSyncManagerSample</string>
+    <string name="default_notification_channel_id">com.reactnativesyncmanagersample.default_channel_id</string>
+</resources>

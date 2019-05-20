@@ -21,6 +21,7 @@ import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, 
 import { BarIndicator } from "react-native-indicators";
 import ImagePicker from "react-native-image-picker";
 import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbMarkAsRead } from "../sendbirdActions";
+import appStateChangeHandler from '../appStateChangeHandler'
 
 class Chat extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -92,18 +93,29 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    this.props.initChatScreen();
+    this.willFocusSubsription = this.props.navigation.addListener('willFocus', () => {
+      this._init()
+    })
+    this.appStateHandler = appStateChangeHandler.getInstance().addCallback('CHAT', () => {
+      this._init()
+    })
     this.props.navigation.setParams({ handleHeaderLeft: this._onBackButtonPress });
+    BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
+  }
+  componentWillUnmount() {
+    this.appStateHandler()
+    this.willFocusSubsription.remove()
+    BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
+  }
+
+  _init = () => {
+    this.props.initChatScreen();
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
     if (isOpenChannel) {
       sbGetOpenChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     } else {
       sbGetGroupChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     }
-    BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
-  }
-  componentWillUnmount() {
-    BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
   }
 
   _componentInit = () => {

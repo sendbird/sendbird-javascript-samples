@@ -23,6 +23,7 @@ import {
     sbUnixTimestampToDate, 
     sbGetChannelTitle 
 } from '../sendbirdActions';
+import appStateChangeHandler from '../appStateChangeHandler'
 
 class GroupChannel extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -59,7 +60,17 @@ class GroupChannel extends Component {
     }
 
     componentDidMount() {
-        this._initGroupChannelList();
+        this.willFocusSubsription = this.props.navigation.addListener('willFocus', () => {
+            this._initGroupChannelList()
+        })
+        this.appStateHandler = appStateChangeHandler.getInstance().addCallback('GROUP_CHANNEL', () => {
+            this._initGroupChannelList()
+        })
+    }
+
+    componentWillUnmount () {
+        this.willFocusSubsription.remove()
+        this.appStateHandler()
     }
 
     componentWillReceiveProps(props) {

@@ -21,6 +21,7 @@
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:jsCodeLocation.host];
 
   [FIRApp configure];
   [RNFirebaseNotifications configure];

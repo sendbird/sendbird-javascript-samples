@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, AsyncStorage } from 'react-native';
 import { connect } from 'react-redux';
-import { NavigationActions } from 'react-navigation';
+import { NavigationActions, StackActions } from 'react-navigation';
 import {
     sbConnect,
     sbGetChannelTitle
@@ -38,7 +38,7 @@ class Start extends Component {
         });
     }
     redirectTo(page, params) {
-        this.props.navigation.dispatch(NavigationActions.reset({
+        this.props.navigation.dispatch(StackActions.reset({
             index : 0,
             actions : [
                 NavigationActions.navigate({ routeName : page, params : params })

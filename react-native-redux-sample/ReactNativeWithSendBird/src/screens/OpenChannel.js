@@ -16,6 +16,7 @@ import {
     Spinner
 } from '../components';
 import { sbCreateOpenChannelListQuery } from '../sendbirdActions';
+import appStateChangeHandler from '../appStateChangeHandler'
 
 class OpenChannel extends Component {
     static navigationOptions = ({ navigation }) => {
@@ -53,7 +54,17 @@ class OpenChannel extends Component {
     }
 
     componentDidMount() {
-        this._initOpenChannelList();
+        this.willFocusSubsription = this.props.navigation.addListener('willFocus', () => {
+            this._initOpenChannelList()
+        })
+        this.appStateHandler = appStateChangeHandler.getInstance().addCallback('OPEN_CHANNEL', () => {
+            this._initOpenChannelList()
+        })
+    }
+
+    componentWillUnmount () {
+        this.appStateHandler()
+        this.willFocusSubsription.remove()
     }
 
     componentWillReceiveProps(props) {

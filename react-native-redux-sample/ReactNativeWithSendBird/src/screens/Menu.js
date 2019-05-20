@@ -12,7 +12,7 @@ import {
     sbRegisterPushToken,
     sbUnregisterPushToken
   } from '../sendbirdActions';
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
 import { Button, HR, Spinner } from '../components';
 
 class Menu extends Component {
@@ -62,7 +62,7 @@ class Menu extends Component {
                                     && payload.channel_type !== "messaging";
                             };
                             const channelType = isOpenChannel() ? "OpenChannel" : "GroupChannel";
-                            this.props.navigation.dispatch(NavigationActions.reset({
+                            this.props.navigation.dispatch(StackActions.reset({
                                 index : 2,
                                 actions : [
                                     NavigationActions.navigate({ routeName : 'Menu' }),
@@ -110,7 +110,7 @@ class Menu extends Component {
     componentWillReceiveProps(props) {
         AsyncStorage.getItem("user", (err, result) => {
             if(!result) {
-                const resetAction = NavigationActions.reset({
+                const resetAction = StackActions.reset({
                     index: 0,
                     actions: [
                         NavigationActions.navigate({ routeName: 'Login' })
@@ -122,18 +122,14 @@ class Menu extends Component {
     }
 
     redirectTo(page, params) {
-        this.props.navigation.dispatch(NavigationActions.reset({
+        this.props.navigation.dispatch(StackActions.reset({
             index : 0,
             actions : [
                 NavigationActions.navigate({ routeName : page, params : params })
             ]
         }));
     }
-    _registerPushToken = (token) => {
-        sbRegisterPushToken(token)
-          .then(res => { })
-          .catch(err => { });
-    }
+
     _onProfileButtonPress = () => {
         this.props.navigation.navigate('Profile');
     }

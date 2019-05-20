@@ -20,7 +20,6 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 2. Install required packages.
 
         npm install
-        react-native link
 
 3. (iOS only) Pod install.
 
@@ -31,7 +30,10 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/smilefam/Se
 
 - Open XCode and load workspace
 - Right click to 'Libraries' > Add Files to "Project Name" > select `node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj`
+- Right click to 'Libraries' > Add Files to "Project Name" > select `node_modules/react-native-gesture-handler/ios/RNGestureHandler.xcodeproj`
 - Project Settings > Build Phases > Link Binary With Libraries > Add `libRCTPushNotification.a`
+- Project Settings > Build Phases > Link Binary With Libraries > Add `libRNGestureHandler.a`
+- Project Settings > Build Phases > Link Binary With Libraries > Add `JavaScriptCore.framework`
 
 5. Run the sample. Before starting, you should launch device amulator (or actual device) to run the sample in Android. This sample is not available for real device in iOS due to Apple Development Policy. In order to run React Native sample in real device, follow [React Native official guide](https://facebook.github.io/react-native/docs/running-on-device.html) for your own setup.
 

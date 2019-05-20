@@ -5,8 +5,9 @@ import { initLogin, sendbirdLogin } from '../actions'
 import {
     sbRegisterPushToken
   } from '../sendbirdActions';
-import { NavigationActions } from 'react-navigation'
+import { NavigationActions, StackActions } from 'react-navigation'
 import { Button, Spinner } from '../components';
+import firebase from "react-native-firebase";
 
 class Login extends Component {
     static navigationOptions = {
@@ -29,13 +30,13 @@ class Login extends Component {
     componentWillReceiveProps(props) {
         let { user, error } = props;
         if (user) {
-            AsyncStorage.getItem('pushToken', (err, pushToken) => {
+            firebase.messaging().getToken().then((pushToken) => {
                 if(pushToken) {
                     sbRegisterPushToken(pushToken)
                         .then(res => {})
                         .catch(err => {});
                 }
-                const resetAction = NavigationActions.reset({
+                const resetAction = StackActions.reset({
                     index: 0,
                     actions: [
                         NavigationActions.navigate({ routeName: 'Menu' })
@@ -44,7 +45,7 @@ class Login extends Component {
                 this.setState({ userId: '', nickname: '', isLoading: false }, () => {
                     this.props.navigation.dispatch(resetAction);
                 });
-            });
+            })
         }
 
         if (error) {
@@ -140,8 +141,8 @@ const styles = {
         flex: 1
     },
     logoViewStyle: {
-        marginTop: 80,
-        marginBottom: 20,
+        marginTop: 35,
+        marginBottom: 5,
         alignItems: 'center'
     },
     logoTextTitle: {

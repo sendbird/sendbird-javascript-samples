@@ -2,22 +2,27 @@
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
-	headerRightContainer: {
-		flexDirection: "row"
+	headerLeftContainer: {
+		flexDirection: "row",
+		paddingLeft: 10
 	},
-	headerRightMemberContainer: {
+	headerLeftItemContainer: {
 		marginLeft: 0,
 		marginRight: 0
 	},
-	headerRightMember: {
+	headerLeftItem: {
 		backgroundColor: 'transparent',
 		paddingHorizontal: 10
 	},
-	headerRightLeaveContainer: {
-		marginLeft: 0,
-		marginRight: 10
+	headerRightContainer: {
+		flexDirection: "row",
+		paddingRight: 10
 	},
-	headerRightLeave: {
+	headerRightItemContainer: {
+		marginLeft: 0,
+		marginRight: 0
+	},
+	headerRightItem: {
 		backgroundColor: 'transparent',
 		paddingHorizontal: 10
 	},

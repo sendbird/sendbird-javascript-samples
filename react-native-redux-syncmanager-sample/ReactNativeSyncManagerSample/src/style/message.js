@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
   container: {
-    marginVertical: 3,
+    paddingTop: 5,
     transform: [{ scaleY: -1 }]
   },
   messageTextContainer: {
@@ -44,13 +44,13 @@ export const style = StyleSheet.create({
   },
   normalMessageContainer: {
     justifyContent: 'flex-start',
-    paddingHorizontal: 14
+    paddingHorizontal: 10
   },
   adminMessageContainer: {
     padding: 8,
-    marginTop: 0,
-    marginBottom: 12,
     backgroundColor: '#e6e9f0'
+  },
+  createdAtContainer: {
   },
   createdAt: {
     fontSize: 10,

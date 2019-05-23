@@ -3,6 +3,7 @@ import React from 'react';
 import {
   Image,
   Text,
+  TouchableOpacity,
   View
 } from 'react-native';
 import {
@@ -49,25 +50,27 @@ export default class MessageView extends React.Component {
     this._isMounted = false;
   }
   render() {
+    const channel = this.props.channel;
+    const message = this.props.message;
     const isMyMessage = SendBird.getInstance().currentUser
-      && this.props.message.sender
-      && SendBird.getInstance().currentUser.userId === this.props.message.sender.userId;
-    const isPreviousMessageSentBySameUser = !!this.props.message._isPreviousMessageSentBySameUser;
-    const readReceipt = this.props.channel.getReadReceipt(this.props.message);
+      && message.sender
+      && SendBird.getInstance().currentUser.userId === message.sender.userId;
+    const isPreviousMessageSentBySameUser = !!message._isPreviousMessageSentBySameUser;
+    const readReceipt = channel.getReadReceipt(message);
 
     const direction = isMyMessage ? 'row-reverse' : 'row';
     const bubbleColor = isMyMessage ? '#5f3dc4' : '#e6e6e6';
     const textColor = isMyMessage ? '#fff' : '#333';
 
     let content = null;
-    if(this.props.message.isUserMessage()) {
+    if(message.isUserMessage()) {
       content = <View style={{
         backgroundColor: bubbleColor,
         ...style.messageTextContainer
         }}>
-        <Text style={{ color: textColor, ...style.messageText }}>{this.props.message.message}</Text>
+        <Text style={{ color: textColor, ...style.messageText }}>{message.message}</Text>
       </View>;
-    } else if(this.props.message.isFileMessage()) {
+    } else if(message.isFileMessage()) {
       if(isImage(this.props)) {
         content = <View style={{
           ...style.imageContainer
@@ -79,7 +82,7 @@ export default class MessageView extends React.Component {
                   height: this.state.height,
                   ...style.image
                 }} 
-                source={{ uri: this.props.message.url.replace("http://", "https://") }}
+                source={{ uri: message.url.replace("http://", "https://") }}
                 resizeMode='contain'
               />}
         </View>;
@@ -90,54 +93,66 @@ export default class MessageView extends React.Component {
         }}>
           <Icon name='file' type='font-awesome' color={textColor} size={18}></Icon>
           <Text style={{ color: textColor, ...style.messageFile }}>{
-            this.props.message.name.length > MAX_FILENAME_LENGTH
-              ? this.props.message.name.substring(0, MAX_FILENAME_LENGTH - 3) + '...'
-              : this.props.message.name}</Text>
+            message.name.length > MAX_FILENAME_LENGTH
+              ? message.name.substring(0, MAX_FILENAME_LENGTH - 3) + '...'
+              : message.name}</Text>
         </View>;
       }
-    } else if(this.props.message.isAdminMessage()) {
+    } else if(message.isAdminMessage()) {
       return <View style={{ ...style.container, ...style.adminMessageContainer }}>
-        <Text>{ this.props.message.message }</Text>
+        <Text>{ message.message }</Text>
       </View>;
     } else {
       return <View />;
     }
 
+    const backgroundColor = message._selected ? '#ddd' : 'transparent';
+    const extendedTouchHitSlop = 100;
     return (
-      <View style={{
-        flexDirection: direction,
-        ...style.container,
-        ...style.normalMessageContainer }}>
-        <Avatar
-          containerStyle={{
-            marginLeft: isMyMessage ? 8 : 0,
-            marginRight: isMyMessage ? 0 : 8,
-            opacity: isPreviousMessageSentBySameUser ? 0 : 1,
-            ...style.avatarContainer
-          }}
-          small
-          rounded
-          source={this.props.message.sender.profileUrl
-            ? { uri: this.props.message.sender.profileUrl }
-            : require('../img/icon_sb_68.png') }
-        />
-        <View style={{ ...style.contentContainer }}>
-          {!isPreviousMessageSentBySameUser &&
-            <View style={{ flexDirection: direction }}>
-              <Text style={style.nickname}>{this.props.message.sender.nickname}</Text>
-            </View>
-          }
-          <View style={{ flexDirection: direction }}>
-            {content}
-            <View style={style.readReceiptContainer}>
-              {isMyMessage && readReceipt > 0 && <Text style={style.readReceipt}>{readReceipt}</Text>}
+        <TouchableOpacity
+          hitSlop={{ top: extendedTouchHitSlop, bottom: extendedTouchHitSlop }}
+          activeOpacity={0.9}
+          onLongPress={() => {
+            if(this.props.onLongPress) {
+              this.props.onLongPress(message);
+            }
+          }}>
+          <View style={{
+            flexDirection: direction,
+            backgroundColor,
+            ...style.container,
+            ...style.normalMessageContainer }}>
+            <Avatar
+              containerStyle={{
+                marginLeft: isMyMessage ? 8 : 0,
+                marginRight: isMyMessage ? 0 : 8,
+                opacity: isPreviousMessageSentBySameUser ? 0 : 1,
+                ...style.avatarContainer
+              }}
+              small
+              rounded
+              source={message.sender.profileUrl
+                ? { uri: message.sender.profileUrl }
+                : require('../img/icon_sb_68.png') }
+            />
+            <View style={style.contentContainer}>
+              {!isPreviousMessageSentBySameUser &&
+                <View style={{ flexDirection: direction }}>
+                  <Text style={style.nickname}>{message.sender.nickname}</Text>
+                </View>
+              }
+              <View style={{ flexDirection: direction }}>
+                {content}
+                <View style={style.readReceiptContainer}>
+                  {isMyMessage && readReceipt > 0 && <Text style={style.readReceipt}>{readReceipt}</Text>}
+                </View>
+              </View>
+              <View style={{ flexDirection: direction, ...style.createdAtContainer}}>
+                <Text style={style.createdAt}>{moment(message.createdAt).fromNow() + ((message.updatedAt > message.createdAt) ? ' (edited)' : '')}</Text>
+              </View>
             </View>
           </View>
-          <View style={{ flexDirection: direction, ...style.createdAtContainer }}>
-            <Text style={style.createdAt}>{moment(this.props.message.createdAt).fromNow()}</Text>
-          </View>
-        </View>
-      </View>
-    );
+        </TouchableOpacity>
+      );
   }
 }

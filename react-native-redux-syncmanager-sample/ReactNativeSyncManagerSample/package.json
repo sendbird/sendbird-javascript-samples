@@ -24,7 +24,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "2.3.0",
     "sendbird": "3.0.98",
-    "sendbird-syncmanager": "^1.1.4"
+    "sendbird-syncmanager": "^1.1.5"
   },
   "devDependencies": {
     "@babel/core": "7.4.3",

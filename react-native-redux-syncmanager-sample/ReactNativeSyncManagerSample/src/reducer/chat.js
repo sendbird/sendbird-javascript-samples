@@ -6,12 +6,27 @@ import {
 
 const _initialState = {
 	channel: null,
-	messages: []
+	messages: [],
+	inputMode: 'chat'
 };
 
 export const reducer = (state = _initialState, action) => {
 	const newState = { ...state };
 	switch(action.type) {
+		case Action.Type.MESSAGE_SELECT: {
+			newState.messages = [ ...newState.messages ];
+			for(let i = 0; i < newState.messages.length; i++) {
+				newState.messages[i]._selected = newState.messages[i].messageId === action.payload.message.messageId;
+			}
+			break;
+		}
+		case Action.Type.MESSAGE_DESELECT_ALL: {
+			newState.messages = [ ...newState.messages ];
+			for(let i = 0; i < newState.messages.length; i++) {
+				newState.messages[i]._selected = false;
+			}
+			break;
+		}
 		case Action.Type.MESSAGE_ADD: {
 			newState.messages = [ ...newState.messages ];
 			for(let i = 0; i < action.payload.messages.length; i++) {

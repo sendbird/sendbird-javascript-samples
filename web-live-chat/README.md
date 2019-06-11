@@ -1,5 +1,5 @@
 # SendBird JavaScript Chat Sample
-This is a sample chat built using using the [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). It can be used to add a functional chat to any website.  
+This is a sample chat built using using the [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). It can be used to add a functional chat to any website.  
 
 
 ## [Demo](https://sample.sendbird.com/livechat/)
@@ -16,7 +16,7 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/liv
 </body>
 ```
 
-2. Import the [`SendBird SDK`](https://github.com/smilefam/SendBird-SDK-JavaScript).  
+2. Import the [`SendBird SDK`](https://github.com/sendbird/SendBird-SDK-JavaScript).  
 3. Import the `liveChat.SendBird.js` file.
 ```javascript
 <script src="SendBird.min.js"></script>

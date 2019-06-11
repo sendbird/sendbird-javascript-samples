@@ -32,10 +32,10 @@ Using [npm](https://www.npmjs.com/package/sendbird):
 
 ### Manual download
   
-Or, you can manually download JS SDK files [here](https://github.com/smilefam/SendBird-SDK-JavaScript).
+Or, you can manually download JS SDK files [here](https://github.com/sendbird/SendBird-SDK-JavaScript).
 
 
 ## Previous versions
 
 To view the version 2 sample, checkout the `v2` branch instead of `master`.  
-To view the basic sample used `jQuery`, checkout the [Legacy tag](https://github.com/smilefam/SendBird-JavaScript/tree/Legacy(WebBasic)) instead of `master`.    
+To view the basic sample used `jQuery`, checkout the [Legacy tag](https://github.com/sendbird/SendBird-JavaScript/tree/Legacy(WebBasic)) instead of `master`.    

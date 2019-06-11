@@ -1,5 +1,5 @@
 # SendBird JavaScript Widget Sample
-This is a sample chat widget built using using the [SendBird SDK](https://github.com/smilefam/SendBird-SDK-JavaScript). It can be used to add a functional chat widget to any website.  
+This is a sample chat widget built using using the [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). It can be used to add a functional chat widget to any website.  
 
 
 ## [Demo](https://sample.sendbird.com/widget/)
@@ -16,7 +16,7 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/wid
 </body>
 ```
 
-2. Import the [`SendBird SDK`](https://github.com/smilefam/SendBird-SDK-JavaScript).  
+2. Import the [`SendBird SDK`](https://github.com/sendbird/SendBird-SDK-JavaScript).  
 3. Import the `widget.SendBird.js` file.
 ```javascript
 <script src="SendBird.min.js"></script>

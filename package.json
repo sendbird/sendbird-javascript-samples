@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/smilefam/SendBird-JavaScript.git"
+    "url": "git+https://github.com/sendbird/SendBird-JavaScript.git"
   },
   "keywords": [],
   "author": "SendBird",
@@ -17,7 +17,7 @@
   "bugs": {
     "url": "support@sendbird.com"
   },
-  "homepage": "https://github.com/smilefam/SendBird-JavaScript#readme",
+  "homepage": "https://github.com/sendbird/SendBird-JavaScript#readme",
   "devDependencies": {
     "express": "^4.16.3"
   }

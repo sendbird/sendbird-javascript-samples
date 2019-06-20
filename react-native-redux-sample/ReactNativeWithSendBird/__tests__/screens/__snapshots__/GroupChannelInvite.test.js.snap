@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`screen/GroupChannelInvite renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "height": 64,
+      }
+    }
+  >
+    <RCTScrollView
+      dataSource={
+        ListViewDataSource {
+          "items": 0,
+        }
+      }
+      enableEmptySections={true}
+      horizontal={true}
+      renderRow={[Function]}
+      renderScrollComponent={[Function]}
+      style={
+        Object {
+          "flex": 1,
+          "marginLeft": 14,
+          "marginRight": 14,
+        }
+      }
+    >
+      <View />
+    </RCTScrollView>
+  </View>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#DEE1E6",
+        "paddingBottom": 4,
+        "paddingLeft": 14,
+        "paddingTop": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#494E57",
+          "fontSize": 12,
+        }
+      }
+    >
+      User List
+    </Text>
+  </View>
+  <View
+    style={Object {}}
+  >
+    <RCTScrollView
+      dataSource={
+        ListViewDataSource {
+          "items": 0,
+        }
+      }
+      enableEmptySections={true}
+      onEndReached={[Function]}
+      onEndReachedThreshold={-50}
+      renderRow={[Function]}
+      renderScrollComponent={[Function]}
+    >
+      <View />
+    </RCTScrollView>
+  </View>
+</View>
+`;

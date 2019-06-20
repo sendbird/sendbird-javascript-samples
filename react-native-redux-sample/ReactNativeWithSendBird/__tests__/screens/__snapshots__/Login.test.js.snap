@@ -1,0 +1,259 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`screen/Login renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "marginBottom": 5,
+        "marginTop": 35,
+      }
+    }
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../src/img/icon_sb_512.png",
+        }
+      }
+      style={
+        Object {
+          "height": 150,
+          "width": 150,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "#7d62d9",
+          "fontSize": 30,
+          "fontWeight": "600",
+        }
+      }
+    >
+      SendBird
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "#7d62d9",
+          "fontSize": 13,
+          "fontWeight": "500",
+        }
+      }
+    >
+      React Native
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "borderColor": "#ddd",
+        "borderRadius": 5,
+        "borderWidth": 1,
+        "marginLeft": 28,
+        "marginRight": 28,
+        "marginTop": 8,
+        "paddingLeft": 8,
+        "paddingRight": 8,
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      autoCorrect={false}
+      duration={100}
+      label="User ID"
+      maxLength={16}
+      onChangeText={[Function]}
+      placeholder="User ID"
+      style={
+        Object {
+          "backgroundColor": "#fff",
+          "fontSize": 13,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "borderColor": "#ddd",
+        "borderRadius": 5,
+        "borderWidth": 1,
+        "marginLeft": 28,
+        "marginRight": 28,
+        "marginTop": 8,
+        "paddingLeft": 8,
+        "paddingRight": 8,
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      autoCorrect={false}
+      duration={100}
+      label="Nickname"
+      maxLength={16}
+      onChangeText={[Function]}
+      placeholder="Nickname"
+      style={
+        Object {
+          "backgroundColor": "#fff",
+          "fontSize": 13,
+        }
+      }
+      underlineColorAndroid="transparent"
+      value=""
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "marginTop": 50,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+      }
+    }
+  >
+    <View
+      style={
+        Array [
+          Object {
+            "marginLeft": 15,
+            "marginRight": 15,
+          },
+          undefined,
+          undefined,
+          undefined,
+        ]
+      }
+    >
+      <View
+        accessible={true}
+        isTVSelectable={true}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={null}
+      >
+        <View
+          pointerEvents="box-only"
+          style={
+            Array [
+              Object {
+                "alignItems": "center",
+                "backgroundColor": "#9E9E9E",
+                "flexDirection": "row",
+                "justifyContent": "center",
+                "padding": 19,
+              },
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              undefined,
+              Object {
+                "padding": 12,
+              },
+              undefined,
+              undefined,
+              undefined,
+              Object {
+                "backgroundColor": "#6e5baa",
+              },
+              false,
+              false,
+            ]
+          }
+        >
+          <Text
+            style={
+              Array [
+                Object {},
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                Array [
+                  Object {
+                    "color": "white",
+                    "fontSize": 20,
+                  },
+                  undefined,
+                  Object {
+                    "fontSize": 17.5,
+                  },
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  false,
+                ],
+              ]
+            }
+          >
+            CONNECT
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#e03131",
+        "fontSize": 12,
+      }
+    }
+  >
+    
+  </Text>
+  <View
+    style={
+      Array [
+        Object {
+          "flexDirection": "column",
+          "marginTop": 15,
+          "paddingLeft": 28,
+          "paddingRight": 28,
+        },
+      ]
+    }
+  >
+    <Text
+      style={
+        Object {
+          "alignSelf": "center",
+          "color": "#8e8e8e",
+          "fontSize": 12,
+        }
+      }
+    >
+      Sample UI v2.1.2 / SDK v.3.0.61
+    </Text>
+  </View>
+</View>
+`;

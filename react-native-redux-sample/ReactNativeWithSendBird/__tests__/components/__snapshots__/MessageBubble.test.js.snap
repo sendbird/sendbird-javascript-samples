@@ -1,0 +1,343 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/MessageBubble renders correctly file 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        false,
+        false,
+        false,
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        },
+        Object {
+          "marginLeft": 0,
+        },
+      ]
+    }
+    underlayColor="white"
+  >
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "#fff",
+            "fontSize": 16,
+          },
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "margin": 0,
+              "padding": 0,
+            },
+          ],
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <Text
+    style={
+      Object {
+        "marginLeft": 8,
+      }
+    }
+  >
+    test.file
+  </Text>
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly image file 1`] = `
+<View
+  style={Object {}}
+>
+  <CachedImage
+    resizeMode="contain"
+    source={
+      Object {
+        "uri": "https://dxstmhyqfqr1o.cloudfront.net/sbcom/logo-white@3x.png?key=390f1364a4e3e1cc0ad95074928193c7aeeca401",
+      }
+    }
+    style={
+      Object {
+        "height": 100,
+        "width": 100,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly video file 1`] = `
+<View
+  style={
+    Object {
+      "borderRadius": 8,
+      "marginBottom": 4,
+      "minHeight": 180,
+      "minWidth": 240,
+    }
+  }
+>
+  <Video
+    controls={true}
+    paused={true}
+    source={
+      Object {
+        "uri": "https://www.youtube.com/watch?v=wjko7g3SMdg",
+      }
+    }
+    style={
+      Object {
+        "borderRadius": 8,
+        "bottom": 0,
+        "left": 0,
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly with no message present 1`] = `null`;
+
+exports[`component/MessageBubble renders correctly with user not present 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#e6e6e6",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
+    }
+  }
+>
+  <View
+    style={Object {}}
+  >
+    <View
+      style={Object {}}
+    >
+      <Text
+        style={
+          Object {
+            "color": "#000",
+            "fontSize": 12,
+          }
+        }
+      >
+        test_message
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#878d99",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly with user not present and isShow true 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#e6e6e6",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
+    }
+  }
+>
+  <Text
+    style={
+      Object {
+        "color": "#7048e8",
+        "fontSize": 9,
+        "paddingBottom": 4,
+      }
+    }
+  >
+    test_nickname
+  </Text>
+  <View
+    style={Object {}}
+  >
+    <View
+      style={Object {}}
+    >
+      <Text
+        style={
+          Object {
+            "color": "#000",
+            "fontSize": 12,
+          }
+        }
+      >
+        test_message
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#878d99",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly with user present 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#5F3DC4",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
+    }
+  }
+>
+  <View
+    style={Object {}}
+  >
+    <View
+      style={Object {}}
+    >
+      <Text
+        style={
+          Object {
+            "color": "#fff",
+            "fontSize": 12,
+          }
+        }
+      >
+        test_message
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#E9EBEF",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`component/MessageBubble renders correctly with user present and isShow true 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#5F3DC4",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
+    }
+  }
+>
+  <View
+    style={Object {}}
+  >
+    <View
+      style={Object {}}
+    >
+      <Text
+        style={
+          Object {
+            "color": "#fff",
+            "fontSize": 12,
+          }
+        }
+      >
+        test_message
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#E9EBEF",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
+</View>
+`;

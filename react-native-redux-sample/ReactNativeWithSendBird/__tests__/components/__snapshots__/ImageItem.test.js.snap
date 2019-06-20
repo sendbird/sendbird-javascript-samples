@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/ImageItem renders correctly 1`] = `
+<View
+  style={Object {}}
+>
+  <CachedImage
+    resizeMode="contain"
+    source={
+      Object {
+        "uri": "test_message_uri",
+      }
+    }
+    style={
+      Object {
+        "height": 100,
+        "width": 100,
+      }
+    }
+  />
+</View>
+`;

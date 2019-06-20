@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/Hr renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#e6e6e6",
+        "flexDirection": "row",
+        "height": 1,
+      },
+      undefined,
+    ]
+  }
+/>
+`;

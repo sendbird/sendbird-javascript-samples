@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/MessageContainer renders correctly with user not present 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#e6e6e6",
+        "borderRadius": 8,
+        "maxWidth": 250,
+        "padding": 8,
+      }
+    }
+  >
+    <View
+      style={Object {}}
+    >
+      <View
+        style={Object {}}
+      >
+        <Text
+          style={
+            Object {
+              "color": "#000",
+              "fontSize": 12,
+            }
+          }
+        >
+          test_message
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "flex-end",
+          "paddingLeft": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#878d99",
+            "fontSize": 8,
+          }
+        }
+      >
+        test_time
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column-reverse",
+        "paddingLeft": 4,
+        "paddingRight": 4,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`component/MessageContainer renders correctly with user present 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row-reverse",
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "#5F3DC4",
+        "borderRadius": 8,
+        "maxWidth": 250,
+        "padding": 8,
+      }
+    }
+  >
+    <View
+      style={Object {}}
+    >
+      <View
+        style={Object {}}
+      >
+        <Text
+          style={
+            Object {
+              "color": "#fff",
+              "fontSize": 12,
+            }
+          }
+        >
+          test_message
+        </Text>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "justifyContent": "flex-end",
+          "paddingLeft": 8,
+        }
+      }
+    >
+      <Text
+        style={
+          Object {
+            "color": "#E9EBEF",
+            "fontSize": 8,
+          }
+        }
+      >
+        test_time
+      </Text>
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "flexDirection": "column-reverse",
+        "paddingLeft": 4,
+        "paddingRight": 4,
+      }
+    }
+  >
+    <Text
+      style={
+        Object {
+          "color": "#f03e3e",
+          "fontSize": 10,
+        }
+      }
+    >
+      1
+    </Text>
+  </View>
+</View>
+`;

@@ -1,37 +1,34 @@
-import React, { Component } from 'react'
-import {
-  Platform,
-  AppState,
-  PushNotificationIOS
-} from 'react-native'
-import { createStackNavigator, createAppContainer } from 'react-navigation'
-import { Provider } from 'react-redux'
-import SendBird from 'sendbird'
-import firebase from 'react-native-firebase'
+import React, { Component } from 'react';
+import { Platform, AppState, PushNotificationIOS } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { Provider } from 'react-redux';
+import SendBird from 'sendbird';
+import firebase from 'react-native-firebase';
 
-import store from './src/store'
+import store from './src/store';
 
-import Start from './src/screens/Start'
-import Login from './src/screens/Login'
-import Menu from './src/screens/Menu'
-import Profile from './src/screens/Profile'
-import OpenChannel from './src/screens/OpenChannel'
-import OpenChannelCreate from './src/screens/OpenChannelCreate'
-import Chat from './src/screens/Chat'
-import Member from './src/screens/Member'
-import BlockUser from './src/screens/BlockUser'
-import GroupChannel from './src/screens/GroupChannel'
-import GroupChannelInvite from './src/screens/GroupChannelInvite'
-import appStateChangeHandler from './src/appStateChangeHandler'
+import Start from './src/screens/Start';
+import Login from './src/screens/Login';
+import Menu from './src/screens/Menu';
+import Profile from './src/screens/Profile';
+import OpenChannel from './src/screens/OpenChannel';
+import OpenChannelCreate from './src/screens/OpenChannelCreate';
+import Chat from './src/screens/Chat';
+import Member from './src/screens/Member';
+import BlockUser from './src/screens/BlockUser';
+import GroupChannel from './src/screens/GroupChannel';
+import GroupChannelInvite from './src/screens/GroupChannelInvite';
+import appStateChangeHandler from './src/appStateChangeHandler';
 
-let AppNavigator
-let AppContainer
+let AppNavigator;
+let AppContainer;
 
 export default class App extends Component {
-  constructor (props) {
-    super(props)
-    this.appStateHandler = appStateChangeHandler.getInstance()
-    AppNavigator = createStackNavigator({
+  constructor(props) {
+    super(props);
+    this.appStateHandler = appStateChangeHandler.getInstance();
+    AppNavigator = createStackNavigator(
+      {
         Start: { screen: Start },
         Login: { screen: Login },
         Menu: { screen: Menu },
@@ -49,52 +46,51 @@ export default class App extends Component {
         navigationOptions: ({ navigation }) => ({
           headerTitleStyle: { fontWeight: '500' }
         })
-      })
-    AppContainer = createAppContainer(AppNavigator)
+      }
+    );
+    AppContainer = createAppContainer(AppNavigator);
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const channel = new firebase.notifications.Android.Channel(
       'com.reactnativewithsendbird.default_channel_id',
       'React Native Redux sample',
       firebase.notifications.Android.Importance.Max
-    )
-      .setDescription('React Native Redux sample notification channel')
-    firebase.notifications().android.createChannel(channel)
+    ).setDescription('React Native Redux sample notification channel');
+    firebase.notifications().android.createChannel(channel);
 
-    console.disableYellowBox = true
-    console.log('app is launched')
-    AppState.addEventListener('change', this._handleAppStateChange)
+    console.disableYellowBox = true;
+    console.log('app is launched');
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
-  componentWillUnmount () {
-    console.log('app is killed')
-    AppState.removeEventListener('change', this._handleAppStateChange)
+  componentWillUnmount() {
+    console.log('app is killed');
+    AppState.removeEventListener('change', this._handleAppStateChange);
   }
 
-  render () {
+  render() {
     return (
-      <Provider
-        store = {store}>
-        <AppContainer/>
+      <Provider store={store}>
+        <AppContainer />
       </Provider>
-    )
+    );
   }
 
-  _handleAppStateChange = (nextAppState) => {
-    const sb = SendBird.getInstance()
+  _handleAppStateChange = nextAppState => {
+    const sb = SendBird.getInstance();
     if (sb) {
       if (nextAppState === 'active') {
         if (Platform.OS === 'ios') {
-          PushNotificationIOS.setApplicationIconBadgeNumber(0)
+          PushNotificationIOS.setApplicationIconBadgeNumber(0);
         }
-        console.log('app is into foreground')
-        sb.setForegroundState()
-        this.appStateHandler.notify()
+        console.log('app is into foreground');
+        sb.setForegroundState();
+        this.appStateHandler.notify();
       } else if (nextAppState === 'background') {
-        console.log('app is into background')
-        sb.setBackgroundState()
+        console.log('app is into background');
+        sb.setBackgroundState();
       }
     }
-  }
+  };
 }

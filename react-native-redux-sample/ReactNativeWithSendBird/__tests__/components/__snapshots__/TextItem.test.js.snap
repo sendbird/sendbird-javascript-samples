@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/TextItem renders correctly with no user present 1`] = `
+<View
+  style={Object {}}
+>
+  <Text
+    style={
+      Object {
+        "color": "#000",
+        "fontSize": 12,
+      }
+    }
+  >
+    test_message
+  </Text>
+</View>
+`;
+
+exports[`component/TextItem renders correctly with user present 1`] = `
+<View
+  style={Object {}}
+>
+  <Text
+    style={
+      Object {
+        "color": "#fff",
+        "fontSize": 12,
+      }
+    }
+  >
+    test_message
+  </Text>
+</View>
+`;

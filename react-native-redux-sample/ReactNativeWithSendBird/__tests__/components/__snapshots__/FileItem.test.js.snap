@@ -1,0 +1,202 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/FileItem renders correctly with no user present 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        false,
+        false,
+        false,
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        },
+        Object {
+          "marginLeft": 0,
+        },
+      ]
+    }
+    underlayColor="white"
+  >
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "#000",
+            "fontSize": 16,
+          },
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "margin": 0,
+              "padding": 0,
+            },
+          ],
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <Text
+    style={
+      Object {
+        "marginLeft": 8,
+      }
+    }
+  >
+    test_messa...
+  </Text>
+</View>
+`;
+
+exports[`component/FileItem renders correctly with user present, message length is large 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        false,
+        false,
+        false,
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        },
+        Object {
+          "marginLeft": 0,
+        },
+      ]
+    }
+    underlayColor="white"
+  >
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "#fff",
+            "fontSize": 16,
+          },
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "margin": 0,
+              "padding": 0,
+            },
+          ],
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <Text
+    style={
+      Object {
+        "marginLeft": 8,
+      }
+    }
+  >
+    test_messa...
+  </Text>
+</View>
+`;
+
+exports[`component/FileItem renders correctly with user present, message length is small 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+    }
+  }
+>
+  <View
+    style={
+      Array [
+        false,
+        false,
+        false,
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "transparent",
+          "justifyContent": "center",
+        },
+        Object {
+          "marginLeft": 0,
+        },
+      ]
+    }
+    underlayColor="white"
+  >
+    <Text
+      allowFontScaling={false}
+      style={
+        Array [
+          Object {
+            "color": "#fff",
+            "fontSize": 16,
+          },
+          Array [
+            Object {
+              "backgroundColor": "transparent",
+            },
+            Object {
+              "margin": 0,
+              "padding": 0,
+            },
+          ],
+          Object {
+            "fontFamily": "FontAwesome",
+            "fontStyle": "normal",
+            "fontWeight": "normal",
+          },
+          Object {},
+        ]
+      }
+    >
+      
+    </Text>
+  </View>
+  <Text
+    style={
+      Object {
+        "marginLeft": 8,
+      }
+    }
+  >
+    test_message
+  </Text>
+</View>
+`;

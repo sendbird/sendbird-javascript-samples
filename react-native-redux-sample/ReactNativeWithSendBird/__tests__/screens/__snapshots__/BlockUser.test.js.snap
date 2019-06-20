@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`screen/BlockUser renders correctly 1`] = `
+<View>
+  <RCTScrollView
+    dataSource={
+      ListViewDataSource {
+        "items": 0,
+      }
+    }
+    enableEmptySections={true}
+    onEndReached={[Function]}
+    onEndReachedThreshold={-100}
+    renderRow={[Function]}
+    renderScrollComponent={[Function]}
+  >
+    <View />
+  </RCTScrollView>
+</View>
+`;

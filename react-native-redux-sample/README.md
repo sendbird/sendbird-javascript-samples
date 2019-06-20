@@ -39,3 +39,14 @@ SendBird React-Native sample using [SendBird SDK](https://github.com/sendbird/Se
 
         react-native run-android
         react-native run-ios
+        
+## Troubleshooting
+
+If you see an error like this: "Unable to load script from assets index.android.bundle."
+
+1.  (in project directory) mkdir android/app/src/main/assets
+2.  react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+
+If you see an error like this: "Loading dependency graph...(node:45456) UnhandledPromiseRejectionWarning: Error: jest-haste-map: Haste module naming collision: Duplicate module name: react-native"
+
+1. Try to delete ios/Pods file

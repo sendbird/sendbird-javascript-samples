@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/AdminMessage renders correctly 1`] = `
+<View
+  style={
+    Array [
+      Object {
+        "transform": Array [
+          Object {
+            "scaleY": -1,
+          },
+        ],
+      },
+      Object {
+        "backgroundColor": "#e6e9f0",
+        "marginBottom": 8,
+        "marginLeft": 14,
+        "marginRight": 14,
+        "marginTop": 8,
+        "padding": 8,
+      },
+    ]
+  }
+>
+  <Text>
+    test_message
+  </Text>
+</View>
+`;

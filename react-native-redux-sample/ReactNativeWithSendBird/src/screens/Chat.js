@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { Platform, View, FlatList, Text, Alert, AsyncStorage, BackHandler } from "react-native";
-import { NavigationActions } from "react-navigation";
+import React, { Component } from 'react';
+import { Platform, View, FlatList, Text, Alert, AsyncStorage, BackHandler } from 'react-native';
+import { NavigationActions } from 'react-navigation';
 import Permissions from 'react-native-permissions';
-import { connect } from "react-redux";
+import { connect } from 'react-redux';
 import {
   openChannelProgress,
   groupChannelProgress,
@@ -16,12 +16,19 @@ import {
   typingStart,
   typingEnd,
   channelExit
-} from "../actions";
-import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from "../components";
-import { BarIndicator } from "react-native-indicators";
-import ImagePicker from "react-native-image-picker";
-import { sbGetGroupChannel, sbGetOpenChannel, sbCreatePreviousMessageListQuery, sbAdjustMessageList, sbIsImageMessage, sbMarkAsRead } from "../sendbirdActions";
-import appStateChangeHandler from '../appStateChangeHandler'
+} from '../actions';
+import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from '../components';
+import { BarIndicator } from 'react-native-indicators';
+import ImagePicker from 'react-native-image-picker';
+import {
+  sbGetGroupChannel,
+  sbGetOpenChannel,
+  sbCreatePreviousMessageListQuery,
+  sbAdjustMessageList,
+  sbIsImageMessage,
+  sbMarkAsRead
+} from '../sendbirdActions';
+import appStateChangeHandler from '../appStateChangeHandler';
 
 class Chat extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -31,11 +38,11 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 0, paddingRight: 0 }}
-          iconRight={{ name: "user-plus", type: "font-awesome", color: "#7d62d9", size: 18 }}
+          iconRight={{ name: 'user-plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
           backgroundColor="transparent"
           onPress={() => {
-            navigation.navigate("GroupChannelInvite", {
-              title: "Invite",
+            navigation.navigate('GroupChannelInvite', {
+              title: 'Invite',
               channelUrl: params.channelUrl
             });
           }}
@@ -48,7 +55,7 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: "chevron-left", type: "font-awesome", color: "#7d62d9", size: 18 }}
+          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
           backgroundColor="transparent"
           onPress={() => {
             params.handleHeaderLeft();
@@ -56,24 +63,24 @@ class Chat extends Component {
         />
       ),
       headerRight: (
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: 'row' }}>
           {_renderInviteButton()}
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
             buttonStyle={{ paddingLeft: 4, paddingRight: 4 }}
-            iconRight={{ name: "users", type: "font-awesome", color: "#7d62d9", size: 18 }}
+            iconRight={{ name: 'users', type: 'font-awesome', color: '#7d62d9', size: 18 }}
             backgroundColor="transparent"
             onPress={() => {
-              navigation.navigate("Member", { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
+              navigation.navigate('Member', { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
             }}
           />
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
             buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-            iconRight={{ name: "user-times", type: "font-awesome", color: "#7d62d9", size: 18 }}
+            iconRight={{ name: 'user-times', type: 'font-awesome', color: '#7d62d9', size: 18 }}
             backgroundColor="transparent"
             onPress={() => {
-              navigation.navigate("BlockUser");
+              navigation.navigate('BlockUser');
             }}
           />
         </View>
@@ -88,23 +95,24 @@ class Chat extends Component {
       channel: null,
       isLoading: false,
       previousMessageListQuery: null,
-      textMessage: ""
+      textMessage: ''
     };
   }
 
   componentDidMount() {
     this.willFocusSubsription = this.props.navigation.addListener('willFocus', () => {
-      this._init()
-    })
+      this._init();
+    });
     this.appStateHandler = appStateChangeHandler.getInstance().addCallback('CHAT', () => {
-      this._init()
-    })
+      this._init();
+    });
     this.props.navigation.setParams({ handleHeaderLeft: this._onBackButtonPress });
     BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
+    this._init();
   }
   componentWillUnmount() {
-    this.appStateHandler()
-    this.willFocusSubsription.remove()
+    this.appStateHandler();
+    this.willFocusSubsription.remove();
     BackHandler.removeEventListener('hardwareBackPress', this._onBackButtonPress);
   }
 
@@ -116,7 +124,7 @@ class Chat extends Component {
     } else {
       sbGetGroupChannel(channelUrl).then(channel => this.setState({ channel }, () => this._componentInit()));
     }
-  }
+  };
 
   _componentInit = () => {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
@@ -174,7 +182,10 @@ class Chat extends Component {
   };
 
   _onUserBlockPress = userId => {
-    Alert.alert("User Block", "Are you sure want to block user?", [{ text: "Cancel" }, { text: "OK", onPress: () => this.props.onUserBlockPress(userId) }]);
+    Alert.alert('User Block', 'Are you sure want to block user?', [
+      { text: 'Cancel' },
+      { text: 'OK', onPress: () => this.props.onUserBlockPress(userId) }
+    ]);
   };
 
   _getMessageList = init => {
@@ -201,9 +212,9 @@ class Chat extends Component {
     if (this.state.textMessage) {
       const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
       const { textMessage } = this.state;
-      this.setState({ textMessage: "" }, () => {
+      this.setState({ textMessage: '' }, () => {
         this.props.onSendButtonPress(channelUrl, isOpenChannel, textMessage);
-        if(this.props && this.props.list && this.props.list.length > 0) {
+        if (this.props && this.props.list && this.props.list.length > 0) {
           this.flatList.scrollToIndex({
             index: 0,
             viewOffset: 0
@@ -215,59 +226,47 @@ class Chat extends Component {
 
   _onPhotoAddPress = () => {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
-    Permissions.checkMultiple([ 'photo' ]).then(response => {
-      if(response.photo === 'authorized') {
+    Permissions.checkMultiple(['photo']).then(response => {
+      if (response.photo === 'authorized') {
         ImagePicker.showImagePicker(
           {
-            title: "Select Image File To Send",
-            mediaType: "photo",
+            title: 'Select Image File To Send',
+            mediaType: 'photo',
             noData: true
           },
           response => {
             if (!response.didCancel && !response.error && !response.customButton) {
               let source = { uri: response.uri };
               if (response.name) {
-                source["name"] = response.fileName;
+                source['name'] = response.fileName;
               } else {
-                paths = response.uri.split("/");
-                source["name"] = paths[paths.length - 1];
+                paths = response.uri.split('/');
+                source['name'] = paths[paths.length - 1];
               }
               if (response.type) {
-                source["type"] = response.type;
+                source['type'] = response.type;
               } else {
                 /** For react-native-image-picker library doesn't return type in iOS,
                  *  it is necessary to force the type to be an image/jpeg (or whatever you're intended to be).
-                */
-                if (Platform.OS === "ios") {
-                  source["type"] = 'image/jpeg';
+                 */
+                if (Platform.OS === 'ios') {
+                  source['type'] = 'image/jpeg';
                 }
               }
               this.props.onFileButtonPress(channelUrl, isOpenChannel, source);
             }
           }
         );
-      } else if(response.photo === 'undetermined') {
+      } else if (response.photo === 'undetermined') {
         Permissions.request('photo').then(response => {
           this._onPhotoAddPress();
         });
       } else {
-        Alert.alert('Permission denied',
-          'You declined the permission to access to your photo.',
-          [ { text: 'OK' } ],
-          { cancelable: false });
+        Alert.alert('Permission denied', 'You declined the permission to access to your photo.', [{ text: 'OK' }], {
+          cancelable: false
+        });
       }
     });
-  };
-
-  _renderFileMessageItem = rowData => {
-    const message = rowData.item;
-    if (message.isUserMessage()) {
-      return <TextItem isUser={message.isUser} message={message.message} />;
-    } else if (sbIsImageMessage(message)) {
-      return <ImageItem isUser={message.isUser} message={message.url.replace("http://", "https://")} />;
-    } else {
-      return <FileItem isUser={message.isUser} message={message.name} />;
-    }
   };
 
   _renderList = rowData => {
@@ -280,12 +279,12 @@ class Chat extends Component {
           key={message.messageId ? message.messageId : message.reqId}
           isShow={message.sender.isShow}
           isUser={message.isUser}
-          profileUrl={message.sender.profileUrl.replace("http://", "https://")}
+          profileUrl={message.sender.profileUrl.replace('http://', 'https://')}
           onPress={() => this._onUserBlockPress(message.sender.userId)}
           nickname={message.sender.nickname}
           time={message.time}
           readCount={isOpenChannel || !channel ? 0 : channel.getReadReceipt(message)}
-          message={this._renderFileMessageItem(rowData)}
+          message={message}
         />
       );
     } else if (message.isAdminMessage()) {
@@ -302,7 +301,7 @@ class Chat extends Component {
         <View style={{ opacity: this.props.typing ? 1 : 0, marginRight: 8 }}>
           <BarIndicator count={4} size={10} animationDuration={900} color="#cbd0da" />
         </View>
-        <Text style={{ color: "#cbd0da", fontSize: 10 }}>{this.props.typing}</Text>
+        <Text style={{ color: '#cbd0da', fontSize: 10 }}>{this.props.typing}</Text>
       </View>
     );
   };
@@ -313,7 +312,7 @@ class Chat extends Component {
         <Spinner visible={this.state.isLoading} />
         <View style={styles.messageListViewStyle}>
           <FlatList
-            ref={elem => this.flatList = elem}
+            ref={elem => (this.flatList = elem)}
             renderItem={this._renderList}
             data={this.props.list}
             extraData={this.state}
@@ -342,24 +341,27 @@ function mapStateToProps({ chat }) {
   return { title, memberCount, list, exit, typing };
 }
 
-export default connect(mapStateToProps, {
-  openChannelProgress,
-  groupChannelProgress,
-  initChatScreen,
-  getChannelTitle,
-  createChatHandler,
-  onSendButtonPress,
-  getPrevMessageList,
-  onUserBlockPress,
-  onFileButtonPress,
-  typingStart,
-  typingEnd,
-  channelExit
-})(Chat);
+export default connect(
+  mapStateToProps,
+  {
+    openChannelProgress,
+    groupChannelProgress,
+    initChatScreen,
+    getChannelTitle,
+    createChatHandler,
+    onSendButtonPress,
+    getPrevMessageList,
+    onUserBlockPress,
+    onFileButtonPress,
+    typingStart,
+    typingEnd,
+    channelExit
+  }
+)(Chat);
 
 const styles = {
   renderTypingViewStyle: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginLeft: 14,
     marginRight: 14,
     marginTop: 4,
@@ -378,7 +380,7 @@ const styles = {
   messageInputViewStyle: {
     flex: 1,
     marginBottom: 0,
-    flexDirection: "column",
-    justifyContent: "center"
+    flexDirection: 'column',
+    justifyContent: 'center'
   }
 };

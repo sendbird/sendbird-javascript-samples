@@ -4,16 +4,20 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
-    "clear": "rm -rf $TMPDIR/react-* && rm -rf $TMPDIR/metro-* && watchman watch-del-all && rm -rf ios/build && rm -rf node_modules/ && npm cache clean --force && npm i",
-    "test": "jest"
+    "clear": "rm -rf $TMPDIR/react-*; rm -rf $TMPDIR/metro-*; watchman watch-del-all; rm -rf ios/build & rm -rf package-lock.json & rm -rf node_modules/; npm cache clean --force; npm i",
+    "test": "jest --verbose --coverage",
+    "test:update": "jest --verbose --coverage --updateSnapshot",
+    "test:watch": "jest --verbose --watch",
+    "coverage": "jest --verbose --coverage && open ./coverage/lcov-report/index.html"
   },
   "dependencies": {
-    "react": "16.8.3",
-    "react-native": "0.59.5",
+    "react": "16.6.3",
+    "react-native": "0.58.6",
     "react-native-cached-image": "1.4.3",
     "react-native-elements": "0.19.0",
     "react-native-fetch-blob": "0.10.8",
-    "react-native-firebase": "^5.3.1",
+    "react-native-video": "^4.4.1",
+    "react-native-firebase": "5.3.1",
     "react-native-gesture-handler": "^1.2.1",
     "react-native-image-picker": "0.26.7",
     "react-native-indicators": "0.12.0",
@@ -23,17 +27,41 @@
     "react-native-swipeout": "2.3.3",
     "react-native-vector-icons": "6.4.2",
     "react-navigation": "^3.8.1",
-    "react-redux": "7.0.2",
-    "redux": "^4.0.1",
-    "redux-thunk": "2.3.0",
+    "react-redux": "^5.0.7",
+    "redux": "^3.7.2",
+    "redux-thunk": "^2.2.0",
     "sendbird": "3.0.99"
   },
   "devDependencies": {
-    "babel-jest": "22.4.1",
-    "babel-preset-react-native": "4.0.0",
-    "jest": "22.4.2"
+    "babel-jest": "24.8.0",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "enzyme-to-json": "^3.3.5",
+    "jest": "24.8.0",
+    "jest-enzyme": "^7.0.2",
+    "react-dom": "16.6.3",
+    "redux-mock-store": "^1.5.3"
   },
   "jest": {
-    "preset": "react-native"
+    "testURL": "http://localhost/",
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/react-native/jest/preprocessor.js"
+    },
+    "preset": "react-native",
+    "setupFiles": [
+      "<rootDir>/__mocks__/mockFirebase.js",
+      "<rootDir>/__mocks__/mockSendbird.js",
+      "<rootDir>/__mocks__/mockNavigation.js",
+      "<rootDir>/__mocks__/mockCachedImage.js",
+      "<rootDir>/__mocks__/mockVideo.js"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/__tests__/helpers",
+      "<rootDir>/node_modules",
+      "<rootDir>/ios"
+    ],
+    "modulePathIgnorePatterns": [
+      "<rootDir>/ios"
+    ]
   }
 }

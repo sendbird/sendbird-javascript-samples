@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/MessageAvatar renders correctly with user present 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "transparent",
+      "height": 34,
+      "marginRight": 8,
+      "width": 34,
+    }
+  }
+/>
+`;

@@ -1,0 +1,24 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component/Input renders correctly 1`] = `
+<RCTScrollView>
+  <View>
+    <TextInput
+      allowFontScaling={true}
+      autoCapitalize="none"
+      autoCorrect={false}
+      borderColor="#d9d9d9"
+      duration={100}
+      highlightColor="#7d62d9"
+      keyboardType="default"
+      label="test_label"
+      maxLength={123}
+      onChangeText={[Function]}
+      textBlurColor="#000"
+      textFocusColor="#7d62d9"
+      underlineColorAndroid="transparent"
+      value="test_value"
+    />
+  </View>
+</RCTScrollView>
+`;

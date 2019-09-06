@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/profileReducer GET_PROFILE_SUCCESS 1`] = `
+Object {
+  "error": "",
+  "isSaved": false,
+  "userInfo": "userInfo",
+}
+`;
+
+exports[`reducers/profileReducer INIT_PROFILE 1`] = `
+Object {
+  "error": "",
+  "isSaved": false,
+  "userInfo": null,
+}
+`;
+
+exports[`reducers/profileReducer UPDATE_PROFILE_FAIL 1`] = `
+Object {
+  "error": "",
+  "isSaved": true,
+  "userInfo": null,
+}
+`;
+
+exports[`reducers/profileReducer UPDATE_PROFILE_SUCCESS 1`] = `
+Object {
+  "error": "",
+  "isSaved": true,
+  "userInfo": null,
+}
+`;
+
+exports[`reducers/profileReducer checking initial state 1`] = `
+Object {
+  "error": "",
+  "isSaved": false,
+  "userInfo": null,
+}
+`;

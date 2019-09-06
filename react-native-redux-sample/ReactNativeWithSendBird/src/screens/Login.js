@@ -117,7 +117,7 @@ class Login extends Component {
         <Text style={styles.errorTextStyle}>{this.props.error}</Text>
 
         <View style={[styles.footerViewStyle]}>
-          <Text style={styles.footerTextStyle}>Sample UI v2.1.2 / SDK v.3.0.61</Text>
+          <Text style={styles.footerTextStyle}>Sample UI v3.0.0 / SDK v.3.0.99</Text>
         </View>
       </View>
     );

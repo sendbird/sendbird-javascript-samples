@@ -52,23 +52,29 @@ exports[`screen/Member renders correctly 1`] = `
           hidesWhenStopped={true}
           size="large"
           style={
-            Object {
-              "flex": 1,
-            }
+            Array [
+              Object {
+                "flex": 1,
+              },
+              Object {},
+            ]
           }
         />
         <View
           style={
-            Object {
-              "alignItems": "center",
-              "bottom": 0,
-              "flex": 1,
-              "justifyContent": "center",
-              "left": 0,
-              "position": "absolute",
-              "right": 0,
-              "top": 0,
-            }
+            Array [
+              Object {
+                "alignItems": "center",
+                "bottom": 0,
+                "flex": 1,
+                "justifyContent": "center",
+                "left": 0,
+                "position": "absolute",
+                "right": 0,
+                "top": 0,
+              },
+              Object {},
+            ]
           }
         >
           <Text

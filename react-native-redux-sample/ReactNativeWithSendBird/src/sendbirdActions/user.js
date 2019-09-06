@@ -65,8 +65,11 @@ export const sbUnregisterPushToken = () => {
             firebase
               .messaging()
               .ios.getAPNSToken()
-              .then(token => {
-                sb.unregisterAPNSPushTokenForCurrentUser(token, (result, error) => {
+              .then(apnsToken => {
+                if (!apnsToken) {
+                  return resolve();
+                }
+                sb.unregisterAPNSPushTokenForCurrentUser(apnsToken, (result, error) => {
                   if (!error) {
                     resolve();
                   } else reject(error);

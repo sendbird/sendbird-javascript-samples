@@ -47,6 +47,7 @@ exports[`screen/Chat renders correctly 1`] = `
       onScroll={[Function]}
       onScrollBeginDrag={[Function]}
       onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
       renderItem={[Function]}
       scrollEventThrottle={50}
       stickyHeaderIndices={Array []}
@@ -143,6 +144,7 @@ exports[`screen/Chat renders correctly 1`] = `
           autoCorrect={false}
           onChangeText={[Function]}
           placeholder="Your message"
+          rejectResponderTermination={true}
           selectionColor="#212529"
           style={
             Object {

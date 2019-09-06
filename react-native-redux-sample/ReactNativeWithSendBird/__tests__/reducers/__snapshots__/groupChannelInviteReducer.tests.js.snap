@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/groupChannelInviteReducer CREATE_GROUP_CHANNEL_FAIL 1`] = `
+Object {
+  "channel": null,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer CREATE_GROUP_CHANNEL_SUCCESS 1`] = `
+Object {
+  "channel": "channel",
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer INIT_INVITE 1`] = `
+Object {
+  "channel": null,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer INVITE_GROUP_CHANNEL_FAIL 1`] = `
+Object {
+  "channel": null,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer INVITE_GROUP_CHANNEL_SUCCESS 1`] = `
+Object {
+  "channel": "channel",
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer USER_LIST_FAIL 1`] = `
+Object {
+  "channel": null,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer USER_LIST_SUCCESS 1`] = `
+Object {
+  "channel": null,
+  "list": Array [
+    "u",
+  ],
+}
+`;
+
+exports[`reducers/groupChannelInviteReducer checking initial state 1`] = `
+Object {
+  "channel": null,
+  "list": Array [],
+}
+`;

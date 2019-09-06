@@ -17,7 +17,20 @@ exports[`screen/OpenChannelCreate renders correctly 1`] = `
       }
     }
   >
-    <RCTScrollView>
+    <RCTScrollView
+      style={
+        Object {
+          "borderColor": "#ddd",
+          "borderRadius": 5,
+          "borderWidth": 1,
+          "marginLeft": 28,
+          "marginRight": 28,
+          "marginTop": 8,
+          "paddingLeft": 8,
+          "paddingRight": 8,
+        }
+      }
+    >
       <View>
         <TextInput
           allowFontScaling={true}
@@ -27,9 +40,16 @@ exports[`screen/OpenChannelCreate renders correctly 1`] = `
           duration={100}
           highlightColor="#7d62d9"
           keyboardType="default"
-          label="Channel Name"
           maxLength={12}
           onChangeText={[Function]}
+          placeholder="Channel Name"
+          rejectResponderTermination={true}
+          style={
+            Object {
+              "backgroundColor": "#fff",
+              "fontSize": 13,
+            }
+          }
           textBlurColor="#000"
           textFocusColor="#7d62d9"
           underlineColorAndroid="transparent"

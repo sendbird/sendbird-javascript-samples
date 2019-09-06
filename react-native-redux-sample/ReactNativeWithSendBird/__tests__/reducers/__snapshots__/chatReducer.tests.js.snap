@@ -1,0 +1,336 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/chatReducer CHANNEL_CHANGED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 3,
+  "selectedMessages": Array [],
+  "title": "title",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CHANNEL_EXIT_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CHANNEL_EXIT_SUCCESS 1`] = `
+Object {
+  "exit": true,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CHANNEL_TITLE_CHANGED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 34,
+  "selectedMessages": Array [],
+  "title": "title",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CHANNEL_TITLE_CHANGED_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CREATE_CHAT_HANDLER_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer CREATE_CHAT_HANDLER_SUCCESS 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer INIT_CHAT_SCREEN 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_COPY 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_DELETED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_LIST_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_LIST_SUCCESS 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    "1",
+  ],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_RECEIVED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    Object {
+      "messageId": 1,
+      "reqId": 123,
+    },
+  ],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer MESSAGE_UPDATED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    Object {
+      "messageId": 1,
+      "reqId": 123,
+    },
+    Object {
+      "messageId": 2,
+    },
+  ],
+  "memberCount": 0,
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer OWN_MESSAGE_DELETED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer OWN_MESSAGE_DELETED_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer OWN_MESSAGE_UPDATED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer OWN_MESSAGE_UPDATED_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer READ_RECEIPT_UPDATED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer SEND_MESSAGE_FAIL 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    Object {
+      "reqId": 456,
+    },
+  ],
+  "memberCount": 0,
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer SEND_MESSAGE_SUCCESS no present message 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    Object {
+      "reqId": 123,
+    },
+    Object {
+      "reqId": 789,
+    },
+    Object {
+      "reqId": 456,
+    },
+  ],
+  "memberCount": 0,
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer SEND_MESSAGE_SUCCESS present message 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    Object {
+      "reqId": 123,
+    },
+    Object {
+      "reqId": 456,
+    },
+  ],
+  "memberCount": 0,
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer SEND_MESSAGE_TEMPORARY 1`] = `
+Object {
+  "exit": false,
+  "list": Array [
+    "message",
+  ],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer TYPING_STATUS_UPDATED 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": true,
+}
+`;
+
+exports[`reducers/chatReducer USER_MESSAGE_PRESS 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [
+    Object {
+      "messageId": 1,
+    },
+  ],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer USER_MESSAGE_SELECTION_CLEAR 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;
+
+exports[`reducers/chatReducer checking initial state 1`] = `
+Object {
+  "exit": false,
+  "list": Array [],
+  "memberCount": 0,
+  "selectedMessages": Array [],
+  "title": "",
+  "typing": "",
+}
+`;

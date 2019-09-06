@@ -1,0 +1,149 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/groupChannelReducer ADD_GROUP_CHANNEL_ITEM which is present 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    Object {
+      "url": "new",
+    },
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer ADD_GROUP_CHANNEL_ITEM which is present 2`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    Object {
+      "url": "new",
+    },
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer CHANNEL_EDIT_FAIL 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer CHANNEL_EDIT_SUCCESS 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    Object {
+      "url": "1",
+    },
+    Object {
+      "url": "3",
+    },
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer CLEAR_SELECTED_GROUP_CHANNEL 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer GET_GROUP_CHANNEL_FAIL 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer GET_GROUP_CHANNEL_SUCCESS 1`] = `
+Object {
+  "channel": "channel",
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_CHANGED not present channel 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    Object {
+      "memberCount": 3,
+      "url": "new",
+    },
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_CHANGED present channel 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    Object {
+      "memberCount": 3,
+      "url": "new",
+    },
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_LIST_FAIL 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_LIST_SUCCESS 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [
+    "1",
+    "2",
+  ],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_PROGRESS_END 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer GROUP_CHANNEL_PROGRESS_START 1`] = `
+Object {
+  "channel": null,
+  "isLoading": true,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer INIT_GROUP_CHANNEL 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/groupChannelReducer checking initial state 1`] = `
+Object {
+  "channel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;

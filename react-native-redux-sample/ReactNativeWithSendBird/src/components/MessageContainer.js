@@ -15,6 +15,7 @@ const MessageContainer = props => {
         nickname={props.nickname}
         message={props.message}
         time={props.time}
+        isEdited={props.isEdited}
       />
       <View style={{ flexDirection: 'column-reverse', paddingLeft: 4, paddingRight: 4 }}>
         {props.isUser ? _renderUnreadCount(props.readCount) : null}

@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/openChannelReducer ADD_OPEN_CHANNEL_ITEM 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": "channel",
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer CLEAR_ADD_OPEN_CHANNEL 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer CLEAR_SELETED_OPEN_CHANNEL 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer GET_OPEN_CHANNEL_FAIL 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer GET_OPEN_CHANNEL_SUCCESS 1`] = `
+Object {
+  "channel": "channel",
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer INIT_OPEN_CHANNEL 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer OPEN_CHANNEL_LIST_FAIL 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer OPEN_CHANNEL_LIST_SUCCESS 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [
+    "1",
+    "2",
+    "3",
+  ],
+}
+`;
+
+exports[`reducers/openChannelReducer OPEN_CHANNEL_PROGRESS_END 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer OPEN_CHANNEL_PROGRESS_START 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": true,
+  "list": Array [],
+}
+`;
+
+exports[`reducers/openChannelReducer checking initial state 1`] = `
+Object {
+  "channel": null,
+  "createdChannel": null,
+  "isLoading": false,
+  "list": Array [],
+}
+`;

@@ -77,6 +77,7 @@ exports[`component/MessageInput renders correctly 1`] = `
       autoCorrect={false}
       onChangeText={[Function]}
       placeholder="Your message"
+      rejectResponderTermination={true}
       selectionColor="#212529"
       style={
         Object {
@@ -223,6 +224,7 @@ exports[`component/MessageInput renders correctly on empty text string 1`] = `
       autoCorrect={false}
       onChangeText={[Function]}
       placeholder="Your message"
+      rejectResponderTermination={true}
       selectionColor="#212529"
       style={
         Object {

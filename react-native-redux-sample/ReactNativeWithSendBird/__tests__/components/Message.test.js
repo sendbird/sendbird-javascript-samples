@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { Message } from '../../src/components';
+import { TestMessage } from '../../src/components';
 import renderer from 'react-test-renderer';
 
 describe('component/Message', () => {
@@ -21,7 +21,7 @@ describe('component/Message', () => {
       profileUrl: 'test_profile_url',
       onPress: () => {}
     };
-    const tree = renderer.create(<Message {...props} />).toJSON();
+    const tree = renderer.create(<TestMessage {...props} />).toJSON();
     expect(tree).toMatchSnapshot();
   });
 });

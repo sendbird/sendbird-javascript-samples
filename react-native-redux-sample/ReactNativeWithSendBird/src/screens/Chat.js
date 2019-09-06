@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, View, FlatList, Text, Alert, AsyncStorage, BackHandler } from 'react-native';
+import { Platform, View, FlatList, Text, Alert, BackHandler, Clipboard, Keyboard } from 'react-native';
 import { NavigationActions } from 'react-navigation';
 import Permissions from 'react-native-permissions';
 import { connect } from 'react-redux';
@@ -12,12 +12,16 @@ import {
   onSendButtonPress,
   getPrevMessageList,
   onUserBlockPress,
+  onMessageDelete,
   onFileButtonPress,
   typingStart,
+  onUserMessageCopy,
+  onUserUpdateMessage,
+  clearMessageSelection,
   typingEnd,
   channelExit
 } from '../actions';
-import { Button, Spinner, TextItem, FileItem, ImageItem, MessageInput, Message, AdminMessage } from '../components';
+import { Button, Spinner, MessageInput, Message, AdminMessage } from '../components';
 import { BarIndicator } from 'react-native-indicators';
 import ImagePicker from 'react-native-image-picker';
 import {
@@ -25,14 +29,50 @@ import {
   sbGetOpenChannel,
   sbCreatePreviousMessageListQuery,
   sbAdjustMessageList,
-  sbIsImageMessage,
   sbMarkAsRead
 } from '../sendbirdActions';
 import appStateChangeHandler from '../appStateChangeHandler';
+import SendBird from 'sendbird';
 
 class Chat extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params } = navigation.state;
+    let newTitle = '';
+    if (params.chooseTitle) {
+      newTitle = params.chooseTitle;
+    } else {
+      newTitle = `${params.newTitle}` + (params.memberCount ? `(${params.memberCount})` : null);
+    }
+    let headerLeft = this._defaultHeaderLeft(params);
+    if (navigation.getParam('configurableHeaderLeft')) {
+      headerLeft = navigation.getParam('configurableHeaderLeft');
+    }
+    let headerRight = this._defaultHeaderRight(params, navigation);
+    if (navigation.getParam('configurableHeaderRight')) {
+      headerRight = navigation.getParam('configurableHeaderRight');
+    }
+    return {
+      title: newTitle,
+      headerLeft: headerLeft,
+      headerRight: headerRight
+    };
+  };
+
+  static _defaultHeaderLeft = params => {
+    return (
+      <Button
+        containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+        buttonStyle={{ paddingLeft: 14 }}
+        icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+        backgroundColor="transparent"
+        onPress={() => {
+          params.handleHeaderLeft();
+        }}
+      />
+    );
+  };
+
+  static _defaultHeaderRight = (params, navigation) => {
     const _renderInviteButton = () => {
       return params.isOpenChannel ? null : (
         <Button
@@ -49,43 +89,30 @@ class Chat extends Component {
         />
       );
     };
-    return {
-      title: `${params.title}(${params.memberCount})`,
-      headerLeft: (
+
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {_renderInviteButton()}
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-          buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          buttonStyle={{ paddingLeft: 4, paddingRight: 4 }}
+          iconRight={{ name: 'users', type: 'font-awesome', color: '#7d62d9', size: 18 }}
           backgroundColor="transparent"
           onPress={() => {
-            params.handleHeaderLeft();
+            navigation.navigate('Member', { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
           }}
         />
-      ),
-      headerRight: (
-        <View style={{ flexDirection: 'row' }}>
-          {_renderInviteButton()}
-          <Button
-            containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-            buttonStyle={{ paddingLeft: 4, paddingRight: 4 }}
-            iconRight={{ name: 'users', type: 'font-awesome', color: '#7d62d9', size: 18 }}
-            backgroundColor="transparent"
-            onPress={() => {
-              navigation.navigate('Member', { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
-            }}
-          />
-          <Button
-            containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
-            buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-            iconRight={{ name: 'user-times', type: 'font-awesome', color: '#7d62d9', size: 18 }}
-            backgroundColor="transparent"
-            onPress={() => {
-              navigation.navigate('BlockUser');
-            }}
-          />
-        </View>
-      )
-    };
+        <Button
+          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+          buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
+          iconRight={{ name: 'user-times', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          backgroundColor="transparent"
+          onPress={() => {
+            navigation.navigate('BlockUser');
+          }}
+        />
+      </View>
+    );
   };
 
   constructor(props) {
@@ -110,6 +137,7 @@ class Chat extends Component {
     BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
     this._init();
   }
+
   componentWillUnmount() {
     this.appStateHandler();
     this.willFocusSubsription.remove();
@@ -146,6 +174,10 @@ class Chat extends Component {
   }
 
   _onBackButtonPress = () => {
+    if (this.props.selectedMessages && this.props.selectedMessages.length !== 0) {
+      this._onEditingCancel();
+      return this.props.clearMessageSelection();
+    }
     const { channelUrl, isOpenChannel, _initListState } = this.props.navigation.state.params;
     if (_initListState) _initListState();
     this.setState({ isLoading: true }, () => {
@@ -155,15 +187,31 @@ class Chat extends Component {
   };
 
   componentWillReceiveProps(props) {
-    const { title, memberCount, list, exit } = props;
-    const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
+    const { title, memberCount, list, exit, selectedMessages } = props;
 
     if (memberCount !== this.props.memberCount || title !== this.props.title) {
       const setParamsAction = NavigationActions.setParams({
-        params: { memberCount, title },
+        params: { memberCount, newTitle: title },
         key: this.props.navigation.state.key
       });
       this.props.navigation.dispatch(setParamsAction);
+    }
+
+    const { params } = this.props.navigation.state;
+    if (
+      selectedMessages &&
+      selectedMessages.length !== 0 &&
+      (params.chooseTitle !== 'Choose' || selectedMessages !== this.props.selectedMessages)
+    ) {
+      this._updateHeadersOnMessagePress(selectedMessages);
+    }
+    if ((!selectedMessages || selectedMessages.length === 0) && params.chooseTitle === 'Choose') {
+      this.props.navigation.setParams({
+        configurableHeaderLeft: undefined,
+        configurableHeaderRight: undefined,
+        chooseTitle: null,
+        newTitle: title
+      });
     }
 
     if (list !== this.props.list) {
@@ -184,7 +232,10 @@ class Chat extends Component {
   _onUserBlockPress = userId => {
     Alert.alert('User Block', 'Are you sure want to block user?', [
       { text: 'Cancel' },
-      { text: 'OK', onPress: () => this.props.onUserBlockPress(userId) }
+      {
+        text: 'OK',
+        onPress: () => this.props.onUserBlockPress(userId)
+      }
     ]);
   };
 
@@ -237,10 +288,10 @@ class Chat extends Component {
           response => {
             if (!response.didCancel && !response.error && !response.customButton) {
               let source = { uri: response.uri };
-              if (response.name) {
+              if (response.fileName) {
                 source['name'] = response.fileName;
               } else {
-                paths = response.uri.split('/');
+                let paths = response.uri.split('/');
                 source['name'] = paths[paths.length - 1];
               }
               if (response.type) {
@@ -269,6 +320,89 @@ class Chat extends Component {
     });
   };
 
+  _selectMessages = messages => {
+    const sb = SendBird.getInstance();
+    return (
+      <View style={{ flexDirection: 'row' }}>
+        {sb.currentUser.userId === messages[0].sender.userId && (
+          <Button
+            containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+            buttonStyle={{ paddingLeft: 10, paddingRight: 10 }}
+            iconRight={{ name: 'edit', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+            backgroundColor="transparent"
+            onPress={() => {
+              if (this.props.selectedMessages[0].isFileMessage() || this.props.selectedMessages[0].isAdminMessage()) {
+                return;
+              }
+              this.setState({
+                textMessage: this.props.selectedMessages[0].message,
+                editing: true
+              });
+            }}
+          />
+        )}
+        <Button
+          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+          buttonStyle={{ paddingLeft: 10, paddingRight: 10 }}
+          iconRight={{ name: 'copy', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+          backgroundColor="transparent"
+          onPress={() => {
+            if (this.props.selectedMessages[0].isFileMessage()) {
+              return;
+            }
+            this.props.onUserMessageCopy();
+            Clipboard.setString(this.props.selectedMessages[0].message);
+          }}
+        />
+        {sb.currentUser.userId === messages[0].sender.userId && (
+          <Button
+            containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+            buttonStyle={{ paddingLeft: 10, paddingRight: 14 }}
+            iconRight={{ name: 'trash', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+            backgroundColor="transparent"
+            onPress={() => {
+              this._deleteSelectedMessageAlert(this.props.selectedMessages[0]);
+            }}
+          />
+        )}
+      </View>
+    );
+  };
+
+  _deleteSelectedMessageAlert = message => {
+    if (message.isAdminMessage()) {
+      return;
+    }
+    const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
+    Alert.alert('Delete Message', 'Are you sure want to delete message?', [
+      { text: 'Cancel' },
+      {
+        text: 'OK',
+        onPress: () => this.props.onMessageDelete(channelUrl, isOpenChannel, message)
+      }
+    ]);
+  };
+
+  _updateHeadersOnMessagePress = messages => {
+    const sb = SendBird.getInstance();
+    const configurableHeaderRight = this._selectMessages(messages);
+    this.props.navigation.setParams({
+      chooseTitle: 'Choose',
+      configurableHeaderLeft: (
+        <Button
+          containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
+          buttonStyle={{ paddingLeft: 14 }}
+          icon={{ name: 'times', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+          backgroundColor="transparent"
+          onPress={() => {
+            this.props.clearMessageSelection();
+          }}
+        />
+      ),
+      configurableHeaderRight: configurableHeaderRight
+    });
+  };
+
   _renderList = rowData => {
     const message = rowData.item;
     const { isOpenChannel } = this.props.navigation.state.params;
@@ -280,9 +414,10 @@ class Chat extends Component {
           isShow={message.sender.isShow}
           isUser={message.isUser}
           profileUrl={message.sender.profileUrl.replace('http://', 'https://')}
-          onPress={() => this._onUserBlockPress(message.sender.userId)}
+          onAvatarPress={() => this._onUserBlockPress(message.sender.userId)}
           nickname={message.sender.nickname}
           time={message.time}
+          isEdited={message.isEdited}
           readCount={isOpenChannel || !channel ? 0 : channel.getReadReceipt(message)}
           message={message}
         />
@@ -306,6 +441,20 @@ class Chat extends Component {
     );
   };
 
+  _onEditingCancel = () => {
+    this.setState({
+      textMessage: '',
+      editing: false
+    });
+    Keyboard.dismiss();
+  };
+
+  _onEditingApprove = () => {
+    const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
+    this.props.onUserUpdateMessage(channelUrl, isOpenChannel, this.props.selectedMessages[0], this.state.textMessage);
+    this._onEditingCancel();
+  };
+
   render() {
     return (
       <View style={styles.containerViewStyle}>
@@ -324,8 +473,9 @@ class Chat extends Component {
         <View style={styles.messageInputViewStyle}>
           {this._renderTyping()}
           <MessageInput
-            onLeftPress={this._onPhotoAddPress}
-            onRightPress={this._onSendButtonPress}
+            onLeftPress={this.state.editing ? this._onEditingCancel : this._onPhotoAddPress}
+            onRightPress={this.state.editing ? this._onEditingApprove : this._onSendButtonPress}
+            editing={this.state.editing}
             textMessage={this.state.textMessage}
             onChangeText={this._onTextMessageChanged}
           />
@@ -336,9 +486,10 @@ class Chat extends Component {
 }
 
 function mapStateToProps({ chat }) {
-  let { title, memberCount, list, exit, typing } = chat;
+  let { title, memberCount, list, exit, typing, selectedMessages } = chat;
+
   list = sbAdjustMessageList(list);
-  return { title, memberCount, list, exit, typing };
+  return { title, memberCount, list, exit, typing, selectedMessages };
 }
 
 export default connect(
@@ -351,10 +502,14 @@ export default connect(
     createChatHandler,
     onSendButtonPress,
     getPrevMessageList,
+    onUserUpdateMessage,
     onUserBlockPress,
     onFileButtonPress,
+    onUserMessageCopy,
+    clearMessageSelection,
     typingStart,
     typingEnd,
+    onMessageDelete,
     channelExit
   }
 )(Chat);

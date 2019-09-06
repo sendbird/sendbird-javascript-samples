@@ -4,87 +4,157 @@ exports[`component/MessageBubble renders correctly file 1`] = `
 <View
   style={
     Object {
-      "flexDirection": "row",
+      "backgroundColor": "#5F3DC4",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
     }
   }
 >
   <View
-    style={
-      Array [
-        false,
-        false,
-        false,
-        Object {
-          "alignItems": "center",
-          "backgroundColor": "transparent",
-          "justifyContent": "center",
-        },
-        Object {
-          "marginLeft": 0,
-        },
-      ]
-    }
-    underlayColor="white"
+    style={Object {}}
   >
-    <Text
-      allowFontScaling={false}
+    <View
       style={
-        Array [
-          Object {
-            "color": "#fff",
-            "fontSize": 16,
-          },
-          Array [
-            Object {
-              "backgroundColor": "transparent",
-            },
-            Object {
-              "margin": 0,
-              "padding": 0,
-            },
-          ],
-          Object {
-            "fontFamily": "FontAwesome",
-            "fontStyle": "normal",
-            "fontWeight": "normal",
-          },
-          Object {},
-        ]
+        Object {
+          "flexDirection": "row",
+        }
       }
     >
-      
-    </Text>
+      <View
+        style={
+          Array [
+            false,
+            false,
+            false,
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "justifyContent": "center",
+            },
+            Object {
+              "marginLeft": 0,
+            },
+          ]
+        }
+        underlayColor="white"
+      >
+        <Text
+          allowFontScaling={false}
+          style={
+            Array [
+              Object {
+                "color": "#fff",
+                "fontSize": 16,
+              },
+              Array [
+                Object {
+                  "backgroundColor": "transparent",
+                },
+                Object {
+                  "margin": 0,
+                  "padding": 0,
+                },
+              ],
+              Object {
+                "fontFamily": "FontAwesome",
+                "fontStyle": "normal",
+                "fontWeight": "normal",
+              },
+              Object {},
+            ]
+          }
+        >
+          
+        </Text>
+      </View>
+      <Text
+        style={
+          Object {
+            "marginLeft": 8,
+          }
+        }
+      >
+        test.file
+      </Text>
+    </View>
   </View>
-  <Text
+  <View
     style={
       Object {
-        "marginLeft": 8,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
       }
     }
   >
-    test.file
-  </Text>
+    <Text
+      style={
+        Object {
+          "color": "#E9EBEF",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
 </View>
 `;
 
 exports[`component/MessageBubble renders correctly image file 1`] = `
 <View
-  style={Object {}}
->
-  <CachedImage
-    resizeMode="contain"
-    source={
-      Object {
-        "uri": "https://dxstmhyqfqr1o.cloudfront.net/sbcom/logo-white@3x.png?key=390f1364a4e3e1cc0ad95074928193c7aeeca401",
-      }
+  style={
+    Object {
+      "backgroundColor": "#5F3DC4",
+      "borderRadius": 8,
+      "maxWidth": 250,
+      "padding": 8,
     }
+  }
+>
+  <View
+    style={Object {}}
+  >
+    <View
+      style={Object {}}
+    >
+      <CachedImage
+        resizeMode="contain"
+        source={
+          Object {
+            "uri": "https://dxstmhyqfqr1o.cloudfront.net/sbcom/logo-white@3x.png?key=390f1364a4e3e1cc0ad95074928193c7aeeca401",
+          }
+        }
+        style={
+          Object {
+            "height": 100,
+            "width": 100,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
     style={
       Object {
-        "height": 100,
-        "width": 100,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
       }
     }
-  />
+  >
+    <Text
+      style={
+        Object {
+          "color": "#E9EBEF",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
 </View>
 `;
 
@@ -92,32 +162,67 @@ exports[`component/MessageBubble renders correctly video file 1`] = `
 <View
   style={
     Object {
+      "backgroundColor": "#5F3DC4",
       "borderRadius": 8,
-      "marginBottom": 4,
-      "minHeight": 180,
-      "minWidth": 240,
+      "maxWidth": 250,
+      "padding": 8,
     }
   }
 >
-  <Video
-    controls={true}
-    paused={true}
-    source={
-      Object {
-        "uri": "https://www.youtube.com/watch?v=wjko7g3SMdg",
+  <View
+    style={Object {}}
+  >
+    <View
+      style={
+        Object {
+          "borderRadius": 8,
+          "marginBottom": 4,
+          "minHeight": 180,
+          "minWidth": 240,
+        }
       }
-    }
+    >
+      <Video
+        controls={true}
+        paused={true}
+        source={
+          Object {
+            "uri": "https://www.youtube.com/watch?v=wjko7g3SMdg",
+          }
+        }
+        style={
+          Object {
+            "borderRadius": 8,
+            "bottom": 0,
+            "left": 0,
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+          }
+        }
+      />
+    </View>
+  </View>
+  <View
     style={
       Object {
-        "borderRadius": 8,
-        "bottom": 0,
-        "left": 0,
-        "position": "absolute",
-        "right": 0,
-        "top": 0,
+        "flexDirection": "row",
+        "justifyContent": "flex-end",
+        "paddingLeft": 8,
       }
     }
-  />
+  >
+    <Text
+      style={
+        Object {
+          "color": "#E9EBEF",
+          "fontSize": 8,
+        }
+      }
+    >
+      test_time
+    </Text>
+  </View>
 </View>
 `;
 

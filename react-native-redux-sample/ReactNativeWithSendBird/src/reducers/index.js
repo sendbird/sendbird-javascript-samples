@@ -11,8 +11,25 @@ import groupChannel from './groupChannelReducer';
 import groupChannelInvite from './groupChannelInviteReducer';
 
 export default combineReducers({
-    login, menu, profile, 
-    openChannel, openChannelCreate, 
-    chat, member, blockUser,
-    groupChannel, groupChannelInvite
+  login,
+  menu,
+  profile,
+  openChannel,
+  openChannelCreate,
+  chat,
+  member,
+  blockUser,
+  groupChannel,
+  groupChannelInvite
 });
+
+export loginReducer from './loginReducer';
+export menuReducer from './menuReducer';
+export profileReducer from './profileReducer';
+export openChannelReducer from './openChannelReducer';
+export openChannelCreateReducer from './openChannelCreateReducer';
+export chatReducer from './chatReducer';
+export memberReducer from './memberReducer';
+export blockUserReducer from './blockUserReducer';
+export groupChannelReducer from './groupChannelReducer';
+export groupChannelInviteReducer from './groupChannelInviteReducer';

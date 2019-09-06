@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/loginReducer INIT_LOGIN 1`] = `
+Object {
+  "error": "",
+  "user": null,
+}
+`;
+
+exports[`reducers/loginReducer LOGIN_FAIL 1`] = `
+Object {
+  "error": "error",
+  "user": null,
+}
+`;
+
+exports[`reducers/loginReducer LOGIN_SUCCESS 1`] = `
+Object {
+  "error": "",
+  "user": "user",
+}
+`;
+
+exports[`reducers/loginReducer checking initial state 1`] = `
+Object {
+  "error": "",
+  "user": null,
+}
+`;

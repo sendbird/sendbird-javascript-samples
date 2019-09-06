@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/blockUserReducer BLOCK_LIST_FAIL 1`] = `
+Object {
+  "list": Array [],
+  "unblockedUserId": "",
+}
+`;
+
+exports[`reducers/blockUserReducer BLOCK_LIST_SUCCESS 1`] = `
+Object {
+  "list": "list",
+  "unblockedUserId": "",
+}
+`;
+
+exports[`reducers/blockUserReducer INIT_BLOCK_USER 1`] = `
+Object {
+  "list": Array [],
+  "unblockedUserId": "",
+}
+`;
+
+exports[`reducers/blockUserReducer USER_UNBLOCK_FAIL 1`] = `
+Object {
+  "list": Array [],
+  "unblockedUserId": "",
+}
+`;
+
+exports[`reducers/blockUserReducer USER_UNBLOCK_SUCCESS 1`] = `
+Object {
+  "list": Array [],
+  "unblockedUserId": "id",
+}
+`;
+
+exports[`reducers/blockUserReducer checking initial state 1`] = `
+Object {
+  "list": Array [],
+  "unblockedUserId": "",
+}
+`;

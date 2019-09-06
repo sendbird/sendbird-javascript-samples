@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/openChannelCreateReducer INIT_OPEN_CHANNEL_CREATE 1`] = `
+Object {
+  "channel": null,
+  "error": "",
+}
+`;
+
+exports[`reducers/openChannelCreateReducer OPEN_CHANNEL_CREATE_FAIL 1`] = `
+Object {
+  "channel": null,
+  "error": "error",
+}
+`;
+
+exports[`reducers/openChannelCreateReducer OPEN_CHANNEL_CREATE_SUCCESS 1`] = `
+Object {
+  "channel": "channel",
+  "error": "",
+}
+`;
+
+exports[`reducers/openChannelCreateReducer checking initial state 1`] = `
+Object {
+  "channel": null,
+  "error": "",
+}
+`;

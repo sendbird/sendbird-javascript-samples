@@ -2,20 +2,33 @@
 
 exports[`component/Message renders correctly with user present 1`] = `
 <View
+  accessible={true}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   style={
-    Object {
-      "transform": Array [
-        Object {
-          "scaleY": -1,
-        },
-      ],
-    }
+    Array [
+      Object {
+        "transform": Array [
+          Object {
+            "scaleY": -1,
+          },
+        ],
+      },
+      Object {
+        "backgroundColor": "",
+      },
+    ]
   }
 >
   <View
     style={
       Object {
         "flexDirection": "row-reverse",
+        "paddingBottom": 4,
         "paddingLeft": 14,
         "paddingRight": 14,
         "paddingTop": 4,

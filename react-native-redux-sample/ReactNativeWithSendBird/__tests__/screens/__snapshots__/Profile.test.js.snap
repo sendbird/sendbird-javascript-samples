@@ -150,6 +150,7 @@ exports[`screen/Profile renders correctly 1`] = `
       allowFontScaling={true}
       maxLength={12}
       onChangeText={[Function]}
+      rejectResponderTermination={true}
       selectionColor="#000"
       style={
         Array [

@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/memberReducer INIT_MEMBER 1`] = `
+Object {
+  "list": Array [],
+}
+`;
+
+exports[`reducers/memberReducer MEMBER_LIST_FAIL 1`] = `
+Object {
+  "list": Array [],
+}
+`;
+
+exports[`reducers/memberReducer MEMBER_LIST_SUCCESS 1`] = `
+Object {
+  "list": Array [
+    "1",
+    "2",
+  ],
+}
+`;
+
+exports[`reducers/memberReducer checking initial state 1`] = `
+Object {
+  "list": Array [],
+}
+`;

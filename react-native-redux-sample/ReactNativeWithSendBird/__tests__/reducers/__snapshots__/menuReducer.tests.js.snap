@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducers/menuReducer DISCONNECT_SUCCESS 1`] = `
+Object {
+  "isDisconnected": true,
+}
+`;
+
+exports[`reducers/menuReducer INIT_MENU 1`] = `
+Object {
+  "isDisconnected": false,
+}
+`;
+
+exports[`reducers/menuReducer checking initial state 1`] = `
+Object {
+  "isDisconnected": false,
+}
+`;

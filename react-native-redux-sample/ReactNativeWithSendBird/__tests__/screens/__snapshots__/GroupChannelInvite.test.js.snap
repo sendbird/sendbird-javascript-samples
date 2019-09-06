@@ -62,16 +62,30 @@ exports[`screen/GroupChannelInvite renders correctly 1`] = `
     style={Object {}}
   >
     <RCTScrollView
-      dataSource={
-        ListViewDataSource {
-          "items": 0,
-        }
-      }
-      enableEmptySections={true}
+      data={Array []}
+      disableVirtualization={false}
+      getItem={[Function]}
+      getItemCount={[Function]}
+      horizontal={false}
+      initialNumToRender={30}
+      keyExtractor={[Function]}
+      maxToRenderPerBatch={10}
+      numColumns={1}
+      onContentSizeChange={[Function]}
       onEndReached={[Function]}
-      onEndReachedThreshold={-50}
-      renderRow={[Function]}
-      renderScrollComponent={[Function]}
+      onEndReachedThreshold={0.5}
+      onLayout={[Function]}
+      onMomentumScrollEnd={[Function]}
+      onScroll={[Function]}
+      onScrollBeginDrag={[Function]}
+      onScrollEndDrag={[Function]}
+      removeClippedSubviews={false}
+      renderItem={[Function]}
+      scrollEventThrottle={50}
+      stickyHeaderIndices={Array []}
+      updateCellsBatchingPeriod={50}
+      viewabilityConfigCallbackPairs={Array []}
+      windowSize={21}
     >
       <View />
     </RCTScrollView>

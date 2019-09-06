@@ -3,7 +3,7 @@ export const INIT_LOGIN = 'init_login';
 export const LOGIN_SUCCESS = 'login_success';
 export const LOGIN_FAIL = 'login_fail';
 
-export const INIT_MENU = 'init_menu'
+export const INIT_MENU = 'init_menu';
 export const DISCONNECT_SUCCESS = 'disconnect_success';
 
 export const INIT_PROFILE = 'init_profile';
@@ -77,6 +77,15 @@ export const MESSAGE_DELETED = 'message_deleted';
 export const CHANNEL_CHANGED = 'channel_changed';
 export const TYPING_STATUS_UPDATED = 'typing_status_updated';
 export const READ_RECEIPT_UPDATED = 'read_receipt_updated';
+
+export const USER_MESSAGE_PRESS = 'message_selected';
+export const USER_MESSAGE_SELECTION_CLEAR = 'selection_messages_clear';
+
+export const OWN_MESSAGE_DELETED = 'own_message_was_deleted';
+export const OWN_MESSAGE_DELETED_FAIL = 'failed_own_message_was_deleted';
+export const OWN_MESSAGE_UPDATED = 'own_message_was_updated';
+export const OWN_MESSAGE_UPDATED_FAIL = 'fail_own_message_was_updated';
+export const MESSAGE_COPY = 'message_was_copied';
 
 // Member/Participant
 export const INIT_MEMBER = 'init_member';

@@ -1,56 +1,77 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import Video from 'react-native-video';
 import { FileItem, TextItem } from './MessageItem';
 import { ImageItem } from './ImageItem';
 
-const _renderNickname = nickname => {
-  return nickname ? <Text style={{ fontSize: 9, color: '#7048e8', paddingBottom: 4 }}>{nickname}</Text> : null;
+const _isVideo = props => {
+  return props.message.type.match(/^video\/.+$/);
 };
 
 const _isImage = props => {
   return props.message.type.match(/^image\/.+$/);
 };
 
-const _isVideo = props => {
-  return props.message.type.match(/^video\/.+$/);
-};
-
-const MessageBubble = props => {
-  let content = null;
-  const message = props.message;
-  if (!message) {
-    return null;
+export class MessageBubble extends Component {
+  constructor(props) {
+    super(props);
   }
-  if (message.isUserMessage()) {
-    content = (
-      <View
-        style={{ maxWidth: 250, padding: 8, borderRadius: 8, backgroundColor: props.isUser ? '#5F3DC4' : '#e6e6e6' }}
-      >
-        {props.isUser || !props.isShow ? null : _renderNickname(props.nickname)}
-        <View style={{}}>
-          <TextItem isUser={props.isUser} message={message.message} />
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingLeft: 8 }}>
-          <Text style={{ fontSize: 8, color: props.isUser ? '#E9EBEF' : '#878d99' }}>{props.time}</Text>
-        </View>
-      </View>
-    );
-  } else if (message.isFileMessage()) {
-    if (_isImage(props)) {
-      content = <ImageItem isUser={props.isUser} message={message.url.replace('http://', 'https://')} />;
-    } else if (_isVideo(props)) {
-      content = (
+
+  _renderNickname = nickname => {
+    return nickname ? <Text style={{ fontSize: 9, color: '#7048e8', paddingBottom: 4 }}>{nickname}</Text> : null;
+  };
+
+  _renderMessageItem = message => {
+    if (message.isUserMessage()) {
+      return <TextItem isUser={this.props.isUser} message={message.message} />;
+    } else if (_isImage(this.props)) {
+      return <ImageItem isUser={this.props.isUser} message={message.url.replace('http://', 'https://')} />;
+    } else if (_isVideo(this.props)) {
+      return (
         <View style={styles.videoContainer}>
           <Video source={{ uri: message.url }} style={styles.video} paused={true} controls={true} />
         </View>
       );
     } else {
-      content = <FileItem isUser={props.isUser} message={message.name} />;
+      return <FileItem isUser={this.props.isUser} message={message.name} />;
     }
+  };
+
+  render() {
+    const message = this.props.message;
+    if (!message) {
+      return null;
+    }
+    return (
+      <View
+        style={{
+          maxWidth: 250,
+          padding: 8,
+          borderRadius: 8,
+          backgroundColor: this.props.isUser ? '#5F3DC4' : '#e6e6e6'
+        }}
+      >
+        {this.props.isUser || !this.props.isShow ? null : this._renderNickname(this.props.nickname)}
+        <View style={{}}>{this._renderMessageItem(this.props.message)}</View>
+        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingLeft: 8 }}>
+          <Text style={{ fontSize: 8, color: this.props.isUser ? '#E9EBEF' : '#878d99' }}>{this.props.time}</Text>
+        </View>
+        {this.props.isEdited && (
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingLeft: 8 }}>
+            <Text
+              style={{
+                fontSize: 8,
+                color: this.props.isUser ? '#E9EBEF' : '#878d99'
+              }}
+            >
+              edited
+            </Text>
+          </View>
+        )}
+      </View>
+    );
   }
-  return content;
-};
+}
 
 const styles = {
   videoContainer: {
@@ -68,5 +89,3 @@ const styles = {
     borderRadius: 8
   }
 };
-
-export { MessageBubble };

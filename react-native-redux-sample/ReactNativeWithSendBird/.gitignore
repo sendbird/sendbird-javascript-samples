@@ -21,7 +21,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-Pods/
+ios/Pods
 
 # Android/IntelliJ
 #
@@ -57,4 +57,3 @@ buck-out/
 *.jsbundle
 
 coverage/
-ios/Pods

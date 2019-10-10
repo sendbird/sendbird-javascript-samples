@@ -1,35 +1,53 @@
 import moment from 'moment';
 
 export function findChannelIndex(newChannel, channels) {
-  const newChannelLastMessageUpdated = newChannel.lastMessage
-    ? newChannel.lastMessage.createdAt
-    : newChannel.createdAt;
+  const newChannelLastMessageUpdated = newChannel.lastMessage ? newChannel.lastMessage.createdAt : newChannel.createdAt;
 
   let index = channels.length;
-  for(let i = 0; i < channels.length; i++) {
+  for (let i = 0; i < channels.length; i++) {
     const comparedChannel = channels[i];
     const comparedChannelLastMessageUpdated = comparedChannel.lastMessage
       ? comparedChannel.lastMessage.createdAt
       : comparedChannel.createdAt;
-    if(newChannel.url === comparedChannel.url) {
+    if (newChannel.url === comparedChannel.url) {
       index = i;
       break;
-    } else if(newChannelLastMessageUpdated > comparedChannelLastMessageUpdated) {
+    } else if (newChannelLastMessageUpdated > comparedChannelLastMessageUpdated) {
       index = i;
       break;
     }
   }
   return index;
 }
-export function findMessageIndex(newMessage, messages) {
+export function findMessageIndex(newMessage, messages, isRequestId = false) {
   let index = messages.length;
-  for(let i = 0; i < messages.length; i++) {
-    if(messages[i].createdAt >= newMessage.createdAt) {
+  for (let i = 0; i < messages.length; i++) {
+    if (
+      !isRequestId &&
+      newMessage.messageId !== 0 &&
+      messages[i].messageId !== 0 &&
+      messages[i].messageId === newMessage.messageId
+    ) {
+      index = i;
+      break;
+    } else if (isRequestId && messages[i].reqId === newMessage.reqId) {
+      index = i;
+      break;
+    } else if (messages[i].createdAt >= newMessage.createdAt) {
       index = i;
       break;
     }
   }
   return index;
+}
+
+export function mergeFailedWithSuccessful(failedMessages, successfulMessages) {
+  const wholeMessages = [...successfulMessages];
+  for (let i = 0; i < failedMessages.length; i++) {
+    const index = findMessageIndex(failedMessages[i], wholeMessages);
+    wholeMessages.splice(index, 0, failedMessages[i]);
+  }
+  return wholeMessages;
 }
 
 export const timestampToTime = timestamp => {
@@ -195,7 +213,7 @@ export const toggleClass = (target, className) => {
 export const uuid4 = () => {
   let d = new Date().getTime();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    const r = ((d + Math.random() * 16) % 16) | 0;
+    const r = (d + Math.random() * 16) % 16 | 0;
     d = Math.floor(d / 16);
     return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
   });

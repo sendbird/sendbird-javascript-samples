@@ -21,7 +21,7 @@ class UserBlockModal extends Modal {
     this.isBlock = isBlock;
     this.user = user;
     this._createElement();
-    
+
     this.submitHandler = () => {
       SendBirdAction.getInstance()
         .blockUser(this.user, this.isBlock)

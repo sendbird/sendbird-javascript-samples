@@ -7,10 +7,15 @@ import { UserBlockModal } from './UserBlockModal';
 import { Chat } from '../Chat';
 
 class Message {
-  constructor({ channel, message }) {
+  constructor({ channel, message, isManual = false, col = null }) {
     this.channel = channel;
     this.message = message;
+    this.isFailed = message.messageId === 0 && message.requestState === 'failed';
+    this.isManual = this.isFailed ? isManual : false;
     this.element = this._createElement();
+    if (col) {
+      this.col = col;
+    }
   }
 
   _createElement() {
@@ -46,7 +51,18 @@ class Message {
   _createUserElement() {
     const sendbirdAction = SendBirdAction.getInstance();
     const isCurrentUser = sendbirdAction.isCurrentUser(this.message.sender);
-    const root = createDivEl({ className: styles['chat-message'], id: this.message.messageId });
+    let root;
+    if (this.isFailed && !this.isManual) {
+      root = createDivEl({
+        className: [styles['chat-message'], styles['is-failed']],
+        id: this.message.reqId
+      });
+    } else {
+      root = createDivEl({
+        className: styles['chat-message'],
+        id: this.message.reqId
+      });
+    }
     setDataInElement(root, MESSAGE_REQ_ID, this.message.reqId);
 
     const messageContent = createDivEl({ className: styles['message-content'] });
@@ -71,36 +87,71 @@ class Message {
     const msg = createDivEl({ className: styles['message-content'], content: protectFromXSS(this.message.message) });
     messageContent.appendChild(msg);
 
-    const time = createDivEl({
-      className: isCurrentUser ? [styles.time, styles['is-user']] : styles.time,
-      content: timestampToTime(this.message.createdAt)
-    });
-    time.addEventListener('mouseover', () => {
-      this._hoverOnTime(time, true);
-    });
-    time.addEventListener('mouseleave', () => {
-      this._hoverOnTime(time, false);
-    });
-    time.addEventListener('click', () => {
-      if (isCurrentUser) {
-        const messageDeleteModal = new MessageDeleteModal({
-          channel: this.channel,
-          message: this.message
-        });
-        messageDeleteModal.render();
-      }
-    });
-    messageContent.appendChild(time);
+    if (this.isFailed && this.isManual) {
+      const resendButton = createDivEl({
+        className: styles['resend-button'],
+        content: 'RESEND'
+      });
+      resendButton.addEventListener('click', () => {
+        this._resendUserMessage();
+      });
+      messageContent.appendChild(resendButton);
+    }
+    if (this.isFailed) {
+      const deleteButton = createDivEl({
+        className: styles['delete-button'],
+        content: 'DELETE'
+      });
+      deleteButton.addEventListener('click', () => {
+        if (isCurrentUser) {
+          const messageDeleteModal = new MessageDeleteModal({
+            channel: this.channel,
+            message: this.message,
+            col: this.col
+          });
+          messageDeleteModal.render();
+        }
+      });
+      messageContent.appendChild(deleteButton);
+    }
+    if (!this.isFailed) {
+      const time = createDivEl({
+        className: isCurrentUser ? [styles.time, styles['is-user']] : styles.time,
+        content: timestampToTime(this.message.createdAt)
+      });
+      time.addEventListener('mouseover', () => {
+        this._hoverOnTime(time, true);
+      });
+      time.addEventListener('mouseleave', () => {
+        this._hoverOnTime(time, false);
+      });
+      time.addEventListener('click', () => {
+        if (isCurrentUser) {
+          const messageDeleteModal = new MessageDeleteModal({
+            channel: this.channel,
+            message: this.message
+          });
+          messageDeleteModal.render();
+        }
+      });
+      messageContent.appendChild(time);
 
-    const count = sendbirdAction.getReadReceipt(this.channel, this.message);
-    const read = createDivEl({
-      className: count ? [styles.read, styles.active] : styles.read,
-      content: count
-    });
-    messageContent.appendChild(read);
+      const count = sendbirdAction.getReadReceipt(this.channel, this.message);
+      const read = createDivEl({
+        className: count ? [styles.read, styles.active] : styles.read,
+        content: count
+      });
+      messageContent.appendChild(read);
+    }
 
     root.appendChild(messageContent);
     return root;
+  }
+
+  _resendUserMessage() {
+    this.channel.resendUserMessage(this.message, (message, err) => {
+      this.col.handleSendMessageResponse(err, message);
+    });
   }
 
   _createFileElement() {
@@ -153,19 +204,27 @@ class Message {
 
     root.appendChild(messageContent);
 
-    if (isImage(this.message.type) && this.message.messageId) {
-      const imageContent = createDivEl({ className: styles['image-content'] });
-      imageContent.addEventListener('click', () => {
+    if (this.message.isFileMessage() && this.message.messageId) {
+      const fileContent = createDivEl({ className: styles['file-content'] });
+      fileContent.addEventListener('click', () => {
         window.open(this.message.url);
       });
-      const imageRender = document.createElement('img');
-      imageRender.className = styles['image-render'];
-      imageRender.src = protectFromXSS(this.message.url);
-      imageRender.onload = () => {
-        Chat.getInstance().main.repositionScroll(imageRender.offsetHeight);
-      };
-      imageContent.appendChild(imageRender);
-      root.appendChild(imageContent);
+      if (this.message.thumbnails.length > 0 || isImage(this.message.type)) {
+        const fileRender = document.createElement('img');
+        fileRender.className = styles['file-render'];
+
+        if (isImage(this.message.type)) {
+          fileRender.src = protectFromXSS(this.message.url);
+        } else if (this.message.thumbnails.length > 0) {
+          fileRender.src = protectFromXSS(this.message.thumbnails[0].url);
+        }
+
+        fileRender.onload = () => {
+          Chat.getInstance().main.repositionScroll(fileRender.offsetHeight);
+        };
+        fileContent.appendChild(fileRender);
+      }
+      root.appendChild(fileContent);
     }
 
     return root;
@@ -176,10 +235,6 @@ class Message {
     const msg = createDivEl({ className: styles['message-admin'], content: protectFromXSS(this.message.message) });
     root.appendChild(msg);
     return root;
-  }
-
-  static getRootElementClasasName() {
-    return styles['chat-message'];
   }
 
   static getReadReceiptElementClassName() {

@@ -9,15 +9,16 @@ const description = 'Are you Sure? Do you want to delete message?';
 const submitText = 'DELETE';
 
 class MessageDeleteModal extends Modal {
-  constructor({ channel, message }) {
+  constructor({ channel, message, col }) {
     super({ title, description, submitText });
     this.channel = channel;
     this.message = message;
+    this.col = col;
     this._createElement();
-    
+
     this.submitHandler = () => {
       SendBirdAction.getInstance()
-        .deleteMessage({ channel: this.channel, message: this.message })
+        .deleteMessage({ channel: this.channel, message: this.message, col: this.col })
         .then(() => {
           Spinner.remove();
           this.close();

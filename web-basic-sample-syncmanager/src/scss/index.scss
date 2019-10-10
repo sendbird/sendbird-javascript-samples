@@ -13,31 +13,43 @@ body {
   min-height: 650px;
   font-family: $font-family-exo2;
 
-  & > .top {
+  &>.top {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 80px;
     color: $color-white;
-    & > .logo {
+
+    &>.logo {
       display: flex;
       align-items: center;
-      & > .logo-image {
+      background-color: $color-white;
+      width: 87px;
+      height: 87px;
+      flex-direction: column;
+      justify-content: center;
+      @include border-radius(50%);
+
+      &>.logo-image {
         display: flex;
         align-items: center;
+        margin-left: 10px;
       }
     }
-    & > .title {
+
+    &>.title {
       display: flex;
       align-items: center;
-      & > .title-company {
+
+      &>.title-company {
         display: flex;
         align-items: center;
         font-size: 30px;
         font-weight: 600;
         margin: 0 10px;
       }
-      & > .title-desc {
+
+      &>.title-desc {
         display: flex;
         align-items: center;
         font-size: 26px;
@@ -46,37 +58,42 @@ body {
     }
   }
 
-  & > .login {
+  &>.login {
     display: flex;
     margin-top: 40px;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    & > .desc {
+    &>.desc {
       display: flex;
       color: $color-purple-text;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      & > .download {
+
+      &>.download {
         display: flex;
         text-align: center;
         margin: 20px 0;
-        & > .download-sample {
+
+        &>.download-sample {
           color: $color-purple-text;
           cursor: pointer;
+
           @include hover {
             cursor: pointer;
           }
         }
       }
     }
-    & > .form {
+
+    &>.form {
       display: flex;
       flex-direction: column;
       margin-top: 10px;
-      & > .form-input {
+
+      &>.form-input {
         display: flex;
         margin-top: 10px;
         border: 2px solid $color-white;
@@ -87,11 +104,13 @@ body {
         color: $color-black-text;
         @include border-radius(2px);
         @include icon($ic-input-user, 20px 20px, 10px center);
+
         @include hover-focus {
           border: 2px solid $color-blue;
         }
       }
-      & > .button {
+
+      &>.button {
         display: flex;
         justify-content: center;
         margin-top: 10px;
@@ -104,6 +123,7 @@ body {
         border: 0;
         @include border-radius(2px);
         cursor: pointer;
+
         @include hover {
           cursor: pointer;
         }
@@ -111,7 +131,7 @@ body {
     }
   }
 
-  & > .image {
+  &>.image {
     display: flex;
     flex-direction: column;
     justify-content: center;

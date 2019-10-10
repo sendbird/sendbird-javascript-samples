@@ -1,5 +1,6 @@
 import { uuid4 } from './utils';
 import SendBird from 'sendbird';
+import { Chat } from './Chat';
 
 let instance = null;
 
@@ -13,6 +14,7 @@ class SendBirdConnection {
     this.key = uuid4();
     this.channel = null;
     this._createConnectionHandler(this.key);
+    this.chat = Chat.getInstance();
 
     this.onReconnectStarted = null;
     this.onReconnectSucceeded = null;
@@ -24,6 +26,9 @@ class SendBirdConnection {
   _createConnectionHandler(key) {
     const handler = new this.sb.ConnectionHandler();
     handler.onReconnectStarted = () => {
+      if (this.chat && this.chat.main) {
+        this.chat.main.body.stopSpinner();
+      }
       if (this.onReconnectStarted) {
         this.onReconnectStarted();
       }
@@ -43,6 +48,10 @@ class SendBirdConnection {
 
   remove() {
     this.sb.removeConnectionHandler(this.key);
+  }
+
+  reconnect() {
+    this.sb.reconnect();
   }
 
   static getInstance() {

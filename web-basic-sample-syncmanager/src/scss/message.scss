@@ -66,15 +66,30 @@
     & > .read.active {
       display: inline-block;
     }
+    & > .resend-button {
+      display: inline;
+      margin-left: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      color: $color-red;
+    }
+
+    & > .delete-button {
+      display: inline;
+      margin-left: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      color: $color-red;
+    }
   }
 
-  & > .image-content {
+  & > .file-content {
     display: block;
     border-left: 2px solid $color-black-text;
     padding-left: 10px;
     margin-top: 8px;
     cursor: pointer;
-    & > .image-render {
+    & > .file-render {
       display: inline;
       max-width: 300px;
       max-height: 300px;
@@ -88,4 +103,8 @@
     font-style: italic;
     color: $color-black-text;
   }
+}
+
+.chat-message.is-failed {
+  background: $color-message-not-sent;
 }

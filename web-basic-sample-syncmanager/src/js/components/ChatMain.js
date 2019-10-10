@@ -33,14 +33,6 @@ class ChatMain {
     Chat.getInstance().element.appendChild(root);
   }
 
-  removeMessage(messageId, isRequestId = false) {
-    this.body.removeMessage(messageId, isRequestId);
-  }
-
-  updateReadReceipt() {
-    this.body.updateReadReceipt();
-  }
-
   updateTyping(memberList) {
     this.input.updateTyping(memberList);
   }
@@ -51,10 +43,6 @@ class ChatMain {
 
   updateBlockedList(user, isBlock) {
     this.menu.updateBlockedList(user, isBlock);
-  }
-
-  updateMenu(channel) {
-    this.menu.updateMenu(channel);
   }
 
   loadInitialMessages() {

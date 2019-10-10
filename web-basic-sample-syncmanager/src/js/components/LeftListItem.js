@@ -24,10 +24,10 @@ class LeftListItem {
 
   get title() {
     return this.channel.members
-          .map(member => {
-            return protectFromXSS(member.nickname);
-          })
-          .join(', ');
+      .map(member => {
+        return protectFromXSS(member.nickname);
+      })
+      .join(', ');
   }
 
   get lastMessagetime() {

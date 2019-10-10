@@ -37,8 +37,9 @@ class ChatInput {
         const previewMessage = SendBirdAction.getInstance().sendFileMessage({
           channel: this.channel,
           file: sendFile,
+          thumbnailSizes: [{ maxWidth: 240, maxHeight: 240 }, { maxWidth: 320, maxHeight: 320 }],
           handler: (message, error) => {
-            if(!error) {
+            if (!error) {
               chat.main.body.collection.appendMessage(message);
             }
             chat.main.body.scrollToBottom();
@@ -71,9 +72,7 @@ class ChatInput {
               channel: this.channel,
               message,
               handler: (message, error) => {
-                if(!error) {
-                  chat.main.body.collection.appendMessage(message);
-                }
+                chat.main.body.collection.handleSendMessageResponse(error, message);
                 chat.main.body.scrollToBottom();
               }
             });

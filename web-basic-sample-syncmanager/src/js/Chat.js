@@ -37,7 +37,7 @@ class Chat {
       className: styles['content-desc'],
       content:
         'Create or select a channel to chat in.\n' +
-        'If you don\'t have a channel to participate,\n' +
+        "If you don't have a channel to participate,\n" +
         'go ahead and create your first channel now.'
     });
     content.appendChild(desc);
@@ -62,7 +62,7 @@ class Chat {
     this.element.appendChild(this.top.element);
 
     /// reset manager when ChatMain is obsolete
-    if(this.main && this.main.body && this.main.body.collection) {
+    if (this.main && this.main.body && this.main.body.collection) {
       this.main.body.collection.remove();
     }
     this.main = new ChatMain(channel);
@@ -85,20 +85,20 @@ class Chat {
 
     ChatLeftMenu.getInstance().activeChannelItem(channel.url);
     this._addEventHandler();
-    
+
     sendbirdAction
       .getChannel(channel.url)
       .then(channel => {
-          this.channel = channel;
-          this._createChatElement(this.channel);
-          this.body.appendChild(this.element);
-          this.main.loadInitialMessages();
-        })
-        .catch(() => {
-          this._createChatElement(this.channel);
-          this.body.appendChild(this.element);
-          this.main.loadInitialMessages();
-        });
+        this.channel = channel;
+        this._createChatElement(this.channel);
+        this.body.appendChild(this.element);
+        this.main.loadInitialMessages();
+      })
+      .catch(() => {
+        this._createChatElement(this.channel);
+        this.body.appendChild(this.element);
+        this.main.loadInitialMessages();
+      });
   }
 
   _removeChatElement() {
@@ -108,29 +108,8 @@ class Chat {
     });
   }
 
-  updateChatInfo(channel) {
-    if (this.channel && this.channel.url === channel.url) {
-      if (this.top) {
-        this.top.updateTitle(channel);
-      }
-      if (this.main) {
-        this.main.updateMenu(channel);
-      }
-    }
-  }
-
   render(channel) {
     channel ? this._renderChatElement(channel) : this.renderEmptyElement();
-  }
-
-  refresh(channel) {
-    this._removeEmptyElement();
-    this._removeChatElement();
-    this.renderEmptyElement();
-    const reconnectChannel = channel ? channel : this.channel;
-    if (reconnectChannel) {
-      this.render(reconnectChannel);
-    }
   }
 
   static getInstance() {

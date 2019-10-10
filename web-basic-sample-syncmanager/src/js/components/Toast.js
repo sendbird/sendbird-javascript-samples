@@ -1,4 +1,3 @@
-
 import styles from '../../scss/toast.scss';
 import { createDivEl } from '../utils';
 
@@ -8,8 +7,8 @@ class Toast {
   constructor(message) {
     if (instance) {
       const messageEl = instance.element.getElementsByClassName('sb-toast-message')[0];
-      if(messageEl) {
-        if(!message) {
+      if (messageEl) {
+        if (!message) {
           message = messageEl.innerHTML;
         }
         messageEl.innerHTML = message;
@@ -40,7 +39,7 @@ class Toast {
     const toastEl = instance ? instance.element : null;
     if (toastEl) {
       const targetEl = toastEl.parentElement;
-      if(targetEl && targetEl.contains(toastEl)) {
+      if (targetEl && targetEl.contains(toastEl)) {
         toastEl.parentElement.removeChild(toastEl);
       }
     }

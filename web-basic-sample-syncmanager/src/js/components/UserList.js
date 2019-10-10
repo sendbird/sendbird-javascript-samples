@@ -35,10 +35,10 @@ class UserList extends List {
 
   _createChannel() {
     SendBirdAction.getInstance()
-    .createGroupChannel(this.selectedUserIds)
-    .then(channel => {
+      .createGroupChannel(this.selectedUserIds)
+      .then(channel => {
         ChatLeftMenu.getInstance().activeChannelUrl = channel.url;
-        Chat.getInstance().render(channel.url, false);
+        Chat.getInstance().render(channel, false);
         Spinner.remove();
         this.close();
       })

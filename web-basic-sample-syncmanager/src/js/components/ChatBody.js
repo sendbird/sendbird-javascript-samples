@@ -1,10 +1,10 @@
 import styles from '../../scss/chat-body.scss';
-import { createDivEl, getDataInElement, removeClass, findMessageIndex } from '../utils';
+import { createDivEl, getDataInElement, removeClass, findMessageIndex, mergeFailedWithSuccessful } from '../utils';
 import { Message } from './Message';
 import { SendBirdAction } from '../SendBirdAction';
 import { MESSAGE_REQ_ID } from '../const';
-
 import SendBirdSyncManager from 'sendbird-syncmanager';
+import { Spinner } from './Spinner';
 
 class ChatBody {
   constructor(channel) {
@@ -15,78 +15,143 @@ class ChatBody {
     this.limit = 50;
     this.element = createDivEl({ className: styles['chat-body'] });
     this._initElement();
+    this.spinnerStarted = false;
   }
-  
+
   _initElement() {
-    if(this.collection) {
+    if (this.collection) {
       this.collection.remove();
     }
-    this.collection = new SendBirdSyncManager.MessageCollection(this.channel, { limit: this.limit });
+    this.collection = new SendBirdSyncManager.MessageCollection(this.channel);
     this.collection.limit = this.limit;
 
     const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
-    collectionHandler.onMessageEvent = (action, message) => {
-      const messageElements = this.element.querySelectorAll('.chat-message');
-      const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
-      switch(action) {
-        case 'insert': {
-          const index = findMessageIndex(message, this.collection.messages);
-          if(index >= 0) {
-            const messageItem = new Message({ channel: this.channel, message });
-            if(index === this.collection.messages.length) {
-              this.element.appendChild(messageItem.element);
-            } else {
-              this.element.insertBefore(messageItem.element, messageElements[index]);
-            }
-            if ((message.isUserMessage() || message.isFileMessage()) && SendBirdAction.getInstance().isCurrentUser(message.sender)) {
-              this.readReceiptManage(message);
-            }
-          }
-          break;
-        }
-        case 'update': {
-          const messageItem = new Message({ channel: this.channel, message });
-          const currentItem = this._getItem(message.messageId, false);
-          const requestItem = message.reqId ? this._getItem(message.reqId, true) : null;
-          if(currentItem || requestItem) {
-            this.element.replaceChild(messageItem.element, requestItem ? requestItem : currentItem);
-          }
-          break;
-        }
-        case 'remove': {
-          if(message.messageId) {
-            this.removeMessage(message.messageId);
-          } else {
-            this.removeMessage(message.reqId, true);
-          }
-          break;
-        }
-        case 'clear': {
-          while (this.element.firstChild) {
-            this.element.removeChild(this.element.firstChild);
-          }
-          break;
-        }
-      }
-      if(keepScrollToBottom) {
-        this.scrollToBottom();
-      }
-    };
+    collectionHandler.onSucceededMessageEvent = this._messageEventHandler.bind(this);
+    collectionHandler.onFailedMessageEvent = this._messageEventHandler.bind(this);
+    collectionHandler.onPendingMessageEvent = this._messageEventHandler.bind(this);
     this.collection.setCollectionHandler(collectionHandler);
 
     this.element.addEventListener('scroll', () => {
       if (this.element.scrollTop === 0) {
         this.updateCurrentScrollHeight();
-        this.collection.fetch('prev', () => {
+        this.collection.fetchSucceededMessages('prev', () => {
           this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
         });
       }
     });
   }
 
+  _messageEventHandler(messages, action, reason) {
+    const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
+    messages.sort((a, b) => a.createdAt - b.createdAt);
+    switch (action) {
+      case 'insert': {
+        this._mergeMessagesOnInsert(messages);
+        break;
+      }
+      case 'update': {
+        if (reason === SendBirdSyncManager.MessageCollection.FailedMessageEventActionReason.UPDATE_RESEND_FAILED) {
+          this._updateMessages(messages, true);
+        } else {
+          this._updateMessages(messages);
+        }
+        break;
+      }
+      case 'remove': {
+        this._removeMessages(messages);
+        break;
+      }
+      case 'clear': {
+        this._clearMessages();
+        break;
+      }
+    }
+    if (keepScrollToBottom) {
+      this.scrollToBottom();
+    }
+  }
+
+  _mergeMessagesOnInsert(messages) {
+    const wholeCollectionMessages = mergeFailedWithSuccessful(
+      this.collection.unsentMessages,
+      this.collection.succeededMessages
+    );
+    for (let i in messages) {
+      const message = messages[i];
+      const index = findMessageIndex(message, wholeCollectionMessages);
+      if (index >= 0) {
+        const messageElements = this.element.querySelectorAll('.chat-message');
+        const messageItem = new Message({ channel: this.channel, message, col: this.collection });
+        this.element.insertBefore(messageItem.element, messageElements[index]);
+        if (
+          (message.isUserMessage() || message.isFileMessage()) &&
+          SendBirdAction.getInstance().isCurrentUser(message.sender)
+        ) {
+          this.readReceiptManage(message);
+        }
+      }
+    }
+  }
+
+  _updateMessages(messages, transformToManual = false) {
+    for (let i in messages) {
+      const message = messages[i];
+      const messageItem = new Message({
+        channel: this.channel,
+        message,
+        isManual: transformToManual,
+        col: this.collection
+      });
+      const currentItem = this._getItem(message.reqId);
+      const requestItem = message.reqId ? this._getItem(message.reqId) : null;
+      if (currentItem || requestItem) {
+        this.element.replaceChild(messageItem.element, requestItem ? requestItem : currentItem);
+      }
+    }
+  }
+
+  _removeMessages(messages) {
+    if (
+      this.collection.unsentMessages.length > 0 &&
+      messages.length > 0 &&
+      messages[0].messageId === 0 &&
+      !this.spinnerStarted
+    ) {
+      const el = this._getItem(messages[0].reqId);
+      const resendButton = el.firstChild.getElementsByClassName('resend-button');
+      if (resendButton && resendButton.length === 0) {
+        Spinner.start(this.element);
+        this.spinnerStarted = true;
+      }
+    }
+    for (let i in messages) {
+      const message = messages[i];
+      this.removeMessage(message.reqId);
+    }
+    if (
+      (this.spinnerStarted && this.collection.unsentMessages.length === 0) ||
+      SendBirdAction.getInstance().getConnectionState() !== 'OPEN'
+    ) {
+      this.stopSpinner();
+    }
+  }
+
+  stopSpinner() {
+    Spinner.remove();
+    this.spinnerStarted = false;
+  }
+
+  _clearMessages() {
+    while (this.element.firstChild) {
+      this.element.removeChild(this.element.firstChild);
+    }
+  }
+
   loadPreviousMessages(callback) {
-    this.collection.fetch('prev', () => {
-      if(callback) callback();
+    this.collection.fetchSucceededMessages('prev', () => {
+      this.collection.fetchFailedMessages(() => {
+        if (callback) callback();
+      });
     });
   }
 
@@ -106,7 +171,7 @@ class ChatBody {
     this.readReceiptManageList.forEach(message => {
       if (message.messageId.toString() !== '0') {
         const className = Message.getReadReceiptElementClassName();
-        const messageItem = this._getItem(message.messageId, false);
+        const messageItem = this._getItem(message.reqId);
         if (messageItem) {
           let readItem = null;
           try {
@@ -144,19 +209,21 @@ class ChatBody {
     this.updateReadReceipt();
   }
 
-  _getItem(messageId, isRequestId = false) {
+  _getItem(reqId) {
     const items = this.element.childNodes;
-    for (let i = 0; i < items.length; i++) {
-      const elementId = isRequestId ? getDataInElement(items[i], MESSAGE_REQ_ID) : items[i].id;
-      if (elementId === messageId.toString()) {
+    // We go in reverse order to prevent situations that
+    // pending-message remove requests accidentally delete succeeded messages
+    for (let i = items.length - 1; i >= 0; i--) {
+      const elementId = getDataInElement(items[i], MESSAGE_REQ_ID);
+      if (elementId === reqId.toString()) {
         return items[i];
       }
     }
     return null;
   }
 
-  removeMessage(messageId, isRequestId = false) {
-    const removeElement = this._getItem(messageId, isRequestId);
+  removeMessage(reqId) {
+    const removeElement = this._getItem(reqId);
     if (removeElement) {
       this.element.removeChild(removeElement);
     }

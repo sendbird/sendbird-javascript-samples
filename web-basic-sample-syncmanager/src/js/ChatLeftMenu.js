@@ -24,75 +24,87 @@ class ChatLeftMenu {
 
     this.channelCollection = new SendBirdSyncManager.ChannelCollection(query);
     const collectionHandler = new SendBirdSyncManager.ChannelCollection.CollectionHandler();
-    collectionHandler.onChannelEvent = (action, channel) => {
-      switch(action) {
+    collectionHandler.onChannelEvent = (action, channels) => {
+      switch (action) {
         case 'insert': {
-          const index = findChannelIndex(channel, this.channelCollection.channels);
-          const handler = () => {
-            Chat.getInstance().render(channel, false);
-            this.activeChannelUrl = channel.url;
-          };
-          const item = new LeftListItem({ channel, handler });
-          if(index < this.groupChannelList.childNodes.length - 1) {
-            this.groupChannelList.insertBefore(item.element, this.groupChannelList.childNodes[index]);
-          } else {
-            this.groupChannelList.appendChild(item.element);
+          for (let i in channels) {
+            const channel = channels[i];
+            const index = findChannelIndex(channel, this.channelCollection.channels);
+            const handler = () => {
+              Chat.getInstance().render(channel, false);
+              this.activeChannelUrl = channel.url;
+            };
+            const item = new LeftListItem({ channel, handler });
+            if (index < this.groupChannelList.childNodes.length - 1) {
+              this.groupChannelList.insertBefore(item.element, this.groupChannelList.childNodes[index]);
+            } else {
+              this.groupChannelList.appendChild(item.element);
+            }
+            if (this.activeChannelUrl === channel.url) {
+              this.activeChannelItem(channel.url);
+            }
           }
           LeftListItem.updateUnreadCount();
           this.toggleGroupChannelDefaultItem();
-          if(this.activeChannelUrl === channel.url) {
-            this.activeChannelItem(channel.url);
-          }
           break;
         }
         case 'update': {
-          const item = this.getItem(channel.url);
-          const handler = () => {
-            Chat.getInstance().render(channel, false);
-            this.activeChannelUrl = channel.url;
-          };
-          const newItem = new LeftListItem({ channel, handler });
-          this.groupChannelList.replaceChild(newItem.element, item);
-          if(this.activeChannelUrl === channel.url) {
-            this.activeChannelItem(channel.url);
+          for (let i in channels) {
+            const channel = channels[i];
+            const item = this.getItem(channel.url);
+            const handler = () => {
+              Chat.getInstance().render(channel, false);
+              this.activeChannelUrl = channel.url;
+            };
+            const newItem = new LeftListItem({ channel, handler });
+            this.groupChannelList.replaceChild(newItem.element, item);
+            if (this.activeChannelUrl === channel.url) {
+              this.activeChannelItem(channel.url);
+            }
           }
           LeftListItem.updateUnreadCount();
           break;
         }
         case 'move': {
-          const previousElement = this.getItem(channel.url);
-          this.groupChannelList.removeChild(previousElement);
+          for (let i in channels) {
+            const channel = channels[i];
+            const previousElement = this.getItem(channel.url);
+            this.groupChannelList.removeChild(previousElement);
 
-          const handler = () => {
-            channel.markAsRead();
-            Chat.getInstance().render(channel, false);
-            this.activeChannelUrl = channel.url;
-          };
-          const newItem = new LeftListItem({ channel, handler });
-          const index = findChannelIndex(channel, this.channelCollection.channels);
-          if(index < this.groupChannelList.childNodes.length - 1) {
-            this.groupChannelList.insertBefore(newItem.element, this.groupChannelList.childNodes[index]);
-          } else {
-            this.groupChannelList.appendChild(newItem.element);
-          }
-          if(this.activeChannelUrl === channel.url) {
-            this.activeChannelItem(channel.url);
+            const handler = () => {
+              channel.markAsRead();
+              Chat.getInstance().render(channel, false);
+              this.activeChannelUrl = channel.url;
+            };
+            const newItem = new LeftListItem({ channel, handler });
+            const index = findChannelIndex(channel, this.channelCollection.channels);
+            if (index < this.groupChannelList.childNodes.length - 1) {
+              this.groupChannelList.insertBefore(newItem.element, this.groupChannelList.childNodes[index]);
+            } else {
+              this.groupChannelList.appendChild(newItem.element);
+            }
+            if (this.activeChannelUrl === channel.url) {
+              this.activeChannelItem(channel.url);
+            }
           }
           LeftListItem.updateUnreadCount();
           break;
         }
         case 'remove': {
-          if(this.activeChannelUrl === channel.url) {
-            this.activeChannelUrl = null;
-            Chat.getInstance().render();
+          for (let i in channels) {
+            const channel = channels[i];
+            if (this.activeChannelUrl === channel.url) {
+              this.activeChannelUrl = null;
+              Chat.getInstance().render();
+            }
+            const element = this.getItem(channel.url);
+            this.groupChannelList.removeChild(element);
           }
-          const element = this.getItem(channel.url);
-          this.groupChannelList.removeChild(element);
           this.toggleGroupChannelDefaultItem();
           break;
         }
         case 'clear': {
-          if(this.activeChannelUrl) {
+          if (this.activeChannelUrl) {
             Chat.getInstance().render();
           }
           this.activeChannelUrl = null;
@@ -114,7 +126,7 @@ class ChatLeftMenu {
       }
     });
     this.groupChannelDefaultItem = document.getElementById('default_item_group');
-    
+
     const groupChannelCreateBtn = document.getElementById('group_chat_add');
     groupChannelCreateBtn.addEventListener('click', () => {
       UserList.getInstance().render();

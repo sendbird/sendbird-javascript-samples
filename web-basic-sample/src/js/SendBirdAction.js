@@ -63,7 +63,7 @@ class SendBirdAction {
 
   getUserList(isInit = false) {
     if (isInit || isNull(this.userQuery)) {
-      this.userQuery = new this.sb.createApplicationUserListQuery();
+      this.userQuery = this.sb.createApplicationUserListQuery();
       this.userQuery.limit = 30;
     }
     return new Promise((resolve, reject) => {
@@ -133,7 +133,7 @@ class SendBirdAction {
    */
   getOpenChannelList(isInit = false, urlKeyword = '') {
     if (isInit || isNull(this.openChannelQuery)) {
-      this.openChannelQuery = new this.sb.OpenChannel.createOpenChannelListQuery();
+      this.openChannelQuery = this.sb.OpenChannel.createOpenChannelListQuery();
       this.openChannelQuery.limit = 20;
       this.openChannelQuery.urlKeyword = urlKeyword;
     }
@@ -216,7 +216,7 @@ class SendBirdAction {
    */
   getGroupChannelList(isInit = false) {
     if (isInit || isNull(this.groupChannelQuery)) {
-      this.groupChannelQuery = new this.sb.GroupChannel.createMyGroupChannelListQuery();
+      this.groupChannelQuery = this.sb.GroupChannel.createMyGroupChannelListQuery();
       this.groupChannelQuery.limit = 50;
       this.groupChannelQuery.includeEmpty = false;
       this.groupChannelQuery.order = 'latest_last_message';
@@ -327,9 +327,14 @@ class SendBirdAction {
   sendFileMessage({
     channel,
     file,
+    thumbnailSizes,
     handler
   }) {
-    return channel.sendFileMessage(file, (message, error) => {
+    const fileMessageParams = new this.sb.FileMessageParams();
+    fileMessageParams.file = file;
+    fileMessageParams.thumbnailSizes = thumbnailSizes;
+
+    return channel.sendFileMessage(fileMessageParams, (message, error) => {
       if (handler) handler(message, error);
     });
   }

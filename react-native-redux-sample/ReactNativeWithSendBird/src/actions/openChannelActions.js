@@ -8,7 +8,7 @@ import {
   GET_OPEN_CHANNEL_FAIL,
   ADD_OPEN_CHANNEL_ITEM,
   CLEAR_ADD_OPEN_CHANNEL,
-  CLEAR_SELETED_OPEN_CHANNEL
+  CLEAR_SELECTED_OPEN_CHANNEL
 } from './types';
 import { sbGetOpenChannelList, sbGetOpenChannel } from '../sendbirdActions';
 
@@ -58,10 +58,12 @@ export const clearCreatedOpenChannel = () => {
   return { type: CLEAR_ADD_OPEN_CHANNEL };
 };
 
-export const clearSeletedOpenChannel = () => {
-  return { type: CLEAR_SELETED_OPEN_CHANNEL };
+export const clearSelectedOpenChannel = () => {
+  return { type: CLEAR_SELECTED_OPEN_CHANNEL };
 };
 
 export const openChannelProgress = start => {
-  return { type: start ? OPEN_CHANNEL_PROGRESS_START : OPEN_CHANNEL_PROGRESS_END };
+  return {
+    type: start ? OPEN_CHANNEL_PROGRESS_START : OPEN_CHANNEL_PROGRESS_END
+  };
 };

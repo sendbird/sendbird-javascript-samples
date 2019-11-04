@@ -8,7 +8,7 @@ import {
   GET_OPEN_CHANNEL_FAIL,
   ADD_OPEN_CHANNEL_ITEM,
   CLEAR_ADD_OPEN_CHANNEL,
-  CLEAR_SELETED_OPEN_CHANNEL
+  CLEAR_SELECTED_OPEN_CHANNEL
 } from '../actions/types';
 
 const INITAL_STATE = {
@@ -42,7 +42,7 @@ export default (state = INITAL_STATE, action) => {
       return { ...state, createdChannel: action.channel };
     case CLEAR_ADD_OPEN_CHANNEL:
       return { ...state, createdChannel: null };
-    case CLEAR_SELETED_OPEN_CHANNEL:
+    case CLEAR_SELECTED_OPEN_CHANNEL:
       return { ...state, channel: null };
     default:
       return state;

@@ -25,7 +25,12 @@ class GroupChannel extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          icon={{
+            name: 'chevron-left',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => navigation.goBack()}
         />
@@ -34,10 +39,18 @@ class GroupChannel extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-          iconRight={{ name: 'user-plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          iconRight={{
+            name: 'user-plus',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => {
-            navigation.navigate('GroupChannelInvite', { title: 'Group Channel Create', channelUrl: null });
+            navigation.navigate('GroupChannelInvite', {
+              title: 'Group Channel Create',
+              channelUrl: null
+            });
           }}
         />
       )
@@ -67,9 +80,10 @@ class GroupChannel extends Component {
     this.appStateHandler();
   }
 
-  componentWillReceiveProps(props) {
-    const { channel } = props;
-    if (channel) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { channel } = this.props;
+
+    if (channel && this.props.channel !== prevProps.channel) {
       this.props.clearSelectedGroupChannel();
       this.props.navigation.navigate('Chat', {
         channelUrl: channel.url,
@@ -207,13 +221,20 @@ class GroupChannel extends Component {
         }
       }
     ];
+    // if(! channel || ! channel.coverUrl) {
+    //   return null
+    // }
+    let avatar = <Avatar />;
+    if (channel.coverUrl) {
+      avatar = <Avatar source={{ uri: channel.coverUrl }} />;
+    }
     return (
       <Swipeout right={swipeoutBtns} autoClose={true}>
         <ListItem
           component={TouchableHighlight}
           containerStyle={{ backgroundColor: '#fff' }}
           key={channel.url}
-          avatar={<Avatar source={{ uri: channel.coverUrl }} />}
+          avatar={avatar}
           title={this._renderTitle(channel)}
           titleStyle={{ fontWeight: '500', fontSize: 16 }}
           subtitle={this._renderLastMessage(channel)}

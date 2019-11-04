@@ -53,11 +53,30 @@ export class MessageBubble extends Component {
       >
         {this.props.isUser || !this.props.isShow ? null : this._renderNickname(this.props.nickname)}
         <View style={{}}>{this._renderMessageItem(this.props.message)}</View>
-        <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingLeft: 8 }}>
-          <Text style={{ fontSize: 8, color: this.props.isUser ? '#E9EBEF' : '#878d99' }}>{this.props.time}</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            paddingLeft: 8
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 8,
+              color: this.props.isUser ? '#E9EBEF' : '#878d99'
+            }}
+          >
+            {this.props.time}
+          </Text>
         </View>
         {this.props.isEdited && (
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', paddingLeft: 8 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              paddingLeft: 8
+            }}
+          >
             <Text
               style={{
                 fontSize: 8,

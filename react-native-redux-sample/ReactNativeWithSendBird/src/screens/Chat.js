@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Platform, View, FlatList, Text, Alert, BackHandler, Clipboard, Keyboard } from 'react-native';
 import { NavigationActions } from 'react-navigation';
-import Permissions from 'react-native-permissions';
+import Permissions, { PERMISSIONS, RESULTS } from 'react-native-permissions';
 import { connect } from 'react-redux';
 import {
   openChannelProgress,
@@ -63,7 +63,12 @@ class Chat extends Component {
       <Button
         containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
         buttonStyle={{ paddingLeft: 14 }}
-        icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+        icon={{
+          name: 'chevron-left',
+          type: 'font-awesome',
+          color: '#7d62d9',
+          size: 18
+        }}
         backgroundColor="transparent"
         onPress={() => {
           params.handleHeaderLeft();
@@ -78,7 +83,12 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 0, paddingRight: 0 }}
-          iconRight={{ name: 'user-plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          iconRight={{
+            name: 'user-plus',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => {
             navigation.navigate('GroupChannelInvite', {
@@ -96,16 +106,29 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 4, paddingRight: 4 }}
-          iconRight={{ name: 'users', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          iconRight={{
+            name: 'users',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => {
-            navigation.navigate('Member', { isOpenChannel: params.isOpenChannel, channelUrl: params.channelUrl });
+            navigation.navigate('Member', {
+              isOpenChannel: params.isOpenChannel,
+              channelUrl: params.channelUrl
+            });
           }}
         />
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 0, paddingRight: 14 }}
-          iconRight={{ name: 'user-times', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          iconRight={{
+            name: 'user-times',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => {
             navigation.navigate('BlockUser');
@@ -133,7 +156,9 @@ class Chat extends Component {
     this.appStateHandler = appStateChangeHandler.getInstance().addCallback('CHAT', () => {
       this._init();
     });
-    this.props.navigation.setParams({ handleHeaderLeft: this._onBackButtonPress });
+    this.props.navigation.setParams({
+      handleHeaderLeft: this._onBackButtonPress
+    });
     BackHandler.addEventListener('hardwareBackPress', this._onBackButtonPress);
     this._init();
   }
@@ -166,10 +191,47 @@ class Chat extends Component {
     }
   };
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
+    const { title, memberCount, list, exit, selectedMessages } = this.props;
+
     if (!isOpenChannel) {
       this.state.textMessage ? this.props.typingStart(channelUrl) : this.props.typingEnd(channelUrl);
+    }
+
+    if (memberCount !== prevProps.memberCount || title !== prevProps.title) {
+      const setParamsAction = NavigationActions.setParams({
+        params: { memberCount, newTitle: title },
+        key: this.props.navigation.state.key
+      });
+      this.props.navigation.dispatch(setParamsAction);
+    }
+
+    const { params } = this.props.navigation.state;
+    if (
+      selectedMessages &&
+      selectedMessages.length !== 0 &&
+      (params.chooseTitle !== 'Choose' || selectedMessages !== prevProps.selectedMessages)
+    ) {
+      this._updateHeadersOnMessagePress(selectedMessages);
+    }
+    if ((!selectedMessages || selectedMessages.length === 0) && params.chooseTitle === 'Choose') {
+      this.props.navigation.setParams({
+        configurableHeaderLeft: undefined,
+        configurableHeaderRight: undefined,
+        chooseTitle: null,
+        newTitle: title
+      });
+    }
+
+    if (list !== prevProps.list) {
+      this.setState({ isLoading: false });
+    }
+
+    if (exit && prevProps.exit !== exit) {
+      this.setState({ isLoading: false }, () => {
+        this.props.navigation.goBack();
+      });
     }
   }
 
@@ -185,45 +247,6 @@ class Chat extends Component {
     });
     return true;
   };
-
-  componentWillReceiveProps(props) {
-    const { title, memberCount, list, exit, selectedMessages } = props;
-
-    if (memberCount !== this.props.memberCount || title !== this.props.title) {
-      const setParamsAction = NavigationActions.setParams({
-        params: { memberCount, newTitle: title },
-        key: this.props.navigation.state.key
-      });
-      this.props.navigation.dispatch(setParamsAction);
-    }
-
-    const { params } = this.props.navigation.state;
-    if (
-      selectedMessages &&
-      selectedMessages.length !== 0 &&
-      (params.chooseTitle !== 'Choose' || selectedMessages !== this.props.selectedMessages)
-    ) {
-      this._updateHeadersOnMessagePress(selectedMessages);
-    }
-    if ((!selectedMessages || selectedMessages.length === 0) && params.chooseTitle === 'Choose') {
-      this.props.navigation.setParams({
-        configurableHeaderLeft: undefined,
-        configurableHeaderRight: undefined,
-        chooseTitle: null,
-        newTitle: title
-      });
-    }
-
-    if (list !== this.props.list) {
-      this.setState({ isLoading: false });
-    }
-
-    if (exit) {
-      this.setState({ isLoading: false }, () => {
-        this.props.navigation.goBack();
-      });
-    }
-  }
 
   _onTextMessageChanged = textMessage => {
     this.setState({ textMessage });
@@ -277,8 +300,10 @@ class Chat extends Component {
 
   _onPhotoAddPress = () => {
     const { channelUrl, isOpenChannel } = this.props.navigation.state.params;
-    Permissions.checkMultiple(['photo']).then(response => {
-      if (response.photo === 'authorized') {
+    Permissions.check(
+      Platform.OS === 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+    ).then(response => {
+      if (response === RESULTS.GRANTED) {
         ImagePicker.showImagePicker(
           {
             title: 'Select Image File To Send',
@@ -308,8 +333,10 @@ class Chat extends Component {
             }
           }
         );
-      } else if (response.photo === 'undetermined') {
-        Permissions.request('photo').then(response => {
+      } else if (response === RESULTS.DENIED) {
+        Permissions.request(
+          Platform.OS === 'ios' ? PERMISSIONS.IOS.PHOTO_LIBRARY : PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE
+        ).then(response => {
           this._onPhotoAddPress();
         });
       } else {
@@ -328,7 +355,12 @@ class Chat extends Component {
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
             buttonStyle={{ paddingLeft: 10, paddingRight: 10 }}
-            iconRight={{ name: 'edit', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+            iconRight={{
+              name: 'edit',
+              type: 'font-awesome',
+              color: '#7d62d9',
+              size: 22
+            }}
             backgroundColor="transparent"
             onPress={() => {
               if (this.props.selectedMessages[0].isFileMessage() || this.props.selectedMessages[0].isAdminMessage()) {
@@ -344,7 +376,12 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 10, paddingRight: 10 }}
-          iconRight={{ name: 'copy', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+          iconRight={{
+            name: 'copy',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 22
+          }}
           backgroundColor="transparent"
           onPress={() => {
             if (this.props.selectedMessages[0].isFileMessage()) {
@@ -358,7 +395,12 @@ class Chat extends Component {
           <Button
             containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
             buttonStyle={{ paddingLeft: 10, paddingRight: 14 }}
-            iconRight={{ name: 'trash', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+            iconRight={{
+              name: 'trash',
+              type: 'font-awesome',
+              color: '#7d62d9',
+              size: 22
+            }}
             backgroundColor="transparent"
             onPress={() => {
               this._deleteSelectedMessageAlert(this.props.selectedMessages[0]);
@@ -392,7 +434,12 @@ class Chat extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'times', type: 'font-awesome', color: '#7d62d9', size: 22 }}
+          icon={{
+            name: 'times',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 22
+          }}
           backgroundColor="transparent"
           onPress={() => {
             this.props.clearMessageSelection();

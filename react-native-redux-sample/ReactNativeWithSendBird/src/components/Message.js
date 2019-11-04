@@ -21,15 +21,15 @@ class Message extends Component {
     return messages.find(message => message.messageId === messageId);
   };
 
-  componentWillReceiveProps(nextProps) {
-    if (!this.props.selectedMessages && !nextProps.selectedMessages) {
+  componentDidUpdate(prevProps) {
+    if (!prevProps.selectedMessages && !this.props.selectedMessages) {
       return;
     }
-    const messageId = this.props.message.messageId;
+    const messageId = prevProps.message.messageId;
     if (
-      nextProps.selectedMessages &&
-      this._containsMessageWithId(nextProps.selectedMessages, messageId) &&
-      (!this.props.selectedMessages || !this._containsMessageWithId(this.props.selectedMessages, messageId))
+      this.props.selectedMessages &&
+      this._containsMessageWithId(this.props.selectedMessages, messageId) &&
+      (!prevProps.selectedMessages || !this._containsMessageWithId(prevProps.selectedMessages, messageId))
     ) {
       this.setState({
         bgColor: '#afceff'
@@ -37,9 +37,9 @@ class Message extends Component {
       return;
     }
     if (
-      this.props.selectedMessages &&
-      this._containsMessageWithId(this.props.selectedMessages, messageId) &&
-      (!nextProps.selectedMessages || !this._containsMessageWithId(nextProps.selectedMessages, messageId))
+      prevProps.selectedMessages &&
+      this._containsMessageWithId(prevProps.selectedMessages, messageId) &&
+      (!prevProps.selectedMessages || !this._containsMessageWithId(this.props.selectedMessages, messageId))
     ) {
       this.setState({
         bgColor: '#f1f2f6'

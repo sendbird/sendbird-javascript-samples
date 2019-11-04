@@ -22,12 +22,14 @@ export const initGroupChannel = () => {
 };
 
 export const groupChannelProgress = start => {
-  return { type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END };
+  return {
+    type: start ? GROUP_CHANNEL_PROGRESS_START : GROUP_CHANNEL_PROGRESS_END
+  };
 };
 
 export const getGroupChannelList = groupChannelListQuery => {
   return dispatch => {
-    if (groupChannelListQuery.hasNext) {
+    if (groupChannelListQuery && groupChannelListQuery.hasNext) {
       return sbGetGroupChannelList(groupChannelListQuery)
         .then(channels =>
           dispatch({

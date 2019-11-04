@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, AsyncStorage, Platform } from 'react-native';
+import { View, Platform } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { connect } from 'react-redux';
 import firebase from 'react-native-firebase';
 import { sendbirdLogout, initMenu } from '../actions';
@@ -48,7 +49,10 @@ class Menu extends Component {
           const user = JSON.parse(result);
           sbConnect(user.userId, user.nickname)
             .then(() => {
-              const payload = notif.notification.data;
+              let payload = notif.notification.data;
+              if (!payload.hasOwnProperty('channel') && payload.hasOwnProperty('sendbird')) {
+                payload = payload.sendbird;
+              }
               const isOpenChannel = () => {
                 return payload.channel_type !== 'group_messaging' && payload.channel_type !== 'messaging';
               };
@@ -105,7 +109,7 @@ class Menu extends Component {
     this.onPushNotificationOpened();
   }
 
-  componentWillReceiveProps(props) {
+  componentDidUpdate(prevProps) {
     AsyncStorage.getItem('user', (err, result) => {
       if (!result) {
         this.setState({ isLoading: false }, () => {
@@ -161,7 +165,12 @@ class Menu extends Component {
           buttonStyle={styles.buttonStyle}
           backgroundColor="#fff"
           color="#6e5baa"
-          icon={{ name: 'user', type: 'font-awesome', color: '#6e5baa', size: 16 }}
+          icon={{
+            name: 'user',
+            type: 'font-awesome',
+            color: '#6e5baa',
+            size: 16
+          }}
           title="Profile"
           onPress={this._onProfileButtonPress}
         />
@@ -171,7 +180,12 @@ class Menu extends Component {
           buttonStyle={styles.buttonStyle}
           backgroundColor="#fff"
           color="#6e5baa"
-          icon={{ name: 'slack', type: 'font-awesome', color: '#6e5baa', size: 16 }}
+          icon={{
+            name: 'slack',
+            type: 'font-awesome',
+            color: '#6e5baa',
+            size: 16
+          }}
           title="Open Channel"
           onPress={this._onOpenChannelPress}
         />
@@ -181,7 +195,12 @@ class Menu extends Component {
           buttonStyle={styles.buttonStyle}
           backgroundColor="#fff"
           color="#6e5baa"
-          icon={{ name: 'users', type: 'font-awesome', color: '#6e5baa', size: 16 }}
+          icon={{
+            name: 'users',
+            type: 'font-awesome',
+            color: '#6e5baa',
+            size: 16
+          }}
           title="Group Channel"
           onPress={this._onGroupChannelPress}
         />
@@ -192,7 +211,12 @@ class Menu extends Component {
           backgroundColor="#fff"
           color="#7d62d9"
           color="#6e5baa"
-          icon={{ name: 'sign-out', type: 'font-awesome', color: '#6e5baa', size: 16 }}
+          icon={{
+            name: 'sign-out',
+            type: 'font-awesome',
+            color: '#6e5baa',
+            size: 16
+          }}
           title="Disconnect"
           onPress={this._onDisconnectButtonPress}
         />

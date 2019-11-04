@@ -1,5 +1,6 @@
 import SendBird from 'sendbird';
-import { Platform, AsyncStorage } from 'react-native';
+import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import firebase from 'react-native-firebase';
 
 // const APP_ID = '078105E7-BD8C-43C9-A583-59E334353965'; // test

@@ -20,7 +20,12 @@ class OpenChannelCreate extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          icon={{
+            name: 'chevron-left',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => navigation.goBack()}
         />
@@ -49,14 +54,16 @@ class OpenChannelCreate extends Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleHeaderRight: this._onCreateButtonPress });
+    this.props.navigation.setParams({
+      handleHeaderRight: this._onCreateButtonPress
+    });
     this.props.initOpenChannelCreate();
   }
 
-  componentWillReceiveProps(props) {
-    const { channel, error } = props;
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { channel, error } = this.props;
 
-    if (channel) {
+    if (channel && this.props.channel !== prevProps.channel) {
       this.props.openChannelProgress(true);
       this.setState({ isLoading: false }, () => {
         this.props.addOpenChannelItem(channel);

@@ -22,7 +22,10 @@ export const onUnblockUserPress = unblockedUserId => {
   return dispatch => {
     return sbUserUnblock(unblockedUserId)
       .then(user => {
-        dispatch({ type: USER_UNBLOCK_SUCCESS, unblockedUserId: unblockedUserId });
+        dispatch({
+          type: USER_UNBLOCK_SUCCESS,
+          unblockedUserId: unblockedUserId
+        });
       })
       .catch(error => dispatch({ type: USER_UNBLOCK_FAIL }));
   };

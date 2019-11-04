@@ -55,14 +55,15 @@ class Profile extends Component {
     });
   }
 
-  componentWillReceiveProps(props) {
-    const { userInfo, isSaved } = props;
-    if (userInfo) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { userInfo, isSaved } = this.props;
+
+    if (userInfo && userInfo !== prevProps.userInfo) {
       const { profileUrl, nickname } = userInfo;
       const isLoading = false;
       this.setState({ profileUrl, nickname, isLoading });
     }
-    if (isSaved) {
+    if (isSaved && isSaved !== prevProps.isSaved) {
       this.props.navigation.goBack();
     }
   }

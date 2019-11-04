@@ -14,9 +14,5 @@ module.exports = {
         inlineRequires: false
       }
     })
-  },
-
-  resolver: {
-    blacklistRE: blacklist([/nodejs-assets\/.*/, /android\/.*/, /ios\/.*/])
   }
 };

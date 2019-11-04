@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { Platform, AppState, PushNotificationIOS } from 'react-native';
+import { Platform, AppState } from 'react-native';
 import { createStackNavigator, createAppContainer } from 'react-navigation';
 import { Provider } from 'react-redux';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 import SendBird from 'sendbird';
 import firebase from 'react-native-firebase';
 

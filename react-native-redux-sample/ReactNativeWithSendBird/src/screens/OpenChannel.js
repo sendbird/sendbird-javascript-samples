@@ -6,7 +6,7 @@ import {
   getOpenChannelList,
   onOpenChannelPress,
   clearCreatedOpenChannel,
-  clearSeletedOpenChannel,
+  clearSelectedOpenChannel,
   openChannelProgress
 } from '../actions';
 import { Button, ListItem, Avatar, Spinner } from '../components';
@@ -22,7 +22,12 @@ class OpenChannel extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          icon={{
+            name: 'chevron-left',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => navigation.goBack()}
         />
@@ -31,7 +36,12 @@ class OpenChannel extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingRight: 14 }}
-          iconRight={{ name: 'plus', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          iconRight={{
+            name: 'plus',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => {
             navigation.navigate('OpenChannelCreate');
@@ -64,16 +74,17 @@ class OpenChannel extends Component {
     this.willFocusSubsription.remove();
   }
 
-  componentWillReceiveProps(props) {
-    const { list, channel, createdChannel } = props;
-    if (createdChannel) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    const { list, channel, createdChannel } = this.props;
+
+    if (createdChannel && createdChannel !== prevProps.createdChannel) {
       const newList = [...[createdChannel], ...list];
       this.setState({ list: newList }, () => {
         this.props.clearCreatedOpenChannel();
       });
     }
-    if (channel) {
-      this.props.clearSeletedOpenChannel();
+    if (channel && channel !== prevProps.channel) {
+      this.props.clearSelectedOpenChannel();
       this.props.navigation.navigate('Chat', {
         channelUrl: channel.url,
         newTitle: channel.name,
@@ -113,11 +124,11 @@ class OpenChannel extends Component {
     }
   };
 
-  // _handleScroll = (e) => {
-  //     if (e.nativeEvent.contentOffset.y < -100 && !this.props.isLoading) {
-  //         this._initOpenChannelList();
-  //     }
-  // }
+  _handleScroll = e => {
+    if (e.nativeEvent.contentOffset.y < -100 && !this.props.isLoading) {
+      this._initOpenChannelList();
+    }
+  };
 
   _renderList = rowData => {
     const channel = rowData.item;
@@ -168,7 +179,7 @@ export default connect(
     getOpenChannelList,
     onOpenChannelPress,
     clearCreatedOpenChannel,
-    clearSeletedOpenChannel,
+    clearSelectedOpenChannel,
     openChannelProgress
   }
 )(OpenChannel);

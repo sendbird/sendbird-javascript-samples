@@ -25,9 +25,9 @@ class Login extends Component {
     this.props.initLogin();
   }
 
-  componentWillReceiveProps(props) {
-    let { user, error } = props;
-    if (user) {
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    let { user, error } = this.props;
+    if (user && user !== prevProps.user) {
       firebase
         .messaging()
         .getToken()
@@ -37,17 +37,17 @@ class Login extends Component {
               .then(res => {})
               .catch(err => {});
           }
-          const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Menu' })]
-          });
-          this.setState({ userId: '', nickname: '', isLoading: false }, () => {
-            this.props.navigation.dispatch(resetAction);
-          });
         });
+      const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName: 'Menu' })]
+      });
+      this.setState({ userId: '', nickname: '', isLoading: false }, () => {
+        this.props.navigation.dispatch(resetAction);
+      });
     }
 
-    if (error) {
+    if (error && error !== prevProps.error) {
       this.setState({ isLoading: false });
     }
   }

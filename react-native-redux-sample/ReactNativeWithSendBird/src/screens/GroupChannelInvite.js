@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, ListView, TouchableHighlight, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableHighlight, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import {
   initInvite,
@@ -23,7 +23,12 @@ class GroupChannelInvite extends Component {
         <Button
           containerViewStyle={{ marginLeft: 0, marginRight: 0 }}
           buttonStyle={{ paddingLeft: 14 }}
-          icon={{ name: 'chevron-left', type: 'font-awesome', color: '#7d62d9', size: 18 }}
+          icon={{
+            name: 'chevron-left',
+            type: 'font-awesome',
+            color: '#7d62d9',
+            size: 18
+          }}
           backgroundColor="transparent"
           onPress={() => navigation.goBack()}
         />
@@ -48,24 +53,25 @@ class GroupChannelInvite extends Component {
     this.state = {
       isLoading: false,
       userListQuery: null,
-      selectedList: [],
-      selectedUserList: ds.cloneWithRows([])
+      selectedList: []
     };
   }
 
   componentDidMount() {
     this._initInvite();
-    this.props.navigation.setParams({ handleHeaderRight: this._onCreateButtonPress });
+    this.props.navigation.setParams({
+      handleHeaderRight: this._onCreateButtonPress
+    });
   }
 
-  componentWillReceiveProps(props) {
-    const { channel, list } = props;
+  componentDidUpdate(prevProps, prevState) {
+    const { channel, list } = this.props;
 
-    if (list !== this.props.list) {
+    if (list !== prevProps.list) {
       this.setState({ isLoading: false });
     }
 
-    if (channel) {
+    if (channel && prevProps.channel !== this.props.channel) {
       const { channelUrl } = this.props.navigation.state.params;
       if (channelUrl) {
         this.setState({ isLoading: false }, () => {
@@ -141,12 +147,16 @@ class GroupChannelInvite extends Component {
     const newSelectedList = this.state.selectedList.filter(user => {
       return user.userId !== removeUser.userId;
     });
-    this.setState({ selectedList: newSelectedList, selectedUserList: ds.cloneWithRows(newSelectedList) });
+    this.setState({
+      selectedList: newSelectedList
+    });
   };
 
   _addSelectedList = addUser => {
     const newSelectedList = [...this.state.selectedList, ...[addUser]];
-    this.setState({ selectedList: newSelectedList, selectedUserList: ds.cloneWithRows(newSelectedList) });
+    this.setState({
+      selectedList: newSelectedList
+    });
   };
 
   _onListItemPress = selectedUser => {
@@ -164,8 +174,8 @@ class GroupChannelInvite extends Component {
     });
   };
 
-  _renderList = rowData => {
-    const user = rowData.item;
+  _renderList = ({ item }) => {
+    const user = item;
     return (
       <ListItem
         component={TouchableHighlight}
@@ -178,7 +188,12 @@ class GroupChannelInvite extends Component {
         titleStyle={{ fontWeight: '500', fontSize: 16, marginLeft: 8 }}
         leftIcon={
           <Icon
-            containerStyle={{ padding: 0, margin: 0, marginLeft: 4, marginRight: 8 }}
+            containerStyle={{
+              padding: 0,
+              margin: 0,
+              marginLeft: 4,
+              marginRight: 8
+            }}
             iconStyle={{ padding: 0, margin: 0 }}
             name="check-circle-o"
             type="font-awesome"
@@ -192,11 +207,11 @@ class GroupChannelInvite extends Component {
     );
   };
 
-  _renderSelectedUserList = rowData => {
+  _renderSelectedUserList = ({ item }) => {
     return (
       <View style={styles.selectedUserListViewStyle}>
-        <Avatar source={{ uri: rowData.profileUrl }} />
-        <Text>{rowData.nickname.length > 5 ? rowData.nickname.substring(0, 3) + '...' : rowData.nickname}</Text>
+        <Avatar source={{ uri: item.profileUrl }} />
+        <Text>{item.nickname.length > 5 ? item.nickname.substring(0, 3) + '...' : item.nickname}</Text>
       </View>
     );
   };
@@ -207,12 +222,12 @@ class GroupChannelInvite extends Component {
         <Spinner visible={this.props.isLoading} />
 
         <View style={{ height: 64 }}>
-          <ListView
-            enableEmptySections={true}
+          <FlatList
+            renderItem={this._renderSelectedUserList}
+            data={this.state.selectedList}
             style={{ flex: 1, marginLeft: 14, marginRight: 14 }}
             horizontal={true}
-            renderRow={this._renderSelectedUserList}
-            dataSource={this.state.selectedUserList}
+            keyExtractor={(item, index) => index.toString()}
           />
         </View>
 
@@ -234,10 +249,6 @@ class GroupChannelInvite extends Component {
     );
   }
 }
-
-const ds = new ListView.DataSource({
-  rowHasChanged: (r1, r2) => r1 !== r2
-});
 
 function mapStateToProps({ groupChannelInvite }) {
   const { list, channel } = groupChannelInvite;

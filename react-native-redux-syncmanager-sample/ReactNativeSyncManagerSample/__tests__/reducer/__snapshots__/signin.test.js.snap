@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer/signin AUTHENTICATE 1`] = `
+Object {
+  "authenticating": true,
+  "err": null,
+  "typedNickname": "",
+  "typedUserId": "",
+  "user": null,
+}
+`;
+
+exports[`reducer/signin SIGNIN_FAILED 1`] = `
+Object {
+  "authenticating": false,
+  "err": [Error: authentication failed],
+  "typedNickname": "",
+  "typedUserId": "",
+  "user": null,
+}
+`;
+
+exports[`reducer/signin SIGNIN_SUCCESS 1`] = `
+Object {
+  "authenticating": false,
+  "err": null,
+  "typedNickname": "",
+  "typedUserId": "",
+  "user": Object {
+    "userId": 1,
+  },
+}
+`;
+
+exports[`reducer/signin checking initial state 1`] = `
+Object {
+  "authenticating": false,
+  "err": null,
+  "typedNickname": "",
+  "typedUserId": "",
+  "user": null,
+}
+`;

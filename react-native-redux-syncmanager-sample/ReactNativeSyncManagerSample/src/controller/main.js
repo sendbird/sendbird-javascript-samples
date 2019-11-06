@@ -1,16 +1,9 @@
-
 import React from 'react';
-import {
-  Alert,
-	AsyncStorage,
-	Platform,
-  View
-} from 'react-native';
-import {
-  Button
-} from 'react-native-elements';
+import { Alert, Platform, View } from 'react-native';
+import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 
+import AsyncStorage from '@react-native-community/async-storage';
 import { FlatList } from 'react-native-gesture-handler';
 import ActionButton from 'react-native-action-button';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -24,7 +17,7 @@ import Action from '../action/main';
 import GroupChannelView from '../view/groupChannel';
 import { navigator } from '../navigator';
 
-class MainController extends React.Component {
+export class MainController extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'SendBird',
@@ -34,64 +27,63 @@ class MainController extends React.Component {
           buttonStyle={style.signoutButton}
           icon={<Icon name="md-log-out" color="#7d62d9" size={28}></Icon>}
           onPress={() => {
-            Alert.alert(
-              'Sign out',
-              'Do you want to sign out?',
-              [
-                { text: 'Cancel' },
-                {
-                  text: 'OK', onPress: () => {
-                    AsyncStorage.removeItem('currentUser', err => {
-                      SendBirdSyncManager.getInstance().reset();
-                      const sb = SendBird.getInstance();
-                      firebase.messaging().getToken()
-                        .then(fcmToken => {
-                          if (fcmToken) {
-                            if (Platform.OS === 'ios') {
-                              sb.unregisterAPNSPushTokenForCurrentUser(fcmToken, (result, err) => {
-                                sb.disconnect(() => {
-                                  navigation.replace('Signin', {});
-                                });
+            Alert.alert('Sign out', 'Do you want to sign out?', [
+              { text: 'Cancel' },
+              {
+                text: 'OK',
+                onPress: () => {
+                  AsyncStorage.removeItem('currentUser', err => {
+                    SendBirdSyncManager.getInstance().reset();
+                    const sb = SendBird.getInstance();
+                    firebase
+                      .messaging()
+                      .getToken()
+                      .then(fcmToken => {
+                        if (fcmToken) {
+                          if (Platform.OS === 'ios') {
+                            sb.unregisterAPNSPushTokenForCurrentUser(fcmToken, (result, err) => {
+                              sb.disconnect(() => {
+                                navigation.replace('Signin', {});
                               });
-                            } else {
-                              sb.unregisterGCMPushTokenForCurrentUser(fcmToken, (result, err) => {
-                                sb.disconnect(() => {
-                                  navigation.replace('Signin', {});
-                                });
-                              });
-                            }
+                            });
                           } else {
-                            sb.disconnect(() => {
-                              navigation.replace('Signin', {});
+                            sb.unregisterGCMPushTokenForCurrentUser(fcmToken, (result, err) => {
+                              sb.disconnect(() => {
+                                navigation.replace('Signin', {});
+                              });
                             });
                           }
-                        });
-                    });
-                  }
-                },
-              ]
-            );
+                        } else {
+                          sb.disconnect(() => {
+                            navigation.replace('Signin', {});
+                          });
+                        }
+                      });
+                  });
+                }
+              }
+            ]);
           }}
         />
       )
-    }
+    };
   };
   static getDerivedStateFromProps(props, state) {
     state.channels = props.channels;
     return state;
   }
-	constructor(props) {
-		super(props);
+  constructor(props) {
+    super(props);
     this.collection = null;
-		this.state = {
-			channels: []
-		};
-	}
-	componentDidMount() {
+    this.state = {
+      channels: []
+    };
+  }
+  componentDidMount() {
     const { navigation } = this.props;
     const userFromParams = navigation.getParam('user', null);
     if (!userFromParams) {
-      AsyncStorage.getItem("currentUser", (err, result) => {
+      AsyncStorage.getItem('currentUser', (err, result) => {
         if (result) {
           const user = JSON.parse(result);
           this.init(user.userId);
@@ -113,17 +105,22 @@ class MainController extends React.Component {
     if (this.onPushNotificationOpened) {
       this.onPushNotificationOpened();
     }
-		this.props.clearChannels();
+    this.props.clearChannels();
+    const manager = SendBirdSyncManager.getInstance();
+    if (manager) {
+      manager.clearCache();
+    }
     if (this.collection) {
-      this.collection.remove();
       this.collection = null;
     }
-	}
-	init(userId) {
+  }
+  init(userId) {
     const sb = SendBird.getInstance();
     sb.connect(userId, (_, err) => {
-      if(!err) {
-        firebase.messaging().getToken()
+      if (!err) {
+        firebase
+          .messaging()
+          .getToken()
           .then(fcmToken => {
             if (fcmToken) {
               this.registerPushToken(fcmToken);
@@ -132,10 +129,14 @@ class MainController extends React.Component {
       }
     });
 
-    firebase.messaging().hasPermission()
+    firebase
+      .messaging()
+      .hasPermission()
       .then(enabled => {
         if (!enabled) {
-          firebase.messaging().requestPermission()
+          firebase
+            .messaging()
+            .requestPermission()
             .then(() => {
               this.addPushNotificationListener();
             })
@@ -147,14 +148,14 @@ class MainController extends React.Component {
         }
       });
     this.addPushTokenRefreshListener();
-    
-		this.onPushNotificationOpened = firebase.notifications().onNotificationOpened(notificationOpen => {
+
+    this.onPushNotificationOpened = firebase.notifications().onNotificationOpened(notificationOpen => {
       firebase.notifications().removeAllDeliveredNotifications();
-      if(notificationOpen) {
+      if (notificationOpen) {
         const notification = notificationOpen.notification;
-        if(notification.data && notification.data.channel && notification.data.channel.channel_url) {
+        if (notification.data && notification.data.channel && notification.data.channel.channel_url) {
           sb.GroupChannel.getChannel(notification.data.channel.channel_url, (channel, err) => {
-            if(!err) {
+            if (!err) {
               this.openChat(channel);
             }
           });
@@ -162,16 +163,34 @@ class MainController extends React.Component {
       }
     });
     firebase.notifications().removeAllDeliveredNotifications();
-		
-		SendBirdSyncManager.setup(userId, err => {
-      if(!err) {
-        firebase.notifications().getInitialNotification()
+    const connectionHandler = new sb.ConnectionHandler();
+    connectionHandler.onReconnectFailed = () => {
+      sb.reconnect();
+    };
+    connectionHandler.onReconnectStarted = () => {};
+    connectionHandler.onReconnectSucceeded = () => {
+      const manager = SendBirdSyncManager.getInstance();
+      manager.resumeSync();
+    };
+    sb.addConnectionHandler('connection handler', connectionHandler);
+
+    const options = new SendBirdSyncManager.Options();
+    options.messageCollectionCapacity = 2000;
+    options.messageResendPolicy = 'automatic';
+    options.failedMessageRetentionDays = 7;
+    options.maxFailedMessageCountPerChannel = 50;
+    options.automaticMessageResendRetryCount = 4;
+    SendBirdSyncManager.setup(userId, options, err => {
+      if (!err) {
+        firebase
+          .notifications()
+          .getInitialNotification()
           .then(notificationOpen => {
             if (notificationOpen) {
               const notification = notificationOpen.notification;
-              if(notification.data && notification.data.channel && notification.data.channel.channel_url) {
+              if (notification.data && notification.data.channel && notification.data.channel.channel_url) {
                 sb.GroupChannel.getChannel(notification.data.channel.channel_url, (channel, err) => {
-                  if(!err) {
+                  if (!err) {
                     this.openChat(channel);
                   }
                 });
@@ -183,7 +202,7 @@ class MainController extends React.Component {
         query.limit = 50;
         query.includeEmpty = false;
         query.order = 'latest_last_message';
-  
+
         this.collection = new SendBirdSyncManager.ChannelCollection(query);
         const collectionHandler = new SendBirdSyncManager.ChannelCollection.CollectionHandler();
         collectionHandler.onChannelEvent = (action, channels) => {
@@ -216,8 +235,8 @@ class MainController extends React.Component {
         console.log(err);
       }
     });
-	}
-	addPushTokenRefreshListener() {
+  }
+  addPushTokenRefreshListener() {
     this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(fcmToken => {
       this.registerPushToken(fcmToken);
     });
@@ -226,19 +245,21 @@ class MainController extends React.Component {
     this.onPushNotificationListener = firebase.messaging().onMessage(message => {
       this.handlePushNotification(message);
     });
-	}
-	handlePushNotification(message) {
+  }
+  handlePushNotification(message) {
     // DO NOTHING FOR FOREGROUND PUSH NOTIFICATION
   }
-	registerPushToken(fcmToken) {
-		const sb = SendBird.getInstance();
+  registerPushToken(fcmToken) {
+    const sb = SendBird.getInstance();
     if (Platform.OS === 'ios') {
       // WARNING! FCM token doesn't work in request to APNs.
       // Use APNs token here instead.
-      firebase.messaging().ios.getAPNSToken()
+      firebase
+        .messaging()
+        .ios.getAPNSToken()
         .then(token => {
           sb.registerAPNSPushTokenForCurrentUser(token, (result, err) => {
-            if(err) {
+            if (err) {
               console.log(err);
             }
           });
@@ -248,59 +269,62 @@ class MainController extends React.Component {
         });
     } else {
       sb.registerGCMPushTokenForCurrentUser(fcmToken, (result, err) => {
-        if(err) {
-          console.log(err);
-        }
-      });
-    }
-	}
-	requireLogin() {
-    this.props.navigation.replace('Signin', {});
-	}
-	createChannel() {
-    this.props.navigation.push('Invite', {});
-	}
-	openChat(channel) {
-    if(navigator.top() !== channel.url) {
-      this.props.navigation.push('Chat', { channel });
-    }
-	}
-	next() {
-    if (this.collection) {
-      this.collection.fetch(err => {
-        if(err) {
+        if (err) {
           console.log(err);
         }
       });
     }
   }
-	render() {
-		return (
-			<View style={style.container}>
-				<FlatList
+  requireLogin() {
+    this.props.navigation.replace('Signin', {});
+  }
+  createChannel() {
+    this.props.navigation.push('Invite', {});
+  }
+  openChat(channel) {
+    if (navigator.top() !== channel.url) {
+      this.props.navigation.push('Chat', { channel });
+    }
+  }
+  next() {
+    if (this.collection) {
+      this.collection.fetch(err => {
+        if (err) {
+          console.log(err);
+        }
+      });
+    }
+  }
+  render() {
+    return (
+      <View style={style.container}>
+        <FlatList
           data={this.state.channels}
           keyExtractor={channel => channel.url}
           onEndReached={this.next.bind(this)}
           renderItem={bundle => {
-						const channel = bundle.item;
+            const channel = bundle.item;
             return <GroupChannelView channel={channel} onPress={this.openChat.bind(this)}></GroupChannelView>;
           }}
         />
         <ActionButton
-          buttonColor='#6e5baa'
+          buttonColor="#6e5baa"
           degrees={0}
           shadowStyle={style.actionButtonShadow}
           fixNativeFeedbackRadius={true}
-          onPress={this.createChannel.bind(this)}>
+          onPress={this.createChannel.bind(this)}
+        >
           <Icon name="md-create" style={style.actionButtonIcon} />
         </ActionButton>
-			</View>
-		);
-	}
+      </View>
+    );
+  }
 }
 
-export default connect(previousState => {
-	const { main } = previousState;
-	return { ...main };
-},
-Action)(MainController);
+export default connect(
+  previousState => {
+    const { main } = previousState;
+    return { ...main };
+  },
+  Action
+)(MainController);

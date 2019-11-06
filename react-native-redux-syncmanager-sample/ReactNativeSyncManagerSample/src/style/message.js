@@ -1,4 +1,3 @@
-
 import { StyleSheet } from 'react-native';
 
 export const style = StyleSheet.create({
@@ -23,10 +22,24 @@ export const style = StyleSheet.create({
   imageContainer: {
     minWidth: 100,
     minHeight: 100,
-    marginBottom:4,
+    marginBottom: 4,
     borderRadius: 8
   },
   image: {
+    borderRadius: 8
+  },
+  videoContainer: {
+    minWidth: 240,
+    minHeight: 180,
+    marginBottom: 4,
+    borderRadius: 8
+  },
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
     borderRadius: 8
   },
   avatarContainer: {
@@ -40,7 +53,7 @@ export const style = StyleSheet.create({
     paddingBottom: 4
   },
   contentContainer: {
-    flexDirection:'column'
+    flexDirection: 'column'
   },
   normalMessageContainer: {
     justifyContent: 'flex-start',
@@ -50,8 +63,7 @@ export const style = StyleSheet.create({
     padding: 8,
     backgroundColor: '#e6e9f0'
   },
-  createdAtContainer: {
-  },
+  createdAtContainer: {},
   createdAt: {
     fontSize: 10,
     color: '#666',
@@ -61,6 +73,12 @@ export const style = StyleSheet.create({
     flexDirection: 'column-reverse',
     paddingHorizontal: 4,
     marginRight: 4,
+    marginBottom: 8
+  },
+  failedMessageLabelContainer: {
+    flexDirection: 'column-reverse',
+    paddingHorizontal: 4,
+    marginRight: 10,
     marginBottom: 8
   },
   readReceipt: {

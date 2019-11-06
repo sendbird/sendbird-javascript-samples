@@ -1,0 +1,71 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action/chat addChannels 1`] = `
+Object {
+  "payload": Object {
+    "channels": Array [
+      Object {
+        "url": "test",
+      },
+      Object {
+        "url": "test 2",
+      },
+    ],
+  },
+  "type": "channel-add",
+}
+`;
+
+exports[`action/chat clearChannels 1`] = `
+Object {
+  "type": "channel-clear",
+}
+`;
+
+exports[`action/chat moveChannels 1`] = `
+Object {
+  "payload": Object {
+    "channels": Array [
+      Object {
+        "url": "test",
+      },
+      Object {
+        "url": "test 2",
+      },
+    ],
+  },
+  "type": "channel-move",
+}
+`;
+
+exports[`action/chat removeChannels 1`] = `
+Object {
+  "payload": Object {
+    "channels": Array [
+      Object {
+        "url": "test",
+      },
+      Object {
+        "url": "test 2",
+      },
+    ],
+  },
+  "type": "channel-remove",
+}
+`;
+
+exports[`action/chat updateChannels 1`] = `
+Object {
+  "payload": Object {
+    "channels": Array [
+      Object {
+        "url": "test",
+      },
+      Object {
+        "url": "test 2",
+      },
+    ],
+  },
+  "type": "channel-update",
+}
+`;

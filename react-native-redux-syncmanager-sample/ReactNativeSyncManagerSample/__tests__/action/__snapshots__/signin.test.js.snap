@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action/authenticate authenticate 1`] = `
+Object {
+  "type": "authenticate",
+}
+`;
+
+exports[`action/authenticate fail 1`] = `
+Object {
+  "payload": Object {
+    "err": [Error: fail],
+  },
+  "type": "signin-failed",
+}
+`;
+
+exports[`action/authenticate succeed 1`] = `
+Object {
+  "payload": Object {
+    "user": Object {
+      "nickname": "test",
+    },
+  },
+  "type": "signin-success",
+}
+`;

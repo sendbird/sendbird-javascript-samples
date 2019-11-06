@@ -1,0 +1,73 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action/chat addMessages 1`] = `
+Object {
+  "payload": Object {
+    "messages": Array [
+      Object {
+        "message": "test",
+      },
+      Object {
+        "message": "test2",
+      },
+    ],
+  },
+  "type": "message-add",
+}
+`;
+
+exports[`action/chat clearMessages 1`] = `
+Object {
+  "type": "message-clear",
+}
+`;
+
+exports[`action/chat deselectAllMessages 1`] = `
+Object {
+  "type": "message-deselect-all",
+}
+`;
+
+exports[`action/chat removeMessages 1`] = `
+Object {
+  "payload": Object {
+    "messages": Array [
+      Object {
+        "message": "test",
+      },
+      Object {
+        "message": "test2",
+      },
+    ],
+  },
+  "type": "message-remove",
+}
+`;
+
+exports[`action/chat selectMessage 1`] = `
+Object {
+  "payload": Object {
+    "message": Object {
+      "message": "test",
+    },
+  },
+  "type": "message-select",
+}
+`;
+
+exports[`action/chat updateMessages 1`] = `
+Object {
+  "payload": Object {
+    "isTransformFailedToManual": undefined,
+    "messages": Array [
+      Object {
+        "message": "test",
+      },
+      Object {
+        "message": "test2",
+      },
+    ],
+  },
+  "type": "message-update",
+}
+`;

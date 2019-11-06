@@ -1,0 +1,153 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer/main CHANNEL_ADD initially empty 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "url": "url 1",
+    },
+    Object {
+      "url": "url 2",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main CHANNEL_ADD initially non-empty, insert by createdAt 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "createdAt": 6,
+      "url": "6",
+    },
+    Object {
+      "createdAt": 5,
+      "url": "5",
+    },
+    Object {
+      "createdAt": 4,
+      "url": "4",
+    },
+    Object {
+      "createdAt": 3,
+      "url": "3",
+    },
+    Object {
+      "createdAt": 2,
+      "url": "2",
+    },
+    Object {
+      "createdAt": 1,
+      "url": "1",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main CHANNEL_ADD initially non-empty, insert by lastMessage 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "createdAt": 6,
+      "url": "6",
+    },
+    Object {
+      "lastMessage": Object {
+        "createdAt": 5,
+      },
+      "url": "5",
+    },
+    Object {
+      "createdAt": 4,
+      "url": "4",
+    },
+    Object {
+      "lastMessage": Object {
+        "createdAt": 3,
+      },
+      "url": "3",
+    },
+    Object {
+      "lastMessage": Object {
+        "createdAt": 2,
+      },
+      "url": "2",
+    },
+    Object {
+      "lastMessage": Object {
+        "createdAt": 1,
+      },
+      "url": "1",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main CHANNEL_CLEAR 1`] = `
+Object {
+  "channels": Array [],
+}
+`;
+
+exports[`reducer/main CHANNEL_MOVE 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "createdAt": 10,
+      "url": "1",
+    },
+    Object {
+      "createdAt": 5,
+      "url": "5",
+    },
+    Object {
+      "createdAt": 3,
+      "url": "3",
+    },
+    Object {
+      "createdAt": 2,
+      "url": "2",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main CHANNEL_REMOVE 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "url": "5",
+    },
+    Object {
+      "url": "3",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main CHANNEL_UPDATE 1`] = `
+Object {
+  "channels": Array [
+    Object {
+      "url": "5",
+    },
+    Object {
+      "url": "3",
+    },
+    Object {
+      "updated": true,
+      "url": "2",
+    },
+    Object {
+      "updated": true,
+      "url": "1",
+    },
+  ],
+}
+`;
+
+exports[`reducer/main checking initial state 1`] = `
+Object {
+  "channels": Array [],
+}
+`;

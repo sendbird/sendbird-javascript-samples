@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer/invite USER_FETCH 1`] = `
+Object {
+  "err": null,
+  "users": Array [
+    "d",
+    "e",
+    "f",
+    "a",
+    "b",
+    "c",
+  ],
+}
+`;
+
+exports[`reducer/invite checking initial state 1`] = `
+Object {
+  "err": null,
+  "users": Array [],
+}
+`;

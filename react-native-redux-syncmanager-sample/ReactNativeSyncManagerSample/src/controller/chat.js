@@ -1,16 +1,6 @@
-
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Clipboard,
-  Keyboard,
-  View
-} from 'react-native';
-import {
-	Button,
-	Input
-} from 'react-native-elements';
+import { Alert, BackHandler, Clipboard, Keyboard, View } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -28,6 +18,7 @@ import { createChannelTitle, toast } from '../utils';
 import { navigator } from '../navigator';
 
 const PAGE_RETURN_DELAY = 600;
+let componentContext = null;
 
 const _chatCloseHeader = navigation => {
   return (
@@ -54,7 +45,7 @@ const _chatControlHeader = navigation => {
         onPress={() => {
           const sb = SendBird.getInstance();
           sb.GroupChannel.getChannel(channel.url, (channel, err) => {
-            if(!err) {
+            if (!err) {
               navigation.push('Member', { channel });
             } else {
               toast('Failed to get channel information.');
@@ -67,22 +58,21 @@ const _chatControlHeader = navigation => {
         buttonStyle={style.headerRightItem}
         icon={<Icon name="md-exit" color="#7d62d9" size={28}></Icon>}
         onPress={() => {
-          Alert.alert(
-            'Leave',
-            'Do you want to leave this channel?',
-            [
-              {text: 'Cancel'},
-              {text: 'OK', onPress: () => {
+          Alert.alert('Leave', 'Do you want to leave this channel?', [
+            { text: 'Cancel' },
+            {
+              text: 'OK',
+              onPress: () => {
                 channel.leave((res, err) => {
-                  if(!err) {
+                  if (!err) {
                     navigation.goBack();
                   } else {
                     toast('Failed to leave channel.');
                   }
                 });
-              }},
-            ]
-          );
+              }
+            }
+          ]);
         }}
       />
     </View>
@@ -97,7 +87,7 @@ const _menuCloseHeader = navigation => {
         buttonStyle={style.headerLeftItem}
         icon={<Icon name="md-close" color="#333" size={28}></Icon>}
         onPress={() => {
-          if(currentChat) {
+          if (currentChat) {
             currentChat.closeMessageControl();
           } else {
             navigation.setParams({
@@ -117,41 +107,39 @@ const _menuControlHeader = navigation => {
   const selectedMessages = navigation.getParam('selectedMessages', []);
   return (
     <View style={style.headerRightContainer}>
-      {(selectedMessages.length === 1
-        && selectedMessages[0].isUserMessage()
-        && selectedMessages[0].sender.userId === syncManager.currentUserId)
-        &&
-        <Button
-          containerStyle={style.headerRightItemContainer}
-          buttonStyle={style.headerRightItem}
-          icon={<Icon name="md-create" color="#7d62d9" size={28}></Icon>}
-          onPress={() => {
-            if(currentChat) {
-              currentChat.closeMessageControl();
-            } else {
-              navigation.setParams({
-                currentChat: null,
-                selectedMessages: []
-              });
-            }
-            currentChat.switchToEditMode(selectedMessages[0]);
-          }}
-        />
-      }
-      {(selectedMessages.length === 1
-        && selectedMessages[0].isUserMessage())
-        &&
+      {selectedMessages.length === 1 &&
+        selectedMessages[0].isUserMessage() &&
+        selectedMessages[0].sender.userId === syncManager.currentUserId &&
+        selectedMessages[0].messageId !== 0 && (
+          <Button
+            containerStyle={style.headerRightItemContainer}
+            buttonStyle={style.headerRightItem}
+            icon={<Icon name="md-create" color="#7d62d9" size={28}></Icon>}
+            onPress={() => {
+              if (currentChat) {
+                currentChat.closeMessageControl();
+              } else {
+                navigation.setParams({
+                  currentChat: null,
+                  selectedMessages: []
+                });
+              }
+              currentChat.switchToEditMode(selectedMessages[0]);
+            }}
+          />
+        )}
+      {selectedMessages.length === 1 && selectedMessages[0].isUserMessage() && (
         <Button
           containerStyle={style.headerRightItemContainer}
           buttonStyle={style.headerRightItem}
           icon={<Icon name="md-copy" color="#7d62d9" size={28}></Icon>}
           onPress={() => {
-            if(selectedMessages.length > 0) {
+            if (selectedMessages.length > 0) {
               const message = selectedMessages[0];
-              if(message.isUserMessage()) {
+              if (message.isUserMessage()) {
                 Clipboard.setString(message.message);
                 toast('The message is copied to Clipboard.');
-                if(currentChat) {
+                if (currentChat) {
                   currentChat.closeMessageControl();
                 } else {
                   navigation.setParams({
@@ -163,44 +151,45 @@ const _menuControlHeader = navigation => {
             }
           }}
         />
-      }
-      {(!selectedMessages[0].isAdminMessage()
-        && selectedMessages[0].sender.userId === syncManager.currentUserId)
-        &&
+      )}
+      {!selectedMessages[0].isAdminMessage() && selectedMessages[0].sender.userId === syncManager.currentUserId && (
         <Button
           containerStyle={style.headerRightItemContainer}
           buttonStyle={style.headerRightItem}
           icon={<Icon name="md-trash" color="#7d62d9" size={28}></Icon>}
           onPress={() => {
-            Alert.alert(
-              'Delete',
-              'Do you want to delete this message?',
-              [
-                {text: 'Cancel'},
-                {text: 'OK', onPress: () => {
-                  for(let i = 0; i < selectedMessages.length; i++) {
-                    channel.deleteMessage(selectedMessages[i], (res, err) => {
-                      if(err) {
-                        console.error(err);
-                      }
-                    });
+            Alert.alert('Delete', 'Do you want to delete this message?', [
+              { text: 'Cancel' },
+              {
+                text: 'OK',
+                onPress: () => {
+                  for (let i = 0; i < selectedMessages.length; i++) {
+                    if (selectedMessages[i].messageId === 0 && selectedMessages[i].requestState !== 'succeeded') {
+                      componentContext.collection.deleteMessage(selectedMessages[i]);
+                    } else {
+                      channel.deleteMessage(selectedMessages[i], (res, err) => {
+                        if (err) {
+                          console.error(err);
+                        }
+                      });
+                    }
                   }
                   navigation.setParams({
                     currentChat: null,
                     selectedMessages: []
                   });
-                }},
-              ]
-            );
+                }
+              }
+            ]);
           }}
         />
-      }
+      )}
     </View>
   );
 };
 
-class ChatController extends React.Component {
-	static navigationOptions = ({ navigation }) => {
+export class ChatController extends React.Component {
+  static navigationOptions = ({ navigation }) => {
     const channel = navigation.getParam('channel', null);
     const selectedMessages = navigation.getParam('selectedMessages', []);
     const isMenuControl = selectedMessages.length > 0;
@@ -209,152 +198,169 @@ class ChatController extends React.Component {
       headerLeft: isMenuControl ? _menuCloseHeader(navigation) : _chatCloseHeader(navigation),
       headerRight: isMenuControl ? _menuControlHeader(navigation) : _chatControlHeader(navigation)
     };
-  }
-	static getDerivedStateFromProps(props, state) {
-    state.messages = props.messages;
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    state.messages = [...props.messages];
     return state;
   }
-	constructor(props) {
-		super(props);
-		this.collection = null;
+
+  constructor(props) {
+    super(props);
+    this.collection = null;
     this.channel = this.props.navigation.getParam('channel', null);
     this.messageInput = null;
-		this.state = {
+    this.state = {
       typedText: '',
       editedMessage: null,
       inputMode: 'chat',
-			messages: []
+      messages: []
     };
-	}
-	componentDidMount() {
-		const sb = SendBird.getInstance();
+    componentContext = this;
+  }
+
+  _messageEventHandler(messages, action, reason) {
+    switch (action) {
+      case 'insert': {
+        this.props.addMessages(messages);
+        break;
+      }
+      case 'update': {
+        if (reason === SendBirdSyncManager.MessageCollection.FailedMessageEventActionReason.UPDATE_RESEND_FAILED) {
+          this.props.updateMessages(messages, true);
+        } else {
+          this.props.updateMessages(messages);
+        }
+        break;
+      }
+      case 'remove': {
+        this.props.removeMessages(messages);
+        break;
+      }
+      case 'clear': {
+        this.props.clearMessages();
+        break;
+      }
+    }
+  }
+
+  componentDidMount() {
+    const sb = SendBird.getInstance();
     const channelHandler = new sb.ChannelHandler();
     channelHandler.onChannelChanged = channel => {
       this.updateChannel(channel);
     };
     channelHandler.onUserJoined = (channel, user) => {
-			this.updateChannel(channel);
-		};
-		channelHandler.onUserLeft = (channel, user) => {
-      if(sb.currentUser.userId === user.userId) {
+      this.updateChannel(channel);
+    };
+    channelHandler.onUserLeft = (channel, user) => {
+      if (sb.currentUser.userId === user.userId) {
         this.props.navigation.replace('NotFound', { channelUrl: channel.url });
       } else {
         this.updateChannel(channel);
       }
-		};
+    };
     sb.addChannelHandler(`chat-${this.channel.url}`, channelHandler);
 
-		this.collection = new SendBirdSyncManager.MessageCollection(this.channel);
-		this.collection.limit = 50;
-		
-		const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
-    collectionHandler.onMessageEvent = (action, messages) => {
-      switch(action) {
-        case 'insert': {
-          this.props.addMessages(messages);
-          break;
-        }
-        case 'update': {
-          this.props.updateMessages(messages);
-          break;
-        }
-        case 'remove': {
-          this.props.removeMessages(messages);
-          break;
-        }
-        case 'clear': {
-          this.props.clearMessages();
-          break;
-        }
-      }
+    this.collection = new SendBirdSyncManager.MessageCollection(this.channel);
+    this.collection.limit = 50;
+
+    const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
+    collectionHandler.onSucceededMessageEvent = (messages, action, reason) => {
+      this._messageEventHandler(messages, action, reason);
     };
-		this.collection.setCollectionHandler(collectionHandler);
-		
-		this.channel.markAsRead();
-    this.collection.fetch('next', err => {
-      if(err) {
-        console.log(err);
-      }
-      this.collection.fetch('prev', err => {
-        if(err) {
-          console.log(err);
-        }
+    collectionHandler.onFailedMessageEvent = (messages, action, reason) => {
+      this._messageEventHandler(messages, action, reason);
+    };
+    collectionHandler.onPendingMessageEvent = (messages, action, reason) => {
+      this._messageEventHandler(messages, action, reason);
+    };
+    this.collection.setCollectionHandler(collectionHandler);
+    this.channel.markAsRead();
+    this.collection.fetchSucceededMessages('next', err => {
+      this.collection.fetchSucceededMessages('prev', err => {
+        this.collection.fetchFailedMessages(err => {});
       });
     });
     navigator.push(this.channel.url);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
-	}
-	componentWillUnmount() {
+  }
+
+  componentWillUnmount() {
+    componentContext = null;
     this.props.clearMessages();
-    if(this.collection) {
+    if (this.collection) {
       this.collection.remove();
       this.collection = null;
     }
     navigator.pop();
     BackHandler.removeEventListener('hardwareBackPress', this.handleBackPress);
   }
+
   handleBackPress = () => {
     const selectedMessages = this.props.navigation.getParam('selectedMessages', []);
-    if(selectedMessages.length > 0) {
+    if (selectedMessages.length > 0) {
       this.closeMessageControl();
       return true;
-    } else if(this.state.inputMode === 'edit') {
+    } else if (this.state.inputMode === 'edit') {
       this.switchToChatMode();
       return true;
     }
     return false;
-  }
+  };
+
   updateChannel(channel) {
     this.channel = channel;
     this.props.navigation.setParams({
       title: `${createChannelTitle(channel)} (${channel.memberCount})`
     });
   }
-	loadPrevious() {
-		this.collection.fetch('prev', err => {
-      if(err) {
+
+  loadPrevious() {
+    this.collection.fetchSucceededMessages('prev', err => {
+      if (err) {
         console.log(err);
       }
     });
   }
+
   sendMessage() {
-		if(this.state.typedText) {
-      const tempMessage = this.channel.sendUserMessage(this.state.typedText, (message, err) => {
-        if(!err) {
-          if(message && this.collection) {
-            this.collection.appendMessage(message);
+    if (this.state.typedText) {
+      const pendingMessage = this.channel.sendUserMessage(this.state.typedText, (message, err) => {
+        // To preserve order of pending messages being processed before same failed ones.
+        setTimeout(() => {
+          if (this.collection) {
+            this.collection.handleSendMessageResponse(err, message);
           }
-        } else {
-          toast('Failed to send message.');
-          if(tempMessage && this.collection) {
-            this.collection.deleteMessage(tempMessage);
-          }
-        }
+        }, 100);
       });
-      if(this.collection) {
-        this.collection.appendMessage(tempMessage);
+      if (this.collection) {
+        this.collection.appendMessage(pendingMessage);
         this.setState({ typedText: '' });
       }
     }
   }
+
   updateMessage() {
-    if(this.state.editedMessage && this.state.typedText) {
+    if (this.state.editedMessage && this.state.typedText) {
       const message = this.state.editedMessage;
-      if(message.isUserMessage() && message.message !== this.state.typedText) {
+      if (message.isUserMessage() && message.message !== this.state.typedText) {
         const messageContent = this.state.typedText;
-        this.channel.updateUserMessage(message.messageId,
+        this.channel.updateUserMessage(
+          message.messageId,
           messageContent,
           message.data,
           message.customType,
           (updatedMessage, err) => {
-            if(!err) {
+            if (!err) {
               this.collection.updateMessage(updatedMessage);
               this.switchToChatMode();
               Keyboard.dismiss();
             } else {
               toast('Failed to update the message.');
             }
-          });
+          }
+        );
       } else {
         this.switchToChatMode();
         Keyboard.dismiss();
@@ -363,63 +369,64 @@ class ChatController extends React.Component {
       toast('Cannot update the message with empty content.');
     }
   }
+
   sendImage(source, options = {}) {
     setTimeout(() => {
       const tempMessage = this.channel.sendFileMessage(source, '', '', options.thumbnailSizes, (message, err) => {
-        if(!err) {
-          if(message && this.collection) {
+        if (!err) {
+          if (message && this.collection) {
             this.collection.appendMessage(message);
           }
         } else {
           toast('Failed to send image. ' + err.message);
-          if(tempMessage && this.collection) {
+          if (tempMessage && this.collection) {
             this.collection.deleteMessage(tempMessage);
           }
         }
       });
-      if(this.collection) {
+      if (this.collection) {
         this.collection.appendMessage(tempMessage);
       }
       this.setState({ typedText: '' });
-    },
-    PAGE_RETURN_DELAY);
+    }, PAGE_RETURN_DELAY);
   }
-	pickImage() {
-		Permissions.check('photo').then(response => {
-      if(response === 'authorized') {
+
+  pickImage() {
+    Permissions.check('photo').then(response => {
+      if (response === 'authorized') {
         ImagePicker.showImagePicker(
           {
-            title: "Select Image",
-            mediaType: "photo",
+            title: 'Select Image',
+            mediaType: 'photo',
             noData: true
           },
           response => {
             if (!response.didCancel && !response.error && !response.customButton) {
               const source = { uri: response.uri };
               if (response.name) {
-                source["name"] = response.fileName;
+                source['name'] = response.fileName;
               } else {
-                paths = response.uri.split("/");
-                source["name"] = paths[paths.length - 1];
+                paths = response.uri.split('/');
+                source['name'] = paths[paths.length - 1];
               }
               if (response.type) {
-                source["type"] = response.type;
+                source['type'] = response.type;
               } else {
                 /** For react-native-image-picker library doesn't return type in iOS,
                  *  it is necessary to force the type to be an image/jpeg (or whatever you're intended to be).
                  */
-                if (Platform.OS === "ios") {
-                  source["type"] = 'image/jpeg';
+                if (Platform.OS === 'ios') {
+                  source['type'] = 'image/jpeg';
                 }
               }
-              const thumbnailSizes = [{'maxWidth': 200, 'maxHeight': 200}];
+              const thumbnailSizes = [{ maxWidth: 200, maxHeight: 200 }];
               this.sendImage(source, { thumbnailSizes });
             }
           }
         );
-      } else if(response === 'undetermined') {
+      } else if (response === 'undetermined') {
         Permissions.request('photo').then(response => {
-          if(response === 'authorized') {
+          if (response === 'authorized') {
             this.pickImage();
           }
         });
@@ -428,17 +435,26 @@ class ChatController extends React.Component {
       }
     });
   }
+
   showMessageControl(message) {
     const syncManager = SendBirdSyncManager.getInstance();
-    if(message.isUserMessage()
-      || (message.isFileMessage() && message.sender.userId === syncManager.currentUserId)) {
+    if (message.isUserMessage() || (message.isFileMessage() && message.sender.userId === syncManager.currentUserId)) {
       this.props.selectMessage(message);
       this.props.navigation.setParams({
         currentChat: this,
-        selectedMessages: [ message ]
+        selectedMessages: [message]
       });
     }
   }
+
+  resendFailedMessage(message) {
+    const pendingMessage = this.channel.resendUserMessage(message, (message, err) => {
+      if (this.collection) {
+        this.collection.handleSendMessageResponse(err, message);
+      }
+    });
+  }
+
   closeMessageControl() {
     this.props.deselectAllMessages();
     this.props.navigation.setParams({
@@ -446,6 +462,7 @@ class ChatController extends React.Component {
       selectedMessages: []
     });
   }
+
   switchToChatMode() {
     this.setState({
       inputMode: 'chat',
@@ -453,6 +470,7 @@ class ChatController extends React.Component {
       typedText: ''
     });
   }
+
   switchToEditMode(message) {
     this.setState({
       inputMode: 'edit',
@@ -461,7 +479,8 @@ class ChatController extends React.Component {
     });
     this.messageInput.focus();
   }
-	render() {
+
+  render() {
     const mode = {
       chat: {
         left: {
@@ -485,63 +504,69 @@ class ChatController extends React.Component {
       }
     };
     const currentMode = mode[this.state.inputMode];
-		return (
-			<View style={style.container}>
+    return (
+      <View style={style.container}>
         <View style={style.messageListViewContainer}>
           <FlatList
             data={this.state.messages}
-            keyExtractor={message => message.messageId + ''}
+            keyExtractor={message => (message.messageId > 0 ? message.messageId : message.reqId) + ''}
             onEndReached={this.loadPrevious.bind(this)}
-            renderItem={bundle => <MessageView
-              channel={this.channel}
-              message={bundle.item}
-              onLongPress={this.showMessageControl.bind(this)} />}
+            renderItem={bundle => (
+              <MessageView
+                channel={this.channel}
+                message={bundle.item}
+                onLongPress={this.showMessageControl.bind(this)}
+                resendFailedMessage={this.resendFailedMessage.bind(this)}
+              />
+            )}
           />
         </View>
         <View style={style.messageInputContainer}>
-					<Button
-						containerStyle={style.uploadContainer}
-						buttonStyle={style.upload}
-						icon={<Icon
-							name={currentMode.left.icon}
-							size={28}
-							color='#333'
-						/>}
-						onPress={currentMode.left.onPress}
-					/>
-					<Input
-            placeholder='Your message'
-            ref={input => { this.messageInput = input; }}
-						containerStyle={style.formContainer}
-						inputContainerStyle={style.formInputContainer}
-						inputStyle={style.formInput}
-						multiline={true}
-						numberOfLines={3}
-						autoCapitalize='none'
-						autoCorrect={false}
-						selectionColor='#ddd'
-						underlineColorAndroid='transparent'
-						value={this.state.typedText}
-						onChangeText={(typedText) => this.setState({typedText})}
-					/>
-					<Button
-						containerStyle={style.sendContainer}
-						buttonStyle={style.send}
-						icon={<Icon
-							name={currentMode.right.icon}
-							size={28}
-							color={this.state.typedText.length > 0 ? '#7d62d9' : '#494e57'}
-						/>}
-						onPress={currentMode.right.onPress}
-					/>
+          <Button
+            containerStyle={style.uploadContainer}
+            buttonStyle={style.upload}
+            icon={<Icon name={currentMode.left.icon} size={28} color="#333" />}
+            onPress={currentMode.left.onPress}
+          />
+          <Input
+            placeholder="Your message"
+            ref={input => {
+              this.messageInput = input;
+            }}
+            containerStyle={style.formContainer}
+            inputContainerStyle={style.formInputContainer}
+            inputStyle={style.formInput}
+            multiline={true}
+            numberOfLines={3}
+            autoCapitalize="none"
+            autoCorrect={false}
+            selectionColor="#ddd"
+            underlineColorAndroid="transparent"
+            value={this.state.typedText}
+            onChangeText={typedText => this.setState({ typedText })}
+          />
+          <Button
+            containerStyle={style.sendContainer}
+            buttonStyle={style.send}
+            icon={
+              <Icon
+                name={currentMode.right.icon}
+                size={28}
+                color={this.state.typedText.length > 0 ? '#7d62d9' : '#494e57'}
+              />
+            }
+            onPress={currentMode.right.onPress}
+          />
         </View>
       </View>
-		);
-	}
+    );
+  }
 }
 
-export default connect(previousState => {
-	const { chat } = previousState;
-	return { ...chat };
-},
-Action)(ChatController);
+export default connect(
+  previousState => {
+    const { chat } = previousState;
+    return { ...chat };
+  },
+  Action
+)(ChatController);

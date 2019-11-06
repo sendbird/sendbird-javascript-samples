@@ -1,0 +1,322 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer/chat FAILED_MESSAGE_ADD 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [
+    Object {
+      "createdAt": 4,
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 3,
+      "messageId": 3,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+  "inputMode": "chat",
+  "messages": Array [],
+}
+`;
+
+exports[`reducer/chat FAILED_MESSAGE_CLEAR 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [
+    Object {
+      "createdAt": 4,
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 3,
+      "messageId": 3,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+  "inputMode": "chat",
+  "messages": Array [],
+}
+`;
+
+exports[`reducer/chat FAILED_MESSAGE_REMOVE 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [
+    Object {
+      "createdAt": 4,
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 3,
+      "messageId": 3,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+  "inputMode": "chat",
+  "messages": Array [],
+}
+`;
+
+exports[`reducer/chat MESSAGE_ADD 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [
+    Object {
+      "_isPreviousMessageSentBySameUser": false,
+      "createdAt": 7,
+      "messageId": 7,
+      "sender": Object {
+        "userId": 5,
+      },
+    },
+    Object {
+      "_isPreviousMessageSentBySameUser": true,
+      "createdAt": 6,
+      "messageId": 6,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "_isPreviousMessageSentBySameUser": true,
+      "createdAt": 5,
+      "messageId": 5,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 4,
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 3,
+      "messageId": 3,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+}
+`;
+
+exports[`reducer/chat MESSAGE_CLEAR 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [],
+}
+`;
+
+exports[`reducer/chat MESSAGE_DESELECT_ALL 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [
+    Object {
+      "_selected": false,
+      "messageId": 1,
+    },
+    Object {
+      "_selected": false,
+      "messageId": 2,
+    },
+    Object {
+      "_selected": false,
+      "messageId": 3,
+    },
+    Object {
+      "_selected": false,
+      "messageId": 4,
+    },
+  ],
+}
+`;
+
+exports[`reducer/chat MESSAGE_REMOVE 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [
+    Object {
+      "createdAt": 4,
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "_isPreviousMessageSentBySameUser": true,
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+}
+`;
+
+exports[`reducer/chat MESSAGE_SELECT 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [
+    Object {
+      "_selected": true,
+      "messageId": 1,
+    },
+    Object {
+      "_selected": true,
+      "messageId": 2,
+    },
+    Object {
+      "_selected": true,
+      "messageId": 3,
+    },
+    Object {
+      "_selected": true,
+      "messageId": 4,
+    },
+  ],
+}
+`;
+
+exports[`reducer/chat MESSAGE_UPDATE 1`] = `
+Object {
+  "channel": null,
+  "failedMessages": Array [],
+  "inputMode": "chat",
+  "messages": Array [
+    Object {
+      "_isPreviousMessageSentBySameUser": true,
+      "createdAt": 4,
+      "isIdentical": [Function],
+      "message": "text 4",
+      "messageId": 4,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "_isPreviousMessageSentBySameUser": undefined,
+      "createdAt": 3,
+      "isIdentical": [Function],
+      "message": "text 3",
+      "messageId": 3,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 2,
+      "messageId": 2,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+    Object {
+      "createdAt": 1,
+      "messageId": 1,
+      "sender": Object {
+        "userId": 4,
+      },
+    },
+  ],
+}
+`;
+
+exports[`reducer/chat checking initial state 1`] = `
+Object {
+  "channel": null,
+  "inputMode": "chat",
+  "messages": Array [],
+}
+`;

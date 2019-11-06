@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reducer/member MEMBER_INIT 1`] = `
+Object {
+  "members": Array [
+    Object {
+      "userId": 1,
+    },
+    Object {
+      "userId": 2,
+    },
+    Object {
+      "userId": 3,
+    },
+  ],
+}
+`;
+
+exports[`reducer/member MEMBER_UPDATE 1`] = `
+Object {
+  "members": Array [
+    Object {
+      "userId": 1,
+    },
+    Object {
+      "userId": 2,
+    },
+    Object {
+      "userId": 3,
+    },
+  ],
+}
+`;
+
+exports[`reducer/member checking initial state 1`] = `
+Object {
+  "members": Array [],
+}
+`;

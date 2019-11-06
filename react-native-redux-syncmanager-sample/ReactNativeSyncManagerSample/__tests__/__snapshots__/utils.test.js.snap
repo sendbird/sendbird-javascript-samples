@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`utils createChannelTitle concise 1`] = `"12345, 23456, 567..."`;
+
+exports[`utils createChannelTitle full 1`] = `"12345, 23456, 56789"`;

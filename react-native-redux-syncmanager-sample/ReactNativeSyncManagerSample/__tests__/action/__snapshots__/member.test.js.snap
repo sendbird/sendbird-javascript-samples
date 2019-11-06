@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`action/invite initMembers 1`] = `
+Object {
+  "payload": Object {
+    "members": Array [
+      Object {
+        "nickname": "test",
+      },
+      Object {
+        "nickname": "test 2",
+      },
+    ],
+  },
+  "type": "member-init",
+}
+`;
+
+exports[`action/invite updateMembers 1`] = `
+Object {
+  "payload": Object {
+    "members": Array [
+      Object {
+        "nickname": "test",
+      },
+      Object {
+        "nickname": "test 2",
+      },
+    ],
+  },
+  "type": "member-update",
+}
+`;

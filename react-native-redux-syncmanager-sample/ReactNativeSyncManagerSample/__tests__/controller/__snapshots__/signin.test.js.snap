@@ -1,0 +1,238 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`controller/signing renders correctly 1`] = `
+<View
+  style={
+    Object {
+      "backgroundColor": "#fff",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "marginBottom": 5,
+        "marginTop": 35,
+      }
+    }
+  >
+    <Image
+      source={
+        Object {
+          "testUri": "../../../src/img/icon_sb_512.png",
+        }
+      }
+      style={
+        Object {
+          "height": 150,
+          "width": 150,
+        }
+      }
+    />
+    <Text
+      style={
+        Object {
+          "color": "#7d62d9",
+          "fontSize": 30,
+          "fontWeight": "600",
+        }
+      }
+    >
+      SendBird
+    </Text>
+    <Text
+      style={
+        Object {
+          "color": "#7d62d9",
+          "fontSize": 13,
+          "fontWeight": "500",
+        }
+      }
+    >
+      React Native
+    </Text>
+  </View>
+  <View
+    style={
+      Object {
+        "paddingHorizontal": 10,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#fff",
+          "borderBottomWidth": 1,
+          "borderColor": "#ddd",
+          "borderRadius": 6,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "marginHorizontal": 20,
+          "marginTop": 8,
+          "paddingHorizontal": 8,
+          "transform": Array [
+            Object {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+    >
+      <TextInput
+        allowFontScaling={true}
+        autoCapitalize="none"
+        autoCorrect={false}
+        maxLength={16}
+        onChangeText={[Function]}
+        placeholder="User ID"
+        rejectResponderTermination={true}
+        style={
+          Object {
+            "alignSelf": "center",
+            "borderWidth": 0,
+            "color": "black",
+            "flex": 1,
+            "fontSize": 13,
+            "minHeight": 40,
+          }
+        }
+        testID="RNE__Input__text-input"
+        underlineColorAndroid="transparent"
+        value=""
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "paddingHorizontal": 10,
+        "width": "100%",
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "alignItems": "center",
+          "backgroundColor": "#fff",
+          "borderBottomWidth": 1,
+          "borderColor": "#ddd",
+          "borderRadius": 6,
+          "borderWidth": 1,
+          "flexDirection": "row",
+          "marginHorizontal": 20,
+          "marginTop": 8,
+          "paddingHorizontal": 8,
+          "transform": Array [
+            Object {
+              "translateX": 0,
+            },
+          ],
+        }
+      }
+    >
+      <TextInput
+        allowFontScaling={true}
+        autoCapitalize="none"
+        autoCorrect={false}
+        maxLength={16}
+        onChangeText={[Function]}
+        placeholder="Nickname"
+        rejectResponderTermination={true}
+        style={
+          Object {
+            "alignSelf": "center",
+            "borderWidth": 0,
+            "color": "black",
+            "flex": 1,
+            "fontSize": 13,
+            "minHeight": 40,
+          }
+        }
+        testID="RNE__Input__text-input"
+        underlineColorAndroid="transparent"
+        value=""
+      />
+    </View>
+  </View>
+  <View
+    style={
+      Object {
+        "marginHorizontal": 28,
+        "marginTop": 20,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "borderRadius": 6,
+        }
+      }
+    >
+      <View
+        accessible={true}
+        isTVSelectable={true}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          Object {
+            "opacity": 1,
+          }
+        }
+      >
+        <View
+          style={
+            Object {
+              "alignItems": "center",
+              "backgroundColor": "#6e5baa",
+              "borderColor": "#2089dc",
+              "borderRadius": 6,
+              "borderWidth": 0,
+              "flexDirection": "row",
+              "height": 50,
+              "justifyContent": "center",
+              "padding": 8,
+            }
+          }
+        >
+          <Text
+            style={
+              Object {
+                "color": "white",
+                "fontSize": 18,
+                "paddingBottom": 1,
+                "paddingTop": 2,
+                "textAlign": "center",
+              }
+            }
+          >
+            Connect
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+  <Text
+    style={
+      Object {
+        "alignSelf": "center",
+        "color": "#e03131",
+        "fontSize": 14,
+        "marginTop": 20,
+      }
+    }
+  >
+    
+  </Text>
+</View>
+`;

@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "moment": "^2.22.1",
-    "sendbird": "3.0.108",
-    "sendbird-syncmanager": "1.1.10"
+    "sendbird": "3.0.111",
+    "sendbird-syncmanager": "1.1.12"
   }
 }

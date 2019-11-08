@@ -52,7 +52,7 @@ class SendBirdAction {
 
   getUserList(isInit = false) {
     if (isInit || isNull(this.userQuery)) {
-      this.userQuery = new this.sb.createApplicationUserListQuery();
+      this.userQuery = this.sb.createApplicationUserListQuery();
       this.userQuery.limit = 30;
     }
     return new Promise((resolve, reject) => {

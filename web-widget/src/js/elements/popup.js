@@ -15,6 +15,7 @@ class Popup extends Element {
     super();
     this._createMemberPopup();
     this._createInvitePopup();
+    this.inviteClickEventList = [];
   }
 
   reset() {
@@ -33,6 +34,10 @@ class Popup extends Element {
     this._setContent(this.invitePopup.count, '0');
     this._setContent(this.invitePopup.inviteBtn, TITLE_POPUP_INVITE_BTN);
     addClass(this.invitePopup.inviteBtn, className.DISABLED);
+    this.inviteClickEventList.forEach((obj) => {
+      this._removeClickEvent(obj.target, obj.action);
+    });
+    this.inviteClickEventList = [];
   }
 
   showMemberPopup(chatSection, index) {
@@ -187,10 +192,12 @@ class Popup extends Element {
     });
   }
 
-  addClickEvent(target, action) {
+  addClickEvent(target, action, options = {invite: false}) {
+    if(options.invite) {
+      this.inviteClickEventList.push({target, action});
+    }
     this._setClickEvent(target, action);
   }
-
 }
 
 export { Popup as default };

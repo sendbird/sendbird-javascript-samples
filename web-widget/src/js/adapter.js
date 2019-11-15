@@ -1,16 +1,14 @@
-import {
-  MAX_COUNT
-} from './consts.js';
-import {
-  xssEscape
-} from './utils.js';
+import { MAX_COUNT } from "./consts.js";
+import { xssEscape } from "./utils.js";
 
-const GLOBAL_HANDLER = 'GLOBAL_HANDLER';
+import SendBird from "sendbird";
+
+const GLOBAL_HANDLER = "GLOBAL_HANDLER";
 const GET_MESSAGE_LIMIT = 20;
 
-class Sendbird {
+class SendBirdAdapter {
   constructor(appId) {
-    this.sb = new window.SendBird({
+    this.sb = new SendBird({
       appId: appId
     });
     this.channelListQuery = null;
@@ -33,7 +31,7 @@ class Sendbird {
         console.error(error);
         return;
       }
-      this.sb.updateCurrentUserInfo(nickname.trim(), '', (response, error) => {
+      this.sb.updateCurrentUserInfo(nickname.trim(), "", (response, error) => {
         if (error) {
           console.error(error);
           return;
@@ -65,7 +63,7 @@ class Sendbird {
       this.channelListQuery.limit = 20;
     }
     if (this.channelListQuery.hasNext && !this.channelListQuery.isLoading) {
-      this.channelListQuery.next(function (channelList, error) {
+      this.channelListQuery.next(function(channelList, error) {
         if (error) {
           console.error(error);
           return;
@@ -76,7 +74,7 @@ class Sendbird {
   }
 
   getChannelInfo(channelUrl, action) {
-    this.sb.GroupChannel.getChannel(channelUrl, function (channel, error) {
+    this.sb.GroupChannel.getChannel(channelUrl, function(channel, error) {
       if (error) {
         console.error(error);
         return;
@@ -86,13 +84,20 @@ class Sendbird {
   }
 
   createNewChannel(userIds, action) {
-    this.sb.GroupChannel.createChannelWithUserIds(userIds, true, '', '', '', function (channel, error) {
-      if (error) {
-        console.error(error);
-        return;
+    this.sb.GroupChannel.createChannelWithUserIds(
+      userIds,
+      true,
+      "",
+      "",
+      "",
+      function(channel, error) {
+        if (error) {
+          console.error(error);
+          return;
+        }
+        action(channel);
       }
-      action(channel);
-    });
+    );
   }
 
   inviteMember(channel, userIds, action) {
@@ -129,7 +134,10 @@ class Sendbird {
       channelSet.query = channelSet.channel.createPreviousMessageListQuery();
     }
     if (channelSet.query.hasMore && !channelSet.query.isLoading) {
-      channelSet.query.load(GET_MESSAGE_LIMIT, false, function (messageList, error) {
+      channelSet.query.load(GET_MESSAGE_LIMIT, false, function(
+        messageList,
+        error
+      ) {
         if (error) {
           console.error(error);
           return;
@@ -149,11 +157,13 @@ class Sendbird {
   }
 
   sendFileMessage(channel, file, action) {
-    let thumbSize = [{
-      maxWidth: 160,
-      maxHeight: 160
-    }];
-    channel.sendFileMessage(file, '', '', thumbSize, (message, error) => {
+    let thumbSize = [
+      {
+        maxWidth: 160,
+        maxHeight: 160
+      }
+    ];
+    channel.sendFileMessage(file, "", "", thumbSize, (message, error) => {
       if (error) {
         console.error(error);
         return;
@@ -162,22 +172,78 @@ class Sendbird {
     });
   }
 
+  _loadUserListFilter (
+    userListQuery,
+    channelUrl,
+    prevUsers,
+    resolve,
+    reject
+  ) {
+    if (!userListQuery.hasNext) {
+      return resolve(prevUsers);
+    }
+    return userListQuery
+      .next()
+      .then(users => {
+        if (channelUrl) {
+          return this.sb.GroupChannel.getChannel(channelUrl)
+            .then(channel => {
+              const channelMemberIds = channel.members.map(member => {
+                return member.userId;
+              });
+              const list = users.filter(user => {
+                return channelMemberIds.indexOf(user.userId) < 0;
+              });
+              const filteredUsers = [...prevUsers, ...list];
+              if (filteredUsers.length < userListQuery.limit / 2) {
+                return this._loadUserListFilter(
+                  userListQuery,
+                  channelUrl,
+                  filteredUsers,
+                  resolve,
+                  reject
+                );
+              } else {
+                resolve(filteredUsers);
+              }
+            })
+            .catch(() => {
+              resolve([...users, ...prevUsers]);
+            });
+        } else {
+          resolve([...users, ...prevUsers]);
+        }
+      })
+      .catch(() => {
+        resolve(prevUsers);
+      });
+  }
+
   /*
   User
    */
-  getUserList(action) {
-    if (!this.userListQuery) {
+  getUserList(channelUrl, cb) {
+    if(!this.userListQuery) {
       this.userListQuery = this.sb.createApplicationUserListQuery();
+      this.userListQuery.limit = 30;
     }
-    if (this.userListQuery.hasNext && !this.userListQuery.isLoading) {
-      this.userListQuery.next((userList, error) => {
-        if (error) {
-          console.error(error);
-          return;
-        }
-        action(userList);
+    return new Promise((resolve, reject) => {
+      const users = [];
+      return this._loadUserListFilter(
+        this.userListQuery,
+        channelUrl,
+        users,
+        resolve,
+        reject
+      );
+    })
+      .then(userList => {
+        cb(userList);
+      })
+      .catch(error => {
+        console.error(error);
+        cb([]);
       });
-    }
   }
 
   /*
@@ -194,28 +260,28 @@ class Sendbird {
     let userJoinFunc = args[7];
 
     let channelHandler = new this.sb.ChannelHandler();
-    channelHandler.onMessageReceived = function (channel, message) {
+    channelHandler.onMessageReceived = function(channel, message) {
       messageReceivedFunc(channel, message);
     };
-    channelHandler.onMessageUpdated = function (channel, message) {
+    channelHandler.onMessageUpdated = function(channel, message) {
       messageUpdatedFunc(channel, message);
     };
-    channelHandler.onMessageDeleted = function (channel, messageId) {
+    channelHandler.onMessageDeleted = function(channel, messageId) {
       messageDeletedFunc(channel, messageId);
     };
-    channelHandler.onChannelChanged = function (channel) {
+    channelHandler.onChannelChanged = function(channel) {
       ChannelChangedFunc(channel);
     };
-    channelHandler.onTypingStatusUpdated = function (channel) {
+    channelHandler.onTypingStatusUpdated = function(channel) {
       typingStatusFunc(channel);
     };
-    channelHandler.onReadReceiptUpdated = function (channel) {
+    channelHandler.onReadReceiptUpdated = function(channel) {
       readReceiptFunc(channel);
     };
-    channelHandler.onUserLeft = function (channel, user) {
+    channelHandler.onUserLeft = function(channel, user) {
       userLeftFunc(channel, user);
     };
-    channelHandler.onUserJoined = function (channel, user) {
+    channelHandler.onUserJoined = function(channel, user) {
       userJoinFunc(channel, user);
     };
     this.sb.addChannelHandler(GLOBAL_HANDLER, channelHandler);
@@ -227,7 +293,7 @@ class Sendbird {
   getNicknamesString(channel) {
     let nicknameList = [];
     let currentUserId = this.sb.currentUser.userId;
-    channel.members.forEach(function (member) {
+    channel.members.forEach(function(member) {
       if (member.userId != currentUserId) {
         nicknameList.push(xssEscape(member.nickname));
       }
@@ -241,35 +307,49 @@ class Sendbird {
 
   getLastMessage(channel) {
     if (channel.lastMessage) {
-      return channel.lastMessage.isUserMessage() || channel.lastMessage.isAdminMessage() ?
-        channel.lastMessage.message :
-        channel.lastMessage.name;
+      return channel.lastMessage.isUserMessage() ||
+        channel.lastMessage.isAdminMessage()
+        ? channel.lastMessage.message
+        : channel.lastMessage.name;
     }
-    return '';
+    return "";
   }
 
   getMessageTime(message) {
-    const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    const months = [
+      "JAN",
+      "FEB",
+      "MAR",
+      "APR",
+      "MAY",
+      "JUN",
+      "JUL",
+      "AUG",
+      "SEP",
+      "OCT",
+      "NOV",
+      "DEC"
+    ];
 
     var _getDay = val => {
       let day = parseInt(val);
       if (day == 1) {
-        return day + 'st';
+        return day + "st";
       } else if (day == 2) {
-        return day + 'en';
+        return day + "en";
       } else if (day == 3) {
-        return day + 'rd';
+        return day + "rd";
       } else {
-        return day + 'th';
+        return day + "th";
       }
     };
 
     var _checkTime = val => {
-      return +val < 10 ? '0' + val : val;
+      return +val < 10 ? "0" + val : val;
     };
 
     if (message) {
-      const LAST_MESSAGE_YESTERDAY = 'YESTERDAY';
+      const LAST_MESSAGE_YESTERDAY = "YESTERDAY";
       var _nowDate = new Date();
       var _date = new Date(message.createdAt);
       if (_nowDate.getDate() - _date.getDate() == 1) {
@@ -279,12 +359,14 @@ class Sendbird {
         _nowDate.getMonth() == _date.getMonth() &&
         _nowDate.getDate() == _date.getDate()
       ) {
-        return _checkTime(_date.getHours()) + ':' + _checkTime(_date.getMinutes());
+        return (
+          _checkTime(_date.getHours()) + ":" + _checkTime(_date.getMinutes())
+        );
       } else {
-        return months[_date.getMonth()] + ' ' + _getDay(_date.getDate());
+        return months[_date.getMonth()] + " " + _getDay(_date.getDate());
       }
     }
-    return '';
+    return "";
   }
 
   getMessageReadReceiptCount(channel, message) {
@@ -296,7 +378,4 @@ class Sendbird {
   }
 }
 
-export {
-  Sendbird as
-  default
-};
+export { SendBirdAdapter as default };

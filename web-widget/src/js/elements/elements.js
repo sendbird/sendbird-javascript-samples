@@ -112,10 +112,12 @@ class Element {
 
   _setClickEvent(...args) {
     args.reduce((target, action) => {
-      target.addEventListener(this.eventName.CLICK, () => {
-        action();
-      });
+      target.addEventListener(this.eventName.CLICK, action);
     });
+  }
+
+  _removeClickEvent(target, action) {
+    target.removeEventListener(this.eventName.CLICK, action);
   }
 
   _setPasteEvent(...args) {

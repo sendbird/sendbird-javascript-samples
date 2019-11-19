@@ -29,6 +29,7 @@ class ChatBody {
     collectionHandler.onSucceededMessageEvent = this._messageEventHandler.bind(this);
     collectionHandler.onFailedMessageEvent = this._messageEventHandler.bind(this);
     collectionHandler.onPendingMessageEvent = this._messageEventHandler.bind(this);
+    collectionHandler.onNewMessage = (event) => { this._onNewMessageEventHandler(event, this.collection) };
     this.collection.setCollectionHandler(collectionHandler);
 
     this.element.addEventListener('scroll', () => {
@@ -38,7 +39,38 @@ class ChatBody {
           this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
         });
       }
+
+      if (this.element.scrollHeight - this.element.scrollTop - this.element.clientHeight === 0) {
+        const newMessagePop = document.getElementById('new-message-pop');
+        if (newMessagePop) newMessagePop.remove();
+      }
     });
+  }
+
+  _onNewMessageEventHandler(event, col) {
+    const messages = col.messages;
+    let isOnNewMessage = !(messages.every(message => (message.messageId !== event.messageId)));
+
+    if (isOnNewMessage) {
+      if (this.element.scrollTop < this.element.scrollHeight - this.element.offsetHeight && !(document.getElementById('new-message-pop'))) {
+        const newMessagePop = document.createElement('div');
+        newMessagePop.setAttribute('id', 'new-message-pop');
+        newMessagePop.setAttribute('class', 'new-message-pop');
+
+        const popText = document.createElement('div');
+        popText.setAttribute('class', 'new-message-pop-text');
+        popText.innerText = 'check new message';
+        newMessagePop.appendChild(popText);
+        popText.addEventListener('click', () => {
+          newMessagePop.remove();
+          this.scrollToBottom();
+        });
+
+        this.element.appendChild(newMessagePop);
+      }
+    } else {
+      console.log('There is no onNewMessage in collection');
+    }
   }
 
   _messageEventHandler(messages, action, reason) {
@@ -65,6 +97,7 @@ class ChatBody {
         this._clearMessages();
         break;
       }
+      default: break;
     }
     if (keepScrollToBottom) {
       this.scrollToBottom();

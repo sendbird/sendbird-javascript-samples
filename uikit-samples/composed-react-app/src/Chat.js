@@ -10,7 +10,7 @@ const {
   SendbirdProvider,
   ChannelList,
   Channel,
-  ChannelSetting,
+  ChannelSettings,
 } = uikit;
 
 export default function Chat({ userId, nickname, theme }) {
@@ -49,7 +49,7 @@ export default function Chat({ userId, nickname, theme }) {
         </div>
         {showSettings && (
           <div className="sendbird-app__settingspanel-wrap">
-            <ChannelSetting
+            <ChannelSettings
               channelUrl={currentChannelUrl}
               onCloseClick={() => { setShowSettings(false); }}
             />

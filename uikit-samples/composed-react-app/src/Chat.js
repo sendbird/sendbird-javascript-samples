@@ -3,15 +3,13 @@ import React, { useEffect, useState } from 'react';
 import './Chat.css';
 
 import { useHistory } from "react-router-dom";
-import uikit from 'sendbird-uikit';
-import 'sendbird-uikit/dist/index.css';
-
-const {
+import {
   SendbirdProvider,
   ChannelList,
   Channel,
   ChannelSettings,
-} = uikit;
+} from 'sendbird-uikit';
+import 'sendbird-uikit/dist/index.css';
 
 export default function Chat({ userId, nickname, theme }) {
   const history = useHistory();

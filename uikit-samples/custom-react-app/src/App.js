@@ -1,24 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
 
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from 'react-router-dom';
+
+import Login from './Login';
+import Chat from './Chat/Index';
+
 function App() {
+  const [config, setconfig] = useState({});
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <Switch>
+          <Route path="/chat">
+            <Chat
+              userId={config.userId}
+              nickname={config.nickname}
+              theme={config.theme}
+            />
+            Chat
+          </Route>
+          <Route path="/">
+            <Login onSubmit={setconfig} />
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

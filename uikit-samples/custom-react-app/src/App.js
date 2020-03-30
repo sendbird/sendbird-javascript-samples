@@ -21,8 +21,8 @@ function App() {
               userId={config.userId}
               nickname={config.nickname}
               theme={config.theme}
+              useCustomQuery={config.useCustomQuery}
             />
-            Chat
           </Route>
           <Route path="/">
             <Login onSubmit={setconfig} />

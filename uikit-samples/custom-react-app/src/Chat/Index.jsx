@@ -10,7 +10,11 @@ import {
 } from 'sendbird-uikit';
 import 'sendbird-uikit/dist/index.css';
 
-export default function Chat({ userId, theme, nickname }) {
+import ChannelPreview from './ChannelPreview';
+import Message from './Message';
+import getCustomPaginatedQuery from './CustomUserList';
+
+export default function Chat({ userId, theme, nickname, useCustomQuery }) {
   const history = useHistory();
   useEffect(() => {
     if (!userId || !nickname) {
@@ -23,14 +27,20 @@ export default function Chat({ userId, theme, nickname }) {
   return (
     <div style={{ height: '100vh' }}>
       <SendbirdProvider
-        appId={process.env.APP_ID}
+        appId="2D7B4CDB-932F-4082-9B09-A1153792DC8D"
         theme={theme}
         userId={userId}
         nickname={nickname}
+        userListQuery={
+          useCustomQuery
+           ? getCustomPaginatedQuery
+           : null
+        }
       >
         <div className="sendbird-app__wrap">
           <div className="sendbird-app__channellist-wrap">
             <ChannelList
+              renderChannelPreview={ChannelPreview}
               onChannelSelect={(channel) => {
                 if (channel && channel.url) {
                   setCurrentChannelUrl(channel.url);
@@ -40,6 +50,7 @@ export default function Chat({ userId, theme, nickname }) {
           </div>
           <div className="sendbird-app__conversation-wrap">
             <Channel
+              renderChatItem={Message}
               channelUrl={currentChannelUrl}
               onChatHeaderActionClick={() => { setShowSettings(true); }}
             />

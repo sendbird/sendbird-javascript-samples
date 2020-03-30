@@ -42,11 +42,11 @@ export default function SignIn({ onSubmit }) {
           className={classes.form}
           onSubmit={e => {
             e.preventDefault();
-            console.warn(e.target.theme);
             onSubmit({
               userId: e.target.userId.value,
               nickname: e.target.nickname.value,
               theme: e.target.theme.checked ? 'dark' : 'light',
+              useCustomQuery: e.target.useCustomQuery.checked,
             });
             history.push('/chat');
           }}
@@ -73,6 +73,10 @@ export default function SignIn({ onSubmit }) {
           <FormControlLabel
             control={<Checkbox value="dark" color="primary" name="theme" />}
             label="Apply dark theme"
+          />
+          <FormControlLabel
+            control={<Checkbox value="customQuery" color="primary" name="useCustomQuery" />}
+            label="Use custom user lisr"
           />
           <Button
             type="submit"

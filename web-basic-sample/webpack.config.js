@@ -8,8 +8,8 @@ const PRODUCTION = 'production';
 module.exports = () => {
   const config = {
     entry: {
-      index: ['./src/js/index.js', './src/scss/index.scss'],
-      main: ['./src/js/main.js', './src/scss/main.scss']
+      index: ['babel-polyfill', './src/js/index.js', './src/scss/index.scss'],
+      main: ['babel-polyfill', './src/js/main.js', './src/scss/main.scss']
     },
     output: {
       path: path.resolve(__dirname, './dist'),

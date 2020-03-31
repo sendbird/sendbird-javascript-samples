@@ -7,6 +7,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import Avatar from '@material-ui/core/Avatar';
 
 import {
   useHistory,
@@ -19,6 +20,9 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  main: {
+    backgroundColor: 'white',
+  },
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
@@ -26,17 +30,28 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  avatar: {
+    marginTop: 20,
+    width: 127/2,
+    height: 150/2,
+    borderRadius: 0,
+  },
 }));
 
 export default function SignIn({ onSubmit }) {
   const classes = useStyles();
   const history = useHistory();
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" className={classes.main}>
       <CssBaseline />
       <div className={classes.paper}>
+        <Avatar
+          alt="Sendbird Logo"
+          src="https://dxstmhyqfqr1o.cloudfront.net/sdk-sample-logo/SB_Symbol_RGB_v3.0.svg"
+          className={classes.avatar}
+        />
         <Typography component="h1" variant="h5">
-          Login
+        SendBird | UiKit Sample
         </Typography>
         <form
           className={classes.form}
@@ -81,10 +96,13 @@ export default function SignIn({ onSubmit }) {
             color="primary"
             className={classes.submit}
           >
-            Start
+            Login
           </Button>
         </form>
       </div>
+      <Typography variant="body1">
+        Start chatting on SendBird by choosing your username and nickname.
+      </Typography>
     </Container>
   );
 }

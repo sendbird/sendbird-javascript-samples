@@ -42,7 +42,6 @@ export default function SignIn({ onSubmit }) {
           className={classes.form}
           onSubmit={e => {
             e.preventDefault();
-            console.log('HOON', e.target);
             onSubmit({
               userId: e.target.userId.value,
               nickname: e.target.nickname.value,

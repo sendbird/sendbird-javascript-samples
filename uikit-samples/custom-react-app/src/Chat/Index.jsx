@@ -27,14 +27,14 @@ export default function Chat({ userId, theme, nickname, useCustomQuery }) {
   return (
     <div style={{ height: '100vh' }}>
       <SendbirdProvider
-        appId="2D7B4CDB-932F-4082-9B09-A1153792DC8D"
+        appId={process.env.APP_ID}
         theme={theme}
         userId={userId}
         nickname={nickname}
         userListQuery={
           useCustomQuery
-           ? getCustomPaginatedQuery
-           : null
+            ? getCustomPaginatedQuery
+            : null
         }
       >
         <div className="sendbird-app__wrap">

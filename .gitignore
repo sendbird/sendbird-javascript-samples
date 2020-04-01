@@ -12,3 +12,4 @@ web-widget/dist
 package-lock.json
 Pods/
 Podfile.lock
+.env

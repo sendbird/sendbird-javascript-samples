@@ -4,7 +4,7 @@ import './Chat.css';
 
 import { useHistory } from "react-router-dom";
 import {
-  SendbirdProvider,
+  SendBirdProvider,
   ChannelList,
   Channel,
   ChannelSettings,
@@ -22,7 +22,7 @@ export default function Chat({ userId, nickname, theme }) {
   const [currentChannelUrl, setCurrentChannelUrl] = useState(null);
   return (
     <div style={{ height: '100vh' }}>
-      <SendbirdProvider
+      <SendBirdProvider
         appId={process.env.APP_ID}
         theme={theme}
         userId={userId}
@@ -53,7 +53,7 @@ export default function Chat({ userId, nickname, theme }) {
             />
           </div>
         )}
-      </SendbirdProvider>
+      </SendBirdProvider>
     </div>
   )
 }

@@ -522,7 +522,7 @@ module.exports = function(webpackEnv) {
                   removeComments: true,
                   collapseWhitespace: true,
                   removeRedundantAttributes: true,
-                  useShortDoctype: true,
+                  useShortDoctype: false,
                   removeEmptyAttributes: true,
                   removeStyleLinkTypeAttributes: true,
                   keepClosingSlash: true,

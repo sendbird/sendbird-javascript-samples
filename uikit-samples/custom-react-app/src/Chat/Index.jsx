@@ -3,7 +3,7 @@ import './index.css';
 import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import {
-  SendbirdProvider,
+  SendBirdProvider,
   ChannelList,
   Channel,
   ChannelSettings,
@@ -26,7 +26,7 @@ export default function Chat({ userId, theme, nickname, useCustomQuery }) {
 
   return (
     <div style={{ height: '100vh' }}>
-      <SendbirdProvider
+      <SendBirdProvider
         appId={process.env.APP_ID}
         theme={theme}
         userId={userId}
@@ -64,7 +64,7 @@ export default function Chat({ userId, theme, nickname, useCustomQuery }) {
             />
           </div>
         )}
-      </SendbirdProvider>
+      </SendBirdProvider>
     </div>
   )
 }

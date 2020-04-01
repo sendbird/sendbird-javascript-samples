@@ -76,7 +76,7 @@ export default function SignIn({ onSubmit }) {
           />
           <FormControlLabel
             control={<Checkbox value="customQuery" color="primary" name="useCustomQuery" />}
-            label="Use custom user lisr"
+            label="Use custom user list"
           />
           <Button
             type="submit"

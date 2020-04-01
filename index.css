@@ -60,6 +60,9 @@ a, a:link, a:visited, a:hover, a:active {
 .basic {
   background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/basic-sample.png');
 }
+.uikit {
+  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/sdk-sample-logo/SB_Symbol_RGB_v3.0.svg');
+}
 .widget {
   background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/widget-sample-1.png');
 }

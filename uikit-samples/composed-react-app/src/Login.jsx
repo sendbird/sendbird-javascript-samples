@@ -51,8 +51,8 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     marginTop: 20,
-    width: 127/2,
-    height: 150/2,
+    width: 127 / 2,
+    height: 150 / 2,
     borderRadius: 0,
   },
 }));
@@ -70,7 +70,7 @@ export default function SignIn({ onSubmit }) {
           className={classes.avatar}
         />
         <Typography component="h1" variant="h5">
-        SendBird | UiKit Sample
+          SendBird | UiKit Sample
         </Typography>
         <form
           className={classes.form}
@@ -80,7 +80,6 @@ export default function SignIn({ onSubmit }) {
               userId: e.target.userId.value,
               nickname: e.target.nickname.value,
               theme: e.target.theme.checked ? 'dark' : 'light',
-              // useCustomQuery: e.target.useCustomQuery.checked,
             });
             history.push('/chat');;
           }}

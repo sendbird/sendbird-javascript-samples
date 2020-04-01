@@ -29,6 +29,25 @@ const useStyles = makeStyles((theme) => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+    backgroundColor: '#6e5baa',
+    '&:hover': {
+      backgroundColor: '#825deb',
+    },
+  },
+  checkbox: {
+    '&.Mui-checked': {
+      color: '#825deb',
+    },
+  },
+  input: {
+    '& .Mui-focused': {
+      color: '#825deb',
+    },
+    '& .MuiOutlinedInput-root': {
+      '&.Mui-focused fieldset': {
+        borderColor: '#825deb',
+      },
+    }
   },
   avatar: {
     marginTop: 20,
@@ -74,6 +93,7 @@ export default function SignIn({ onSubmit }) {
             id="userId"
             label="User Id"
             name="userId"
+            className={classes.input}
             autoFocus
           />
           <TextField
@@ -84,9 +104,10 @@ export default function SignIn({ onSubmit }) {
             name="nickname"
             label="Nick Name"
             id="nickname"
+            className={classes.input}
           />
           <FormControlLabel
-            control={<Checkbox value="dark" color="primary" name="theme" />}
+            control={<Checkbox value="dark" color="primary" name="theme" className={classes.checkbox} />}
             label="Apply dark theme"
           />
           <Button

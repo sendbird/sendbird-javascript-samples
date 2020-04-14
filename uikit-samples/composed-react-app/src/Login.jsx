@@ -66,7 +66,7 @@ export default function SignIn({ onSubmit }) {
       <div className={classes.paper}>
         <Avatar
           alt="Sendbird Logo"
-          src="https://dxstmhyqfqr1o.cloudfront.net/sdk-sample-logo/SB_Symbol_RGB_v3.0.svg"
+          src="https://dxstmhyqfqr1o.cloudfront.net/symbol/Sendbird_Symbol_PNG/Sendbird_Symbol_RGB.png"
           className={classes.avatar}
         />
         <Typography component="h1" variant="h5">

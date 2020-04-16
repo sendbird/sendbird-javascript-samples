@@ -53,15 +53,15 @@ a, a:link, a:visited, a:hover, a:active {
   height: 150px;
   float: left;
   border-radius: 4px;
-  background-size: 240px 150px;
+  background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
 }
 .basic {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/basic-sample.png');
+  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-1.png');
 }
 .uikit {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/sdk-sample-logo/SB_Symbol_RGB_v3.0.svg');
+  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-4.png');
 }
 .widget {
   background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/widget-sample-1.png');
@@ -70,7 +70,7 @@ a, a:link, a:visited, a:hover, a:active {
   background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/live-chat-sample.png');
 }
 .rn-android {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/rn-android.png');
+  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-3.png');
   background-size: 75px 150px;
   background-color: #f5f5f5;
 }

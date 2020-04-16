@@ -37,6 +37,11 @@
   }
 }
 
+.logo-image {
+  background-color: $color-white;
+  border-radius: 50%;
+}
+
 .chat-root {
   display: flex;
   flex-direction: column;

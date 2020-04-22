@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
   },
   main: {
     backgroundColor: 'white',
+    textAlign: 'center',
   },
   form: {
     width: '100%', // Fix IE 11 issue.

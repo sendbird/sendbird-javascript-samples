@@ -1,5 +1,5 @@
 import '../../scss/widget.scss';
-import { removeClass, addClass } from '../utils.js';
+import { removeClass, addClass, xssEscape } from '../utils.js';
 import { className, styleValue } from '../consts.js';
 
 class Element {
@@ -76,7 +76,7 @@ class Element {
   }
 
   _setContent(target, text) {
-    target.innerHTML = text;
+    target.innerHTML =  xssEscape(text);
   }
 
   _addContent(target, text) {

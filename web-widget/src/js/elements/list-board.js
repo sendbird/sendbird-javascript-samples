@@ -1,5 +1,5 @@
 import { className, MAX_COUNT, MAX_FONT_SIZE } from '../consts.js';
-import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace } from '../utils.js';
+import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace, xssEscape } from '../utils.js';
 import Element from './elements.js';
 
 const EMPTY_STRING = '';
@@ -275,7 +275,7 @@ class ListBoard extends Element {
     this._setClass(contentBottom, [className.CONTENT_BOTTOM]);
     var contentLastMessage = this.createDiv();
     this._setClass(contentLastMessage, [className.LAST_MESSAGE]);
-    this._setContent(contentLastMessage, message);
+    this._setContent(contentLastMessage, xssEscape(message));
     contentBottom.appendChild(contentLastMessage);
 
     var contentUnread = this.createSpan();

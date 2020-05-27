@@ -71,7 +71,7 @@ export default function SignIn({ onSubmit }) {
           className={classes.avatar}
         />
         <Typography component="h1" variant="h5">
-          SendBird | UiKit Sample
+          SendBird | UIKit Sample
         </Typography>
         <form
           className={classes.form}

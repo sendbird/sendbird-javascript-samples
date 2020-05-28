@@ -24,6 +24,9 @@ Add `library` and `libraryTarget` in `output` field of `webpack.config.js`.
     library: 'SendBirdWidget',
     libraryTarget: 'umd'
   },
+  optimization: {
+    minimize: false
+  },
 ```
 
 ### Rebuild Widget Sample

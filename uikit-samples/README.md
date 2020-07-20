@@ -18,14 +18,15 @@ You can set your own APP_ID, USER_ID, and NICKNAME in `const.js` instead of alre
 And there are some commented links in the samples. They will be usefull for reference.
 
 
-### 1-1) [Using SendBird App](https://codesandbox.io/s/1-1-using-sendbird-app-q4e6c)
+### 1-1) [Using SendBird App](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5)
 
-Here is a sample, you can see how to use `App` component here.
+You can see how to use `App` component in this sample.
 
 
-### 1-2) Basic format of SendBird UIkit Customization
+### 1-2) [Basic format of SendBird UIkit Customization](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c)
 
-[Here is a sample](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c), you can see a basic format for customizing.
+You can see a basic format for customizing in this sample.
+
 
 > note: Imported as different name to origine
 ```js
@@ -37,9 +38,9 @@ import {
 ```
 
 
-### 2-1) Customizing MessageItem
+### 2-1) [Customizing MessageItem](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=)
 
-You can see how to customize message item of the `Channel` component [in this sample](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=).
+You can see how to customize message item of the `Channel` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the message item customization is applied.
@@ -65,9 +66,9 @@ Set a function returning customized message item. You can get these function par
 Make your own customized message item components here.
 
 
-### 2-2) Customizing MessageListParams
+### 2-2) [Customizing MessageListParams](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573)
 
-You can see how to customize message list of the `Channel` component [in this sample](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573).
+You can see how to customize message list of the `Channel` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the message list customization are applied.<br />
@@ -96,9 +97,9 @@ MessageListParams
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L488)
 
 
-### 2-3) Customizing MessageParams
+### 2-3) [Customizing MessageParams](https://codesandbox.io/s/2-3-customizing-messageparams-phqii)
 
-You can see how to customize message params through props of the `Channel` component [in this sample](https://codesandbox.io/s/2-3-customizing-messageparams-phqii).
+You can see how to customize message params through props of the `Channel` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can send or update as a highlighted message.
@@ -132,9 +133,9 @@ FileMessageParams
 If the customType of message is `highlight`, show background color with yellow.
 
 
-### 2-4) Customizing ChatHeader
+### 2-4) [Customizing ChatHeader](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
 
-You can see how to customize chat header of the `Channel` component [in this sample](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z).
+You can see how to customize chat header of the `Channel` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the chat header customization is applied.
@@ -155,9 +156,9 @@ Set a function returning customized chat header. You can get channel and user in
 Make your own customized chat header component here.
 
 
-### 2-5) Customizing MessageInput
+### 2-5) [Customizing MessageInput](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
 
-You can see how to customize message input of the `Channel` component [in this sample](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d).
+You can see how to customize message input of the `Channel` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the message input customization is applied.
@@ -178,9 +179,9 @@ Set a function returning customized message input. You can get channel, user, an
 Make your own customized message input component here.
 
 
-### 3-1) Customizing ChannelPreviewItem
+### 3-1) [Customizing ChannelPreviewItem](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
 
-You can see how to customize channel preview item of the `ChannelList` component [in this sample](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs).
+You can see how to customize channel preview item of the `ChannelList` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the channel preview item customization is applied.
@@ -209,9 +210,9 @@ function CustomizedChannelPreviewItem(props) {
 }
 ```
 
-### 3-2) Customizing ChannelListQuery
+### 3-2) [Customizing ChannelListQuery](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=)
 
-You can see how to customize channel list query of the `ChannelList` component [in this sample](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=).
+You can see how to customize channel list query of the `ChannelList` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can see that the channel list customization is applied.
@@ -246,9 +247,9 @@ ApplicationUserListQuery
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L1313)
 
 
-### 3-3) Customizing ChannelParams
+### 3-3) [Customizing ChannelParams](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx)
 
-You can see how to customize channel preview item of the `ChannelList` component [in this sample](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx).
+You can see how to customize channel preview item of the `ChannelList` component in this sample.
 
 #### App.js
 If you enable the toggle button, you can create channel using GroupChannelParams.

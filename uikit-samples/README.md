@@ -28,7 +28,7 @@ You can see how to use `App` component in this sample.
 You can see a basic format for customizing in this sample.
 
 
-> note: Imported as different name to origine
+> Note: Imported as different name to origin
 ```js
 import {
   Channel as SBConversation,

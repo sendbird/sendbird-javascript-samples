@@ -72,7 +72,7 @@ You can see how to customize message list of the `Channel` component in this sam
 
 #### App.js
 If you enable the toggle button, you can see that the message list customization are applied.<br />
-You will see the message items only you sent.
+You will see only the messages that you sent
 
 #### CustomizedApp.js
 You can see a `queries` prop of the `Channel`(SBConversation) component.

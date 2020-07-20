@@ -13,14 +13,14 @@ Find the docs at: https://docs.sendbird.com/javascript/ui_kit_getting_started
 
 ## Customized Samples
 
-Belowing samples show how to use and customize Sendbird UIKit. They are integrated in [codesandbox](https://codesandbox.io)<br />
+These samples show how to use and customize Sendbird UIKit. They are integrated in [codesandbox](https://codesandbox.io).<br />
 You can set your own APP_ID, USER_ID, and NICKNAME in `const.js` instead of already set things.<br />
 And there are some commented links in the samples. They will be usefull for reference.
 
 
-### 1-1) Using SendBird App
+### 1-1) [Using SendBird App](https://codesandbox.io/s/1-1-using-sendbird-app-q4e6c)
 
-[Here is a sample](https://codesandbox.io/s/1-1-using-sendbird-app-q4e6c), you can see how to use `App` component here.
+Here is a sample, you can see how to use `App` component here.
 
 
 ### 1-2) Basic format of SendBird UIkit Customization

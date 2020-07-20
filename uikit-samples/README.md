@@ -280,4 +280,4 @@ GroupChannelParams
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L1448)
 
 #### CustomizedChannelPreviewItem.js
-If the customType of chanenl is `highlight`, show background color with yellow.
+If the customType of channel is `highlight`, show background color with yellow.

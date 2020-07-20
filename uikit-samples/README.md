@@ -125,6 +125,7 @@ const handleUpdateUserMessage = (text) => {
 UserMessageParams
 * [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L407)
+
 FileMessageParams
 * [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_fileMessageParams-FileMessageParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L440)

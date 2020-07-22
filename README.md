@@ -19,13 +19,11 @@
 
 > The previous samples, `react-native-sample` and `web-sample` are deprecated. For current samples, refer to `react-native-redux-sample` and `web-basic-sample`.
 
-## Installation
+## Installation of Chat SDK
 
 ### Requirements
 
 `Node.js` should be installed on your system.
-
-### Chat SDK for JavaScript
 
 You can download the Chat SDK for JavaScript by using two package managers below.
 

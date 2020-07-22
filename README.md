@@ -1,41 +1,49 @@
-# SendBird JavaScript Sample
+# SendBird JavaScript samples
+![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
+![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
+![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
 
-The samples in this repository are fully functional messaging applications built using [SendBird](https://sendbird.com) JavaScript SDK.
-  1. **Web Basic sample:** Slack-like full screen chat sample for desktop browsers.
-  2. **Web Basic sample with SyncManager** Same as Web Basic sample with SyncManager integrated
-  3. **Web Widget sample:** Facebook-chat-like chat widget to regular websites.  
-  4. **Web Live Chat sample:** Twitch-chat-like chat sample for desktop browsers.  
-  5. **React Native Redux sample:** Mobile chat sample for iOS and Android.
+## Introduction
 
-> `react-native-sample` and `web-sample` are deprecated. See `react-native-redux-sample` and `web-basic-sample` instead.
+[Sendbird](https://sendbird.com) provides the chat API and SDK for your app, enabling real-time communication among the users. Here are various samples built using Sendbird Chat SDK.
 
+- [**Web chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample) is a Slack-like full screen chat sample for desktop browsers.
 
-## Table of Contents
+- [**Web chat sample with SyncManager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager) is a web chat sample integrated with SyncManager, which is equipped with a local cache along with core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app. This sample is written in JavaScript with [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript) and [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). Find more about SyncManager on [Sendbird SyncManager document](https://docs.sendbird.com/javascript/sync_manager_getting_started).
 
-  1. [Installing SendBird JS SDK](#installing-the-sendbird-js-sdk)
-  2. [Previous versions](#previous-versions)
-  
-  
-## Installing the SendBird JS SDK
-  
-Using [Bower](http://bower.io):
+- [**Web widget sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-widget) is a Facebook-chat-like chat widget for websites.
+ 
+- [**Web live chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-live-chat) is a Twitch-chat-like chat sample for desktop browsers.
 
-      bower install sendbird
+- [**React native redux sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-sample) is a mobile chat sample for iOS and Android.
 
+> The previous samples, `react-native-sample` and `web-sample` are deprecated. For current samples, refer to `react-native-redux-sample` and `web-basic-sample`.
 
-Using [npm](https://www.npmjs.com/package/sendbird):
+## Installation
 
-      npm install --save sendbird
+### Requirements
 
-> We support React Native and NodeJS.
+`Node.js` should be installed on your system.
 
+### Chat SDK for JavaScript
 
-### Manual download
-  
-Or, you can manually download JS SDK files [here](https://github.com/sendbird/SendBird-SDK-JavaScript).
+You can download the Chat SDK for JavaScript by using two package managers below.
 
+A. [Bower](https://bower.io/)
+
+```
+bower install sendbird
+```
+
+B. [npm](https://www.npmjs.com/package/sendbird)
+
+```
+npm install --save sendbird
+```
+
+Or you can manually download the Chat SDK from [here](https://github.com/sendbird/SendBird-SDK-JavaScript) on Github
 
 ## Previous versions
 
-To view the version 2 sample, checkout the `v2` branch instead of `master`.  
-To view the basic sample used `jQuery`, checkout the [Legacy tag](https://github.com/sendbird/SendBird-JavaScript/tree/Legacy(WebBasic)) instead of `master`.    
+You can access the version 2 sample from the repository by switching from `master` to `v2` branch.
+You can access the chat sample that uses `jQuery` from the repository by switching from `master` to [`legacy tag`](https://github.com/sendbird/SendBird-JavaScript/tree/Legacy(WebBasic)).   

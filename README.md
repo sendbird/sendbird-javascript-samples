@@ -7,7 +7,7 @@
 
 [Sendbird](https://sendbird.com) provides the chat API and SDK for your app, enabling real-time communication among the users. Here are various samples built using Sendbird Chat SDK.
 
-- [**Web chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample) is a Slack-like full screen chat sample for desktop browsers.
+- [**Web chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample) is a Slack-like full screen chat sample for desktop browsers. Group channel and open channel are the two main channel types in which you can create various subtypes where users can send and receive messages. This sample is written in JavaScript with [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript).
 
 - [**Web chat sample with SyncManager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager) is a web chat sample integrated with SyncManager, which is equipped with a local cache along with core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app. This sample is written in JavaScript with [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript) and [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). Find more about SyncManager on [Sendbird SyncManager document](https://docs.sendbird.com/javascript/sync_manager_getting_started).
 

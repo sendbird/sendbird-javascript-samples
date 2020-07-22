@@ -25,6 +25,8 @@
 
 `Node.js` should be installed on your system.
 
+### Package managers
+
 You can download the Chat SDK for JavaScript by using two package managers below.
 
 A. [Bower](https://bower.io/)

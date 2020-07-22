@@ -18,7 +18,8 @@ You have to set your own APP_ID, USER_ID, and NICKNAME in `const.js` in each exa
 And there are some commented links in the samples. They will be usefull for reference.
 
 
-### 1-1) [Using SendBird App](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5)
+### 1-1) Using SendBird App
+[[View in codesandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5)]
 
 You can see how to use `App` component in this sample.
 

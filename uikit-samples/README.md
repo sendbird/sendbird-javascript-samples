@@ -14,6 +14,8 @@ Find the docs at: https://docs.sendbird.com/javascript/ui_kit_getting_started
 ## Customized Samples
 
 These samples show how to use and customize Sendbird UIKit. They are integrated in [codesandbox](https://codesandbox.io).<br />
+And [Material UI](https://material-ui.com/) is used for custom components.
+
 You have to set your own APP_ID, USER_ID, and NICKNAME in `const.js` in each example to make them work.<br />
 And there are some commented links in the samples. They will be usefull for reference.
 

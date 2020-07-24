@@ -38,7 +38,7 @@ npm install
 ``` 
 
 2. Modify files
-If you want to change `APP_ID`, change `APP_ID` in const.js to the other `APP_ID` you want.  
+If you want to change `APP_ID`, change `APP_ID` in `./src/js/const.js` to the other `APP_ID` you want.  
 You can test the sample with local server by running the following command.  
 
 ```bash

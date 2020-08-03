@@ -71,7 +71,7 @@ export default function SignIn({ onSubmit }) {
           className={classes.avatar}
         />
         <Typography component="h1" variant="h5">
-          SendBird | UIKit Sample
+          Sendbird | UIKit Sample
         </Typography>
         <form
           className={classes.form}
@@ -122,7 +122,7 @@ export default function SignIn({ onSubmit }) {
         </form>
       </div>
       <Typography variant="body1">
-        Start chatting on SendBird by choosing your username and nickname.
+        Start chatting on Sendbird by choosing your username and nickname.
       </Typography>
     </Container>
   );

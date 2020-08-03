@@ -20,13 +20,13 @@ You have to set your own APP_ID, USER_ID, and NICKNAME in `const.js` in each exa
 And there are some commented links in the samples. They will be usefull for reference.
 
 
-### 1-1) Using SendBird App
+### 1-1) Using Sendbird App
 ##### [[View in codesandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5)]
 
 You can see how to use `App` component in this sample.
 
 
-### 1-2) Basic format of SendBird UIkit Customization
+### 1-2) Basic format of Sendbird UIkit Customization
 ##### [[View in codesandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c)]
 
 You can see a basic format for customizing in this sample.
@@ -99,7 +99,7 @@ You can see a `queries` prop of the `Channel`(SBConversation) component.
 > Use object json type input, don't create sendbird message list params instance
 
 MessageListParams
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_messageListParams-MessageListParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L488)
 
 
@@ -130,11 +130,11 @@ const handleUpdateUserMessage = (text) => {
 ```
 
 UserMessageParams
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L407)
 
 FileMessageParams
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_fileMessageParams-FileMessageParams.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_fileMessageParams-FileMessageParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L440)
 
 #### CustomizedMessageItems
@@ -251,11 +251,11 @@ You can see a `queries` prop of the `ChannelList`(SBChannelList) component.
 > Use object json type input, don't create sendbird query
 
 ChannelListQuery
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L1764)
 
 ApplicationUserListQuery
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_query_applicationUserListQuery-ApplicationUserListQuery.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_query_applicationUserListQuery-ApplicationUserListQuery.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L1313)
 
 
@@ -280,7 +280,7 @@ And you should return `GroupChannelParams` *instance* in the function.
 const handleOnBeforeCreateChannel = (selectedUsers) => {
   const channelParams = new sdk.GroupChannelParams();
     channelParams.addUserIds(selectedUsers);
-    channelParams.name = "Hello SendBird!!";
+    channelParams.name = "Hello Sendbird!!";
     channelParams.overUrl = null;
     channelParams.coverImage = null;
     channelParams.customType = HIGHLIGHT;
@@ -289,7 +289,7 @@ const handleOnBeforeCreateChannel = (selectedUsers) => {
 ```
 
 GroupChannelParams
-* [SendBird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_groupChannelParams-GroupChannelParams.html)
+* [Sendbird API Reference](https://sendbird.github.io/core-sdk-javascript/module-model_params_groupChannelParams-GroupChannelParams.html)
 * [GitHub SendBird.d.ts](https://github.com/sendbird/SendBird-SDK-JavaScript/blob/master/SendBird.d.ts#L1448)
 
 #### CustomizedChannelPreviewItem.js

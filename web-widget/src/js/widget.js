@@ -38,7 +38,7 @@ window.WebFontConfig = {
 };
 
 class SBWidget {
-  constructor() {}
+  constructor() { }
 
   start(appId) {
     this._getGoogleFont();
@@ -70,7 +70,7 @@ class SBWidget {
   }
 
   _initClickEvent(event) {
-    var _checkPopup = function(_target, obj) {
+    var _checkPopup = function (_target, obj) {
       if (
         obj === _target ||
         hasClass(_target, className.IC_MEMBERS) ||
@@ -359,7 +359,7 @@ class SBWidget {
             }
           }
         },
-        (channel, user) => {
+        (channel, _) => {
           this.listBoard.setChannelTitle(
             channel.url,
             this.sb.getNicknamesString(channel)
@@ -402,15 +402,17 @@ class SBWidget {
       );
       let channelSet = this.getChannelSet(channel.url);
       let lastMessage = getLastItem(channelSet.message);
-      channelSet.message.push(message);
-      this.setMessageItem(
-        channelSet.channel,
-        targetBoard,
-        [message],
-        false,
-        isBottom,
-        lastMessage
-      );
+      if (!channelSet.message.map(m => m.messageId).includes(message.messageId)) {
+        channelSet.message.push(message);
+        this.setMessageItem(
+          channelSet.channel,
+          targetBoard,
+          [message],
+          false,
+          isBottom,
+          lastMessage
+        );
+      }
       channel.markAsRead();
       this.updateUnreadMessageCount(channel);
     }
@@ -421,7 +423,7 @@ class SBWidget {
           icon:
             "http://qnimate.com/wp-content/uploads/2014/07/web-notification-api-300x150.jpg"
         });
-        notification.onclick = function() {
+        notification.onclick = function () {
           window.focus();
         };
         this.notificationSound.play();
@@ -989,7 +991,7 @@ class SBWidget {
       isObject = false;
     }
 
-    this.activeChannelSetList = this.activeChannelSetList.filter(function(obj) {
+    this.activeChannelSetList = this.activeChannelSetList.filter(function (obj) {
       return isObject ? obj.channel != channel : obj.channel.url != channel;
     });
   }

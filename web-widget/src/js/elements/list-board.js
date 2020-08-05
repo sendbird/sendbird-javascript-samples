@@ -1,5 +1,5 @@
 import { className, MAX_COUNT, MAX_FONT_SIZE } from '../consts.js';
-import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace, xssEscape } from '../utils.js';
+import { show, hide, hasClass, removeClass, addClass, isEmptyString, removeWhiteSpace } from '../utils.js';
 import Element from './elements.js';
 
 const EMPTY_STRING = '';
@@ -7,7 +7,7 @@ const EMPTY_STRING = '';
 const OPTION_TOOLTIP_TEXT = 'Log out';
 const NEW_CHAT_TOOLTIP_TEXT = 'New Message';
 
-const TITLE_TOP_LOGIN = 'Sendbird Widget';
+const TITLE_TOP_LOGIN = 'SendBird Widget';
 const TITLE_TOP_CHANNEL = 'Channel List';
 const TITLE_LOGIN_USER_ID = 'USER ID';
 const TITLE_LOGIN_NICKNAME = 'NICKNAME';
@@ -275,7 +275,7 @@ class ListBoard extends Element {
     this._setClass(contentBottom, [className.CONTENT_BOTTOM]);
     var contentLastMessage = this.createDiv();
     this._setClass(contentLastMessage, [className.LAST_MESSAGE]);
-    this._setContent(contentLastMessage, xssEscape(message));
+    this._setContent(contentLastMessage, message);
     contentBottom.appendChild(contentLastMessage);
 
     var contentUnread = this.createSpan();

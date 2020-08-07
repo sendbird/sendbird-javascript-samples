@@ -1,5 +1,5 @@
 # SendBird JavaScript Web Basic Sample
-This is full screen chat sample like Slack using the [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) for desktop browsers.
+This is full screen chat sample like Slack using the [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) for desktop browsers.
 
 1. [Demo](#demo)
 1. [Run the sample](#run-the-sample)

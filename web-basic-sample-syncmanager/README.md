@@ -1,7 +1,7 @@
 # SendBird JavaScript Web Basic Sample with SyncManager
-This is full screen chat sample like Slack using [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) for desktop browsers. SyncManager is included and applied.
+This is full screen chat sample like Slack using [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) for desktop browsers. SyncManager is included and applied.
 
-- [SendBird JavaScript Web Basic Sample with SyncManager](#sendbird-javascript-web-basic-sample-with-syncmanager)
+- [Sendbird JavaScript Web Basic Sample with SyncManager](#sendbird-javascript-web-basic-sample-with-syncmanager)
   - [SyncManager](#syncmanager)
   - [Demo](#demo)
   - [Run the sample](#run-the-sample)

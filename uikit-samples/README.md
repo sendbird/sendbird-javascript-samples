@@ -124,8 +124,8 @@ The **renderChatHeader** is a `ReactElement` prop in the **channel** component w
 
 ```javascript
 <Channel
-  renderMessageInput={({ channel, user, disabled }) => (
-    <CustomizedMessageInput />
+  renderChatHeader={({ channel, user }) => (
+    <CustomizedHeader />
   )}
 >
 ```
@@ -133,6 +133,20 @@ The **renderChatHeader** is a `ReactElement` prop in the **channel** component w
 > Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the CodeSandbox sample. 
 
 ### [Message input](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
+
+The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
+
+```javascript
+<Channel
+  renderMessageInput={({ channel, user, disabled }) => (
+    <CustomizedMessageInput />
+  )}
+>
+```
+
+> Note: You can try making your own customized message input item by using `<CustomizedMessageInput />` on the CodeSandbox sample. 
+
+### [Channel preview item](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** is a callback function which can be implemented with custom code for events related to the corresponding user actions. 
 

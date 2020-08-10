@@ -94,7 +94,7 @@ The **queries.messageListParams** is an `instance` prop in the **channel** compo
 
 ### [Message params](https://codesandbox.io/s/2-3-customizing-messageparams-phqii) 
 
-The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the `UserMessageParams` and the `FileMessageParams` respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it. 
+The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it. 
 
 > Note: On the CodeSandbox’s preview, you can send or update a message in highlight.
 

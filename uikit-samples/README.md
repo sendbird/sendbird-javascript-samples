@@ -205,7 +205,7 @@ Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [AP
 
 ### [Channel params](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
 
-The **onBeforeCreateChannel** is a function in the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
+The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
 > Note: you can create a channel using `GroupChannelParams`.
 

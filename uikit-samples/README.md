@@ -61,7 +61,7 @@ This section explains what you need to know before testing the sample app.
 
 ### [Message item](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=)
 
-The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `UserMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
+The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
 ```javascript
 <Channel
@@ -122,7 +122,7 @@ const handleUpdateUserMessage = (text) => {
 }
 ```
 
-Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html){:target="_blank"}.
+Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html).
 
 ### [Chat header](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
 

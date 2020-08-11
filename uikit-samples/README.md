@@ -38,7 +38,7 @@ import { App as SendbirdApp } from 'sendbird-uikit'
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below. 
 
-Try your [component importing on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
+Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
 
 ```javascript
 import {

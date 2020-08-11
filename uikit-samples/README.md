@@ -136,6 +136,8 @@ Find out more about `UserMessageParams` and `FileMessageParams` on the [API refe
 
 The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
+Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
+
 ```javascript
 <Channel
   renderChatHeader={({ channel, user }) => (
@@ -146,9 +148,12 @@ The **renderChatHeader** is a `ReactElement` prop in the **channel** component w
 
 > Note: You can try making your own customized chat header item by using `<CustomizedHeader />` on the CodeSandbox sample. 
 
-### [Message input](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
+### Message input
 
 The **renderMessageInput** is a `ReactElement` prop in the **Channel** component which allows you to customize the message input by setting a function. This prop provides three arguments: **channel**, **user**, and **disabled**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user. The **disabled** refers to whether to enable the message input box or not.
+
+Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing-chatinput-wgi9d)
+
 
 ```javascript
 <Channel
@@ -160,9 +165,11 @@ The **renderMessageInput** is a `ReactElement` prop in the **Channel** component
 
 > Note: You can try making your own customized message input item by using `<CustomizedMessageInput />` on the CodeSandbox sample. 
 
-### [Channel preview item](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
+### Channel preview item
 
 The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action. 
+
+Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
 
 ```javascript
 <ChannelList
@@ -187,9 +194,11 @@ function CustomizedChannelPreviewItem(props) {
 
 > Note: You can try making your own customized channel preview item by using `<CustomizedMessageItem />` and using the **onLeaveChannel** function in the component on the CodeSandbox sample.  
 
-### [Channel list query](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=) 
+### Channel list query
 
 The **queries.channelListQuery** is an `instance` prop in the **ChannelList** component which filters channels by using its options.  
+
+Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-customizing-channellistquery-z2y89?file=) 
 
 > Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
@@ -214,6 +223,8 @@ Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [AP
 ### [Channel params](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
+
+Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
 
 > Note: you can create a channel using `GroupChannelParams`.
 

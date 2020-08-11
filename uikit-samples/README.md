@@ -17,7 +17,7 @@ Find out more about Sendbird UIKit for React at [UIKit for React doc](https://do
 
 ## UIKit components and ways to customize
 
-These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached [CodeSandbox](https://codesandbox.io) link in which you can see the sample codes and alter them to see how the changes are rendered.
+These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached CodeSandbox link in which you can see the sample codes and alter them to see how the changes are rendered.
 
 <br />
 
@@ -29,10 +29,10 @@ This section shows you what you need for testing Sendbird UIKit sample app for R
 
 The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization. 
 
-Try setting your own by downloading the Sendbird sample [here](https://github.com/sendbird/Sendbird-JavaScript). 
+Try setting your own by downloading the Sendbird sample.
 
 ```javascript
-import {App as SendbirdApp} from 'sendbird-uikit'
+import { App as SendbirdApp } from 'sendbird-uikit'
 ```
 
 ### [Import components to customize UIKit](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c)
@@ -49,7 +49,7 @@ import {
 
 ### Referring to CodeSandbox 
 
-Each CodeSandbox sample has `App.js` and `CustomizedApp.js`. CodeSandbox is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js` rendered as a default. If you click the right button, you will see `const.js`, the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
+Each CodeSandbox sample has `App.js` and `CustomizedApp.js` which operate based on the imported `const.js`. CodeSandbox is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js`. If you click the right button, you will see the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
 
 If you would like to get a deeper understanding of how CodeSandbox works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding CodeSandbox samples. 
 

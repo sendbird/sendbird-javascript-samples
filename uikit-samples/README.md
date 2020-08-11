@@ -126,7 +126,7 @@ Find out more about `UserMessageParams` and `FileMessageParams` on the [API refe
 
 ### [Chat header](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
 
-The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
+The **renderChatHeader** is a `ReactElement` prop in the **channel** component which you can use to customize the header of `channel` by setting a function. This prop provides two arguments: **channel** and **user**. The channel refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **user** refers to a `User` object which represents the current user.
 
 ```javascript
 <Channel
@@ -154,7 +154,7 @@ The **renderMessageInput** is a `ReactElement` prop in the **Channel** component
 
 ### [Channel preview item](https://codesandbox.io/s/3-1-customizing-channelpreviewitem-ycsvs)
 
-The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** is a callback function which can be implemented with custom code for events related to the corresponding user actions. 
+The **renderChannelPreview** is a `ReactElement` prop in the **ChannelList** component which allows you to customize channel preview by setting a function. This prop provides two arguments: **channel** and **onLeaveChannel**. The **channel** refers to a `GroupChannel` object which is a collection of properties necessary to render the current channel view. The **onLeaveChannel** has a callback function as an argument which can be implemented with custom code for events related to the corresponding user action. 
 
 ```javascript
 <ChannelList
@@ -201,11 +201,11 @@ The **queries.channelListQuery** is an `instance` prop in the **ChannelList** co
 >
 ```
 
-Find out more about `ChannelListQuery` and `applicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html).
+Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html).
 
 ### [Channel params](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
 
-The **onBeforeCreateChannel** is a callback function in the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
+The **onBeforeCreateChannel** is a function in the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 
 > Note: you can create a channel using `GroupChannelParams`.
 

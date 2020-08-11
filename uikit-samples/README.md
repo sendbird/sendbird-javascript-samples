@@ -13,9 +13,13 @@ Sendbird UIKit for React is a development kit with an user interface that enable
 
 Find out more about Sendbird UIKit for React at [UIKit for React doc](https://docs.sendbird.com/javascript/ui_kit_getting_started).
 
+<br />
+
 ## UIKit components and ways to customize
 
 These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached [CodeSandbox](https://codesandbox.io) link in which you can see the sample codes and alter them to see how the changes are rendered.
+
+<br />
 
 ## Before getting started
 
@@ -48,6 +52,8 @@ import {
 Each CodeSandbox sample has `App.js` and `CustomizedApp.js`. CodeSandbox is a code editor that provides an instant live preview. The preview has two buttons placed at the top center. If you click the left button, you will see unaltered `App.js` rendered as a default. If you click the right button, you will see `const.js`, the customized component from `CustomizedApp.js`, and any changes you make on them applied and rendered on the live preview.
 
 If you would like to get a deeper understanding of how CodeSandbox works, refer to **CustomizedMessageItems**, **CustomizedHeader**, **CustomizedMessageInput**, and **CustomizedChannelPreviewItem** which you can find on corresponding CodeSandbox samples. 
+
+<br />
 
 ## Getting Started 
 

@@ -38,7 +38,7 @@ import { App as SendbirdApp } from 'sendbird-uikit'
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below. 
 
-Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c)
+Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
 
 ```javascript
 import {
@@ -64,7 +64,7 @@ This section explains what you need to know before testing the sample app.
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
-Try [Message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=)
+Try [Message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=).
 
 ```javascript
 <Channel

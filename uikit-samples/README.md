@@ -16,7 +16,6 @@ Find out more about Sendbird UIKit for React at [UIKit for React doc](https://do
 <br />
 
 ## UIKit components and ways to customize
-
 These samples are here to help you better understand UIKit for React by going over the core components and ways to customize. On each core component sample, there is an attached CodeSandbox link in which you can see the sample codes and alter them to see how the changes are rendered.
 
 <br />
@@ -86,6 +85,7 @@ The **queries.messageListParams** is an `instance` prop in the **channel** compo
 > Note: On CodeSandbox’s preview, only the messages you sent will be displayed. 
 
 ```javascript
+// Pass arguments in JSON data input format to the query instance.
 <Channel
   queries={{
     messageListParams: {
@@ -186,6 +186,7 @@ The **queries.channelListQuery** is an `instance` prop in the **ChannelList** co
 > Note: On the CodeSandbox’s preview, the empty channels that you see means that the channels are successfully created and there are no messages sent by users.
 
 ```javascript
+// Pass arguments in JSON data input format to the query instance.
 <ChannelList
   queries={{
     channelListQuery: {

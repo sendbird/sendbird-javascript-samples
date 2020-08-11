@@ -220,7 +220,7 @@ Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-c
 
 Find out more about `ChannelListQuery` and `ApplicationUserListQuery` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_query_groupChannelListQuery-GroupChannelListQuery.html).
 
-### [Channel params](https://codesandbox.io/s/3-3-customizing-channellist-sg9kx) 
+### Channel params
 
 The **onBeforeCreateChannel** is a prop of the **ChannelList** component which can be implemented with custom code for events related to the corresponding user actions.
 

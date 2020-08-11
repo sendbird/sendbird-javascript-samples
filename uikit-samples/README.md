@@ -60,7 +60,7 @@ If you would like to get a deeper understanding of how CodeSandbox works, refer 
 
 This section explains what you need to know before testing the sample app.
 
-### [Message item](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=)
+### Message item
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 

@@ -38,7 +38,7 @@ import { App as SendbirdApp } from 'sendbird-uikit'
 
 Here is a list of the essential components that you need to import before you start customizing chat. Note that the names of the components are changed as shown in the code below. 
 
-Try [importing components on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
+Try your [component importing on CodeSandbox](https://codesandbox.io/s/1-2-customization-basic-format-q4e6c).
 
 ```javascript
 import {
@@ -64,7 +64,7 @@ This section explains what you need to know before testing the sample app.
 
 The **renderChatItem** is a `ReactElement` prop in the Channel component which you can use to customize `message` by setting a function. This prop provides three arguments: **message**, **onUpdateMessage**, and **onDeleteMessage**. The **message** represents an already sent or received message of an `BaseMessage` object; **onUpdateMessage** and **onDeleteMessage** are callback functions which you can implement with custom code for events related to the corresponding user actions.
 
-Try [Message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=).
+Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messageitem-0nop5?file=).
 
 ```javascript
 <Channel
@@ -82,9 +82,11 @@ Try [Message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-messa
 
 > Note: You can try making your own customized message item by using `<CustomizedMessageItem />` on the CodeSandbox sample. 
 
-### [Message list params](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573)
+### Message list params
 
 The **queries.messageListParams** is an `instance` prop in the **channel** component which you can use to retrieve a list of messages by specifying the properties of `MessageListParams`. 
+
+Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-customizing-messagelistparams-45573).
 
 > Note: On CodeSandbox’s preview, only the messages you sent will be displayed. 
 
@@ -102,9 +104,11 @@ The **queries.messageListParams** is an `instance` prop in the **channel** compo
 >
 ```
 
-### [Message params](https://codesandbox.io/s/2-3-customizing-messageparams-phqii) 
+### Message params 
 
 The **onBeforeSendUserMessage**, **onBeforeSendFileMessage**, and **onBeforeUpdateUserMessage** are `callback function` props in the **channel** component. The first two execute additional operations for a user message and a file message respectively; the corresponding modified messages are returned through the **text** and the **file** arguments respectively. The **onBeforeUpdateUserMessage** executes additional operations for a user message before updating it. 
+
+Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizing-messageparams-phqii)
 
 > Note: On the CodeSandbox’s preview, you can send or update a message in highlight.
 

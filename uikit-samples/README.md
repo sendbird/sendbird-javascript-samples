@@ -122,7 +122,7 @@ const handleUpdateUserMessage = (text) => {
 }
 ```
 
-Find out more about `UserMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html).
+Find out more about `UserMessageParams` and `FileMessageParams` on the [API reference of Sendbird Chat SDK for JavaScript](https://sendbird.github.io/core-sdk-javascript/module-model_params_userMessageParams-UserMessageParams.html){:target="_blank"}.
 
 ### [Chat header](https://codesandbox.io/s/2-4-customizing-chatheader-voi0z)
 

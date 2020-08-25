@@ -26,7 +26,7 @@ const _chatCloseHeader = navigation => {
       <Button
         containerStyle={style.headerLeftItemContainer}
         buttonStyle={style.headerLeftItem}
-        icon={<Icon name="md-arrow-back" color="#333" size={28}></Icon>}
+        icon={<Icon name="md-arrow-back" color="#333" size={28} />}
         onPress={() => {
           navigation.goBack();
         }}
@@ -41,7 +41,7 @@ const _chatControlHeader = navigation => {
       <Button
         containerStyle={style.headerRightItemContainer}
         buttonStyle={style.headerRightItem}
-        icon={<Icon name="md-contacts" color="#7d62d9" size={28}></Icon>}
+        icon={<Icon name="md-contacts" color="#7d62d9" size={28} />}
         onPress={() => {
           const sb = SendBird.getInstance();
           sb.GroupChannel.getChannel(channel.url, (channel, err) => {
@@ -56,7 +56,7 @@ const _chatControlHeader = navigation => {
       <Button
         containerStyle={style.headerRightItemContainer}
         buttonStyle={style.headerRightItem}
-        icon={<Icon name="md-exit" color="#7d62d9" size={28}></Icon>}
+        icon={<Icon name="md-exit" color="#7d62d9" size={28} />}
         onPress={() => {
           Alert.alert('Leave', 'Do you want to leave this channel?', [
             { text: 'Cancel' },
@@ -85,7 +85,7 @@ const _menuCloseHeader = navigation => {
       <Button
         containerStyle={style.headerLeftItemContainer}
         buttonStyle={style.headerLeftItem}
-        icon={<Icon name="md-close" color="#333" size={28}></Icon>}
+        icon={<Icon name="md-close" color="#333" size={28} />}
         onPress={() => {
           if (currentChat) {
             currentChat.closeMessageControl();
@@ -114,7 +114,7 @@ const _menuControlHeader = navigation => {
           <Button
             containerStyle={style.headerRightItemContainer}
             buttonStyle={style.headerRightItem}
-            icon={<Icon name="md-create" color="#7d62d9" size={28}></Icon>}
+            icon={<Icon name="md-create" color="#7d62d9" size={28} />}
             onPress={() => {
               if (currentChat) {
                 currentChat.closeMessageControl();
@@ -132,7 +132,7 @@ const _menuControlHeader = navigation => {
         <Button
           containerStyle={style.headerRightItemContainer}
           buttonStyle={style.headerRightItem}
-          icon={<Icon name="md-copy" color="#7d62d9" size={28}></Icon>}
+          icon={<Icon name="md-copy" color="#7d62d9" size={28} />}
           onPress={() => {
             if (selectedMessages.length > 0) {
               const message = selectedMessages[0];
@@ -156,7 +156,7 @@ const _menuControlHeader = navigation => {
         <Button
           containerStyle={style.headerRightItemContainer}
           buttonStyle={style.headerRightItem}
-          icon={<Icon name="md-trash" color="#7d62d9" size={28}></Icon>}
+          icon={<Icon name="md-trash" color="#7d62d9" size={28} />}
           onPress={() => {
             Alert.alert('Delete', 'Do you want to delete this message?', [
               { text: 'Cancel' },
@@ -277,11 +277,14 @@ export class ChatController extends React.Component {
     };
     this.collection.setCollectionHandler(collectionHandler);
     this.channel.markAsRead();
-    this.collection.fetchSucceededMessages('next', err => {
-      this.collection.fetchSucceededMessages('prev', err => {
+
+    SendBirdSyncManager.loggerLevel = 98765;
+    this.collection.fetchSucceededMessages('prev', err => {
+      this.collection.fetchSucceededMessages('next', err => {
         this.collection.fetchFailedMessages(err => {});
       });
     });
+
     navigator.push(this.channel.url);
     BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }

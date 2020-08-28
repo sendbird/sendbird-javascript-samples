@@ -36,11 +36,11 @@ By using this [link](https://sample.sendbird.com/basic/sync-manager), you can te
 
 <br />
 
-## Run the sample app on your system 
+## Getting started
 
-You can install SyncManager for Javascript sample app through `npm`.
+You can install and run SyncManager for JavaScript sample app on your system using `npm`.
 
-1. Install packages
+### Install packages
 
 `Node` v8.x+ should be installed on your system.
 
@@ -48,7 +48,7 @@ You can install SyncManager for Javascript sample app through `npm`.
 npm install
 ```
 
-2. Run
+### Run the sample
 
 ```bash
 npm start

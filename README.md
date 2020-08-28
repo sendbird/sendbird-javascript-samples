@@ -33,13 +33,13 @@ You can download the Chat SDK for JavaScript by using two package managers below
 
 A. [Bower](https://bower.io/)
 
-```
+```bash
 bower install sendbird
 ```
 
 B. [npm](https://www.npmjs.com/package/sendbird)
 
-```
+```bash
 npm install --save sendbird
 ```
 

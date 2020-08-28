@@ -13,7 +13,7 @@ Sendbird SyncManager provides the local caching system and data synchronization 
 
 ### Sendbird SyncManager for JavaScript doc
 
-Find out more about Sendbird SyncManager for JavaScript at [SyncManager for JavaScript doc](https://docs.sendbird.com/javascript/sync_manager_getting_started) and [SyncManager Github repository README.md](https://github.com/sendbird/sendbird-syncmanager-javascript/blob/master/README.md) file.
+Find out more about Sendbird SyncManager for JavaScript at [SyncManager for JavaScript doc](https://docs.sendbird.com/javascript/sync_manager_getting_started).
 
 <br />
 

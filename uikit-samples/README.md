@@ -68,15 +68,15 @@ Try your [message item on CodeSandbox](https://codesandbox.io/s/2-1-customizing-
 
 ```javascript
 <Channel
-  renderChatItem={({
-    message,
-    onDeleteMessage,
-    onUpdateMessage,
-    onResendMessage,
-    emojiContainer,
-  }) => {
-    <CustomizedMessageItem />
-  }}
+    renderChatItem={({
+        message,
+        onDeleteMessage,
+        onUpdateMessage,
+        onResendMessage,
+        emojiContainer,
+    }) => {
+        <CustomizedMessageItem />
+    }}
 >
 ```
 
@@ -93,14 +93,14 @@ Try your [message list params on CodeSandbox](https://codesandbox.io/s/2-2-custo
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
 <Channel
-  queries={{
-    messageListParams: {
-      senderUserIds: [USER_ID],
-      prevResultSize: 30,
-      includeReplies: false,
-      includeReactions: false
-    }
-  }}
+    queries={{
+        messageListParams: {
+            senderUserIds: [USER_ID],
+            prevResultSize: 30,
+            includeReplies: false,
+            includeReactions: false
+        }
+   }}
 >
 ```
 
@@ -114,9 +114,9 @@ Try your [message params on CodeSandbox](https://codesandbox.io/s/2-3-customizin
 
 ```javascript
 <Channel
-  onBeforeSendUserMessage={(text) => {}}
-  onBeforeSendFileMessage={(file) => {}}
-  onBeforeUpdateUserMessage={handleUpdateUserMessage}
+    onBeforeSendUserMessage={(text) => {}}
+    onBeforeSendFileMessage={(file) => {}}
+    onBeforeUpdateUserMessage={handleUpdateUserMessage}
 >
 ```
 
@@ -124,9 +124,9 @@ In order to complete an operation you intend to carry out with each function, yo
 
 ```javascript
 const handleUpdateUserMessage = (text) => {
-  const userMessageParams = new sdk.UserMessageParams();
-  userMessageParams.message = text;
-  return userMessageParams;
+    const userMessageParams = new sdk.UserMessageParams();
+    userMessageParams.message = text;
+    return userMessageParams;
 }
 ```
 
@@ -140,9 +140,9 @@ Try your [chat header on CodeSandbox](https://codesandbox.io/s/2-4-customizing-c
 
 ```javascript
 <Channel
-  renderChatHeader={({ channel, user }) => (
-    <CustomizedHeader />
-  )}
+    renderChatHeader={({ channel, user }) => (
+        <CustomizedHeader />
+    )}
 >
 ```
 
@@ -157,9 +157,9 @@ Try your [message input on CodeSandbox](https://codesandbox.io/s/2-5-customizing
 
 ```javascript
 <Channel
-  renderMessageInput={({ channel, user, disabled }) => (
-    <CustomizedMessageInput />
-  )}
+    renderMessageInput={({ channel, user, disabled }) => (
+        <CustomizedMessageInput />
+    )}
 >
 ```
 
@@ -173,9 +173,9 @@ Try your [channel preview item on CodeSandbox](https://codesandbox.io/s/3-1-cust
 
 ```javascript
 <ChannelList
-  renderChannelPreview={({ channel, onLeaveChannel }) => (
-    <CustomizedChannelPreviewItem />
-  )}
+    renderChannelPreview={({ channel, onLeaveChannel }) => (
+        <CustomizedChannelPreviewItem />
+    )}
 >
 ```
 
@@ -185,10 +185,10 @@ You can make your own customized channel preview item component in this file. Yo
 
 ```javascript
 function CustomizedChannelPreviewItem(props) {
-  const { channel, onLeaveChannel } = props;
-  ...
-  
-  onLeaveChannel(channel);
+    const { channel, onLeaveChannel } = props;
+    ...
+    
+    onLeaveChannel(channel);
 }
 ```
 
@@ -205,16 +205,16 @@ Try your [channel list query item on CodeSandbox](https://codesandbox.io/s/3-2-c
 ```javascript
 // Pass arguments in JSON data input format to the query instance.
 <ChannelList
-  queries={{
-    channelListQuery: {
-      includeEmpty: true,
-      limit: 50,
-      order: "chronological"
-    },
-    applicationUserListQuery: {
-      limit: 50,
-    }
-  }}
+    queries={{
+        channelListQuery: {
+            includeEmpty: true,
+            limit: 50,
+            order: "chronological"
+        },
+        applicationUserListQuery: {
+            limit: 50,
+        }
+    }}
 >
 ```
 
@@ -230,19 +230,20 @@ Try your [channel param on CodeSandbox](https://codesandbox.io/s/3-3-customizing
 
 ```javascript
 <ChannelList
-  onBeforeCreateChannel={handleOnBeforeCreateChannel}
+    onBeforeCreateChannel={handleOnBeforeCreateChannel}
 >
 ```
 You can get an array of **selectedUsers** in a function argument. In order to complete an operation you intend to carry out with the function, you should return a `GroupchannelParams` object after specifying its properties. 
 
 ```javascript
 const handleOnBeforeCreateChannel = (selectedUsers) => {
-  const channelParams = new sdk.GroupChannelParams();
+    const channelParams = new sdk.GroupChannelParams();
     channelParams.addUserIds(selectedUsers);
     channelParams.name = "Hello Sendbird!!";
     channelParams.overUrl = null;
     channelParams.coverImage = null;
     channelParams.customType = HIGHLIGHT;
+    
     return channelParams;
 }
 ```

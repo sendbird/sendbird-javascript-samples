@@ -56,7 +56,7 @@ npm start
 
 <br />
 
-## Customize the sample
+## Customizing the sample
 
 To implement customization to the sample, you can use `webpack` for buiding it. 
 

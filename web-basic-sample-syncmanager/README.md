@@ -60,21 +60,26 @@ npm start
 
 To implement customization to the sample, you can use `webpack` for buiding it. 
 
-1. Install packages
+### Install packages
 
 `Node` v8.x+ should be installed on your system.
+
 ```bash
 npm install
 ``` 
-2. Modify files
+
+### Modify files
 
 If you want to change `APP_ID`, change `APP_ID` in `const.js` to the other `APP_ID` you want.  You can test the sample with local server by running the following command.  
+
 ```bash
 npm run start:dev
 ``` 
-3. Build the sample
+
+### Build the sample
 
 When the modification is complete, you'll need to bundle the file using `webpack`. The bundled files are created in the **dist** folder. Please check `webpack.config.js` for settings.    
+
 ```bash
 npm run build
 ```

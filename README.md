@@ -19,6 +19,8 @@
 
 > The previous samples, `react-native-sample` and `web-sample` are deprecated. For current samples, refer to `react-native-redux-sample` and `web-basic-sample`.
 
+<br />
+
 ## Installation of Chat SDK
 
 ### Requirements

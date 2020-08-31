@@ -1,7 +1,7 @@
 # Sendbird JavaScript samples
 ![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
 ![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
-[![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
+[![npm](https://img.shields.io/npm/v/sendbird-syncmanager.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
 
 ## Introduction
 

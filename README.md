@@ -45,6 +45,8 @@ npm install --save sendbird
 
 Or you can manually download the Chat SDK from [here](https://github.com/sendbird/SendBird-SDK-JavaScript) on Github
 
+<br />
+
 ## Previous versions
 
 You can access the version 2 sample from the repository by switching from `master` to `v2` branch.

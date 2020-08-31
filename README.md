@@ -19,6 +19,8 @@
 
 > The previous samples, `react-native-sample` and `web-sample` are deprecated. For current samples, refer to `react-native-redux-sample` and `web-basic-sample`.
 
+<br />
+
 ## Installation of Chat SDK
 
 ### Requirements
@@ -31,13 +33,13 @@ You can download the Chat SDK for JavaScript by using two package managers below
 
 A. [Bower](https://bower.io/)
 
-```
+```bash
 bower install sendbird
 ```
 
 B. [npm](https://www.npmjs.com/package/sendbird)
 
-```
+```bash
 npm install --save sendbird
 ```
 

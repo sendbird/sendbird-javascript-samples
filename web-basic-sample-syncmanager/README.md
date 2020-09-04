@@ -1,11 +1,9 @@
-# SendBird JavaScript Web Basic Sample with SyncManager
-This is full screen chat sample like Slack using [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) for desktop browsers. SyncManager is included and applied.
+# Sendbird SyncManager for JavaScript sample
+![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
+![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
+[![npm](https://img.shields.io/npm/v/sendbird-syncmanager.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird-syncmanager)
 
-- [Sendbird JavaScript Web Basic Sample with SyncManager](#sendbird-javascript-web-basic-sample-with-syncmanager)
-  - [SyncManager](#syncmanager)
-  - [Demo](#demo)
-  - [Run the sample](#run-the-sample)
-  - [Customizing the sample](#customizing-the-sample)
+## Introduction
 
 SyncManager for Javascript is a Chat SDK add-on that optimizes the user caching experience by interlinking the synchronization of the local data storage with the chat data in Sendbird server through an event-driven structure. Provided here is a SyncManager sample for Javascript to experience first-hand the benefits of Sendbird’s SyncManager.
 

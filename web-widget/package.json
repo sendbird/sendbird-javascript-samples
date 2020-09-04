@@ -1,7 +1,7 @@
 {
   "name": "Sample-JS-Web-Widget",
   "version": "0.18.0",
-  "description": "SendBird Widget Sample",
+  "description": "Sendbird Widget Sample",
   "main": "index.js",
   "scripts": {
     "start:dev": "./node_modules/.bin/webpack-dev-server",

@@ -1,6 +1,6 @@
 # Sample JavaScript React-Native Redux with SyncManager
 
-SendBird React-Native sample using [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) and [SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript).
+Sendbird React-Native sample using [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript) and [SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript).
 
 ## Prerequisite
 

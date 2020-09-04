@@ -1,7 +1,7 @@
 {
   "name": "Sample-JS-Web-Live-Chat",
   "version": "1.0.0",
-  "description": "SendBird Live Chat",
+  "description": "Sendbird Live Chat",
   "main": "index.js",
   "scripts": {
     "start:dev": "./node_modules/.bin/webpack-dev-server",

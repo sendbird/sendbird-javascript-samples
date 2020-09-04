@@ -1,6 +1,6 @@
 # Sample JavaScript React-Native Redux
 
-SendBird React-Native sample using [SendBird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript)
+Sendbird React-Native sample using [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript)
 
 ## Prerequisite
 

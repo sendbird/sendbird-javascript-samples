@@ -42,7 +42,7 @@ function notifyMe() {
 function notifyMessage(channel, message) {
   var iconUrl = location.protocol + '//' + location.host + '/static/img/sendbird-icon-120x120.png';
   if (window.Notification && Notification.permission === "granted") {
-    var noti = new Notification("SendBird | " + channel.url, {
+    var noti = new Notification("Sendbird | " + channel.url, {
       icon: iconUrl,
       body: message,
       tag: channel.url

@@ -11,9 +11,9 @@ SyncManager for Javascript is a Chat SDK add-on that optimizes the user caching 
 
 Sendbird SyncManager provides the local caching system and data synchronization with the Sendbird server, which are run on an event-driven structure. According to the real-time events of the messages and channels, SyncManager takes care of the background tasks for the cache updates from the Sendbird server to the local device. By leveraging this systemized structure with connection-based synchronization, SyncManager allows you to easily integrate the Chat SDK to utilize all of its features, while also reducing data usage and offering a reliable and effortless storage mechanism. 
 
-### Sendbird SyncManager for JavaScript doc
+### More about Sendbird SyncManager for JavaScript
 
-Find out more about Sendbird SyncManager for JavaScript at [SyncManager for JavaScript doc](https://docs.sendbird.com/javascript/sync_manager_getting_started).
+Find out more about Sendbird SyncManager for JavaScript at [SyncManager for JavaScript doc](https://docs.sendbird.com/javascript/sync_manager_getting_started). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
 
 <br />
 
@@ -26,7 +26,7 @@ The minimum requirements for SyncManager for Javascript are:
 - NPM v6+
 - [Chat SDK for JavaScript](https://github.com/sendbird/SendBird-SDK-JavaScript) v3.0 115+
 
-### Try the sample app applied with your data 
+### Try the sample app using your data 
 
 If you would like to try the sample app specifically fit to your usage, you can do so by replacing the default sample app ID with yours, which you can obtain by [creating your Sendbird application from the dashboard](https://docs.sendbird.com/javascript/quick_start#3_install_and_configure_the_chat_sdk_4_step_1_create_a_sendbird_application_from_your_dashboard). Furthermore, you could also add data of your choice on the dashboard to test. This will allow you to experience the sample app with data from your Sendbird application. 
 

@@ -1,4 +1,4 @@
-# Sendbird UIKIT for React samples
+# Sendbird UIKit for React samples
 ![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
 ![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
 [![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
@@ -9,7 +9,7 @@ Sendbird UIKit for React is a development kit with an user interface that enable
 * **composed-react-app** is a chat app which contains various smart components.
 * **custom-react-app** is a chat app which contains customizable sample codes for **Message**, **ChannelPreview**, and **UserList**. 
 
-### More about Sendbird UIKIT for React
+### More about Sendbird UIKit for React
 
 Find out more about Sendbird UIKit for React at [UIKit for React doc](https://docs.sendbird.com/javascript/ui_kit_getting_started). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
 

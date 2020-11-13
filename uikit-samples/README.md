@@ -11,7 +11,7 @@ Sendbird UIKit for React is a development kit with an user interface that enable
 
 ### More about Sendbird UIKit for React
 
-Find out more about Sendbird UIKit for React at [UIKit for React doc](https://docs.sendbird.com/javascript/ui_kit_getting_started). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
+Find out more about Sendbird UIKit for React at [UIKit for React doc](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
 
 <br />
 

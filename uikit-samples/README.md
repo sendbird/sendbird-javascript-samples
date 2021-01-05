@@ -24,6 +24,16 @@ These samples are here to help you better understand UIKit for React by going ov
 
 This section shows you what you need for testing Sendbird UIKit sample app for React sample app.
 
+### Requirements
+
+The minimum requirements for UIKit for React are:
+
+- React 16.8.0+
+- React DOM 16.8.0+
+- Sendbird Chat SDK for JavaScript 3.0.115+
+- css-vars-ponyfill 2.3.2
+- date-fns 2.16.1
+
 ### Implement Chat with App component
 
 The `App` component is a collection of all UIKit components you need to implement chat. This is included in all core component samples, so be sure to set your own APP_ID, USER_ID, and NICKNAME in  `const.js` in each to customize your sample. On the [CodeSandbox](https://codesandbox.io/s/1-1-using-sendbird-app-9xum5) link, you will see that the props of the `App` component refer to use the values of the correspondings of `const.js` for initialization. 

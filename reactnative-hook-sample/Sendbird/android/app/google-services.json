@@ -1,0 +1,127 @@
+{
+  "project_info": {
+    "project_number": "984140644677",
+    "firebase_url": "https://sendbird-sample.firebaseio.com",
+    "project_id": "sendbird-sample",
+    "storage_bucket": "sendbird-sample.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984140644677:android:abe06d49c04fba23",
+        "android_client_info": {
+          "package_name": "com.sendbird.android.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984140644677-ajrt7j1g982mntarduj22mlq1dberha0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEbeM5JMueecNFsTMR7UKZ-EFyPxxD-II"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984140644677-75b8ti7rnl9ojhu930phht25emuifkki.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984140644677-ojkvnumsulrcsh0oesjgrp5p2njhaef5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sendbird.chat.reactnative.sample"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984140644677:android:2b5dc8acc186529c4efe2c",
+        "android_client_info": {
+          "package_name": "com.sendbird.chat.reactnative.sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984140644677-sboadkq7fa97jnjeqdkt0t1i1q2sresp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sendbird.chat.reactnative.sample",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "984140644677-ajrt7j1g982mntarduj22mlq1dberha0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEbeM5JMueecNFsTMR7UKZ-EFyPxxD-II"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984140644677-75b8ti7rnl9ojhu930phht25emuifkki.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984140644677-ojkvnumsulrcsh0oesjgrp5p2njhaef5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sendbird.chat.reactnative.sample"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984140644677:android:2ed088b3f578c94b4efe2c",
+        "android_client_info": {
+          "package_name": "com.sendbird.unitysdk"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984140644677-ajrt7j1g982mntarduj22mlq1dberha0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDEbeM5JMueecNFsTMR7UKZ-EFyPxxD-II"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984140644677-75b8ti7rnl9ojhu930phht25emuifkki.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "984140644677-ojkvnumsulrcsh0oesjgrp5p2njhaef5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sendbird.chat.reactnative.sample"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

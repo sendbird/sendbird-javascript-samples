@@ -11,7 +11,7 @@ Sendbird UIKit for React is a development kit with an user interface that enable
 
 ### More about Sendbird UIKit for React
 
-Find out more about Sendbird UIKit for React at [UIKit for React doc](https://docs.sendbird.com/javascript/ui_kit_getting_started). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
+Find out more about Sendbird UIKit for React at [UIKit for React doc](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
 
 <br />
 
@@ -23,6 +23,16 @@ These samples are here to help you better understand UIKit for React by going ov
 ## Before getting started
 
 This section shows you what you need for testing Sendbird UIKit sample app for React sample app.
+
+### Requirements
+
+The minimum requirements for UIKit for React are:
+
+- React 16.8.0+
+- React DOM 16.8.0+
+- Sendbird Chat SDK for JavaScript 3.0.115+
+- css-vars-ponyfill 2.3.2
+- date-fns 2.16.1
 
 ### Implement Chat with App component
 

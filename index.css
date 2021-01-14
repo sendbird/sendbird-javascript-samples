@@ -1,7 +1,6 @@
 body {
-  font-family: 'Exo 2';
+  margin: 0;
   -webkit-font-smoothing: antialiased;
-  background-color: #ffffff;
 }
 
 a, a:link, a:visited, a:hover, a:active {
@@ -10,117 +9,84 @@ a, a:link, a:visited, a:hover, a:active {
 }
 
 .container {
-  width: 900px;
-  height: 100%;
-  margin: 0 auto;
-  padding: 50px 0;
-}
-
-.top {
-  width: 900px;
-  text-align: center;
-  font-size: 36px;
-  font-weight: 600;
-}
-
-.hr {
-  width: 100%;
-  height: 0;
-  margin: 26px 0;
-  border-top: 1px solid #8e8e8e;
-}
-
-.content {
-  width: 900px;
-  height: 100%;
-  margin-bottom: 20px;
-}
-.item {
-  display: inline-block;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 20px;
-  border: 1px solid #2C2D30;
-  border-radius: 4px;
-  cursor: pointer;
-}
-.item:hover {
-  border: 1px solid #6742d6;
-}
-
-.item-image {
-  width: 240px;
-  height: 150px;
-  float: left;
-  border-radius: 4px;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-}
-.basic {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-1.png');
-}
-.uikit {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-4.png');
-}
-.widget {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/widget-sample-1.png');
-}
-.live-chat {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/js-sample/live-chat-sample.png');
-}
-.rn-android {
-  background-image: url('https://dxstmhyqfqr1o.cloudfront.net/screenshots/screenshot-3.png');
-  background-size: 75px 150px;
-  background-color: #f5f5f5;
-}
-
-.item-info {
-  position: relative;
-  width: calc(100% - 280px);
-  height: 150px;
-  float: right;
-}
-.info-title {
-  font-size: 24px;
-  margin-bottom: 10px;
-}
-.info-desc {
-  font-size: 16px;
-  opacity: 0.5;
-}
-.info-button {
-  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  top: 0;
   bottom: 0;
+  left: 0;
   right: 0;
-  text-align: right;
-  display: inline-block;
-  width: 100%;
+  font-family: 'Exo 2';
+  background: #f1f2f6;
+  overflow: hidden;
+  overflow-y: auto;
 }
-.button {
-  float: right;
-  width: 100px;
-  font-size: 16px;
-  height: 30px;
+.container .title {
+  font-size: 32px;
+  font-weight: 100;
+  color: #54a;
   text-align: center;
-  line-height: 30px;
-  border-radius: 4px;
-  margin-left: 10px;
+  margin-top: 20px;
+}
+.container .platform {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  flex-grow: 1;
+  width: 1080px;
+  padding: 15px;
+}
+.container .platform .platform-item {
+  flex: 1;
+  margin: 10px;
+}
+.container .platform .platform-item .label {
+  font-size: 20px;
+  font-weight: 200;
+  margin-bottom: 20px;
+  text-align: center;
+}
+.container .platform .platform-item .sample {
+  text-align: center;
+  margin: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 1px 1px 1px #ddd;
+  overflow: hidden;
+}
+.container .platform .platform-item .sample .thumbnail {
+  width: 100%;
+  height: 240px;
+  background-color: #333;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.container .platform .platform-item .sample .detail .name {
+  font-size: 16px;
+  font-weight: 500;
+  color: #54a;
+  background: #fff;
+  padding: 15px;
+}
+.container .platform .platform-item .sample .buttons {
+  display: flex;
+  flex-direction: row;
+}
+.container .platform .platform-item .sample .button {
+  flex: 1;
+  text-align: center;
+  font-size: 15px;
+  color: #fff;
+  padding: 10px 0;
+  background: #54a;
+}
+.container .platform .platform-item .sample .button:hover {
   cursor: pointer;
-  border: 1px solid #2C2D30;
+  background: #65b;
 }
-.button > i {
-  margin-right: 8px;
-}
-.button:hover {
-  border: 1px solid #6742d6;
-  color: #6742d6;
-}
-.disable {
-  cursor: default;
-  opacity: 0.4;
-}
-.button.disable:hover {
-  border: 1px solid #2C2D30;
-  color: initial;
+.container .platform .platform-item .sample .button .fas,
+.container .platform .platform-item .sample .button .fab {
+  margin-right: 3px;
 }

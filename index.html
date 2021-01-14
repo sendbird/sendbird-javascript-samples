@@ -1,161 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <link rel="icon" href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
-    <link rel="shortcut icon" href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
+    <link rel="icon"
+        href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
+    <link rel="shortcut icon"
+        href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
 
-    <link href='https://fonts.googleapis.com/css?family=Exo+2:400,900italic,900,800italic,800,700italic,700,600italic,600,500italic,500,400italic,300italic,200italic,200,100italic,100,300'
-          rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link
+        href='https://fonts.googleapis.com/css?family=Exo+2:400,900italic,900,800italic,800,700italic,700,600italic,600,500italic,500,400italic,300italic,200italic,200,100italic,100,300'
+        rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
 
     <link rel="stylesheet" href="index.css">
-    <title>Sample | Sendbird</title>
+    <title>Sample | Sendbird for JavaScript</title>
 </head>
+
 <body>
     <div class="container">
-        <div class="top">Sendbird JavaScript Sample</div>
-        <div class="hr"></div>
+        <div class='title'>Sendbird JavaScript samples</div>
+        <div id='platform' class='platform'></div>
+        <script type='text/javascript' src='./sample-info.js'></script>
+        <script type='text/javascript'>
+            window.onload = function () {
+                var platformContainer = document.getElementById('platform');
+                for (var key in SampleInfo) {
+                    var platform = SampleInfo[key];
+                    var platformItem = document.createElement('div');
+                    platformItem.className = 'platform-item';
+                    platformItem.innerHTML = "\
+                        <div class='label'>" + platform.label + "</div>\
+                        <div class='items'></div>";
 
-        <a href="https://sample.sendbird.com/basic/" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image basic"></div>
-                    <div class="item-info">
-                        <div class="info-title">Web Basic Sample</div>
-                        <div class="info-desc">This sample is full screen chat sample like Slack for desktop browsers.</div>
-                        <div class="info-button">
-                            <a href="https://sample.sendbird.com/basic/" target="_blank">
-                                <div class="button"><i class="fas fa-link"></i>DEMO</div>
-                            </a>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://sample.sendbird.com/basic/sync-manager" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image basic"></div>
-                    <div class="item-info">
-                        <div class="info-title">Web Basic Sample with SyncManager</div>
-                        <div class="info-desc">This sample is full screen chat sample like Slack for desktop browsers with SyncManager.</div>
-                        <div class="info-button">
-                            <a href="https://sample.sendbird.com/basic/sync-manager" target="_blank">
-                                <div class="button"><i class="fas fa-link"></i>DEMO</div>
-                            </a>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://sample.sendbird.com/widget/" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image widget"></div>
-                    <div class="item-info">
-                        <div class="info-title">Web Widget Sample</div>
-                        <div class="info-desc">This sample is chat widget sample to regular websites like Facebook-chat for desktop browsers.</div>
-                        <div class="info-button">
-                            <a href="https://sample.sendbird.com/widget/" target="_blank">
-                                <div class="button"><i class="fas fa-link"></i>DEMO</div>
-                            </a>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/web-widget" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://sample.sendbird.com/livechat/" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image live-chat"></div>
-                    <div class="item-info">
-                        <div class="info-title">Web Live Chat Sample</div>
-                        <div class="info-desc">This sample is chat sample to live streaming like Twitch for desktop browsers.</div>
-                        <div class="info-button">
-                            <a href="https://sample.sendbird.com/livechat/" target="_blank">
-                                <div class="button"><i class="fas fa-link"></i>DEMO</div>
-                            </a>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/web-live-chat" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-sample" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image rn-android"></div>
-                    <div class="item-info">
-                        <div class="info-title">React-Native Sample</div>
-                        <div class="info-desc">This sample is React-Native chat sample that works on both Android and iOS.</div>
-                        <div class="info-button">
-                            <div class="button disable"><i class="fas fa-link"></i>DEMO</div>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-sample" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-syncmanager-sample" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image rn-android"></div>
-                    <div class="item-info">
-                        <div class="info-title">React-Native Sample with SyncManager</div>
-                        <div class="info-desc">This sample is React-Native chat sample using SyncManager.</div>
-                        <div class="info-button">
-                            <div class="button disable"><i class="fas fa-link"></i>DEMO</div>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-syncmanager-sample" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
-        <a href="https://sample.sendbird.com/uikit-composed/" target="_blank">
-            <div class="content">
-                <div class="item">
-                    <div class="item-image uikit"></div>
-                    <div class="item-info">
-                        <div class="info-title">UIKit Sample</div>
-                        <div class="info-desc">This sample is full screen chat sample made using UI Kit.</div>
-                        <div class="info-button">
-                            <a href="https://sample.sendbird.com/uikit-composed/" target="_blank">
-                                <div class="button"><i class="fas fa-link"></i>DEMO</div>
-                            </a>
-                            <a href="https://github.com/sendbird/SendBird-JavaScript/tree/master/uikit-samples" target="_blank">
-                                <div class="button"><i class="fab fa-github"></i>GITHUB</div>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </a>
-
+                    var sampleContainer = platformItem.querySelector('.items');
+                    for (var sample of platform.items) {
+                        var sampleItem = document.createElement('div');
+                        sampleItem.className = 'sample';
+                        sampleItem.innerHTML = "\
+                            <div style='background-image:url(\"" + sample.thumbnail + "\");' class='thumbnail'></div>\
+                            <div class='detail'>\
+                                <div class='name'>" + sample.name + "</div>\
+                            </div>\
+                            <div class='buttons'>"
+                            + (sample.url
+                                ? "<a href='" + sample.url + "' target='_blank' class='button'><i class='fas fa-link'></i> Demo</a>"
+                                : "") +
+                            "<a href='" + sample.repo + "' target='_blank' class='button'><i class='fab fa-github'></i> Github</a>\
+                            </div>";
+                        sampleContainer.appendChild(sampleItem);
+                    }
+                    platformContainer.appendChild(platformItem);
+                }
+            };
+        </script>
     </div>
 </body>
+
 </html>

@@ -1,11 +1,14 @@
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
+
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import messaging from '@react-native-firebase/messaging';
+
 import { withAppContext } from '../context';
 import Login from './login';
 import Channels from './channels';
+import { handleNotificationAction } from '../utils';
 
 const Lobby = props => {
   const { navigation, sendbird } = props;
@@ -43,6 +46,7 @@ const Lobby = props => {
           setCurrentUser(JSON.parse(user));
         }
         setInitialized(true);
+        return handleNotificationAction(navigation, sendbird, currentUser, 'lobby');
       })
       .catch(err => console.error(err));
   }, []);
@@ -89,11 +93,11 @@ const Lobby = props => {
         currentUser ? (
           <Channels {...props} currentUser={currentUser} />
         ) : (
-            <Login {...props} onLogin={login} />
-          )
+          <Login {...props} onLogin={login} />
+        )
       ) : (
-          <View />
-        )}
+        <View />
+      )}
     </>
   );
 };

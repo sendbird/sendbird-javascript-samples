@@ -11,6 +11,7 @@ import {
   Alert,
   Platform
 } from 'react-native';
+
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
@@ -142,13 +143,11 @@ const Chat = props => {
       });
     }
   };
-  channelHandler.onChannelDeleted = channel => {
-    if (user.userId === currentUser.userId) {
-      navigation.navigate('Lobby', {
-        action: 'delete',
-        data: { channel }
-      });
-    }
+  channelHandler.onChannelDeleted = (channelUrl, channelType) => {
+    navigation.navigate('Lobby', {
+      action: 'delete',
+      data: { channel }
+    });
   };
 
   const handleStateChange = newState => {

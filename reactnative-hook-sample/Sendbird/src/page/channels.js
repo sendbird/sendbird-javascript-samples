@@ -3,6 +3,7 @@ import { Text, StatusBar, SafeAreaView, View, FlatList, RefreshControl, AppState
 
 import { channelsReducer } from '../reducer/channels';
 import Channel from '../component/channel';
+import { handleNotificationAction } from '../utils';
 
 const Channels = props => {
   const { route, navigation, sendbird, currentUser } = props;
@@ -85,6 +86,8 @@ const Channels = props => {
   connectionHandler.onReconnectSucceeded = () => {
     dispatch({ type: 'error', payload: { error: null } });
     refresh();
+
+    handleNotificationAction(navigation, sendbird, currentUser, 'channels').catch(err => console.error(err));
   };
   connectionHandler.onReconnectFailed = () => {
     dispatch({

@@ -3,18 +3,18 @@ const path = require('path');
 
 module.exports = {
   entry: {
-    liveChat: ['babel-polyfill', './src/js/chat.js']
+    liveChat: ['babel-polyfill', './src/js/chat.js'],
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].SendBird.js',
-    publicPath: 'dist'
+    publicPath: 'dist',
   },
-  devtool: 'cheap-eval-source-map',
+  devtool: 'eval-cheap-source-map',
   devServer: {
     publicPath: '/dist/',
     compress: true,
-    port: 9000
+    port: 9000,
   },
   module: {
     rules: [
@@ -23,19 +23,20 @@ module.exports = {
         test: /\.scss$/,
         use: [
           {
-            loader: 'style-loader'
+            loader: 'style-loader',
           },
           {
             loader: 'css-loader',
             options: {
-              modules: true,
-              localIdentName: '[local]'
-            }
+              modules: {
+                localIdentName: '[local]',
+              },
+            },
           },
           {
-            loader: 'sass-loader'
-          }
-        ]
+            loader: 'sass-loader',
+          },
+        ],
       },
       {
         // ESLint
@@ -44,15 +45,15 @@ module.exports = {
         exclude: /(node_modules|SendBird.min.js)/,
         loader: 'eslint-loader',
         options: {
-          failOnError: true
-        }
+          failOnError: true,
+        },
       },
       {
         // ES6
         test: /\.js($|\?)/i,
         loader: 'babel-loader',
-        exclude: /(node_modules)/
-      }
-    ]
-  }
+        exclude: /(node_modules)/,
+      },
+    ],
+  },
 };

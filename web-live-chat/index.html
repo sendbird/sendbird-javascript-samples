@@ -2,22 +2,32 @@
 <html lang='en'>
 <head>
   <meta charset='UTF-8'>
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sendbird - A Complete Chat Platform, Messaging and Chat SDK and API" />
+  <meta property="og:description" content="Sendbird&#039;s chat, voice and video APIs and SDKs connect users through immersive, modern communication solutions that drive better user experiences and engagement." />
+  <meta property="og:url" content="https://sendbird.com/" />
+  <meta property="og:site_name" content="Sendbird" />
+  <meta property="og:image" content="https://6cro14eml0v2yuvyx3v5j11j-wpengine.netdna-ssl.com/wp-content/uploads/sendbird_thumbnail.png" />
+  <meta property="og:image:secure_url" content="https://6cro14eml0v2yuvyx3v5j11j-wpengine.netdna-ssl.com/wp-content/uploads/sendbird_thumbnail.png" />
+  <meta property="og:image:width" content="1200" /><meta property="og:image:height" content="645" />
   <link rel="icon" href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
   <link rel="shortcut icon" href="https://dxstmhyqfqr1o.cloudfront.net/favicon/Sendbird_Favicon_PNG/Sendbird_Favicon_16X16.png">
   <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
   <title>Live Chat Sample</title>
+  <script src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/axios.min.js"></script>
 
   <style>
     body {
       margin: 0;
-      background: #20242a;
+      background: #e0e0e0;
       font-family: 'Lato';
       font-weight: 400;
       -webkit-font-smoothing: antialiased;
     }
 
     .top {
-      width: 1100px;
+      width: 1224px;
       height: 43px;
       padding: 20px 0;
       margin: 0 auto;
@@ -29,7 +39,7 @@
     }
     .top > span {
       float: left;
-      color: #868d99;
+      color: black;
       font-size: 13px;
       position: absolute;
       bottom: 28px;
@@ -43,21 +53,91 @@
     }
 
     .content {
-      width: 1100px;
-      height: 808px;
+      width: 1224px;
+      height: 680px;
       margin: 0 auto;
     }
 
-    .content-image {
+    /* .content-image {
       display: inline-block;
       width: 680px;
       height: 808px;
+    } */
+
+    .content-video {
+      display: inline-block;
+      width: 848px;
+      height: 680px;
+      background-color: white;
+    }
+
+    .content-video-stream {
+      width: 100%;
+      height: 522px;
+      background-color: black;
+    }
+
+    .content-video-stream-image {
+      width: 848px;
+      height: 522px;
+    }
+
+    .content-video-control {
+      width: 848px;
+      height: 48px;
+      background-color: black;
+    }
+
+    .content-video-control-icon {
+      margin: 13px 0px 11px 0px;
+    }
+
+    .content-video-control-text {
+      margin: 15px 0px 13px 0px;
+      font-family: OpenSans;
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: white;
+    }
+
+    .content-video-description {
+      padding: 24px 24px 26px 24px;
+      border-right: 1px solid #e2e2e2;
+    }
+
+    .content-video-live-icon {
+      float: left;
+      width: 42px;
+      height: 32px;
+      object-fit: contain;
+    }
+
+    .content-video-title {
+      margin-left: 8px;
+      height: 32px;
+      font-size: 24px;
+      font-weight: 600;
+      line-height: 1.33;
+      letter-spacing: -0.12px;
+      color: black;
+    }
+
+    .content-video-information {
+      margin-top: 8px;
+      opacity: 0.64;
+      font-family: OpenSans;
+      font-size: 14px;
+      line-height: 1.43;
+      color: black;
     }
 
     .content-chat {
-      width: 400px;
-      height: 100%;
+      width: 376px;
+      height: 680px;
       float: right;
+      background-color: white;
     }
 
   </style>
@@ -70,11 +150,34 @@
     <!--<img class="sendbird-logo" src="https://dxstmhyqfqr1o.cloudfront.net/logo/logo_SendBird_positive.svg" alt="SendBird">-->
     <img class="sendbird-logo" src="https://dxstmhyqfqr1o.cloudfront.net/logos/Sendbird_Logo_PNG/Sendbird_Logo_RGB_lg.png" alt="Sendbird">
   </a>
-  <span>version 0.6.0</span>
+  <span>version 0.7.0</span>
 </div>
 <div class="content">
-  <div class="content-image">
+  <!-- <div class="content-image">
     <img src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/bg_livechat_x2.png" width="680" height="810">
+  </div> -->
+  <div class="content-video">
+    <div class="content-video-stream">
+      <img class="content-video-stream-image" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/img-video.jpg" width="848" height="522" />
+    </div>
+    <div class="content-video-control">
+      <img class="content-video-control-icon" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-pause.svg" style="margin-left: 14px" />
+      <img class="content-video-control-icon" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-file-audio.svg" style="margin-left: 16px" />
+      <img class="content-video-control-icon" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-volume-slider.svg" style="margin-left: 8px" />
+      <img class="content-video-control-icon" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-fullscreen.svg" style="float: right; margin-right: 18px" />
+      <span class="content-video-control-text" style="float: right; margin-right: 16px">1080p</span>
+    </div>
+    <div class="content-video-description">
+      <div>
+        <img class="content-video-live-icon" src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-live.svg" />
+        <span class="content-video-title">RockBird | Live at International Music Concert</span>
+        <img src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-more.svg" style="float: right; margin-right: 4px" />
+        <img src="https://dxstmhyqfqr1o.cloudfront.net/liveChat/icon-share.svg" style="float: right" />
+      </div>
+      <div class="content-video-information">
+        3,365 watching now ∙Started streaming 1 hours ago
+      </div>
+    </div>
   </div>
   <div class="content-chat" id="sb_chat"></div>
 </div>

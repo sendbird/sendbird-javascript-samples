@@ -1,5 +1,5 @@
 # Sendbird JavaScript Chat Sample
-This is a sample chat built using the [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). It can be used to add a functional chat to any website.  
+This is a sample chat built using the [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). It can be used to add a functional chat to any website.
 
 
 ## [Demo](https://sample.sendbird.com/livechat/)
@@ -8,15 +8,15 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/liv
 
 
 ## Setup
-1. The `body` must have a `div` element whose id is `sb_chat`. we recommend width and height to 400px or over both.  
-  
+1. The `body` must have a `div` element whose id is `sb_chat`. we recommend width and height to 400px or over both.
+
 ```html
 <body>
   <div id="sb_chat"></div>
 </body>
 ```
 
-2. Import the [`SendBird SDK`](https://github.com/sendbird/SendBird-SDK-JavaScript).  
+2. Import the [`SendBird SDK`](https://github.com/sendbird/SendBird-SDK-JavaScript).
 3. Import the `liveChat.SendBird.js` file.
 ```javascript
 <script src="SendBird.min.js"></script>
@@ -25,9 +25,9 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/liv
 
 
 ## Customizing the sample
-If you refresh your browser window, you need to reconnect to SendBird. To retain connection on browser refresh, you must implement an appropriate `event handler`. 
+If you refresh your browser window, you need to reconnect to SendBird. To retain connection on browser refresh, you must implement an appropriate `event handler`.
 
-If you wish to issue an `access_token` for your user, modify the `connect function` in `src/sendbird.js`.  
+If you wish to issue an `access_token` for your user, modify the `connect function` in `src/sendbird.js`.
 
 > Require that you have Node v8.x+ installed.
 1. Install npm
@@ -39,14 +39,14 @@ npm install
 ```bash
 npm run start:dev
 ```
-        
+
 3. Start sample.
 ```bash
 npm start
 ```
 
 
-## Advanced  
+## Advanced
 ### Connect other APP or Channel
 If you want to connect other application or channel, you need to change variable `appId` or `channelUrl` in `index.html`.
 
@@ -64,8 +64,8 @@ If you want to connect other application or channel, you need to change variable
 </html>
 ```
 
-### Start with User connect  
-If you want to start this sample with user connect, you can using `startWithConnect()`.  
+### Start with User connect
+If you want to start this sample with user connect, you can using `startWithConnect()`.
 
 ```html
 ...
@@ -85,7 +85,7 @@ If you want to start this sample with user connect, you can using `startWithConn
 ```
 
 ### Enter Channel
-If you want to enter channel, you can using `enterChannel()`.  
+If you want to enter channel, you can using `enterChannel()`.
 
 ```javascript
 ...
@@ -97,7 +97,7 @@ liveChat.enterChannel(channelUrl, function() {
 ```
 
 ### Exit Channel
-If you want to exit current channel, you can using `exitChannel()`.  
+If you want to exit current channel, you can using `exitChannel()`.
 
 ```javascript
 ...
@@ -116,7 +116,7 @@ liveChat.exitChannel(function() {
         |-- ...                             - (node packages)
     |-- src
         |-- js
-            |-- elements  
+            |-- elements
                 |-- elements.js             - elements root class
                 |-- spinner.js              - spinner element
                 |-- chat-board.js           - board element
@@ -125,8 +125,8 @@ liveChat.exitChannel(function() {
             |-- sendbird.js                 - sendbird functions
             |-- chat.js                     - chat functions
         |-- scss
-            |-- mixins 
-                |-- _border-radius.scss     - border radius mixin  
+            |-- mixins
+                |-- _border-radius.scss     - border radius mixin
                 |-- _box-shadow.scss        - box shadow mixin
                 |-- _state.scss             - element state mixin
                 |-- _transform.scss         - transform mixin
@@ -134,12 +134,12 @@ liveChat.exitChannel(function() {
             |-- _mixins.scss                - import mixin
             |-- _variables.scss             - css variables
             |-- _animation.scss             - animation
-            |-- _icons.scss                 - icon 
-            |-- chat.scss                   - main css  
-|-- .eslintrc.js                            - lint setting 
-|-- webpack.config.js                       - webpack setting 
-|-- package.json                            - npm package 
-|-- SendBird.min.js                         - SendBird SDK 
+            |-- _icons.scss                 - icon
+            |-- chat.scss                   - main css
+|-- .eslintrc.js                            - lint setting
+|-- webpack.config.js                       - webpack setting
+|-- package.json                            - npm package
+|-- SendBird.min.js                         - SendBird SDK
 |-- index.html                              - sample file
 |-- README.md
 ```

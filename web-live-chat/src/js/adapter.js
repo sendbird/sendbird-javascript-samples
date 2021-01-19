@@ -4,8 +4,8 @@ const GLOBAL_HANDLER = 'GLOBAL_HANDLER';
 const GET_MESSAGE_LIMIT = 30;
 
 export const KeyCode = {
-  ENTER : 13,
-  KR : 229
+  ENTER: 13,
+  KR: 229,
 };
 
 class SendbirdAdapter {
@@ -47,7 +47,7 @@ class SendbirdAdapter {
   }
 
   disconnect(action) {
-    if(this.isConnected()) {
+    if (this.isConnected()) {
       this.api.disconnect(() => {
         action();
       });
@@ -130,17 +130,17 @@ class SendbirdAdapter {
 
   connectionHandler(channelUrl, liveChat) {
     let ConnectionHandler = new this.api.ConnectionHandler();
-    ConnectionHandler.onReconnectStarted = function(id) {
+    ConnectionHandler.onReconnectStarted = function (id) {
       console.log('onReconnectStarted');
       liveChat.$spinner.attachTo(liveChat.$messageBoard.$content);
     };
 
-    ConnectionHandler.onReconnectSucceeded = function(id) {
+    ConnectionHandler.onReconnectSucceeded = function (id) {
       console.log('onReconnectSucceeded');
       liveChat.enterChannel(channelUrl);
     };
 
-    ConnectionHandler.onReconnectFailed = function(id) {
+    ConnectionHandler.onReconnectFailed = function (id) {
       console.log('onReconnectFailed');
     };
     this.api.addConnectionHandler('CONNECTION_HANDLER', ConnectionHandler);

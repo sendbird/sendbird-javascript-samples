@@ -27,6 +27,10 @@
   &:focus { @content; }
 }
 
+@mixin active {
+  &:active { @content; }
+}
+
 @mixin after {
   &::after {
     @content

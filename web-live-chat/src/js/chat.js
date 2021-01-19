@@ -14,10 +14,8 @@ const ERROR_MESSAGE_USER_INFO = 'Please pass "USER_ID" and "NICKNAME" when start
 const ERROR_MESSAGE_CHANNEL_URL = 'Please pass "CHANNEL_URL" when start.';
 const ERROR_MESSAGE = 'Please create "sb_chat" element on first.';
 
-const MAX_MESSAGE_COUNT = 100;
-
 window.WebFontConfig = {
-  google: { families: ['Lato:400,700'] }
+  google: { families: ['Lato:400,700'] },
 };
 
 class LiveChat {
@@ -32,19 +30,19 @@ class LiveChat {
       console.error(ERROR_MESSAGE_APP_ID);
       return;
     }
-    switch(arg.type) {
-    case "channel":
-      if(!arg.data.channelUrl) {
-        console.error(ERROR_MESSAGE_CHANNEL_URL);
-        return;
-      }
-      break;
-    case "user":
-      if(!arg.data.userId || !arg.data.nickname) {
-        console.error(ERROR_MESSAGE_USER_INFO);
-        return;
-      }
-      break;
+    switch (arg.type) {
+      case 'channel':
+        if (!arg.data.channelUrl) {
+          console.error(ERROR_MESSAGE_CHANNEL_URL);
+          return;
+        }
+        break;
+      case 'user':
+        if (!arg.data.userId || !arg.data.nickname) {
+          console.error(ERROR_MESSAGE_USER_INFO);
+          return;
+        }
+        break;
     }
     this.loadGoogleFont();
 
@@ -56,24 +54,30 @@ class LiveChat {
       this.$chatBoard = new ChatBoard(this.$chat);
       this.$messageBoard = new MessageBoard();
 
+      _this.$messageBoard.leave.on('click', (e) => {
+        _this.adapter.disconnect(() => {
+          _this.$chatBoard.replaceElement(_this.$messageBoard, _this.$loginBoard);
+        });
+      });
+
       this.$messageBoard.$content.on('scroll', (e) => {
-        if(_this.$messageBoard.$content.getScrollY() === 0) {
+        if (_this.$messageBoard.$content.getScrollY() === 0) {
           _this.adapter.getMessageList((messageList) => {
-            _this.$messageBoard.render(messageList, false, true);
+            _this.$messageBoard.render(messageList, true);
           });
         }
-        if(_this.$messageBoard.$content.isScrollBottom()) {
+        if (_this.$messageBoard.$content.isScrollBottom()) {
           _this.$messageBoard.removeBottomBar();
         }
       });
 
-      _this.$messageBoard.$icon.on('click', () => {
+      _this.$messageBoard.send.on('click', () => {
         let textMessage = _this.$messageBoard.getMessage();
         _this.$messageBoard.clearInput();
         if (textMessage) {
-          textMessage = textMessage.replace(/<[\/]?\s*br\s*[\/]?>/gi, "\n");
+          textMessage = textMessage.replace(/<[/]?\s*br\s*[/]?>/gi, '\n');
           _this.adapter.sendMessage(textMessage, (message) => {
-            _this.$messageBoard.render([ message ], true, false);
+            _this.$messageBoard.render([message], false, true);
             _this.clearOverflowedMessages();
           });
         }
@@ -83,31 +87,29 @@ class LiveChat {
 
   start(appId, channelUrl) {
     this.init(appId, {
-      'type' : 'channel',
-      'data' : {
-        'channelUrl' : channelUrl
-      }
+      type: 'channel',
+      data: {
+        channelUrl: channelUrl,
+      },
     });
 
     if (this.$chat) {
       let _this = this;
       this.$loginBoard = new LoginBoard();
       this.$loginBoard.onLogin(() => {
-        if(!_this.$loginBoard.$login.hasClass("disabled")) {
+        if (!_this.$loginBoard.$login.hasClass('disabled')) {
           _this.$loginBoard.disable();
           _this.$spinner.attachTo(_this.$loginBoard.$login);
 
-          _this.adapter.connect(_this.$loginBoard.$userId.val(),
-            _this.$loginBoard.$nickname.val(),
-            () => {
-              _this.$spinner.remove(_this.$loginBoard.$login);
-              _this.$loginBoard.reset();
-              _this.$spinner.attachTo(_this.$messageBoard.$content);
+          _this.adapter.connect(_this.$loginBoard.$userId.val(), _this.$loginBoard.$nickname.val(), () => {
+            _this.$spinner.remove(_this.$loginBoard.$login);
+            _this.$loginBoard.reset();
+            _this.$spinner.attachTo(_this.$messageBoard.$content);
 
-              _this.$chatBoard.replaceElement(_this.$loginBoard, _this.$messageBoard);
-              _this.adapter.connectionHandler(channelUrl, _this);
-              _this.enterChannel(channelUrl);
-            });
+            _this.$chatBoard.replaceElement(_this.$loginBoard, _this.$messageBoard);
+            _this.adapter.connectionHandler(channelUrl, _this);
+            _this.enterChannel(channelUrl);
+          });
         }
       });
       this.$chatBoard.appendElement(this.$loginBoard);
@@ -119,11 +121,11 @@ class LiveChat {
   startWithConnect(appId, userId, nickname, callback) {
     let _this = this;
     _this.init(appId, {
-      'type' : 'user',
-      'data' : {
-        'userId' : userId,
-        'nickname' : nickname
-      }
+      type: 'user',
+      data: {
+        userId: userId,
+        nickname: nickname,
+      },
     });
     if (_this.$chat) {
       _this.adapter.connect(userId, nickname, () => {
@@ -141,22 +143,16 @@ class LiveChat {
     _this.adapter.enterChannel(channelUrl, () => {
       _this.adapter.getMessageList((messageList) => {
         _this.$spinner.remove(_this.$messageBoard.$content);
-        _this.$messageBoard.render(messageList, true, false);
+        _this.$messageBoard.render(messageList, false, true);
 
         _this.adapter.createHandler((channel, message) => {
           if (channel.url === channelUrl) {
-            let isBottom = _this.$messageBoard.isScrollBottom();
-            _this.$messageBoard.render([message], isBottom, false);
-            if (!isBottom) {
-              _this.$messageBoard.createBottomBar();
-            } else {
-              _this.clearOverflowedMessages();
-            }
+            _this.$messageBoard.render([message], false, false, true);
           }
         });
       }, true);
 
-      if(callback) {
+      if (callback) {
         callback();
       }
     });
@@ -166,26 +162,16 @@ class LiveChat {
     this.adapter.exitChannel(callback);
   }
 
-  clearOverflowedMessages() {
-    let $messages = this.$messageBoard.$content.children();
-    let overCount = $messages.length - MAX_MESSAGE_COUNT;
-    if (overCount > 0) {
-      for(let i = 0 ; i < overCount; i++) {
-        this.$messageBoard.$content.removeFirst();
-      }
-    }
-  }
-
   loadGoogleFont() {
     var wf = document.createElement('script');
-    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+    wf.src =
+      ('https:' == document.location.protocol ? 'https' : 'http') +
       '://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js';
     wf.type = 'text/javascript';
     wf.async = 'true';
     var s = document.getElementsByTagName('script')[0];
     s.parentNode.insertBefore(wf, s);
   }
-
 }
 
 window.liveChat = new LiveChat();

@@ -4,28 +4,25 @@ import '../../scss/chat.scss';
 
 class Element {
   constructor(arg) {
-    this.supportedTags = [ 'div', 'span', 'input', 'label' ];
-    this.supportedEvents = [
-      'click', 'keydown', 'keyup', 'scroll',
-      'paste', 'change', 'focus', 'blur'
-    ];
-    if(!arg || typeof arg === 'string') {
-      let tag = (this.supportedTags.indexOf(arg) >= 0) ? arg : 'div';
+    this.supportedTags = ['div', 'span', 'input', 'label', 'button', 'img'];
+    this.supportedEvents = ['click', 'keydown', 'keyup', 'scroll', 'paste', 'change', 'focus', 'blur'];
+    if (!arg || typeof arg === 'string') {
+      let tag = this.supportedTags.indexOf(arg) >= 0 ? arg : 'div';
       this.$ = document.createElement(tag);
-    } else if(arg instanceof HTMLElement) {
+    } else if (arg instanceof HTMLElement) {
       this.$ = arg;
     }
   }
 
   setClass(...args) {
-    if(this.$) {
-      return this.$.className = args.join(' ');
+    if (this.$) {
+      return (this.$.className = args.join(' '));
     }
   }
 
   hasClass(className) {
-    if(this.$) {
-      if(this.$.classList) {
+    if (this.$) {
+      if (this.$.classList) {
         return this.$.classList.contains(className);
       } else {
         return new RegExp('(^| )' + className + '( |$)', 'gi').test(this.$.className);
@@ -36,9 +33,9 @@ class Element {
   }
 
   addClass(className) {
-    if(this.$) {
+    if (this.$) {
       let classList = this.$.className.split(' ');
-      if(!(className in classList)) {
+      if (!(className in classList)) {
         classList.push(className);
         this.$.className = classList.join(' ');
       }
@@ -47,12 +44,14 @@ class Element {
   }
 
   removeClass(className) {
-    if(this.$) {
-      if(this.$.classList) {
+    if (this.$) {
+      if (this.$.classList) {
         this.$.classList.remove(className);
       } else {
-        this.$.className = this.$.className
-          .replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), '');
+        this.$.className = this.$.className.replace(
+          new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'),
+          ''
+        );
       }
     }
     return this.$;
@@ -67,55 +66,61 @@ class Element {
   }
 
   setStyle(style, value, unit = '') {
-    if(this.$) {
+    if (this.$) {
       this.$.style[style] = value + unit;
     }
   }
 
   focus() {
-    if(this.$) {
+    if (this.$) {
       this.$.focus();
     }
   }
 
   blur() {
-    if(this.$) {
+    if (this.$) {
       this.$.blur();
     }
   }
 
   click() {
-    if(this.$) {
+    if (this.$) {
       this.$.click();
     }
   }
 
   attr(key, val) {
-    if(this.$) {
-      if(val !== undefined) {
+    if (this.$) {
+      if (val !== undefined) {
         this.$.setAttribute(key, val);
       }
       return this.$.getAttribute(key);
     }
   }
 
+  removeAttr(key) {
+    if (this.$) {
+      this.$.removeAttribute(key);
+    }
+  }
+
   protectFromXSS(text) {
     return text
-      .replace(/\&/g, '&amp;')
-      .replace(/\#/g, '&#35;')
-      .replace(/\</g, '&lt;')
-      .replace(/\>/g, '&gt;')
-      .replace(/\"/g, '&quot;')
-      .replace(/\'/g, '&apos;')
+      .replace(/&/g, '&amp;')
+      .replace(/#/g, '&#35;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
       .replace(/\+/g, '&#43;')
-      .replace(/\-/g, '&#45;')
+      .replace(/-/g, '&#45;')
       .replace(/\(/g, '&#40;')
       .replace(/\)/g, '&#41;')
-      .replace(/\%/g, '&#37;');
+      .replace(/%/g, '&#37;');
   }
 
   val(newVal, options) {
-    if(this.$) {
+    if (this.$) {
       if (!options) options = {};
 
       if (this.getTag() === 'INPUT') {
@@ -128,7 +133,7 @@ class Element {
           if (options.xssProtectionEnabled) {
             newVal = this.protectFromXSS(newVal);
           }
-          if(options.showEndOfLine) {
+          if (options.showEndOfLine) {
             newVal = newVal.replace(/\n/g, '<br />');
           }
           this.$.innerHTML = newVal;
@@ -141,12 +146,12 @@ class Element {
   }
 
   appendContent(text, options) {
-    if(this.$) {
-      if(!options) options = {};
-      if(options.xssProtectionEnabled) {
+    if (this.$) {
+      if (!options) options = {};
+      if (options.xssProtectionEnabled) {
         text = this.protectFromXSS(text);
       }
-      if(options.showEndOfLine) {
+      if (options.showEndOfLine) {
         text = text.replace(/\n/g, '<br />');
       }
       this.val(this.val() + text);
@@ -155,13 +160,13 @@ class Element {
   }
 
   enable() {
-    if(this.$) {
+    if (this.$) {
       this.$.disabled = false;
     }
   }
 
   disable() {
-    if(this.$) {
+    if (this.$) {
       this.$.disabled = true;
     }
   }
@@ -179,17 +184,17 @@ class Element {
   }
 
   insertBefore(elem, before) {
-    if(this.$) {
-      if(elem instanceof Element) elem = elem.$;
-      if(before instanceof Element) before = before.$;
+    if (this.$) {
+      if (elem instanceof Element) elem = elem.$;
+      if (before instanceof Element) before = before.$;
       this.$.insertBefore(elem, before);
     }
     return this.$;
   }
 
   appendElement(elem) {
-    if(this.$) {
-      if(elem instanceof HTMLElement) {
+    if (this.$) {
+      if (elem instanceof HTMLElement) {
         this.$.appendChild(elem);
       } else {
         this.$.appendChild(elem.$);
@@ -199,16 +204,16 @@ class Element {
   }
 
   replaceElement(from, to) {
-    if(this.$) {
-      if(from instanceof Element) from = from.$;
-      if(to instanceof Element) to = to.$;
+    if (this.$) {
+      if (from instanceof Element) from = from.$;
+      if (to instanceof Element) to = to.$;
       this.$.replaceChild(to, from);
     }
   }
 
   removeElement(elem) {
-    if(this.$) {
-      if(elem instanceof HTMLElement) {
+    if (this.$) {
+      if (elem instanceof HTMLElement) {
         this.$.removeChild(elem);
       } else {
         this.$.removeChild(elem.$);
@@ -217,13 +222,13 @@ class Element {
   }
 
   removeFirst() {
-    if(this.$.children.length > 0) {
+    if (this.$.children.length > 0) {
       this.$.removeChild(this.$.firstChild);
     }
   }
 
   removeLast() {
-    if(this.$.children.length > 0) {
+    if (this.$.children.length > 0) {
       this.$.removeChild(this.$.lastChild);
     }
   }
@@ -280,9 +285,9 @@ class Element {
   }
 
   on(type, hdlr) {
-    if(this.$) {
-      type = (this.supportedEvents.indexOf(type) >= 0) ? type : null;
-      if(type) {
+    if (this.$) {
+      type = this.supportedEvents.indexOf(type) >= 0 ? type : null;
+      if (type) {
         this.$.addEventListener(type, hdlr);
       }
     }

@@ -725,7 +725,7 @@ function updateGroupChannelLastMessage(message) {
     }
 
     if (lastMessageDateString) {
-      lastMessageDateString = '<div><img src="static/img/icon-time.png" style="vertical-align: moddle; padding-bottom: 2px;" /> <span> ' + lastMessageDateString + '</span></div>';
+      lastMessageDateString = '<div><img src="static/img/icon-time.png" style="vertical-align: middle; padding-bottom: 2px;" /> <span> ' + lastMessageDateString + '</span></div>';
     }
 
     $('.left-nav-channel-group[data-channel-url=' + message.channelUrl + '] .left-nav-channel-lastmessage').html(lastMessage);
@@ -1540,7 +1540,7 @@ function imageMessageList(obj) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name chat-canvas__list-name__user">' +
-      xssEscape(user.nickanme) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +
@@ -1554,7 +1554,7 @@ function imageMessageList(obj) {
     msgList += '' +
       '<div class="chat-canvas__list">' +
       '  <label class="chat-canvas__list-name" data-userid="%userid%" data-nickname="%nickname%">'.replace('%userid%', user.userId).replace('%nickname%', xssEscape(user.nickname)) +
-      xssEscape(user.nickanme) +
+      xssEscape(user.nickname) +
       '  </label>' +
       '  <label class="chat-canvas__list-separator">:</label>' +
       '  <label class="chat-canvas__list-text" data-messageid="%messageid%">'.replace('%messageid%', message.messageId) +

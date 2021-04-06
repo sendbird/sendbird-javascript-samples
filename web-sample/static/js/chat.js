@@ -725,7 +725,7 @@ function updateGroupChannelLastMessage(message) {
     }
 
     if (lastMessageDateString) {
-      lastMessageDateString = '<div><img src="static/img/icon-time.png" style="vertical-align: moddle; padding-bottom: 2px;" /> <span> ' + lastMessageDateString + '</span></div>';
+      lastMessageDateString = '<div><img src="static/img/icon-time.png" style="vertical-align: middle; padding-bottom: 2px;" /> <span> ' + lastMessageDateString + '</span></div>';
     }
 
     $('.left-nav-channel-group[data-channel-url=' + message.channelUrl + '] .left-nav-channel-lastmessage').html(lastMessage);

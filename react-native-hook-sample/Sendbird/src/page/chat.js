@@ -184,7 +184,7 @@ const Chat = props => {
       dispatch({ type: 'error', payload: { error: '' } });
       query.limit = 50;
       query.reverse = true;
-      query.load((err, fetchedMessages) => {
+      query.load((fetchedMessages, err) => {
         if (!err) {
           dispatch({ type: 'fetch-messages', payload: { messages: fetchedMessages } });
         } else {

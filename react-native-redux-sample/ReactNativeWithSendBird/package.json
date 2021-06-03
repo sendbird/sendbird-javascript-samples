@@ -15,6 +15,7 @@
     "@react-native-community/async-storage": "^1.6.2",
     "@react-native-community/netinfo": "^4.4.0",
     "@react-native-community/push-notification-ios": "^1.0.2",
+    "@react-native-community/toolbar-android": "^0.1.0-rc.2",
     "react": "16.9.0",
     "react-native": "0.61.2",
     "react-native-cached-image": "https://github.com/fungilation/react-native-cached-image.git",

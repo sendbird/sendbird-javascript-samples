@@ -1,6 +1,0 @@
-# Sample JavaScript React-Native Basic
-
-## NOTICE!
-
-This sample is deprecated and not supported any longer.  
-You can see the latest React Native sample in [Sendbird React Native Redux sample](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native-redux-sample).

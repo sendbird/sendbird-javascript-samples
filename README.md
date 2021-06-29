@@ -30,13 +30,13 @@ The Sendbird React Native framework allows you to simplify development for iOS a
 
 ### JavaScript
 
-- [**Web chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample) is a Slack-like full screen chat sample for desktop browsers. Group channel and open channel are the two main channel types in which you can create various subtypes where users can send and receive messages. This sample is written in JavaScript with [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript).
+- [**JavaScript chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript-basic-sample) is a Slack-like full screen chat sample for desktop browsers. Group channel and open channel are the two main channel types in which you can create various subtypes where users can send and receive messages. This sample is written in JavaScript with [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript).
 
-- [**Web widget sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-widget) is a Facebook-chat-like chat widget for websites.
+- [**JavaScript widget sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript-widget) is a Facebook-chat-like chat widget for websites.
  
-- [**Web live chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-live-chat) is a Twitch-chat-like chat sample for desktop browsers.
+- [**JavaScript live chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript-live-chat) is a Twitch-chat-like chat sample for desktop browsers.
 
-- [**Web chat sample with SyncManager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/web-basic-sample-syncmanager) is a web chat sample integrated with SyncManager, which is equipped with a local cache along with core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app. This sample is written in JavaScript with [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript) and [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). Find more about SyncManager on [Sendbird SyncManager document](https://sendbird.com/docs/syncmanager/v1/javascript/getting-started/about-syncmanager).
+- [**JavaScript chat sample with SyncManager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript-basic-sample-syncmanager) is a web chat sample integrated with SyncManager, which is equipped with a local cache along with core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app. This sample is written in JavaScript with [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript) and [Sendbird Chat SDK](https://github.com/sendbird/SendBird-SDK-JavaScript). Find more about SyncManager on [Sendbird SyncManager document](https://sendbird.com/docs/syncmanager/v1/javascript/getting-started/about-syncmanager).
 
 
 <br />
@@ -57,5 +57,6 @@ yarn install --save sendbird
 Or download the latest release manually from [GitHub](https://github.com/sendbird/SendBird-SDK-JavaScript)
 
 
+## Support and Issues
 
-[UIKit for React doc](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
+Check out the [UIKit for React docs](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).

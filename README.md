@@ -7,10 +7,11 @@ Sendbird provides an easy-to-use Chat API, native Chat SDKs, UIKits, and a fully
 
 The best way to get started is through the [JavaScript Getting Started guide](https://sendbird.com/docs/chat/v3/javascript/getting-started/about-chat-sdk).
 
-
 ## Introduction
 
 This repository contains samples for how to use Sendbird with plain Javascript, React and React Native. You can find more information  in the [Javascript SDK documentation](https://sendbird.com/docs/chat/v3/javascript/getting-started/about-chat-sdk) and [React Quickstart Documentation](https://sendbird.com/docs/uikit/v1/react/quickstart/send-first-message)
+
+![UIKit](asset/uikit.png)
 
 ### React
 Sendbird UIKit for React is a set of prebuilt UI components that allows you to easily craft an in-app chat with all the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more. All the included components can be styled and customized to create an unique experience that fits your app.
@@ -59,4 +60,4 @@ Or download the latest release manually from [GitHub](https://github.com/sendbir
 
 ## Support and Issues
 
-Check out the [UIKit for React docs](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community](https://community.sendbird.com).
+Check out the [UIKit for React docs](https://sendbird.com/docs/uikit/v1/javascript/getting-started/about-uikit). If you need any help in resolving any issues or have questions, visit [our community forums](https://community.sendbird.com).

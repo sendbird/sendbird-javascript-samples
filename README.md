@@ -41,31 +41,20 @@ The Sendbird React Native framework allows you to simplify development for iOS a
 
 <br />
 
-## Installation of Chat SDK
+## Installation
 
-### Requirements
-
-`Node.js` should be installed on your system.
-
-### Package managers
-
-You can download the Chat SDK for JavaScript by using two package managers below. 
-
-A. [Bower](https://bower.io/)
-
-```bash
-bower install sendbird
-```
-
-B. [npm](https://www.npmjs.com/package/sendbird)
+To use the Sendbird Chat SDK directly you can install it through npm or yarn with
 
 ```bash
 npm install --save sendbird
 ```
+or
 
-Or you can manually download the Chat SDK from [here](https://github.com/sendbird/SendBird-SDK-JavaScript) on Github
+```bash
+yarn install --save sendbird
+```
 
-<br />
+Or download the latest release manually from [GitHub](https://github.com/sendbird/SendBird-SDK-JavaScript)
 
 
 

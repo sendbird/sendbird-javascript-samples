@@ -7,6 +7,7 @@ import { body, UPDATE_INTERVAL_TIME } from './const';
 import { SendBirdConnection } from './SendBirdConnection';
 import { SendBirdEvent } from './SendBirdEvent';
 import { LeftListItem } from './components/LeftListItem';
+import { notify } from './utils';
 
 const sb = new SendBirdAction();
 
@@ -97,6 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       createChannelEvent();
       updateGroupChannelTime();
       chatLeft.getGroupChannelList(true);
+    })
+    .then(()=>{
+      notify('Welcome to the Team!');
     })
     .catch(() => {
       redirectToIndex('SendBird connection failed.');

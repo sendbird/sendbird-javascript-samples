@@ -16,11 +16,11 @@ This repository contains samples for how to use Sendbird to add chat using Javas
 ### React
 Sendbird UIKit for React is a set of prebuilt UI components that allows you to easily craft an in-app chat with all the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more. All the included components can be styled and customized to create an unique experience that fits your app.
 
-- [**Basic React App**](https://github.com/sendbird/SendBird-JavaScript/react/react-app-simple) is a quickest way to get started using UIKit
+- [**Basic React App**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react/react-app-simple) is a quickest way to get started using UIKit
 
-- [**Composed React App**](https://github.com/sendbird/SendBird-JavaScript/react/react-app-composed) demonstrates how to use the various smart components.
+- [**Composed React App**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react/react-app-custom) demonstrates how to use the various smart components.
 
-- [**Custom React App**](https://github.com/sendbird/SendBird-JavaScript/react/react-app-custom) shows how to customize the **Message**, **ChannelPreview**, and **UserList** UI elements.
+- [**Custom React App**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react/react-app-custom) shows how to customize the **Message**, **ChannelPreview**, and **UserList** UI elements.
 
 
 ### React Native

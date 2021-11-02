@@ -41,7 +41,7 @@ The Sendbird React Native framework allows you to simplify development for iOS a
  
 - [**JavaScript live chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript/javascript-live-chat) is a Twitch-chat-like experience.
 
-- [**JavaScript chat sample with SyncManager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript-basic-sample-syncmanager) is a web chat sample integrated with [Sendbird SyncManager document](https://sendbird.com/docs/syncmanager/v1/javascript/getting-started/about-syncmanager), adds local caching to the core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app.
+- [**JavaScript chat sample with SyncManager**](https://github.com/sendbird/sendbird-javascript-samples/tree/master/javascript/javascript-basic-syncmanager) is a web chat sample integrated with [Sendbird SyncManager document](https://sendbird.com/docs/syncmanager/v1/javascript/getting-started/about-syncmanager), adds local caching to the core chat features. For faster data loading and caching, the sample synchronizes with the Sendbird server and saves a list of group channels and the messages within the local cache into your client app.
 
 ## Installation
 

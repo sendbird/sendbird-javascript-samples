@@ -1,0 +1,23 @@
+@import 'mixins';
+@import 'variables';
+
+.button-create {
+  width: 80px;
+  height: 36px;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  line-height: 36px;
+  font-weight: 600;
+  color: $color-white;
+  cursor: pointer;
+  background-color: $color-blue;
+  border: 1px solid $color-blue;
+  margin-right: 12px;
+  @include border-radius(4px);
+  @include hover-focus {
+    cursor: pointer;
+    background-color: $color-blue-dark;
+    border: 1px solid $color-blue-dark;
+  }
+}

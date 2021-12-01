@@ -1,0 +1,34 @@
+@import 'mixins';
+@import 'variables';
+
+.chat-user-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 10px 20px;
+  cursor: pointer;
+
+  & > .user-image {
+    display: flex;
+    width: 36px;
+    height: 36px;
+    margin-right: 10px;
+    background-size: 36px 36px;
+    background-position: center center;
+    background-repeat: no-repeat;
+    @include border-radius(50%);
+  }
+
+  & > .user-nickname {
+    width: 154px;
+    max-width: 154px;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+  }
+  & > .user-nickname.is-user {
+    font-weight: 600;
+    color: $color-purple-deep;
+  }
+}

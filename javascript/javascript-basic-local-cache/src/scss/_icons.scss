@@ -1,0 +1,40 @@
+// Icons
+$ic-prefix: 'https://dxstmhyqfqr1o.cloudfront.net/web-basic/';
+$ic-input-user: 'icon-username-landing.svg';
+$ic-profile-default: 'image-profile.svg';
+$ic-add-normal: 'icon-add-normal.png';
+$ic-add-over: 'icon-add-over.png';
+$ic-close: 'icon-close.png';
+$ic-enter: 'icon-enter.png';
+$ic-check-unselect: 'icon-check-unselect.png';
+$ic-check-select: 'icon-check-select.png';
+$ic-empty-chat: 'img-empty.svg';
+
+$ic-group: 'icon-group.png';
+$ic-hide-normal: 'icon-hide-normal.png';
+$ic-hide: 'icon-hide.png';
+$ic-group-add-normal: 'icon-group-add-normal.png';
+$ic-group-add: 'icon-group-add.png';
+$ic-leave-normal: 'icon-leave-normal.png';
+$ic-leave: 'icon-leave.png';
+$ic-attach-file-normal: 'icon-attach-file-normal.png';
+$ic-attach-file: 'icon-attach-file.png';
+$ic-arrow-normal: 'icon-arrow-nomal.png';
+$ic-arrow: 'icon-arrow.png';
+$ic-back: 'icon-back.png';
+
+$ic-search: 'icon-search-nomal.png';
+$ic-search-over: 'icon-search-over.png';
+
+@mixin icon($url, $size: cover, $position: center) {
+  background-image: url($ic-prefix + $url);
+  background-position: $position;
+  background-size: $size;
+  background-repeat: no-repeat;
+}
+
+@mixin imageMessage() {
+  background-position: center;
+  background-size: 160px 160px;
+  background-repeat: no-repeat;
+}

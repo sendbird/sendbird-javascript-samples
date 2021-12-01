@@ -1,0 +1,97 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.chat-menu-root {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+  background-color: $color-white;
+  box-sizing: border-box;
+  border-left: 1px solid $color-chat-border;
+  color: $color-black-border;
+  padding: 0;
+
+  & > .menu-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding: 10px 20px;
+    border-bottom: 1px solid $color-chat-border;
+    cursor: pointer;
+
+    & > .menu-users,
+    & > .menu-blocked {
+      display: flex;
+      opacity: 0.6;
+    }
+
+    & > .menu-arrow {
+      display: flex;
+      width: 36px;
+      height: 36px;
+      @include icon($ic-arrow-normal, 26px 26px, center center);
+    }
+
+    @include hover-focus {
+      background-color: $color-chat-select;
+
+      & > .menu-users,
+      & > .menu-blocked {
+        opacity: 1;
+      }
+
+      & > .menu-arrow {
+        @include icon($ic-arrow, 26px 26px, center center);
+      }
+    }
+  }
+
+  & > .menu-list {
+    display: none;
+    flex-direction: column;
+    position: absolute;
+    width: 239px;
+    height: calc(100% - 77px);
+    background: $color-white;
+    z-index: 999;
+
+    & > .list-title {
+      display: flex;
+      align-items: center;
+      align-content: center;
+      padding: 10px 20px;
+      box-sizing: border-box;
+      color: $color-black-border;
+      border-bottom: 1px solid $color-chat-border;
+      cursor: pointer;
+      @include hover-focus {
+        background-color: $color-chat-select;
+      }
+
+      & > .list-back {
+        display: flex;
+        width: 36px;
+        height: 36px;
+        @include icon($ic-back, 24px 24px, 0 center);
+      }
+
+      & > .list-text {
+        display: flex;
+      }
+    }
+
+    & > .list-body {
+      display: block;
+      flex-direction: column;
+      height: 100%;
+      max-height: calc(100% - 56px);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+  }
+}

@@ -1,0 +1,81 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.chat-top {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 80px;
+  box-sizing: border-box;
+  padding: 15px 20px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid $color-chat-border;
+  color: $color-black-border;
+
+  & > .chat-title {
+    max-width: 800px;
+    font-size: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+  }
+  & > .chat-title.is-group {
+    padding-left: 34px;
+    @include icon($ic-group, 27px 27px, 0 center);
+  }
+
+  & > .chat-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    width: 150px;
+    margin-left: 20px;
+
+    & > .button-invite {
+      width: 36px;
+      height: 36px;
+      border: 1px solid $color-chat-border;
+      margin-right: 10px;
+      cursor: pointer;
+      @include border-radius(4px);
+      @include icon($ic-group-add-normal, 20px 20px, center center);
+      @include hover-focus {
+        cursor: pointer;
+        border: 1px solid $color-black-border;
+        @include icon($ic-group-add, 20px 20px, center center);
+      }
+    }
+
+    & > .button-hide {
+      width: 36px;
+      height: 36px;
+      border: 1px solid $color-chat-border;
+      margin-right: 10px;
+      cursor: pointer;
+      @include border-radius(4px);
+      @include icon($ic-hide-normal, 20px 20px, center center);
+      @include hover-focus {
+        cursor: pointer;
+        border: 1px solid $color-black-border;
+        @include icon($ic-hide, 20px 20px, center center);
+      }
+    }
+
+    & > .button-leave {
+      width: 36px;
+      height: 36px;
+      border: 1px solid $color-chat-border;
+      cursor: pointer;
+      @include border-radius(4px);
+      @include icon($ic-leave-normal, 20px 20px, center center);
+      @include hover-focus {
+        cursor: pointer;
+        border: 1px solid $color-black-border;
+        @include icon($ic-leave, 20px 20px, center center);
+      }
+    }
+  }
+}

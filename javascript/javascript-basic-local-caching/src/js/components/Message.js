@@ -155,7 +155,7 @@ class Message {
   }
 
   _resendUserMessage() {
-    this.channel.resendUserMessage(this.message, (error, message) => {});
+    this.channel.resendUserMessage(this.message, (error, message) => { });
   }
 
   _createFileElement() {

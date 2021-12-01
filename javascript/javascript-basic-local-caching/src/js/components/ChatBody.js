@@ -34,17 +34,26 @@ class ChatBody {
 
     this.collection.setMessageCollectionHandler({
       onMessagesAdded: (context, channel, messages) => {
+        console.log('onMessagesAdded', { messages });
         this._mergeMessagesOnInsert(messages);
       },
       onMessagesUpdated: (context, channel, messages) => {
+        console.log('onMessagesUpdated', { messages });
         this._updateMessages(messages);
       },
       onMessagesDeleted: (context, channel, messages) => {
+        console.log('onMessagesDeleted', { messages });
         this._removeMessages(messages);
       },
-      onChannelUpdated: (context, channel) => {},
-      onChannelDeleted: (context, channel) => {},
-      onHugeGapDetected: () => {}
+      onChannelUpdated: (context, channel) => {
+        console.log('onChannelUpdated');
+      },
+      onChannelDeleted: (context, channel) => {
+        console.log('onChannelDeleted');
+      },
+      onHugeGapDetected: () => {
+        console.log('onHugeGapDetected');
+      }
     });
 
     this.element.addEventListener('scroll', () => {
@@ -149,9 +158,11 @@ class ChatBody {
     this.collection
       .initialize(sb.MessageCollection.MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API, new Date().getTime())
       .onCacheResult((error, messages) => {
+        console.log('onCacheResult');
         this._mergeMessagesOnInsert(messages);
       })
       .onApiResult((error, messages) => {
+        console.log('onApiResult');
         this.element.innerHTML = '';
         this._mergeMessagesOnInsert(messages);
         callback();

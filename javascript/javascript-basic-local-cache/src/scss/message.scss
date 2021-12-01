@@ -108,3 +108,6 @@
 .chat-message.is-failed {
   background: $color-message-not-sent;
 }
+.chat-message.is-pending {
+  color: $color-message-not-sent;
+}

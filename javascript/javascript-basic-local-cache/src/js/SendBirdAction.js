@@ -200,7 +200,7 @@ class SendBirdAction {
         });
         return;
       }
-      if (message.messageId === 0 && message.requestState === 'failed') {
+      if (message.messageId === 0 && (message.sendingStatus === 'pending' || message.sendingStatus === 'failed')) {
         col.deleteMessage(message);
         resolve(true);
       } else {

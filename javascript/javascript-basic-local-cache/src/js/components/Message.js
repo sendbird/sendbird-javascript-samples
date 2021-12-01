@@ -10,8 +10,9 @@ class Message {
   constructor({ channel, message, isManual = false, col = null }) {
     this.channel = channel;
     this.message = message;
-    this.isFailed = message.messageId === 0 && message.requestState === 'failed';
-    this.isManual = this.isFailed ? isManual : false;
+    this.isPending = message.messageId === 0 && message.sendingStatus === 'pending';
+    this.isFailed = message.messageId === 0 && message.sendingStatus === 'failed';
+    this.isManual = (this.isPending || this.isFailed) ? isManual : false;
     this.element = this._createElement();
     if (col) {
       this.col = col;
@@ -55,6 +56,11 @@ class Message {
     if (this.isFailed && !this.isManual) {
       root = createDivEl({
         className: [styles['chat-message'], styles['is-failed']],
+        id: this.message.reqId
+      });
+    } else if (this.isPending && !this.isManual) {
+      root = createDivEl({
+        className: [styles['chat-message'], styles['is-pending']],
         id: this.message.reqId
       });
     } else {

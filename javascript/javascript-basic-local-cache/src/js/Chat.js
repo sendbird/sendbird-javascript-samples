@@ -63,7 +63,7 @@ class Chat {
 
     /// reset manager when ChatMain is obsolete
     if (this.main && this.main.body && this.main.body.collection) {
-      this.main.body.collection.remove();
+      this.main.body.collection.dispose();
     }
     this.main = new ChatMain(channel);
   }

@@ -3,7 +3,7 @@ import { createDivEl, getDataInElement, removeClass, findMessageIndex, mergeFail
 import { Message } from './Message';
 import { SendBirdAction } from '../SendBirdAction';
 import { MESSAGE_REQ_ID } from '../const';
-import SendBirdSyncManager from 'sendbird-syncmanager';
+// import SendBirdSyncManager from 'sendbird-syncmanager';
 import { Spinner } from './Spinner';
 
 class ChatBody {
@@ -16,26 +16,63 @@ class ChatBody {
     this.element = createDivEl({ className: styles['chat-body'] });
     this._initElement();
     this.spinnerStarted = false;
+    this.messagesView = [];
   }
 
   _initElement() {
     if (this.collection) {
-      this.collection.remove();
+      // this.collection.remove();
+      this.collection.dispose();
     }
-    this.collection = new SendBirdSyncManager.MessageCollection(this.channel);
-    this.collection.limit = this.limit;
+    // this.collection = new SendBirdSyncManager.MessageCollection(this.channel);
+    // this.collection.limit = this.limit;
+    const action = SendBirdAction.getInstance();
+    const sb = action.sb;
+    const messageFilter = new sb.MessageFilter();
+    this.collection = this.channel
+      .createMessageCollection()
+      .setFilter(messageFilter)
+      .setStartingPoint(new Date().getTime())
+      .setLimit(this.limit)
+      .build();
 
-    const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
-    collectionHandler.onSucceededMessageEvent = this._messageEventHandler.bind(this);
-    collectionHandler.onFailedMessageEvent = this._messageEventHandler.bind(this);
-    collectionHandler.onPendingMessageEvent = this._messageEventHandler.bind(this);
-    collectionHandler.onNewMessage = (event) => { this._onNewMessageEventHandler(event, this.collection) };
-    this.collection.setCollectionHandler(collectionHandler);
+    // const collectionHandler = new SendBirdSyncManager.MessageCollection.CollectionHandler();
+    // collectionHandler.onSucceededMessageEvent = this._messageEventHandler.bind(this);
+    // collectionHandler.onFailedMessageEvent = this._messageEventHandler.bind(this);
+    // collectionHandler.onPendingMessageEvent = this._messageEventHandler.bind(this);
+    // collectionHandler.onNewMessage = (event) => { this._onNewMessageEventHandler(event, this.collection) };
+    // this.collection.setCollectionHandler(collectionHandler);
+    this.collection.setMessageCollectionHandler({
+      onMessagesAdded: (context, channel, messages) => {
+        this._mergeMessagesOnInsert(messages);
+      },
+      onMessagesUpdated: (context, channel, messages) => {
+        this._updateMessages(messages);
+      },
+      onMessagesDeleted: (context, channel, messages) => {
+        this._removeMessages(messages);
+      },
+      onChannelUpdated: (context, channel) => {},
+      onChannelDeleted: (context, channel) => {},
+      onHugeGapDetected: () => {}
+    });
+
+    this.collection
+      .initialize(sb.MessageCollection.MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API, new Date().getTime())
+      .onCacheResult((error, messages) => {
+        this._mergeMessagesOnInsert(messages);
+      })
+      .onApiResult((error, messages) => {
+        this._mergeMessagesOnInsert(messages);
+      });
 
     this.element.addEventListener('scroll', () => {
       if (this.element.scrollTop === 0) {
         this.updateCurrentScrollHeight();
-        this.collection.fetchSucceededMessages('prev', () => {
+        // this.collection.fetchSucceededMessages('prev', () => {
+        //   this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
+        // });
+        this.collection.loadPrevious().then(messages => {
           this.element.scrollTop = this.element.scrollHeight - this.scrollHeight;
         });
       }
@@ -47,71 +84,75 @@ class ChatBody {
     });
   }
 
-  _onNewMessageEventHandler(event, col) {
-    const messages = col.messages;
-    let isOnNewMessage = !(messages.every(message => (message.messageId !== event.messageId)));
+  // _onNewMessageEventHandler(event, col) {
+  //   const messages = col.messages;
+  //   let isOnNewMessage = !(messages.every(message => (message.messageId !== event.messageId)));
 
-    if (isOnNewMessage) {
-      if (this.element.scrollTop < this.element.scrollHeight - this.element.offsetHeight && !(document.getElementById('new-message-pop'))) {
-        const newMessagePop = document.createElement('div');
-        newMessagePop.setAttribute('id', 'new-message-pop');
-        newMessagePop.setAttribute('class', 'new-message-pop');
+  //   if (isOnNewMessage) {
+  //     if (this.element.scrollTop < this.element.scrollHeight - this.element.offsetHeight && !(document.getElementById('new-message-pop'))) {
+  //       const newMessagePop = document.createElement('div');
+  //       newMessagePop.setAttribute('id', 'new-message-pop');
+  //       newMessagePop.setAttribute('class', 'new-message-pop');
 
-        const popText = document.createElement('div');
-        popText.setAttribute('class', 'new-message-pop-text');
-        popText.innerText = 'check new message';
-        newMessagePop.appendChild(popText);
-        popText.addEventListener('click', () => {
-          newMessagePop.remove();
-          this.scrollToBottom();
-        });
+  //       const popText = document.createElement('div');
+  //       popText.setAttribute('class', 'new-message-pop-text');
+  //       popText.innerText = 'check new message';
+  //       newMessagePop.appendChild(popText);
+  //       popText.addEventListener('click', () => {
+  //         newMessagePop.remove();
+  //         this.scrollToBottom();
+  //       });
 
-        this.element.appendChild(newMessagePop);
-      }
-    } else {
-      console.log('There is no onNewMessage in collection');
-    }
-  }
+  //       this.element.appendChild(newMessagePop);
+  //     }
+  //   } else {
+  //     console.log('There is no onNewMessage in collection');
+  //   }
+  // }
 
-  _messageEventHandler(messages, action, reason) {
-    const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
-    messages.sort((a, b) => a.createdAt - b.createdAt);
-    switch (action) {
-      case 'insert': {
-        this._mergeMessagesOnInsert(messages);
-        break;
-      }
-      case 'update': {
-        if (reason === SendBirdSyncManager.MessageCollection.FailedMessageEventActionReason.UPDATE_RESEND_FAILED) {
-          this._updateMessages(messages, true);
-        } else {
-          this._updateMessages(messages);
-        }
-        break;
-      }
-      case 'remove': {
-        this._removeMessages(messages);
-        break;
-      }
-      case 'clear': {
-        this._clearMessages();
-        break;
-      }
-      default: break;
-    }
-    if (keepScrollToBottom) {
-      this.scrollToBottom();
-    }
-  }
+  // _messageEventHandler(messages, action, reason) {
+  //   const keepScrollToBottom = this.element.scrollTop >= this.element.scrollHeight - this.element.offsetHeight;
+  //   messages.sort((a, b) => a.createdAt - b.createdAt);
+  //   switch (action) {
+  //     case 'insert': {
+  //       this._mergeMessagesOnInsert(messages);
+  //       break;
+  //     }
+  //     case 'update': {
+  //       if (reason === SendBirdSyncManager.MessageCollection.FailedMessageEventActionReason.UPDATE_RESEND_FAILED) {
+  //         this._updateMessages(messages, true);
+  //       } else {
+  //         this._updateMessages(messages);
+  //       }
+  //       break;
+  //     }
+  //     case 'remove': {
+  //       this._removeMessages(messages);
+  //       break;
+  //     }
+  //     case 'clear': {
+  //       this._clearMessages();
+  //       break;
+  //     }
+  //     default: break;
+  //   }
+  //   if (keepScrollToBottom) {
+  //     this.scrollToBottom();
+  //   }
+  // }
 
   _mergeMessagesOnInsert(messages) {
-    const wholeCollectionMessages = mergeFailedWithSuccessful(
-      this.collection.unsentMessages,
-      this.collection.succeededMessages
-    );
+    // const wholeCollectionMessages = mergeFailedWithSuccessful(
+    //   this.collection.unsentMessages,
+    //   this.collection.succeededMessages
+    // );
+    // const wholeCollectionMessages = mergeFailedWithSuccessful(
+    //   this.collection.failedMessages,
+    //   this.collection.succeededMessages
+    // );
     for (let i in messages) {
       const message = messages[i];
-      const index = findMessageIndex(message, wholeCollectionMessages);
+      const index = findMessageIndex(message, this.collection.succeededMessages);
       if (index >= 0) {
         const messageElements = this.element.querySelectorAll('.chat-message');
         const messageItem = new Message({ channel: this.channel, message, col: this.collection });
@@ -124,6 +165,21 @@ class ChatBody {
         }
       }
     }
+    // for (let message of messages) {
+    //   const messageElements = this.element.querySelectorAll('.chat-message');
+    //   const replaceIndex = this.messagesView.findIndex(m => m.messageId === message.messageId);
+    //   // console.log(message.messageId, message.sendingStatus, { replaceIndex });
+    //   if (replaceIndex < 0) {
+    //     const insertIndex = this.messagesView.findIndex(m => m.messageId > message.messageId);
+    //     // console.log({ insertIndex });
+    //     this.messagesView.splice(insertIndex, 0, message);
+    //     const messageItem = new Message({ channel: this.channel, message, col: this.collection });
+    //     this.element.insertBefore(messageItem.element, messageElements[insertIndex]);
+    //   } else {
+    //     const messageItem = new Message({ channel: this.channel, message, col: this.collection });
+    //     this.element.replaceChild(messageItem.element, messageElements[replaceIndex]);
+    //   }
+    // }
   }
 
   _updateMessages(messages, transformToManual = false) {
@@ -145,7 +201,7 @@ class ChatBody {
 
   _removeMessages(messages) {
     if (
-      this.collection.unsentMessages.length > 0 &&
+      this.collection.pendingMessages.length > 0 &&
       messages.length > 0 &&
       messages[0].messageId === 0 &&
       !this.spinnerStarted
@@ -162,7 +218,7 @@ class ChatBody {
       this.removeMessage(message.reqId);
     }
     if (
-      (this.spinnerStarted && this.collection.unsentMessages.length === 0) ||
+      (this.spinnerStarted && this.collection.pendingMessages.length === 0) ||
       SendBirdAction.getInstance().getConnectionState() !== 'OPEN'
     ) {
       this.stopSpinner();
@@ -181,11 +237,20 @@ class ChatBody {
   }
 
   loadPreviousMessages(callback) {
-    this.collection.fetchSucceededMessages('prev', () => {
-      this.collection.fetchFailedMessages(() => {
-        if (callback) callback();
+    // this.collection.fetchSucceededMessages('prev', () => {
+    //   this.collection.fetchFailedMessages(() => {
+    //     if (callback) callback();
+    //   });
+    // });
+    this.collection
+      .loadPrevious()
+      .then(messages => {
+        this._mergeMessagesOnInsert(messages);
+        callback();
+      })
+      .catch(e => {
+        console.log({ e });
       });
-    });
   }
 
   scrollToBottom() {

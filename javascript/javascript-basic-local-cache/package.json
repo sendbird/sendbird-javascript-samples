@@ -1,7 +1,7 @@
 {
-  "name": "Sample-JS-Web-Basic-SyncManager",
-  "version": "1.0.4",
-  "description": "Sendbird Web Basic Sample using SyncManager",
+  "name": "sendbird-sample-javascript-local-caching",
+  "version": "1.0.0",
+  "description": "Sendbird Sample using Local Caching",
   "main": "index.js",
   "scripts": {
     "dev": "./node_modules/.bin/webpack --mode=development",
@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "moment": "^2.22.1",
-    "sendbird": "^3.0.111",
-    "sendbird-syncmanager": "^1.1.14"
+    "sendbird": "^3.1.1"
   }
 }

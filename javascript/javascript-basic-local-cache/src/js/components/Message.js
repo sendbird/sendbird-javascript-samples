@@ -149,9 +149,7 @@ class Message {
   }
 
   _resendUserMessage() {
-    this.channel.resendUserMessage(this.message, (message, err) => {
-      this.col.handleSendMessageResponse(err, message);
-    });
+    this.channel.resendUserMessage(this.message, (error, message) => {});
   }
 
   _createFileElement() {

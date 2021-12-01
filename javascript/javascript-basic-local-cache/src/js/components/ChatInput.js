@@ -37,16 +37,15 @@ class ChatInput {
         const previewMessage = SendBirdAction.getInstance().sendFileMessage({
           channel: this.channel,
           file: sendFile,
-          thumbnailSizes: [{ maxWidth: 240, maxHeight: 240 }, { maxWidth: 320, maxHeight: 320 }],
-          handler: (message, error) => {
-            if (!error) {
-              chat.main.body.collection.appendMessage(message);
-            }
+          thumbnailSizes: [
+            { maxWidth: 240, maxHeight: 240 },
+            { maxWidth: 320, maxHeight: 320 }
+          ],
+          handler: (error, message) => {
             chat.main.body.scrollToBottom();
           }
         });
         previewMessage.createdAt = new Date().getTime();
-        chat.main.body.collection.appendMessage(previewMessage);
       }
     });
 
@@ -71,12 +70,10 @@ class ChatInput {
             const previewMessage = SendBirdAction.getInstance().sendUserMessage({
               channel: this.channel,
               message,
-              handler: (message, error) => {
-                chat.main.body.collection.handleSendMessageResponse(error, message);
+              handler: (error, message) => {
                 chat.main.body.scrollToBottom();
               }
             });
-            chat.main.body.collection.appendMessage(previewMessage);
             channel.endTyping();
           }
         } else {

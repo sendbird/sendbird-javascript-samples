@@ -2,7 +2,6 @@ import { APP_ID as appId } from './const';
 import { isNull } from './utils';
 
 import SendBird from 'sendbird';
-import SendBirdSyncManager from 'sendbird-syncmanager';
 
 let instance = null;
 
@@ -12,8 +11,10 @@ class SendBirdAction {
       return instance;
     }
     this.sb = new SendBird({
-      appId
+      appId,
+      localCacheEnabled: true
     });
+    this.sb.setErrorFirstCallback(true);
     this.userQuery = null;
     this.groupChannelQuery = null;
     this.previousMessageQuery = null;
@@ -27,11 +28,11 @@ class SendBirdAction {
   connect(userId, nickname) {
     return new Promise((resolve, reject) => {
       const sb = SendBird.getInstance();
-      sb.connect(userId, (user, error) => {
+      sb.connect(userId, (error, user) => {
         if (error) {
           reject(error);
         } else {
-          sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (user, error) => {
+          sb.updateCurrentUserInfo(decodeURIComponent(nickname), null, (error, user) => {
             error ? reject(error) : resolve(user);
           });
         }
@@ -57,7 +58,7 @@ class SendBirdAction {
     }
     return new Promise((resolve, reject) => {
       if (this.userQuery.hasNext && !this.userQuery.isLoading) {
-        this.userQuery.next((list, error) => {
+        this.userQuery.next((error, list) => {
           error ? reject(error) : resolve(list);
         });
       } else {
@@ -67,8 +68,7 @@ class SendBirdAction {
   }
 
   isCurrentUser(user) {
-    const manager = SendBirdSyncManager.getInstance();
-    return user.userId === manager.currentUserId;
+    return user.userId === this.sb.currentUser.userId;
   }
 
   getBlockedList(isInit = false) {
@@ -78,7 +78,7 @@ class SendBirdAction {
     }
     return new Promise((resolve, reject) => {
       if (this.blockedQuery.hasNext && !this.blockedQuery.isLoading) {
-        this.blockedQuery.next((blockedList, error) => {
+        this.blockedQuery.next((error, blockedList) => {
           error ? reject(error) : resolve(blockedList);
         });
       } else {
@@ -90,11 +90,11 @@ class SendBirdAction {
   blockUser(user, isBlock = true) {
     return new Promise((resolve, reject) => {
       if (isBlock) {
-        this.sb.blockUser(user, (response, error) => {
+        this.sb.blockUser(user, (error, response) => {
           error ? reject(error) : resolve();
         });
       } else {
-        this.sb.unblockUser(user, (response, error) => {
+        this.sb.unblockUser(user, (error, response) => {
           error ? reject(error) : resolve();
         });
       }
@@ -106,7 +106,7 @@ class SendBirdAction {
    */
   getChannel(channelUrl) {
     return new Promise((resolve, reject) => {
-      this.sb.GroupChannel.getChannel(channelUrl, (groupChannel, error) => {
+      this.sb.GroupChannel.getChannel(channelUrl, (error, groupChannel) => {
         error ? reject(error) : resolve(groupChannel);
       });
     });
@@ -116,7 +116,7 @@ class SendBirdAction {
     return new Promise((resolve, reject) => {
       let params = new this.sb.GroupChannelParams();
       params.addUserIds(userIds);
-      this.sb.GroupChannel.createChannel(params, (groupChannel, error) => {
+      this.sb.GroupChannel.createChannel(params, (error, groupChannel) => {
         error ? reject(error) : resolve(groupChannel);
       });
     });
@@ -124,11 +124,11 @@ class SendBirdAction {
 
   inviteGroupChannel(channelUrl, userIds) {
     return new Promise((resolve, reject) => {
-      this.sb.GroupChannel.getChannel(channelUrl, (groupChannel, error) => {
+      this.sb.GroupChannel.getChannel(channelUrl, (error, groupChannel) => {
         if (error) {
           reject(error);
         } else {
-          groupChannel.inviteWithUserIds(userIds, (groupChannel, error) => {
+          groupChannel.inviteWithUserIds(userIds, (error, groupChannel) => {
             error ? reject(error) : resolve(groupChannel);
           });
         }
@@ -138,11 +138,11 @@ class SendBirdAction {
 
   leave(channelUrl) {
     return new Promise((resolve, reject) => {
-      this.sb.GroupChannel.getChannel(channelUrl, (groupChannel, error) => {
+      this.sb.GroupChannel.getChannel(channelUrl, (error, groupChannel) => {
         if (error) {
           reject(error);
         } else {
-          groupChannel.leave((response, error) => {
+          groupChannel.leave((error, response) => {
             error ? reject(error) : resolve();
           });
         }
@@ -152,11 +152,11 @@ class SendBirdAction {
 
   hide(channelUrl) {
     return new Promise((resolve, reject) => {
-      this.sb.GroupChannel.getChannel(channelUrl, (groupChannel, error) => {
+      this.sb.GroupChannel.getChannel(channelUrl, (error, groupChannel) => {
         if (error) {
           reject(error);
         } else {
-          groupChannel.hide((response, error) => {
+          groupChannel.hide((error, response) => {
             error ? reject(error) : resolve();
           });
         }
@@ -177,8 +177,8 @@ class SendBirdAction {
   }
 
   sendUserMessage({ channel, message, handler }) {
-    return channel.sendUserMessage(message, (message, error) => {
-      if (handler) handler(message, error);
+    return channel.sendUserMessage(message, (error, message) => {
+      if (handler) handler(error, message);
     });
   }
 
@@ -187,8 +187,8 @@ class SendBirdAction {
     fileMessageParams.file = file;
     fileMessageParams.thumbnailSizes = thumbnailSizes;
 
-    return channel.sendFileMessage(fileMessageParams, (message, error) => {
-      if (handler) handler(message, error);
+    return channel.sendFileMessage(fileMessageParams, (error, message) => {
+      if (handler) handler(error, message);
     });
   }
 
@@ -204,7 +204,7 @@ class SendBirdAction {
         col.deleteMessage(message);
         resolve(true);
       } else {
-        channel.deleteMessage(message, (response, error) => {
+        channel.deleteMessage(message, (error, response) => {
           error ? reject(error) : resolve(response);
         });
       }

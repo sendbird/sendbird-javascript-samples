@@ -11,7 +11,7 @@
     "start": "npm run build && node server.js",
     "deploy": "node ./deploy/deploy.js"
   },
-  "author": "SendBird",
+  "author": "Sendbird",
   "license": "ISC",
   "devDependencies": {
     "babel-core": "^6.26.0",

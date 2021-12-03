@@ -48,8 +48,10 @@ class ChatMain {
   loadInitialMessages() {
     const sendbirdAction = SendBirdAction.getInstance();
     this.body.loadInitialMessages(() => {
-      sendbirdAction.markAsRead(this.channel);
-      this.body.scrollToBottom();
+      this.body.loadPreviousMessages(() => {
+        sendbirdAction.markAsRead(this.channel);
+        this.body.scrollToBottom();
+      });
     });
   }
 }

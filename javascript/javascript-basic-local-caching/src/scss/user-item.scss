@@ -1,0 +1,77 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.user-item {
+  display: flex;
+  padding: 8px 20px 8px 20px;
+  border: 1px solid transparent;
+  border-bottom: 1px solid $color-gray-dark;
+  justify-content: space-between;
+  cursor: pointer;
+  @include hover-focus {
+    cursor: pointer;
+    border: 1px solid $color-purple-light;
+    @include border-radius(2px);
+  }
+
+  & > .user-info {
+    display: flex;
+    align-items: center;
+
+    & > .user-profile {
+      display: flex;
+      width: 40px;
+      height: 40px;
+      @include icon($ic-profile-default, 40px 40px, center center);
+    }
+
+    & > .user-nickname {
+      margin: 0 10px;
+      font-size: 18px;
+      max-width: 250px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      -ms-text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    & > .user-online {
+      display: flex;
+      width: 8px;
+      height: 8px;
+      border: 1px solid $color-black-text-light;
+      background-color: $color-black-text-light;
+      opacity: 0.4;
+      @include border-radius(50%);
+    }
+    & > .user-online.active {
+      border: 1px solid $color-green-online;
+      background-color: $color-green-online;
+      opacity: 1;
+    }
+  }
+
+  & > .user-state {
+    display: flex;
+    align-items: center;
+
+    & > .user-time {
+      display: flex;
+      color: $color-black-text-light;
+      margin-right: 10px;
+    }
+
+    & > .user-select {
+      display: flex;
+      width: 30px;
+      height: 30px;
+      opacity: 0.4;
+      @include icon($ic-check-unselect, 30px 30px, center center);
+    }
+    & > .user-select.active {
+      opacity: 1;
+      @include icon($ic-check-select, 30px 30px, center center);
+    }
+  }
+}

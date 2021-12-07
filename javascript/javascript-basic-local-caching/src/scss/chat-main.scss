@@ -1,0 +1,18 @@
+@import 'mixins';
+@import 'variables';
+
+.chat-main-root {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+
+  & > .chat-main {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+  }
+}

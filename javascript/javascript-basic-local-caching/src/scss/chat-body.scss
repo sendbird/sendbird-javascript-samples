@@ -1,0 +1,35 @@
+@import 'mixins';
+@import 'variables';
+@import 'icons';
+
+.chat-body {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 0;
+
+  & > .new-message-pop {
+    margin: 0px 10px;
+    display: flex;
+    width: inherit;
+
+    position: sticky;
+    bottom: -10px;
+    background-color: $color-white;
+    border: 5px solid $color-blue;
+    border-radius: 10px;
+
+    & > .new-message-pop-text {
+      margin-left: 30px;
+      height: 30px;
+      font-size: 24px;
+      color: $color-blue;
+      @include hover-focus {
+        cursor: pointer;
+      }
+    }
+  }
+}

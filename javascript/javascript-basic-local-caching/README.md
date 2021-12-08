@@ -1,11 +1,11 @@
 # Sendbird Local Caching for JavaScript sample
 ![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
 ![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
-[![npm](https://img.shields.io/npm/v/sendbird-syncmanager.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird-syncmanager)
+[![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
 
 ## Introduction
 
-Local Caching enables Sendbird Chat SDK for Javascript to locally cache and retrieve group channel and message data. This facilitates offline messaging by allowing the SDK to create a channel list view or a chat view in a prompt manner and display them even when a client app is in offline mode. Provided here is a Local Caching for Javascript sample to experience first-hand the benefits of Sendbird's Local Caching.
+Local Caching enables Sendbird Chat SDK for JavaScript to locally cache and retrieve group channel and message data. This facilitates offline messaging by allowing the SDK to create a channel list view or a chat view in a prompt manner and display them even when a client app is in offline mode. Provided here is a Local Caching for JavaScript sample to experience first-hand the benefits of Sendbird's Local Caching.
 
 ### Benefits
 
@@ -18,13 +18,13 @@ Find out more about Sendbird Local Caching for JavaScript at [Local Caching for 
 <br />
 
 ## Before getting started
-This section provides the prerequisites for testing Sendbird Desk for Javascript sample app.
+This section provides the prerequisites for testing Sendbird Desk for JavaScript sample app.
 
 ### Requirements
-The minimum requirements for Local Caching for Javascript are:
-- Node. js v10+
+The minimum requirements for Local Caching for JavaScript are:
+- Node.js v10+
 - NPM v6+
-- [Chat SDK for JavaScript](https://github.com/sendbird/SendBird-SDK-JavaScript) v3.0 115+
+- [Chat SDK for JavaScript](https://github.com/sendbird/SendBird-SDK-JavaScript) v3.1.0 or higher
 
 ### Try the sample app using your data 
 
@@ -34,7 +34,7 @@ If you would like to try the sample app specifically fit to your usage, you can 
 
 ## Getting started
 
-You can install and run SyncManager for JavaScript sample app on your system using `npm`.
+You can install and run Local Caching for JavaScript sample app on your system using `npm`.
 
 ### Install packages
 

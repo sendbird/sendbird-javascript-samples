@@ -35,7 +35,7 @@ The Sendbird React Native framework allows you to simplify development for iOS a
 
 ### JavaScript
 
-- [**JavaScript chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript/javascript-basic-sample) is a Slack-like full screen chat sample for desktop browsers using both Group channels and open channels.
+- [**JavaScript chat sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript/javascript-basic) is a Slack-like full screen chat sample for desktop browsers using both Group channels and open channels.
 
 - [**JavaScript widget sample**](https://github.com/sendbird/SendBird-JavaScript/tree/master/javascript/javascript-widget) is a Facebook-chat-like chat widget for websites.
  

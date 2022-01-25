@@ -33,8 +33,8 @@ Sendbird React Native sample using [Sendbird SDK](https://github.com/sendbird/Se
 
 5. Run the sample. Before starting, you should launch device emulator (or actual device) to run the sample in Android. This sample is not available for real device in iOS due to Apple Development Policy. In order to run React Native sample in real device, follow [React Native official guide](https://facebook.github.io/react-native/docs/running-on-device.html) for your own setup
 
-        react-native run-android
-        react-native run-ios
+        npx react-native run-android
+        npx react-native run-ios
 
 For iOS, you may also launch directly from Xcode
 
@@ -61,3 +61,4 @@ You don't need to do manual linking, i.e. `react-native link <package-name>`
     - If you run on real device, check if everything installed and especially Android studio 
     - Check if your device is visible by `adb devices`, sometimes it may not work or have lags. In this case call: `adb kill-server` and `adb start-server`
     - You might build the project using `react-native run-android`, but if it fails you might need to run it with Android studio
+    - If you can't load bundle from 8081 port, run `adb reverse tcp:8081 tcp:8081` and restart app.

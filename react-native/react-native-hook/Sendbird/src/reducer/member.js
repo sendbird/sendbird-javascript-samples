@@ -9,12 +9,14 @@ export const memberReducer = (state, action) => {
       if (!state.members.map(m => m.userId).includes(user.userId)) {
         return { ...state, members: [...state.members, user], error: '' };
       }
+      break;
     }
     case 'remove-member': {
       const { user } = action.payload || {};
       if (state.members.map(m => m.userId).includes(user.userId)) {
         return { ...state, members: state.members.filter(m => m.userId !== user.userId), error: '' };
       }
+      break;
     }
     case 'error': {
       const { error } = action.payload || {};

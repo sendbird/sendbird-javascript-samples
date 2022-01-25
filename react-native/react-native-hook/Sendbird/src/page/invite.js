@@ -7,7 +7,7 @@ import {
   FlatList,
   RefreshControl,
   TouchableOpacity,
-  AppState
+  AppState,
 } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -27,7 +27,7 @@ const Invite = props => {
     userMap: {},
     selectedUsers: [],
     loading: false,
-    error: ''
+    error: '',
   });
 
   useLayoutEffect(() => {
@@ -39,14 +39,14 @@ const Invite = props => {
       </View>
     );
     navigation.setOptions({
-      headerRight: () => right
+      headerRight: () => right,
     });
   });
 
   // on state change
   useEffect(() => {
     sendbird.addConnectionHandler('invite', connectionHandler);
-    AppState.addEventListener('change', handleStateChange);
+    const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -56,8 +56,8 @@ const Invite = props => {
           dispatch({
             type: 'error',
             payload: {
-              error: 'Connection failed. Please check the network status.'
-            }
+              error: 'Connection failed. Please check the network status.',
+            },
           });
         }
       });
@@ -68,12 +68,14 @@ const Invite = props => {
     return () => {
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('invite');
-      AppState.removeEventListener('change', handleStateChange);
+      unsubscribe.remove();
     };
   }, []);
 
   useEffect(() => {
-    if (query) next();
+    if (query) {
+      next();
+    }
   }, [query]);
 
   /// on connection event
@@ -82,16 +84,16 @@ const Invite = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connecting..'
-      }
+        error: 'Connecting..',
+      },
     });
   };
   connectionHandler.onReconnectSucceeded = () => {
     dispatch({
       type: 'error',
       payload: {
-        error: ''
-      }
+        error: '',
+      },
     });
     refresh();
   };
@@ -99,8 +101,8 @@ const Invite = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connection failed. Please check the network status.'
-      }
+        error: 'Connection failed. Please check the network status.',
+      },
     });
   };
 
@@ -111,51 +113,37 @@ const Invite = props => {
       sendbird.setBackgroundState();
     }
   };
-  const invite = () => {
+  const invite = async () => {
     if (state.selectedUsers.length > 0) {
       dispatch({ type: 'start-loading' });
-      if (!channel) {
-        const params = new sendbird.GroupChannelParams();
-        params.addUsers(state.selectedUsers);
-        sendbird.GroupChannel.createChannel(params, (err, channel) => {
-          if (!err) {
-            dispatch({ type: 'end-loading' });
-            navigation.dispatch(
-              StackActions.replace('Chat', {
-                currentUser,
-                channel
-              })
-            );
-          } else {
-            dispatch({
-              type: 'error',
-              payload: {
-                error: err.message
-              }
-            });
-          }
-        });
-      } else {
-        channel.invite(state.selectedUsers, (err, _) => {
-          if (!err) {
-            dispatch({ type: 'end-loading' });
-            navigation.goBack();
-          } else {
-            dispatch({
-              type: 'error',
-              payload: {
-                error: err.message
-              }
-            });
-          }
+      try {
+        if (!channel) {
+          const params = new sendbird.GroupChannelParams();
+          params.addUsers(state.selectedUsers);
+          const createdChannel = await sendbird.GroupChannel.createChannel(params);
+
+          dispatch({ type: 'end-loading' });
+          navigation.dispatch(
+            StackActions.replace('Chat', {
+              currentUser,
+              channel: createdChannel,
+            }),
+          );
+        } else {
+          await channel.invite(state.selectedUsers);
+          dispatch({ type: 'end-loading' });
+          navigation.goBack();
+        }
+      } catch (err) {
+        dispatch({
+          type: 'error',
+          payload: { error: err.message },
         });
       }
     } else {
       dispatch({
         type: 'error',
-        payload: {
-          error: 'Select at least 1 user to invite.'
-        }
+        payload: { error: 'Select at least 1 user to invite.' },
       });
     }
   };
@@ -172,14 +160,14 @@ const Invite = props => {
         if (!err) {
           dispatch({
             type: 'fetch-users',
-            payload: { users: fetchedUsers }
+            payload: { users: fetchedUsers },
           });
         } else {
           dispatch({
             type: 'error',
             payload: {
-              error: 'Failed to get the users.'
-            }
+              error: 'Failed to get the users.',
+            },
           });
         }
       });
@@ -230,19 +218,19 @@ const Invite = props => {
 
 const style = {
   container: {
-    flex: 1
+    flex: 1,
   },
   inviteButton: {
-    marginRight: 12
+    marginRight: 12,
   },
   errorContainer: {
     backgroundColor: '#333',
     opacity: 0.8,
-    padding: 10
+    padding: 10,
   },
   error: {
-    color: '#fff'
-  }
+    color: '#fff',
+  },
 };
 
 export default withAppContext(Invite);

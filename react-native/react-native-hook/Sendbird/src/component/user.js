@@ -30,20 +30,20 @@ const style = {
     paddingHorizontal: 20,
     paddingTop: 15,
     paddingBottom: 8,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   profileImageContainer: {
     position: 'relative',
     width: 40,
     height: 40,
-    marginRight: 12
+    marginRight: 12,
   },
   profileImage: {
     position: 'absolute',
     width: 40,
     height: 40,
     borderWidth: 0,
-    borderRadius: 20
+    borderRadius: 20,
   },
   check: {
     position: 'absolute',
@@ -52,12 +52,12 @@ const style = {
     opacity: 0.6,
     borderWidth: 0,
     borderRadius: 20,
-    backgroundColor: '#666'
+    backgroundColor: '#666',
   },
   nickname: {
     fontSize: 18,
-    color: '#666'
-  }
+    color: '#666',
+  },
 };
 
 export default withAppContext(User);

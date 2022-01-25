@@ -8,7 +8,7 @@ import {
   Animated,
   Keyboard,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import { withAppContext } from '../context';
 import { profileReducer } from '../reducer/profile';
@@ -20,7 +20,7 @@ const Profile = props => {
   const [state, dispatch] = useReducer(profileReducer, {
     nickname: currentUser.nickname,
     error: '',
-    updating: false
+    updating: false,
   });
 
   const showErrorFadeDuration = 200;
@@ -33,14 +33,14 @@ const Profile = props => {
       Animated.timing(fade, {
         toValue: 1,
         duration: showErrorFadeDuration,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(fade, {
         toValue: 0,
         delay: showErrorDuration,
         duration: showErrorFadeDuration,
-        useNativeDriver: true
-      })
+        useNativeDriver: true,
+      }),
     ]).start();
   };
   const saveNickname = () => {
@@ -93,8 +93,8 @@ const Profile = props => {
 
 const style = {
   container: {
-    flex: 1
-  }
+    flex: 1,
+  },
 };
 
 export default withAppContext(Profile);

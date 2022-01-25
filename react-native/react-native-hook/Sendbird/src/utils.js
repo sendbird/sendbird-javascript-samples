@@ -1,4 +1,4 @@
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions } from '@react-navigation/native';
 
 import notifee from '@notifee/react-native';
@@ -18,7 +18,7 @@ export const createChannelName = channel => {
         `${nicknames.slice(0, channelNameMaxMembers + 1).join(', ')} and ${
           nicknames.length - channelNameMaxMembers
         } others`,
-        channelNameEllipsisLength
+        channelNameEllipsisLength,
       );
     } else {
       return ellipsis(`${nicknames.join(', ')}`, channelNameEllipsisLength);
@@ -37,7 +37,7 @@ export const onRemoteMessage = async remoteMessage => {
   // Set the channel for Android
   const channelId = await notifee.createChannel({
     id: 'SendbirdNotificationChannel',
-    name: 'Sendbird RN Sample'
+    name: 'Sendbird RN Sample',
   });
 
   if (remoteMessage && remoteMessage.data) {
@@ -47,7 +47,7 @@ export const onRemoteMessage = async remoteMessage => {
     const message = JSON.parse(remoteMessage.data.sendbird);
     let channelUrl = null;
     if (message && message.channel) {
-      channelUrl = message.channel['channel_url'];
+      channelUrl = message.channel.channel_url;
     }
     pushActionId += channelUrl;
 
@@ -61,9 +61,9 @@ export const onRemoteMessage = async remoteMessage => {
         channelId,
         pressAction: {
           id: pushActionId,
-          launchActivity: 'default'
-        }
-      }
+          launchActivity: 'default',
+        },
+      },
     });
   }
 };
@@ -76,7 +76,7 @@ export const handleNotificationAction = async (navigation, sendbird, currentUser
     if (remoteMessage && remoteMessage.data) {
       const message = JSON.parse(remoteMessage.data.sendbird);
       if (message && message.channel) {
-        const channel = await sendbird.GroupChannel.getChannel(message.channel['channel_url']);
+        const channel = await sendbird.GroupChannel.getChannel(message.channel.channel_url);
         navigation.dispatch(state => {
           const lobbyIndex = state.routes.findIndex(route => route.name === 'Lobby');
           const newRoute = { name: 'Chat', params: { channel, currentUser } };

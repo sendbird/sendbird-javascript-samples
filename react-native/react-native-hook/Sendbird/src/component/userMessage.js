@@ -11,22 +11,19 @@ const UserMessage = props => {
   const [readReceipt, setReadReceipt] = useState(channel.members.length - 1);
 
   useEffect(() => {
+    const channelHandler = new sendbird.ChannelHandler();
+    channelHandler.onReadReceiptUpdated = targetChannel => {
+      if (targetChannel.url === channel.url) {
+        setReadReceipt(channel.getUnreadMemberCount(message));
+      }
+    };
+
     sendbird.addChannelHandler(`message-${message.reqId}`, channelHandler);
-    setReadReceipt(channel.getReadReceipt(message));
+    setReadReceipt(channel.getUnreadMemberCount(message));
     return () => {
       sendbird.removeChannelHandler(`message-${message.reqId}`);
     };
   }, []);
-
-  const channelHandler = new sendbird.ChannelHandler();
-  channelHandler.onReadReceiptUpdated = targetChannel => {
-    if (targetChannel.url === channel.url) {
-      const newReadReceipt = channel.getReadReceipt(message);
-      if (newReadReceipt !== readReceipt) {
-        setReadReceipt(newReadReceipt);
-      }
-    }
-  };
 
   return (
     <TouchableOpacity
@@ -35,7 +32,7 @@ const UserMessage = props => {
       onLongPress={() => onLongPress(message)}
       style={{
         ...style.container,
-        flexDirection: isMyMessage ? 'row-reverse' : 'row'
+        flexDirection: isMyMessage ? 'row-reverse' : 'row',
       }}
     >
       <View style={style.profileImageContainer}>
@@ -65,53 +62,53 @@ const UserMessage = props => {
 const style = {
   container: {
     paddingHorizontal: 4,
-    marginVertical: 2
+    marginVertical: 2,
   },
   profileImageContainer: {
     width: 32,
     height: 32,
-    marginHorizontal: 8
+    marginHorizontal: 8,
   },
   profileImage: {
     width: 32,
     height: 32,
     borderWidth: 0,
     borderRadius: 16,
-    marginTop: 20
+    marginTop: 20,
   },
   content: {
     alignSelf: 'center',
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   nickname: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#888',
-    marginHorizontal: 8
+    marginHorizontal: 8,
   },
   messageBubble: {
     maxWidth: 240,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    marginTop: 2
+    marginTop: 2,
   },
   message: {
-    fontSize: 18
+    fontSize: 18,
   },
   status: {
     alignSelf: 'flex-end',
     marginHorizontal: 3,
-    marginBottom: 3
+    marginBottom: 3,
   },
   readReceipt: {
     fontSize: 12,
-    color: '#f89'
+    color: '#f89',
   },
   updatedAt: {
     fontSize: 12,
-    color: '#999'
-  }
+    color: '#999',
+  },
 };
 
 export default withAppContext(UserMessage);

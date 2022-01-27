@@ -2,7 +2,7 @@ import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 
 import { withAppContext } from '../context';
@@ -17,14 +17,14 @@ const Lobby = props => {
   const savedUserKey = 'savedUser';
 
   useLayoutEffect(() => {
-    const title = !!currentUser ? (
+    const title = currentUser ? (
       <View style={style.headerLeftContainer}>
         <Image source={require('../asset/logo-icon-white.png')} style={style.logo} />
         <Text style={style.headerTitle}>Channels</Text>
       </View>
     ) : null;
 
-    const right = !!currentUser ? (
+    const right = currentUser ? (
       <View style={style.headerRightContainer}>
         <TouchableOpacity activeOpacity={0.85} style={style.profileButton} onPress={startChat}>
           <Icon name="chat" color="#fff" size={28} />
@@ -35,7 +35,7 @@ const Lobby = props => {
     navigation.setOptions({
       headerShown: !!currentUser,
       headerTitle: () => title,
-      headerRight: () => right
+      headerRight: () => right,
     });
   }, [currentUser]);
 
@@ -63,10 +63,10 @@ const Lobby = props => {
           ) {
             if (Platform.OS === 'ios') {
               const token = await messaging().getAPNSToken();
-              await sendbird.registerAPNSPushTokenForCurrentUser(token);
+              sendbird.registerAPNSPushTokenForCurrentUser(token);
             } else {
               const token = await messaging().getToken();
-              await sendbird.registerGCMPushTokenForCurrentUser(token);
+              sendbird.registerGCMPushTokenForCurrentUser(token);
             }
           }
         } catch (err) {
@@ -74,6 +74,12 @@ const Lobby = props => {
         }
       })
       .catch(err => console.error(err));
+  };
+
+  const logout = async () => {
+    await AsyncStorage.removeItem(savedUserKey);
+    sendbird.disconnect();
+    setCurrentUser(null);
   };
 
   const startChat = () => {
@@ -104,29 +110,26 @@ const Lobby = props => {
 
 const style = {
   headerLeftContainer: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   headerRightContainer: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16
+    marginRight: 16,
   },
   headerTitle: {
     fontSize: 20,
-    color: '#fff'
+    color: '#fff',
   },
   logo: {
     width: 32,
-    height: 32
+    height: 32,
   },
   profileButton: {
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 };
 
 export default withAppContext(Lobby);

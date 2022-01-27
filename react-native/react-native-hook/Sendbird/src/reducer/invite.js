@@ -7,7 +7,7 @@ export const inviteReducer = (state, action) => {
         userMap: {},
         selectedUsers: [],
         loading: false,
-        error: ''
+        error: '',
       };
     }
     case 'fetch-users': {
@@ -34,7 +34,7 @@ export const inviteReducer = (state, action) => {
       return {
         ...state,
         userMap,
-        users: mergedUsers
+        users: mergedUsers,
       };
     }
     case 'select-user': {
@@ -43,7 +43,7 @@ export const inviteReducer = (state, action) => {
         return {
           ...state,
           error: '',
-          selectedUsers: [...state.selectedUsers, user]
+          selectedUsers: [...state.selectedUsers, user],
         };
       }
       break;
@@ -54,7 +54,7 @@ export const inviteReducer = (state, action) => {
         return {
           ...state,
           error: '',
-          selectedUsers: state.selectedUsers.filter(u => u.userId !== user.userId)
+          selectedUsers: state.selectedUsers.filter(u => u.userId !== user.userId),
         };
       }
       break;

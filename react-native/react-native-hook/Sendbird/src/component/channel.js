@@ -96,7 +96,7 @@ const style = {
     flexDirection: 'row',
     backgroundColor: '#f1f2f6',
     paddingHorizontal: 20,
-    paddingVertical: 15
+    paddingVertical: 15,
   },
   profileImage: {
     width: 44,
@@ -104,26 +104,26 @@ const style = {
     borderWidth: 1,
     borderRadius: 22,
     marginRight: 15,
-    backgroundColor: '#fff'
+    backgroundColor: '#fff',
   },
   contentContainer: {
     flex: 1,
     position: 'relative',
     alignSelf: 'center',
-    paddingBottom: 2
+    paddingBottom: 2,
   },
   name: {
     fontSize: 16,
     fontWeight: '100',
     color: '#333',
-    marginBottom: 2
+    marginBottom: 2,
   },
   lastMessage: {
     fontSize: 14,
-    color: '#999'
+    color: '#999',
   },
   propertyContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   unreadMessageCountContainer: {
     minWidth: 20,
@@ -131,18 +131,18 @@ const style = {
     borderRadius: 10,
     backgroundColor: '#742ddd',
     alignSelf: 'flex-end',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   unreadMessageCount: {
     fontSize: 12,
-    color: '#fff'
+    color: '#fff',
   },
   updatedAt: {
     fontSize: 12,
     color: '#999',
     marginTop: 2,
-    marginBottom: 4
-  }
+    marginBottom: 4,
+  },
 };
 
 export default withAppContext(Channel);

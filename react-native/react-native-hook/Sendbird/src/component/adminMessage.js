@@ -18,12 +18,12 @@ const style = {
   container: {
     width: '100%',
     alignItems: 'center',
-    paddingVertical: 12
+    paddingVertical: 12,
   },
   message: {
     fontSize: 18,
-    color: '#ccc'
-  }
+    color: '#ccc',
+  },
 };
 
 export default withAppContext(AdminMessage);

@@ -9,12 +9,11 @@ import {
   AppState,
   TextInput,
   Alert,
-  Platform
+  Platform,
 } from 'react-native';
 
 import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
-import RNFS from 'react-native-fs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import { withAppContext } from '../context';
@@ -35,7 +34,7 @@ const Chat = props => {
     loading: false,
     input: '',
     empty: '',
-    error: ''
+    error: '',
   });
 
   useLayoutEffect(() => {
@@ -52,14 +51,14 @@ const Chat = props => {
 
     navigation.setOptions({
       title: createChannelName(channel),
-      headerRight: () => right
+      headerRight: () => right,
     });
   });
   // on state change
   useEffect(() => {
     sendbird.addConnectionHandler('chat', connectionHandler);
     sendbird.addChannelHandler('chat', channelHandler);
-    AppState.addEventListener('change', handleStateChange);
+    const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -69,8 +68,8 @@ const Chat = props => {
           dispatch({
             type: 'error',
             payload: {
-              error: 'Connection failed. Please check the network status.'
-            }
+              error: 'Connection failed. Please check the network status.',
+            },
           });
         }
       });
@@ -81,13 +80,15 @@ const Chat = props => {
     return () => {
       sendbird.removeConnectionHandler('chat');
       sendbird.removeChannelHandler('chat');
-      AppState.removeEventListener('change', handleStateChange);
+      unsubscribe.remove();
     };
   }, []);
 
   /// on query refresh
   useEffect(() => {
-    if (query) next();
+    if (query) {
+      next();
+    }
   }, [query]);
 
   /// on connection event
@@ -96,16 +97,16 @@ const Chat = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connecting..'
-      }
+        error: 'Connecting..',
+      },
     });
   };
   connectionHandler.onReconnectSucceeded = () => {
     dispatch({
       type: 'error',
       payload: {
-        error: ''
-      }
+        error: '',
+      },
     });
     refresh();
   };
@@ -113,8 +114,8 @@ const Chat = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connection failed. Please check the network status.'
-      }
+        error: 'Connection failed. Please check the network status.',
+      },
     });
   };
 
@@ -122,7 +123,7 @@ const Chat = props => {
   const channelHandler = new sendbird.ChannelHandler();
   channelHandler.onMessageReceived = (targetChannel, message) => {
     if (targetChannel.url === channel.url) {
-      dispatch({ type: 'receive-message', payload: { message } });
+      dispatch({ type: 'receive-message', payload: { message, channel } });
     }
   };
   channelHandler.onMessageUpdated = (targetChannel, message) => {
@@ -139,14 +140,14 @@ const Chat = props => {
     if (user.userId === currentUser.userId) {
       navigation.navigate('Lobby', {
         action: 'leave',
-        data: { channel }
+        data: { channel },
       });
     }
   };
   channelHandler.onChannelDeleted = (channelUrl, channelType) => {
     navigation.navigate('Lobby', {
       action: 'delete',
-      data: { channel }
+      data: { channel },
     });
   };
 
@@ -168,10 +169,10 @@ const Chat = props => {
         onPress: () => {
           navigation.navigate('Lobby', {
             action: 'leave',
-            data: { channel }
+            data: { channel },
           });
-        }
-      }
+        },
+      },
     ]);
   };
   const refresh = () => {
@@ -224,23 +225,22 @@ const Chat = props => {
       } else if (Platform.OS === 'ios') {
         // TODO:
       }
-      const result = await DocumentPicker.pick({
+      const result = await DocumentPicker.pickSingle({
         type: [
           DocumentPicker.types.images,
           DocumentPicker.types.video,
           DocumentPicker.types.audio,
           DocumentPicker.types.plainText,
-          DocumentPicker.types.zip
-        ]
+          DocumentPicker.types.zip,
+        ],
       });
-      const copyPath = `${RNFS.TemporaryDirectoryPath}/${result.name}`;
-      await RNFS.copyFile(result.uri, copyPath);
 
-      const fileStat = await RNFS.stat(copyPath);
       const params = new sendbird.FileMessageParams();
       params.file = {
-        ...result,
-        uri: `file://${fileStat.path}`
+        size: result.size,
+        uri: result.uri,
+        name: result.name,
+        type: result.type,
       };
       dispatch({ type: 'start-loading' });
       channel.sendFileMessage(params, (err, message) => {
@@ -351,50 +351,50 @@ const Chat = props => {
 
 const style = {
   container: {
-    flex: 1
+    flex: 1,
   },
   headerRightContainer: {
-    flexDirection: 'row'
+    flexDirection: 'row',
   },
   headerRightButton: {
-    marginRight: 10
+    marginRight: 10,
   },
   errorContainer: {
     backgroundColor: '#333',
     opacity: 0.8,
-    padding: 10
+    padding: 10,
   },
   error: {
-    color: '#fff'
+    color: '#fff',
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   empty: {
     fontSize: 24,
     color: '#999',
-    alignSelf: 'center'
+    alignSelf: 'center',
   },
   inputContainer: {
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingVertical: 4,
     paddingHorizontal: 10,
-    alignItems: 'center'
+    alignItems: 'center',
   },
   input: {
     flex: 1,
     fontSize: 20,
-    color: '#555'
+    color: '#555',
   },
   uploadButton: {
-    marginRight: 10
+    marginRight: 10,
   },
   sendButton: {
-    marginLeft: 10
-  }
+    marginLeft: 10,
+  },
 };
 
 export default withAppContext(Chat);

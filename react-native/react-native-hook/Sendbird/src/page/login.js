@@ -9,7 +9,7 @@ import {
   Animated,
   Keyboard,
   StatusBar,
-  SafeAreaView
+  SafeAreaView,
 } from 'react-native';
 import { loginReducer } from '../reducer/login';
 
@@ -19,7 +19,7 @@ const Login = props => {
     userId: '',
     nickname: '',
     error: '',
-    connecting: false
+    connecting: false,
   });
 
   const showErrorFadeDuration = 200;
@@ -32,14 +32,14 @@ const Login = props => {
       Animated.timing(fade, {
         toValue: 1,
         duration: showErrorFadeDuration,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
       Animated.timing(fade, {
         toValue: 0,
         delay: showErrorDuration,
         duration: showErrorFadeDuration,
-        useNativeDriver: true
-      })
+        useNativeDriver: true,
+      }),
     ]).start();
   };
   const connect = () => {
@@ -73,7 +73,9 @@ const Login = props => {
     }
   };
   const start = user => {
-    if (onLogin) onLogin(user);
+    if (onLogin) {
+      onLogin(user);
+    }
   };
   return (
     <>
@@ -116,32 +118,32 @@ const Login = props => {
 
 const style = {
   container: {
-    flex: 1
+    flex: 1,
   },
   logoContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 100
+    marginBottom: 100,
   },
   logo: {
     width: 300,
     height: 51,
     marginTop: 200,
-    resizeMode: 'stretch'
+    resizeMode: 'stretch',
   },
   subtitle: {
     color: '#999',
     fontSize: 18,
     marginTop: 10,
-    marginBottom: 30
+    marginBottom: 30,
   },
   loginForm: {
     justifyContent: 'flex-end',
     alignItems: 'stretch',
     paddingLeft: 48,
     paddingRight: 48,
-    paddingBottom: 36
+    paddingBottom: 36,
   },
   loginInput: {
     height: 48,
@@ -151,14 +153,14 @@ const style = {
     borderWidth: 0.2,
     borderRadius: 5,
     marginBottom: 8,
-    alignSelf: 'stretch'
+    alignSelf: 'stretch',
   },
   loginError: {
     fontSize: 18,
     color: '#d44',
     textAlign: 'center',
     alignSelf: 'stretch',
-    marginBottom: 10
+    marginBottom: 10,
   },
   loginButton: {
     height: 48,
@@ -168,12 +170,12 @@ const style = {
     borderRadius: 5,
     marginBottom: 8,
     alignSelf: 'stretch',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   loginButtonLabel: {
     color: '#fff',
-    fontSize: 18
-  }
+    fontSize: 18,
+  },
 };
 
 export default Login;

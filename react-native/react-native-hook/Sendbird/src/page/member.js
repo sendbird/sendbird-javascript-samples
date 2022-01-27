@@ -11,7 +11,7 @@ const Member = props => {
   const { currentUser, channel } = route.params;
   const [state, dispatch] = useReducer(memberReducer, {
     members: channel.members,
-    error: ''
+    error: '',
   });
 
   useLayoutEffect(() => {
@@ -23,7 +23,7 @@ const Member = props => {
       </View>
     );
     navigation.setOptions({
-      headerRight: () => right
+      headerRight: () => right,
     });
   });
 
@@ -31,7 +31,7 @@ const Member = props => {
   useEffect(() => {
     sendbird.addConnectionHandler('member', connectionHandler);
     sendbird.addChannelHandler('member', channelHandler);
-    AppState.addEventListener('change', handleStateChange);
+    const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -41,8 +41,8 @@ const Member = props => {
           dispatch({
             type: 'error',
             payload: {
-              error: 'Connection failed. Please check the network status.'
-            }
+              error: 'Connection failed. Please check the network status.',
+            },
           });
         }
       });
@@ -53,7 +53,7 @@ const Member = props => {
     return () => {
       sendbird.removeConnectionHandler('member');
       sendbird.removeChannelHandler('member');
-      AppState.removeEventListener('change', handleStateChange);
+      unsubscribe.remove();
     };
   }, []);
 
@@ -63,16 +63,16 @@ const Member = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connecting..'
-      }
+        error: 'Connecting..',
+      },
     });
   };
   connectionHandler.onReconnectSucceeded = () => {
     dispatch({
       type: 'error',
       payload: {
-        error: ''
-      }
+        error: '',
+      },
     });
     refresh();
   };
@@ -80,8 +80,8 @@ const Member = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connection failed. Please check the network status.'
-      }
+        error: 'Connection failed. Please check the network status.',
+      },
     });
   };
 
@@ -138,19 +138,19 @@ const Member = props => {
 
 const style = {
   container: {
-    flex: 1
+    flex: 1,
   },
   inviteButton: {
-    marginRight: 12
+    marginRight: 12,
   },
   errorContainer: {
     backgroundColor: '#333',
     opacity: 0.8,
-    padding: 10
+    padding: 10,
   },
   error: {
-    color: '#fff'
-  }
+    color: '#fff',
+  },
 };
 
 export default withAppContext(Member);

@@ -15,14 +15,14 @@ const Channels = props => {
     channelMap: {},
     loading: false,
     empty: '',
-    error: null
+    error: null,
   });
 
   // on state change
   useEffect(() => {
     sendbird.addConnectionHandler('channels', connectionHandler);
     sendbird.addChannelHandler('channels', channelHandler);
-    AppState.addEventListener('change', handleStateChange);
+    const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
       sendbird.connect(currentUser.userId, (err, _) => {
@@ -32,8 +32,8 @@ const Channels = props => {
           dispatch({
             type: 'end-loading',
             payload: {
-              error: 'Connection failed. Please check the network status.'
-            }
+              error: 'Connection failed. Please check the network status.',
+            },
           });
         }
       });
@@ -45,7 +45,7 @@ const Channels = props => {
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('channels');
       sendbird.removeChannelHandler('channels');
-      AppState.removeEventListener('change', handleStateChange);
+      unsubscribe.remove();
     };
   }, []);
 
@@ -59,8 +59,8 @@ const Channels = props => {
               dispatch({
                 type: 'error',
                 payload: {
-                  error: 'Failed to leave the channel.'
-                }
+                  error: 'Failed to leave the channel.',
+                },
               });
             }
           });
@@ -70,7 +70,9 @@ const Channels = props => {
   }, [route.params]);
 
   useEffect(() => {
-    if (query) next();
+    if (query) {
+      next();
+    }
   }, [query]);
 
   /// on connection event
@@ -79,8 +81,8 @@ const Channels = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connecting..'
-      }
+        error: 'Connecting..',
+      },
     });
   };
   connectionHandler.onReconnectSucceeded = () => {
@@ -93,8 +95,8 @@ const Channels = props => {
     dispatch({
       type: 'error',
       payload: {
-        error: 'Connection failed. Please check the network status.'
-      }
+        error: 'Connection failed. Please check the network status.',
+      },
     });
   };
 
@@ -127,7 +129,7 @@ const Channels = props => {
   const chat = channel => {
     navigation.navigate('Chat', {
       channel,
-      currentUser
+      currentUser,
     });
   };
   const refresh = () => {
@@ -143,14 +145,14 @@ const Channels = props => {
         if (!err) {
           dispatch({
             type: 'fetch-channels',
-            payload: { channels: fetchedChannels }
+            payload: { channels: fetchedChannels },
           });
         } else {
           dispatch({
             type: 'error',
             payload: {
-              error: 'Failed to get the channels.'
-            }
+              error: 'Failed to get the channels.',
+            },
           });
         }
       });
@@ -190,31 +192,31 @@ const Channels = props => {
 
 const style = {
   container: {
-    flex: 1
+    flex: 1,
   },
   errorContainer: {
     backgroundColor: '#333',
     opacity: 0.8,
-    padding: 10
+    padding: 10,
   },
   error: {
-    color: '#fff'
+    color: '#fff',
   },
   loading: {
     position: 'absolute',
     right: 20,
-    bottom: 20
+    bottom: 20,
   },
   emptyContainer: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   empty: {
     fontSize: 24,
     color: '#999',
-    alignSelf: 'center'
-  }
+    alignSelf: 'center',
+  },
 };
 
 export default Channels;

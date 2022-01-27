@@ -6,7 +6,7 @@ import { AppContext } from './src/context';
 import 'react-native-gesture-handler';
 import messaging from '@react-native-firebase/messaging';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import Lobby from './src/page/lobby';
 import Chat from './src/page/chat';
@@ -15,23 +15,23 @@ import Invite from './src/page/invite';
 import Profile from './src/page/profile';
 
 import { onRemoteMessage } from './src/utils';
-import AsyncStorage from '@react-native-community/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 
 const appId = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23';
 const sendbird = new SendBird({ appId });
 sendbird.setErrorFirstCallback(true);
 
 const initialState = {
-  sendbird
+  sendbird,
 };
 
 const defaultHeaderOptions = {
   headerStyle: {
-    backgroundColor: '#742ddd'
+    backgroundColor: '#742ddd',
   },
-  headerTintColor: '#fff'
+  headerTintColor: '#fff',
 };
 
 const App = () => {
@@ -49,10 +49,10 @@ const App = () => {
             ) {
               if (Platform.OS === 'ios') {
                 const token = await messaging().getAPNSToken();
-                await sendbird.registerAPNSPushTokenForCurrentUser(token);
+                sendbird.registerAPNSPushTokenForCurrentUser(token);
               } else {
                 const token = await messaging().getToken();
-                await sendbird.registerGCMPushTokenForCurrentUser(token);
+                sendbird.registerGCMPushTokenForCurrentUser(token);
               }
             }
           }

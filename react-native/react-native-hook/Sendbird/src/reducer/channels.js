@@ -6,7 +6,7 @@ export const channelsReducer = (state, action) => {
         channelMap: {},
         channels: [],
         loading: false,
-        error: null
+        error: null,
       };
     }
     case 'fetch-channels': {
@@ -26,7 +26,7 @@ export const channelsReducer = (state, action) => {
         ...state,
         channelMap,
         channels: mergedChannels,
-        empty: mergedChannels.length === 0 ? 'Start conversation.' : ''
+        empty: mergedChannels.length === 0 ? 'Start conversation.' : '',
       };
     }
     case 'join-channel':
@@ -40,7 +40,7 @@ export const channelsReducer = (state, action) => {
           const bt = b.lastMessage ? b.lastMessage.createdAt : b.createdAt;
           return bt - at;
         }),
-        empty: ''
+        empty: '',
       };
     }
     case 'leave-channel':
@@ -51,7 +51,7 @@ export const channelsReducer = (state, action) => {
         ...state,
         channelMap: { ...state.channelMap, [channel.url]: false },
         channels: slicedChannels,
-        empty: slicedChannels.length === 0 ? 'Start conversation.' : ''
+        empty: slicedChannels.length === 0 ? 'Start conversation.' : '',
       };
     }
     case 'start-loading': {

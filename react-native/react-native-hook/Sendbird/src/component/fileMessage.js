@@ -7,7 +7,6 @@ import moment from 'moment';
 
 import { withAppContext } from '../context';
 
-const IMAGE_MAX_SIZE = 240;
 const DEFAULT_IMAGE_WIDTH = 240;
 const DEFAULT_IMAGE_HEIGHT = 160;
 
@@ -15,8 +14,6 @@ const FileMessage = props => {
   const { sendbird, channel, message, onPress = () => {}, onLongPress = () => {} } = props;
   const isMyMessage = message.sender.userId === sendbird.currentUser.userId;
   const [readReceipt, setReadReceipt] = useState(0);
-  const [width, setWidth] = useState(DEFAULT_IMAGE_WIDTH);
-  const [height, setHeight] = useState(DEFAULT_IMAGE_HEIGHT);
 
   const isImage = () => {
     return message.type.match(/^image\/.+$/);
@@ -30,17 +27,7 @@ const FileMessage = props => {
 
   useEffect(() => {
     sendbird.addChannelHandler(`message-${message.reqId}`, channelHandler);
-    setReadReceipt(channel.getReadReceipt(message));
-
-    if (isImage()) {
-      Image.getSize(message.url, (measureWidth, measureHeight) => {
-        const scaleWidth = IMAGE_MAX_SIZE / measureWidth;
-        const scaleHeight = IMAGE_MAX_SIZE / measureHeight;
-        const scale = Math.min(scaleWidth <= scaleHeight ? scaleWidth : scaleHeight, 1);
-        setWidth(measureWidth * scale);
-        setHeight(measureHeight * scale);
-      });
-    }
+    setReadReceipt(channel.getUnreadMemberCount(message));
     return () => {
       sendbird.removeChannelHandler(`message-${message.reqId}`);
     };
@@ -49,7 +36,7 @@ const FileMessage = props => {
   const channelHandler = new sendbird.ChannelHandler();
   channelHandler.onReadReceiptUpdated = targetChannel => {
     if (targetChannel.url === channel.url) {
-      const newReadReceipt = channel.getReadReceipt(message);
+      const newReadReceipt = channel.getUnreadMemberCount(message);
       if (newReadReceipt !== readReceipt) {
         setReadReceipt(newReadReceipt);
       }
@@ -63,7 +50,7 @@ const FileMessage = props => {
       onLongPress={() => onLongPress(message)}
       style={{
         ...style.container,
-        flexDirection: isMyMessage ? 'row-reverse' : 'row'
+        flexDirection: isMyMessage ? 'row-reverse' : 'row',
       }}
     >
       <View style={style.profileImageContainer}>
@@ -73,8 +60,8 @@ const FileMessage = props => {
       </View>
       <View style={{ ...style.content, alignItems: isMyMessage ? 'flex-end' : 'flex-start' }}>
         {!message.hasSameSenderAbove && <Text style={style.nickname}>{message.sender.nickname}</Text>}
-        {isImage() && <Image source={{ uri: message.url }} style={{ ...style.image, width, height }} />}
-        {isVideo() && <Video source={{ uri: message.url }} repeat={true} muted={true} style={{ ...style.video }} />}
+        {isImage() && <Image resizeMode={'cover'} source={{ uri: message.url }} style={style.image} />}
+        {isVideo() && <Video source={{ uri: message.url }} repeat muted style={style.video} />}
         {isFile() && (
           <View style={{ ...style.messageBubble, backgroundColor: isMyMessage ? '#7b53ef' : '#ddd' }}>
             <Icon name="attach-file" color={isMyMessage ? '#fff' : '#333'} size={18} />
@@ -84,7 +71,7 @@ const FileMessage = props => {
       </View>
       <View style={{ ...style.status, alignItems: isMyMessage ? 'flex-end' : 'flex-start' }}>
         {message.sendingStatus === 'pending' && (
-          <Progress.Circle size={10} indeterminate={true} indeterminateAnimationDuration={800} color="#999" />
+          <Progress.Circle size={10} indeterminate indeterminateAnimationDuration={800} color="#999" />
         )}
         {message.sendingStatus === 'succeeded' && readReceipt > 0 && (
           <Text style={style.readReceipt}>{readReceipt}</Text>
@@ -97,64 +84,66 @@ const FileMessage = props => {
 
 const style = {
   container: {
-    paddingHorizontal: 4
+    paddingHorizontal: 4,
   },
   profileImageContainer: {
     width: 32,
     height: 32,
-    marginHorizontal: 8
+    marginHorizontal: 8,
   },
   profileImage: {
     width: 32,
     height: 32,
     borderWidth: 0,
     borderRadius: 16,
-    marginTop: 20
+    marginTop: 20,
   },
   content: {
     alignSelf: 'flex-end',
-    marginHorizontal: 4
+    marginHorizontal: 4,
   },
   nickname: {
     fontSize: 15,
     fontWeight: 'bold',
     color: '#888',
-    marginHorizontal: 8
+    marginHorizontal: 8,
   },
   image: {
+    width: DEFAULT_IMAGE_WIDTH,
+    height: DEFAULT_IMAGE_HEIGHT,
     backgroundColor: '#ccc',
     borderRadius: 8,
-    marginTop: 6
+    marginTop: 6,
   },
   video: {
     width: DEFAULT_IMAGE_WIDTH,
     height: DEFAULT_IMAGE_HEIGHT,
     borderRadius: 8,
-    marginTop: 6
+    marginTop: 6,
   },
   messageBubble: {
     maxWidth: 240,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 7,
-    marginTop: 4
+    marginTop: 4,
   },
   message: {
-    fontSize: 18
+    fontSize: 18,
   },
   status: {
     alignSelf: 'flex-end',
     marginHorizontal: 3,
-    marginBottom: 2
+    marginBottom: 2,
   },
   readReceipt: {
     fontSize: 12,
-    color: '#f89'
+    color: '#f89',
   },
   updatedAt: {
     fontSize: 12,
-    color: '#999'
-  }
+    color: '#999',
+  },
 };
 
 export default withAppContext(FileMessage);

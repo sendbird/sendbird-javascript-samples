@@ -6,7 +6,7 @@ export const chatReducer = (state, action) => {
         messageMap: {},
         messages: [],
         loading: false,
-        error: null
+        error: null,
       };
     }
     case 'fetch-messages': {
@@ -29,14 +29,20 @@ export const chatReducer = (state, action) => {
         ...state,
         messages: mergedMessages,
         messageMap,
-        empty: mergedMessages.length === 0 ? 'Start conversation.' : ''
+        empty: mergedMessages.length === 0 ? 'Start conversation.' : '',
       };
     }
     case 'send-message':
     case 'receive-message':
     case 'update-message': {
+      if (action.type === 'receive-message') {
+        action.payload.channel.markAsRead();
+      }
+
       const { message, clearInput } = action.payload || {};
-      if (!state.messageMap[message.reqId]) {
+      const msgId = message.reqId || message.messageId;
+
+      if (!state.messageMap[msgId]) {
         if (state.messages.length > 0) {
           message.hasSameSenderAbove =
             message.sender && state.messages[0].sender && message.sender.userId === state.messages[0].sender.userId;
@@ -44,20 +50,20 @@ export const chatReducer = (state, action) => {
         return {
           ...state,
           messages: [message, ...state.messages],
-          messageMap: { ...state.messageMap, [message.reqId]: true },
+          messageMap: { ...state.messageMap, [msgId]: true },
           input: clearInput ? '' : state.input,
-          empty: ''
+          empty: '',
         };
       } else {
         for (let i in state.messages) {
-          if (state.messages[i].reqId === message.reqId) {
+          if (state.messages[i].reqId === msgId) {
             const updatedMessages = [...state.messages];
             message.hasSameSenderAbove = updatedMessages[i].hasSameSenderAbove;
             updatedMessages[i] = message;
             return {
               ...state,
               input: clearInput ? '' : state.input,
-              messages: updatedMessages
+              messages: updatedMessages,
             };
           }
         }
@@ -77,7 +83,7 @@ export const chatReducer = (state, action) => {
           }
           return {
             ...state,
-            messages: updatedMessages
+            messages: updatedMessages,
           };
         }
       }

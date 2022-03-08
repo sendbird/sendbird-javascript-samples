@@ -156,11 +156,15 @@ class ChatBody {
     this.collection
       .initialize(sb.MessageCollection.MessageCollectionInitPolicy.CACHE_AND_REPLACE_BY_API, new Date().getTime())
       .onCacheResult((error, messages) => {
-        this._mergeMessagesOnInsert(messages);
+        if (!error) {
+          this._mergeMessagesOnInsert(messages);
+        }
       })
       .onApiResult((error, messages) => {
-        this.element.innerHTML = '';
-        this._mergeMessagesOnInsert(messages);
+        if (!error) {
+          this.element.innerHTML = '';
+          this._mergeMessagesOnInsert(messages);
+        }
         callback();
       });
   }

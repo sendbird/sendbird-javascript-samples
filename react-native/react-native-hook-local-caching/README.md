@@ -1,4 +1,4 @@
-# Sendbird React Native Hook sample
+# Sendbird React Native Hook + Local caching sample
 
 Sendbird React Native sample using [Sendbird SDK](https://github.com/sendbird/SendBird-SDK-JavaScript).
 

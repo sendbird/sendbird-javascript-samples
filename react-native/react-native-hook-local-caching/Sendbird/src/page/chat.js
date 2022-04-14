@@ -1,43 +1,81 @@
-import React, { useLayoutEffect, useEffect, useState, useReducer } from 'react';
-import {
-  Text,
-  StatusBar,
-  SafeAreaView,
-  TouchableOpacity,
-  View,
-  FlatList,
-  AppState,
-  TextInput,
-  Alert,
-  Platform,
-} from 'react-native';
+import React, { useContext, useLayoutEffect, useState } from 'react';
+import { Alert, FlatList, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
+import { check, PERMISSIONS, request, RESULTS } from 'react-native-permissions';
 import DocumentPicker from 'react-native-document-picker';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useHeaderHeight } from '@react-navigation/elements';
 
-import { withAppContext } from '../context';
-import { chatReducer } from '../reducer/chat';
+import { AppContext } from '../context';
 import Message from '../component/message';
 import { createChannelName } from '../utils';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useMessageCollection } from '../hooks/useMessageCollection/useMessageCollection';
+import { useConnectionHandler } from '../hooks/useConnectionHandler';
+import { getMessageUniqId } from '../hooks/useMessageCollection/reducer';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const Chat = props => {
-  const { route, navigation, sendbird } = props;
-  const { currentUser, channel } = route.params;
+const Chat = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { sendbird, currentUser } = useContext(AppContext);
 
-  const [query, setQuery] = useState(null);
-  const [state, dispatch] = useReducer(chatReducer, {
+  const headerHeight = useHeaderHeight();
+
+  const { bottom } = useSafeAreaInsets();
+
+  const [staleChannel] = useState(() => sendbird.GroupChannel.buildFromSerializedData(route.params.channel));
+  const [input, setInput] = useState('');
+  const [error, setError] = useState(null);
+
+  const { messages, activeChannel, refresh, next, sendUserMessage, sendFileMessage } = useMessageCollection(
     sendbird,
-    channel,
-    messages: [],
-    messageMap: {}, // redId => boolean
-    loading: false,
-    input: '',
-    empty: '',
-    error: '',
-  });
+    staleChannel,
+    currentUser.userId,
+    () => {
+      navigation.navigate('Lobby', {
+        action: 'delete',
+        data: { channel: staleChannel },
+      });
+    },
+    setError,
+  );
+
+  useConnectionHandler(
+    sendbird,
+    'page-chat',
+    {
+      onReconnectStarted: () => {
+        setError('Connecting..');
+      },
+      onReconnectSucceeded: () => {
+        setError(null);
+        refresh();
+      },
+      onReconnectFailed: () => {
+        setError('Connection failed. Please check the network status.');
+      },
+    },
+    [refresh],
+  );
 
   useLayoutEffect(() => {
+    const leave = () => {
+      Alert.alert('Leave', 'Are you going to leave this channel?', [
+        { text: 'Cancel' },
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('Lobby', {
+              action: 'leave',
+              data: { channel: activeChannel },
+            });
+          },
+        },
+      ]);
+    };
+    const member = () => navigation.navigate('Member', { channel: activeChannel.serialize(), currentUser });
+
     const right = (
       <View style={style.headerRightContainer}>
         <TouchableOpacity activeOpacity={0.85} style={style.headerRightButton} onPress={member}>
@@ -50,166 +88,23 @@ const Chat = props => {
     );
 
     navigation.setOptions({
-      title: createChannelName(channel),
+      title: createChannelName(staleChannel),
       headerRight: () => right,
     });
-  });
-  // on state change
-  useEffect(() => {
-    sendbird.addConnectionHandler('chat', connectionHandler);
-    sendbird.addChannelHandler('chat', channelHandler);
-    const unsubscribe = AppState.addEventListener('change', handleStateChange);
+  }, [activeChannel, currentUser]);
 
-    if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
-        if (!err) {
-          refresh();
-        } else {
-          dispatch({
-            type: 'error',
-            payload: {
-              error: 'Connection failed. Please check the network status.',
-            },
-          });
-        }
-      });
-    } else {
-      refresh();
-    }
+  const _sendUserMessage = async () => {
+    if (input.length > 0) {
+      try {
+        const params = new sendbird.UserMessageParams();
+        params.message = input;
+        setInput('');
 
-    return () => {
-      sendbird.removeConnectionHandler('chat');
-      sendbird.removeChannelHandler('chat');
-      unsubscribe.remove();
-    };
-  }, []);
-
-  /// on query refresh
-  useEffect(() => {
-    if (query) {
-      next();
-    }
-  }, [query]);
-
-  /// on connection event
-  const connectionHandler = new sendbird.ConnectionHandler();
-  connectionHandler.onReconnectStarted = () => {
-    dispatch({
-      type: 'error',
-      payload: {
-        error: 'Connecting..',
-      },
-    });
-  };
-  connectionHandler.onReconnectSucceeded = () => {
-    dispatch({
-      type: 'error',
-      payload: {
-        error: '',
-      },
-    });
-    refresh();
-  };
-  connectionHandler.onReconnectFailed = () => {
-    dispatch({
-      type: 'error',
-      payload: {
-        error: 'Connection failed. Please check the network status.',
-      },
-    });
-  };
-
-  /// on channel event
-  const channelHandler = new sendbird.ChannelHandler();
-  channelHandler.onMessageReceived = (targetChannel, message) => {
-    if (targetChannel.url === channel.url) {
-      dispatch({ type: 'receive-message', payload: { message, channel } });
-    }
-  };
-  channelHandler.onMessageUpdated = (targetChannel, message) => {
-    if (targetChannel.url === channel.url) {
-      dispatch({ type: 'update-message', payload: { message } });
-    }
-  };
-  channelHandler.onMessageDeleted = (targetChannel, messageId) => {
-    if (targetChannel.url === channel.url) {
-      dispatch({ type: 'delete-message', payload: { messageId } });
-    }
-  };
-  channelHandler.onUserLeft = (channel, user) => {
-    if (user.userId === currentUser.userId) {
-      navigation.navigate('Lobby', {
-        action: 'leave',
-        data: { channel },
-      });
-    }
-  };
-  channelHandler.onChannelDeleted = (channelUrl, channelType) => {
-    navigation.navigate('Lobby', {
-      action: 'delete',
-      data: { channel },
-    });
-  };
-
-  const handleStateChange = newState => {
-    if (newState === 'active') {
-      sendbird.setForegroundState();
-    } else {
-      sendbird.setBackgroundState();
-    }
-  };
-  const member = () => {
-    navigation.navigate('Member', { channel, currentUser });
-  };
-  const leave = () => {
-    Alert.alert('Leave', 'Are you going to leave this channel?', [
-      { text: 'Cancel' },
-      {
-        text: 'OK',
-        onPress: () => {
-          navigation.navigate('Lobby', {
-            action: 'leave',
-            data: { channel },
-          });
-        },
-      },
-    ]);
-  };
-  const refresh = () => {
-    channel.markAsRead();
-    setQuery(channel.createPreviousMessageListQuery());
-    dispatch({ type: 'refresh' });
-  };
-  const next = () => {
-    if (query.hasMore) {
-      dispatch({ type: 'error', payload: { error: '' } });
-      query.limit = 50;
-      query.reverse = true;
-      query.load((err, fetchedMessages) => {
-        if (!err) {
-          dispatch({ type: 'fetch-messages', payload: { messages: fetchedMessages } });
-        } else {
-          dispatch({ type: 'error', payload: { error: 'Failed to get the messages.' } });
-        }
-      });
-    }
-  };
-  const sendUserMessage = () => {
-    if (state.input.length > 0) {
-      const params = new sendbird.UserMessageParams();
-      params.message = state.input;
-
-      const pendingMessage = channel.sendUserMessage(params, (err, message) => {
-        if (!err) {
-          dispatch({ type: 'send-message', payload: { message } });
-        } else {
-          setTimeout(() => {
-            dispatch({ type: 'error', payload: { error: 'Failed to send a message.' } });
-            dispatch({ type: 'delete-message', payload: { reqId: pendingMessage.reqId } });
-          }, 500);
-        }
-      });
-      dispatch({ type: 'send-message', payload: { message: pendingMessage, clearInput: true } });
+        await sendUserMessage(params);
+      } catch (e) {
+        console.log('failure user mes', e);
+        setError('Failed to send a message:', e.message);
+      }
     }
   };
   const selectFile = async () => {
@@ -235,28 +130,17 @@ const Chat = props => {
         ],
       });
 
-      const params = new sendbird.FileMessageParams();
-      params.file = {
-        size: result.size,
-        uri: result.uri,
-        name: result.name,
-        type: result.type,
-      };
-      dispatch({ type: 'start-loading' });
-      channel.sendFileMessage(params, (err, message) => {
-        dispatch({ type: 'end-loading' });
-        if (!err) {
-          dispatch({ type: 'send-message', payload: { message } });
-        } else {
-          setTimeout(() => {
-            dispatch({ type: 'error', payload: { error: 'Failed to send a message.' } });
-          }, 500);
-        }
-      });
+      try {
+        const params = new sendbird.FileMessageParams();
+        params.file = { size: result.size, uri: result.uri, name: result.name, type: result.type };
+        await sendFileMessage(params);
+      } catch {
+        setError('Failed to send a file message.');
+      }
     } catch (err) {
-      console.log(err);
       if (!DocumentPicker.isCancel(err)) {
-        dispatch({ type: 'error', payload: { error: err.message } });
+        console.log(err);
+        setError(err.message);
       }
     }
   };
@@ -290,64 +174,82 @@ const Chat = props => {
     }
   };
   return (
-    <>
-      <StatusBar backgroundColor="#742ddd" barStyle="light-content" />
-      <SafeAreaView style={style.container}>
-        <FlatList
-          data={state.messages}
-          inverted={true}
-          renderItem={({ item }) => (
-            <Message
-              key={item.reqId}
-              channel={channel}
-              message={item}
-              onPress={message => viewDetail(message)}
-              onLongPress={message => showContextMenu(message)}
-            />
-          )}
-          keyExtractor={item => `${item.messageId}` || item.reqId}
-          contentContainerStyle={{ flexGrow: 1, paddingVertical: 10 }}
-          ListHeaderComponent={
-            state.error && (
-              <View style={style.errorContainer}>
-                <Text style={style.error}>{state.error}</Text>
-              </View>
-            )
-          }
-          ListEmptyComponent={
-            <View style={style.emptyContainer}>
-              <Text style={style.empty}>{state.empty}</Text>
+    <View style={style.container}>
+      <FlatList
+        data={messages}
+        inverted={true}
+        renderItem={({ item }) => (
+          <Message
+            channel={activeChannel}
+            message={item}
+            onPress={message => viewDetail(message)}
+            onLongPress={message => showContextMenu(message)}
+          />
+        )}
+        keyExtractor={getMessageUniqId}
+        contentContainerStyle={{ flexGrow: 1, paddingVertical: 8 }}
+        ListHeaderComponent={
+          error && (
+            <View style={style.errorContainer}>
+              <Text style={style.error}>{error}</Text>
             </View>
-          }
-          onEndReached={() => next()}
-          onEndReachedThreshold={0.5}
-        />
+          )
+        }
+        ListEmptyComponent={
+          <View style={style.emptyContainer}>
+            <Text style={style.empty}>{'No messages'}</Text>
+          </View>
+        }
+        onEndReached={next}
+        onEndReachedThreshold={0.5}
+      />
+      <KeyboardAvoidingView
+        keyboardVerticalOffset={-bottom + headerHeight}
+        behavior={Platform.select({ ios: 'padding', default: undefined })}
+      >
         <View style={style.inputContainer}>
           <TouchableOpacity activeOpacity={0.85} style={style.uploadButton} onPress={selectFile}>
             <Icon name="insert-photo" color="#7b53ef" size={28} />
           </TouchableOpacity>
           <TextInput
-            value={state.input}
+            value={input}
             style={style.input}
             multiline={true}
             numberOfLines={2}
             onChangeText={content => {
               if (content.length > 0) {
-                channel.startTyping();
+                staleChannel.startTyping();
               } else {
-                channel.endTyping();
+                staleChannel.endTyping();
               }
-              dispatch({ type: 'typing', payload: { input: content } });
+              setInput(content);
             }}
           />
-          <TouchableOpacity activeOpacity={0.85} style={style.sendButton} onPress={sendUserMessage}>
-            <Icon name="send" color={state.input.length > 0 ? '#7b53ef' : '#ddd'} size={28} />
+          <TouchableOpacity activeOpacity={0.85} style={style.sendButton} onPress={_sendUserMessage}>
+            <Icon name="send" color={input.length > 0 ? '#7b53ef' : '#ddd'} size={28} />
           </TouchableOpacity>
         </View>
-      </SafeAreaView>
-    </>
+        <View style={{ height: bottom }} />
+      </KeyboardAvoidingView>
+    </View>
   );
 };
+
+// <View style={{ paddingLeft: left, paddingRight: right, backgroundColor: colors.background }}>
+//   <View style={{ justifyContent: 'center', width: '100%' }}>
+//     {inputMode === 'send' && <SendInput {...props} text={text} setText={setText} disabled={disabled} />}
+//     {inputMode === 'edit' && editMessage && (
+//       <EditInput
+//         {...props}
+//         text={text}
+//         setText={setText}
+//         editMessage={editMessage}
+//         setEditMessage={setEditMessage}
+//       />
+//     )}
+//   </View>
+//   <SafeAreaBottom height={bottom} />
+// </View>
 
 const style = {
   container: {
@@ -378,13 +280,14 @@ const style = {
     alignSelf: 'center',
   },
   inputContainer: {
+    alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: '#fff',
     paddingVertical: 4,
     paddingHorizontal: 10,
-    alignItems: 'center',
   },
   input: {
+    maxHeight: 100,
     flex: 1,
     fontSize: 20,
     color: '#555',
@@ -397,4 +300,4 @@ const style = {
   },
 };
 
-export default withAppContext(Chat);
+export default Chat;

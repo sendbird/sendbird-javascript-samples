@@ -1,29 +1,29 @@
 import React, { useReducer } from 'react';
 import {
   ActivityIndicator,
+  Animated,
   Image,
+  Keyboard,
+  SafeAreaView,
+  StatusBar,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
-  Animated,
-  Keyboard,
-  StatusBar,
-  SafeAreaView,
+  View,
 } from 'react-native';
 import { loginReducer } from '../reducer/login';
 
+const showErrorFadeDuration = 200;
+const showErrorDuration = 3500;
+
 const Login = props => {
-  const { sendbird, onLogin } = props;
+  const { onLogin } = props;
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
     nickname: '',
     error: '',
     connecting: false,
   });
-
-  const showErrorFadeDuration = 200;
-  const showErrorDuration = 3500;
 
   const fade = new Animated.Value(0);
   const showError = message => {
@@ -42,41 +42,25 @@ const Login = props => {
       }),
     ]).start();
   };
-  const connect = () => {
-    if (!state.connecting) {
-      if (state.userId && state.nickname) {
-        dispatch({ type: 'start-connection' });
-        Keyboard.dismiss();
-        sendbird.connect(state.userId, (err, user) => {
-          if (!err) {
-            if (user.nickname !== state.nickname) {
-              sendbird.updateCurrentUserInfo(state.nickname, '', (err, user) => {
-                dispatch({ type: 'end-connection' });
-                if (!err) {
-                  start(user);
-                } else {
-                  showError(err.message);
-                }
-              });
-            } else {
-              dispatch({ type: 'end-connection' });
-              start(user);
-            }
-          } else {
-            dispatch({ type: 'end-connection' });
-            showError(err.message);
-          }
-        });
-      } else {
-        showError('Please put your user ID and nickname.');
+  const connect = async () => {
+    if (state.connecting) return;
+
+    if (state.userId && state.nickname) {
+      dispatch({ type: 'start-connection' });
+      Keyboard.dismiss();
+
+      try {
+        await onLogin({ userId: state.userId, nickname: state.nickname });
+      } catch (e) {
+        showError(e.message);
+      } finally {
+        dispatch({ type: 'end-connection' });
       }
+    } else {
+      showError('Please put your user ID and nickname.');
     }
   };
-  const start = user => {
-    if (onLogin) {
-      onLogin(user);
-    }
-  };
+
   return (
     <>
       <StatusBar backgroundColor="#742ddd" barStyle="light-content" />

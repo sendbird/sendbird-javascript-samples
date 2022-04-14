@@ -46,29 +46,10 @@ const Invite = props => {
   // on state change
   useEffect(() => {
     sendbird.addConnectionHandler('invite', connectionHandler);
-    const unsubscribe = AppState.addEventListener('change', handleStateChange);
-
-    if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
-        if (!err) {
-          refresh();
-        } else {
-          dispatch({
-            type: 'error',
-            payload: {
-              error: 'Connection failed. Please check the network status.',
-            },
-          });
-        }
-      });
-    } else {
-      refresh();
-    }
 
     return () => {
       dispatch({ type: 'end-loading' });
       sendbird.removeConnectionHandler('invite');
-      unsubscribe.remove();
     };
   }, []);
 
@@ -106,13 +87,6 @@ const Invite = props => {
     });
   };
 
-  const handleStateChange = newState => {
-    if (newState === 'active') {
-      sendbird.setForegroundState();
-    } else {
-      sendbird.setBackgroundState();
-    }
-  };
   const invite = async () => {
     if (state.selectedUsers.length > 0) {
       dispatch({ type: 'start-loading' });

@@ -76,7 +76,9 @@ const Channel = props => {
         style={style.profileImage}
       />
       <View style={style.contentContainer}>
-        <Text style={style.name}>{name}</Text>
+        <Text style={style.name} numberOfLines={1}>
+          {name}
+        </Text>
         <Text style={style.lastMessage}>{ellipsis(lastMessage.replace(/\n/g, ' '), LAST_MESSAGE_ELLIPSIS)}</Text>
       </View>
       <View style={style.propertyContainer}>
@@ -116,6 +118,7 @@ const style = {
     fontSize: 16,
     fontWeight: '100',
     color: '#333',
+    marginRight: 8,
     marginBottom: 2,
   },
   lastMessage: {

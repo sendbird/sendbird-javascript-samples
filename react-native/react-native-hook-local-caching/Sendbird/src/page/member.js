@@ -1,16 +1,20 @@
-import React, { useLayoutEffect, useEffect, useReducer } from 'react';
-import { Text, StatusBar, SafeAreaView, View, FlatList, TouchableOpacity, AppState } from 'react-native';
+import React, { useContext, useEffect, useLayoutEffect, useReducer, useState } from 'react';
+import { FlatList, SafeAreaView, StatusBar, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { withAppContext } from '../context';
+import { AppContext } from '../context';
 import { memberReducer } from '../reducer/member';
 import User from '../component/user';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-const Member = props => {
-  const { route, navigation, sendbird } = props;
-  const { currentUser, channel } = route.params;
+const Member = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { sendbird, currentUser } = useContext(AppContext);
+  const [staleChannel] = useState(() => sendbird.GroupChannel.buildFromSerializedData(route.params.channel));
+
   const [state, dispatch] = useReducer(memberReducer, {
-    members: channel.members,
+    members: staleChannel.members,
     error: '',
   });
 
@@ -31,29 +35,10 @@ const Member = props => {
   useEffect(() => {
     sendbird.addConnectionHandler('member', connectionHandler);
     sendbird.addChannelHandler('member', channelHandler);
-    const unsubscribe = AppState.addEventListener('change', handleStateChange);
-
-    if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
-        if (!err) {
-          refresh();
-        } else {
-          dispatch({
-            type: 'error',
-            payload: {
-              error: 'Connection failed. Please check the network status.',
-            },
-          });
-        }
-      });
-    } else {
-      refresh();
-    }
 
     return () => {
       sendbird.removeConnectionHandler('member');
       sendbird.removeChannelHandler('member');
-      unsubscribe.remove();
     };
   }, []);
 
@@ -87,12 +72,12 @@ const Member = props => {
 
   /// on channel event
   const channelHandler = new sendbird.ChannelHandler();
-  channelHandler.onUserJoined = (_, user) => {
+  channelHandler.onUserJoined = user => {
     if (user.userId !== currentUser.userId) {
       dispatch({ type: 'add-member', payload: { user } });
     }
   };
-  channelHandler.onUserLeft = (_, user) => {
+  channelHandler.onUserLeft = user => {
     if (user.userId !== currentUser.userId) {
       dispatch({ type: 'remove-member', payload: { user } });
     } else {
@@ -100,18 +85,11 @@ const Member = props => {
     }
   };
 
-  const handleStateChange = newState => {
-    if (newState === 'active') {
-      sendbird.setForegroundState();
-    } else {
-      sendbird.setBackgroundState();
-    }
-  };
   const invite = () => {
-    navigation.navigate('Invite', { channel, currentUser });
+    navigation.navigate('Invite', { channel: staleChannel, currentUser });
   };
   const refresh = () => {
-    dispatch({ type: 'refresh', payload: { members: channel.members } });
+    dispatch({ type: 'refresh', payload: { members: staleChannel.members } });
   };
 
   return (
@@ -153,4 +131,4 @@ const style = {
   },
 };
 
-export default withAppContext(Member);
+export default Member;

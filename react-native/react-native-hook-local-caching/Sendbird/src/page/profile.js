@@ -1,14 +1,14 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import {
   ActivityIndicator,
-  Text,
-  TextInput,
-  View,
-  TouchableOpacity,
   Animated,
   Keyboard,
-  StatusBar,
   SafeAreaView,
+  StatusBar,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { withAppContext } from '../context';
 import { profileReducer } from '../reducer/profile';
@@ -48,7 +48,7 @@ const Profile = props => {
       if (state.nickname && sendbird.currentUser.nickname !== state.nickname) {
         dispatch({ type: 'start-update' });
         Keyboard.dismiss();
-        sendbird.updateCurrentUserInfo(state.nickname, '', (err, user) => {
+        sendbird.updateCurrentUserInfo(state.nickname, '', (user, err) => {
           dispatch({ type: 'end-update' });
           if (!err) {
             currentUser.nickname = user.nickname;

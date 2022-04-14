@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Platform } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, AppState, StyleSheet } from 'react-native';
 import SendBird from 'sendbird';
 
 import { AppContext } from './src/context';
@@ -15,62 +15,65 @@ import Invite from './src/page/invite';
 import Profile from './src/page/profile';
 
 import { onRemoteMessage } from './src/utils';
+import AuthManager from './src/libs/AuthManager';
+import NotificationManager from './src/libs/NotificationManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
 
 const appId = '9DA1B1F4-0BE6-4DA8-82C5-2E81DAB56F23';
-const sendbird = new SendBird({ appId });
-sendbird.setErrorFirstCallback(true);
+const sendbird = new SendBird({ appId, localCacheEnabled: true });
+sendbird.useAsyncStorageAsDatabase(AsyncStorage);
 
-const initialState = {
-  sendbird,
-};
+const AppProvider = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
-const defaultHeaderOptions = {
-  headerStyle: {
-    backgroundColor: '#742ddd',
-  },
-  headerTintColor: '#fff',
+  useEffect(() => {
+    AuthManager.getUserForAutoSignIn()
+      .then(async user => {
+        if (user) {
+          // Even if an error occurs, you still need to sign-in. Because you can make a connection request offline.
+          try {
+            await sendbird.connect(user.userId);
+          } finally {
+            setCurrentUser(user);
+          }
+        }
+      })
+      .finally(() => setLoading(false));
+
+    const unsubscribes = [
+      AppState.addEventListener('change', appState => {
+        if (appState === 'active') {
+          sendbird.setForegroundState();
+        } else {
+          sendbird.setBackgroundState();
+        }
+      }).remove,
+      messaging().onMessage(onRemoteMessage),
+    ];
+    return () => {
+      unsubscribes.forEach(fn => fn());
+    };
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      NotificationManager.setPushToken(sendbird);
+    } else {
+      NotificationManager.clearPushToken(sendbird);
+    }
+  }, [currentUser]);
+
+  if (loading) return <ActivityIndicator style={StyleSheet.absoluteFill} color={'#742ddd'} size={'large'} />;
+  return <AppContext.Provider value={{ sendbird, currentUser, setCurrentUser }}>{children}</AppContext.Provider>;
 };
 
 const App = () => {
-  const savedUserKey = 'savedUser';
-
-  useEffect(() => {
-    AsyncStorage.getItem(savedUserKey)
-      .then(async user => {
-        try {
-          if (user) {
-            const authorizationStatus = await messaging().requestPermission();
-            if (
-              authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-              authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-            ) {
-              if (Platform.OS === 'ios') {
-                const token = await messaging().getAPNSToken();
-                sendbird.registerAPNSPushTokenForCurrentUser(token);
-              } else {
-                const token = await messaging().getToken();
-                sendbird.registerGCMPushTokenForCurrentUser(token);
-              }
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })
-      .catch(err => console.error(err));
-
-    if (Platform.OS !== 'ios') {
-      const unsubscribeHandler = messaging().onMessage(onRemoteMessage);
-      return unsubscribeHandler;
-    }
-  }, []);
-
   return (
-    <NavigationContainer>
-      <AppContext.Provider value={initialState}>
+    <AppProvider>
+      <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="Lobby" component={Lobby} options={{ ...defaultHeaderOptions }} />
           <Stack.Screen name="Chat" component={Chat} options={{ ...defaultHeaderOptions }} />
@@ -78,9 +81,16 @@ const App = () => {
           <Stack.Screen name="Invite" component={Invite} options={{ ...defaultHeaderOptions }} />
           <Stack.Screen name="Profile" component={Profile} options={{ ...defaultHeaderOptions }} />
         </Stack.Navigator>
-      </AppContext.Provider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </AppProvider>
   );
+};
+
+const defaultHeaderOptions = {
+  headerStyle: {
+    backgroundColor: '#742ddd',
+  },
+  headerTintColor: '#fff',
 };
 
 export default App;

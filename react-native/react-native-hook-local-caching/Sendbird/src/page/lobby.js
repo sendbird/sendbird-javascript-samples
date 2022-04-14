@@ -1,20 +1,17 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
-import { Image, Text, TouchableOpacity, View, Platform } from 'react-native';
+import React, { useContext, useLayoutEffect } from 'react';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import messaging from '@react-native-firebase/messaging';
 
-import { withAppContext } from '../context';
+import { AppContext, withAppContext } from '../context';
 import Login from './login';
 import Channels from './channels';
-import { handleNotificationAction } from '../utils';
+import AuthManager from '../libs/AuthManager';
+import { useNavigation } from '@react-navigation/native';
 
-const Lobby = props => {
-  const { navigation, sendbird } = props;
-  const [initialized, setInitialized] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
-  const savedUserKey = 'savedUser';
+const Lobby = () => {
+  const navigation = useNavigation();
+  const { sendbird, currentUser, setCurrentUser } = useContext(AppContext);
 
   useLayoutEffect(() => {
     const title = currentUser ? (
@@ -39,46 +36,16 @@ const Lobby = props => {
     });
   }, [currentUser]);
 
-  useEffect(() => {
-    AsyncStorage.getItem(savedUserKey)
-      .then(user => {
-        if (user) {
-          setCurrentUser(JSON.parse(user));
-        }
-        setInitialized(true);
-        return handleNotificationAction(navigation, sendbird, currentUser, 'lobby');
-      })
-      .catch(err => console.error(err));
-  }, []);
-
-  const login = user => {
-    AsyncStorage.setItem(savedUserKey, JSON.stringify(user))
-      .then(async () => {
-        try {
-          setCurrentUser(user);
-          const authorizationStatus = await messaging().requestPermission();
-          if (
-            authorizationStatus === messaging.AuthorizationStatus.AUTHORIZED ||
-            authorizationStatus === messaging.AuthorizationStatus.PROVISIONAL
-          ) {
-            if (Platform.OS === 'ios') {
-              const token = await messaging().getAPNSToken();
-              sendbird.registerAPNSPushTokenForCurrentUser(token);
-            } else {
-              const token = await messaging().getToken();
-              sendbird.registerGCMPushTokenForCurrentUser(token);
-            }
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      })
-      .catch(err => console.error(err));
+  const login = async user => {
+    await sendbird.connect(user.userId);
+    await sendbird.updateCurrentUserInfo(user.nickname, '');
+    await AuthManager.signIn(user);
+    setCurrentUser(user);
   };
 
   const logout = async () => {
-    await AsyncStorage.removeItem(savedUserKey);
-    sendbird.disconnect();
+    await sendbird.disconnect();
+    await AuthManager.signOut();
     setCurrentUser(null);
   };
 
@@ -93,19 +60,7 @@ const Lobby = props => {
     }
   };
 
-  return (
-    <>
-      {initialized ? (
-        currentUser ? (
-          <Channels {...props} currentUser={currentUser} />
-        ) : (
-          <Login {...props} onLogin={login} />
-        )
-      ) : (
-        <View />
-      )}
-    </>
-  );
+  return <>{currentUser ? <Channels /> : <Login onLogin={login} />}</>;
 };
 
 const style = {

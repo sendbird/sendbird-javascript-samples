@@ -1,6 +1,7 @@
 import React, { createContext } from 'react';
 
 export const AppContext = createContext();
+
 export const withAppContext = (Component, mapStateToProp = null) => {
   const ConsumableComponent = props => {
     return (

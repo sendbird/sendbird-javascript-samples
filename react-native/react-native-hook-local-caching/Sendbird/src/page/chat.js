@@ -235,22 +235,6 @@ const Chat = () => {
   );
 };
 
-// <View style={{ paddingLeft: left, paddingRight: right, backgroundColor: colors.background }}>
-//   <View style={{ justifyContent: 'center', width: '100%' }}>
-//     {inputMode === 'send' && <SendInput {...props} text={text} setText={setText} disabled={disabled} />}
-//     {inputMode === 'edit' && editMessage && (
-//       <EditInput
-//         {...props}
-//         text={text}
-//         setText={setText}
-//         editMessage={editMessage}
-//         setEditMessage={setEditMessage}
-//       />
-//     )}
-//   </View>
-//   <SafeAreaBottom height={bottom} />
-// </View>
-
 const style = {
   container: {
     flex: 1,

@@ -6211,10 +6211,10 @@ send@0.17.2:
     range-parser "~1.2.1"
     statuses "~1.5.0"
 
-sendbird@^3.1.14:
-  version "3.1.14"
-  resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.1.14.tgz#2a28f18849ce9c28b697dcae8cb374b42db7e08a"
-  integrity sha512-uK600rBQu4cwz1hlq+bhckHUXO9xE2FrMT2eUhZc2UKekA5HZmwhmpISmm3G6LN9y8pFI6l7nUsjpuufl/I/AA==
+sendbird@^3.1.16:
+  version "3.1.16"
+  resolved "https://registry.yarnpkg.com/sendbird/-/sendbird-3.1.16.tgz#1c76732a58ed369c506b8d24376d4dfc8c4205bc"
+  integrity sha512-jl93YlyKmLqlQVoxL039v+RRZ4hGxSHyK/UfHkWZqmZDuffEh2DtcQFyGKKAtd4M4HcgJhzAPpGMh7ng2BvIvA==
   dependencies:
     agentkeepalive "4.1.4"
     axios "^0.27.2"

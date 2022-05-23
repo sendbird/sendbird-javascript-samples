@@ -29,7 +29,7 @@
     "react-native-svg": "^12.1.1",
     "react-native-vector-icons": "^9.0.0",
     "react-native-video": "^5.2.0",
-    "sendbird": "^3.1.7"
+    "sendbird": "^3.1.14"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

@@ -12,11 +12,13 @@ import {
   View,
 } from 'react-native';
 import { loginReducer } from '../reducer/login';
+import { useIsMountedRef } from '../hooks/useIsMountedRef';
 
 const showErrorFadeDuration = 200;
 const showErrorDuration = 3500;
 
 const Login = props => {
+  const isMounted = useIsMountedRef();
   const { onLogin } = props;
   const [state, dispatch] = useReducer(loginReducer, {
     userId: '',
@@ -52,9 +54,9 @@ const Login = props => {
       try {
         await onLogin({ userId: state.userId, nickname: state.nickname });
       } catch (e) {
-        showError(e.message);
+        isMounted.current && showError(e.message);
       } finally {
-        dispatch({ type: 'end-connection' });
+        isMounted.current && dispatch({ type: 'end-connection' });
       }
     } else {
       showError('Please put your user ID and nickname.');

@@ -16,7 +16,6 @@ import Profile from './src/page/profile';
 
 import { onRemoteMessage } from './src/utils';
 import AuthManager from './src/libs/AuthManager';
-import NotificationManager from './src/libs/NotificationManager';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator();
@@ -46,9 +45,9 @@ const AppProvider = ({ children }) => {
     const unsubscribes = [
       AppState.addEventListener('change', appState => {
         if (appState === 'active') {
-          sendbird.setForegroundState();
+          sendbird.getConnectionState() === 'CLOSED' && sendbird.setForegroundState();
         } else {
-          sendbird.setBackgroundState();
+          sendbird.getConnectionState() === 'OPEN' && sendbird.setBackgroundState();
         }
       }).remove,
       messaging().onMessage(onRemoteMessage),
@@ -57,14 +56,6 @@ const AppProvider = ({ children }) => {
       unsubscribes.forEach(fn => fn());
     };
   }, []);
-
-  useEffect(() => {
-    if (currentUser) {
-      NotificationManager.setPushToken(sendbird);
-    } else {
-      NotificationManager.clearPushToken(sendbird);
-    }
-  }, [currentUser]);
 
   if (loading) return <ActivityIndicator style={StyleSheet.absoluteFill} color={'#742ddd'} size={'large'} />;
   return <AppContext.Provider value={{ sendbird, currentUser, setCurrentUser }}>{children}</AppContext.Provider>;

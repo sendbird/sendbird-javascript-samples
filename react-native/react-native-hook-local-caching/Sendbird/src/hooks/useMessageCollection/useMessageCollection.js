@@ -10,7 +10,7 @@ const createMessageCollection = (sdk, channel) => {
   return collection.setLimit(100).setStartingPoint(Date.now()).setFilter(filter).build();
 };
 
-function isDifferentChannel(a, b): boolean {
+function isDifferentChannel(a, b) {
   if (!a || !b) return true;
   return a.url !== b.url;
 }
@@ -51,7 +51,7 @@ export const useMessageCollection = (sdk, staleChannel, userId, onChannelDeleted
   };
 
   const init = useCallback(
-    async (uid?: string) => {
+    async (uid) => {
       if (collectionRef.current) collectionRef.current?.dispose();
 
       if (uid) {

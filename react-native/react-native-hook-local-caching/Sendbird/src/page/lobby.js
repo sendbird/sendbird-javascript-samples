@@ -3,11 +3,18 @@ import { Image, Text, TouchableOpacity, View } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { AppContext, withAppContext } from '../context';
+import { AppContext } from '../context';
 import Login from './login';
 import Channels from './channels';
 import AuthManager from '../libs/AuthManager';
 import { useNavigation } from '@react-navigation/native';
+import NotificationManager from '../libs/NotificationManager';
+
+async function safeRunForOffline(callback) {
+  try {
+    await callback();
+  } catch {}
+}
 
 const Lobby = () => {
   const navigation = useNavigation();
@@ -21,31 +28,63 @@ const Lobby = () => {
       </View>
     ) : null;
 
+    const left = currentUser ? (
+      <TouchableOpacity activeOpacity={0.85} onPress={logout}>
+        <Icon name="logout" color="#fff" size={28} />
+      </TouchableOpacity>
+    ) : null;
+
     const right = currentUser ? (
-      <View style={style.headerRightContainer}>
-        <TouchableOpacity activeOpacity={0.85} style={style.profileButton} onPress={startChat}>
-          <Icon name="chat" color="#fff" size={28} />
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity activeOpacity={0.85} onPress={startChat}>
+        <Icon name="chat" color="#fff" size={28} />
+      </TouchableOpacity>
     ) : null;
 
     navigation.setOptions({
       headerShown: !!currentUser,
       headerTitle: () => title,
+      headerLeft: () => left,
       headerRight: () => right,
     });
   }, [currentUser]);
 
-  const login = async user => {
-    await sendbird.connect(user.userId);
-    await sendbird.updateCurrentUserInfo(user.nickname, '');
-    await AuthManager.signIn(user);
-    setCurrentUser(user);
+  const login = async signUser => {
+    return new Promise((resolve, reject) => {
+      const cacheStrictCodes = [400300, 400301, 400302, 400310];
+
+      sendbird.connect(signUser.userId, async (sendbirdUser, error) => {
+        // Cache strict errors - https://sendbird.com/docs/chat/v3/javascript/guides/authentication#2-connect-to-sendbird-server-with-a-user-id
+        if (error && sendbird.isCacheEnabled && cacheStrictCodes.some(c => error.code === c)) {
+          await sendbird.clearCachedData().catch(e => console.log('clear cache failure', e));
+          return reject(error);
+        }
+
+        if (sendbirdUser) {
+          await AuthManager.signIn(signUser);
+          let _user = sendbirdUser;
+
+          await safeRunForOffline(async () => {
+            _user = await sendbird.updateCurrentUserInfo(signUser.nickname, _user.profileUrl);
+          });
+          await safeRunForOffline(async () => {
+            await NotificationManager.setPushToken(sendbird);
+          });
+
+          setCurrentUser(_user);
+          return resolve(_user);
+        }
+
+        if (error) {
+          return reject(error);
+        }
+      });
+    });
   };
 
   const logout = async () => {
-    await sendbird.disconnect();
+    await NotificationManager.clearPushToken(sendbird);
     await AuthManager.signOut();
+    await sendbird.disconnect();
     setCurrentUser(null);
   };
 
@@ -68,12 +107,6 @@ const style = {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  headerRightContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-  },
   headerTitle: {
     fontSize: 20,
     color: '#fff',
@@ -82,9 +115,6 @@ const style = {
     width: 32,
     height: 32,
   },
-  profileButton: {
-    marginLeft: 10,
-  },
 };
 
-export default withAppContext(Lobby);
+export default Lobby;

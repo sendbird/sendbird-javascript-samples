@@ -10,26 +10,26 @@ PODS:
     - React-Core (= 0.67.1)
     - React-jsi (= 0.67.1)
     - ReactCommon/turbomodule/core (= 0.67.1)
-  - Firebase/CoreOnly (8.11.0):
-    - FirebaseCore (= 8.11.0)
-  - Firebase/Messaging (8.11.0):
+  - Firebase/CoreOnly (8.15.0):
+    - FirebaseCore (= 8.15.0)
+  - Firebase/Messaging (8.15.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 8.11.0)
-  - FirebaseCore (8.11.0):
+    - FirebaseMessaging (~> 8.15.0)
+  - FirebaseCore (8.15.0):
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
-  - FirebaseCoreDiagnostics (8.11.0):
+  - FirebaseCoreDiagnostics (8.15.0):
     - GoogleDataTransport (~> 9.1)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/Logger (~> 7.7)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.11.0):
+  - FirebaseInstallations (8.15.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.7)
     - GoogleUtilities/UserDefaults (~> 7.7)
     - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseMessaging (8.11.0):
+  - FirebaseMessaging (8.15.0):
     - FirebaseCore (~> 8.0)
     - FirebaseInstallations (~> 8.0)
     - GoogleDataTransport (~> 9.1)
@@ -100,9 +100,9 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - GoogleDataTransport (9.1.2):
-    - GoogleUtilities/Environment (~> 7.2)
-    - nanopb (~> 2.30908.0)
+  - GoogleDataTransport (9.1.4):
+    - GoogleUtilities/Environment (~> 7.7)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
     - PromisesObjC (< 3.0, >= 1.2)
   - GoogleUtilities/AppDelegateSwizzler (7.7.0):
     - GoogleUtilities/Environment
@@ -128,17 +128,17 @@ PODS:
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.180)
-  - Permission-Camera (3.2.0):
+  - Permission-Camera (3.3.1):
     - RNPermissions
-  - Permission-MediaLibrary (3.2.0):
+  - Permission-MediaLibrary (3.3.1):
     - RNPermissions
-  - Permission-Microphone (3.2.0):
+  - Permission-Microphone (3.3.1):
     - RNPermissions
-  - Permission-Notifications (3.2.0):
+  - Permission-Notifications (3.3.1):
     - RNPermissions
-  - Permission-PhotoLibrary (3.2.0):
+  - Permission-PhotoLibrary (3.3.1):
     - RNPermissions
-  - PromisesObjC (2.0.0)
+  - PromisesObjC (2.1.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -337,9 +337,9 @@ PODS:
   - React-jsinspector (0.67.1)
   - React-logger (0.67.1):
     - glog
-  - react-native-document-picker (8.0.0):
+  - react-native-document-picker (8.1.0):
     - React-Core
-  - react-native-safe-area-context (3.3.2):
+  - react-native-safe-area-context (3.4.1):
     - React-Core
   - react-native-video (5.2.0):
     - React-Core
@@ -411,30 +411,30 @@ PODS:
     - React-jsi (= 0.67.1)
     - React-logger (= 0.67.1)
     - React-perflogger (= 0.67.1)
-  - RNCAsyncStorage (1.15.17):
+  - RNCAsyncStorage (1.17.5):
     - React-Core
-  - RNFBApp (14.2.4):
-    - Firebase/CoreOnly (= 8.11.0)
+  - RNFBApp (14.9.4):
+    - Firebase/CoreOnly (= 8.15.0)
     - React-Core
-  - RNFBMessaging (14.2.4):
-    - Firebase/Messaging (= 8.11.0)
+  - RNFBMessaging (14.9.4):
+    - Firebase/Messaging (= 8.15.0)
     - React-Core
     - RNFBApp
-  - RNGestureHandler (2.2.0):
+  - RNGestureHandler (2.4.2):
     - React-Core
-  - RNNotifee (4.0.1):
+  - RNNotifee (4.1.0):
     - React-Core
-    - RNNotifee/NotifeeCore (= 4.0.1)
-  - RNNotifee/NotifeeCore (4.0.1):
+    - RNNotifee/NotifeeCore (= 4.1.0)
+  - RNNotifee/NotifeeCore (4.1.0):
     - React-Core
-  - RNPermissions (3.2.0):
+  - RNPermissions (3.3.1):
     - React-Core
-  - RNScreens (3.10.2):
+  - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
-  - RNSVG (12.1.1):
-    - React
-  - RNVectorIcons (9.0.0):
+  - RNSVG (12.3.0):
+    - React-Core
+  - RNVectorIcons (9.1.0):
     - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
@@ -642,11 +642,11 @@ SPEC CHECKSUMS:
   DoubleConversion: 831926d9b8bf8166fd87886c4abab286c2422662
   FBLazyVector: cf409c74423d3507bda74bda1dc41e903ec2cd5b
   FBReactNativeSpec: ef0ce762fdb37900abb01e008cce5f0ef2cce6b7
-  Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
-  FirebaseCore: 2f4f85b453cc8fea4bb2b37e370007d2bcafe3f0
-  FirebaseCoreDiagnostics: 64d9709d804a6c25bd77841371c1fcfd909d5601
-  FirebaseInstallations: 044eede8a049bce71c4541ee68d6e4364fcbe774
-  FirebaseMessaging: 02e248e8997f71fa8cc9d78e9d49ec1a701ba14a
+  Firebase: 5f8193dff4b5b7c5d5ef72ae54bb76c08e2b841d
+  FirebaseCore: 5743c5785c074a794d35f2fff7ecc254a91e08b1
+  FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
+  FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
+  FirebaseMessaging: 5e5118a2383b3531e730d974680954c679ca0a13
   Flipper: 30e8eeeed6abdc98edaf32af0cda2f198be4b733
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
   Flipper-DoubleConversion: 57ffbe81ef95306cc9e69c4aa3aeeeeb58a6a28c
@@ -658,17 +658,17 @@ SPEC CHECKSUMS:
   FlipperKit: d8d346844eca5d9120c17d441a2f38596e8ed2b9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
-  GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
+  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
   GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
-  Permission-Camera: 53efcbb755b0e8bdf253dbb27cc7559ccfce8480
-  Permission-MediaLibrary: d35adbe2a069f2e16121fd79cf15959e86a3f74a
-  Permission-Microphone: db557c64f7e9ad41bff6b3f6d93df3b67311855b
-  Permission-Notifications: bb420c3d28328df24de1b476b41ed8249ccf2537
-  Permission-PhotoLibrary: 7bec836dcdd04a0bfb200c314f1aae06d4476357
-  PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  Permission-Camera: bae27a8503530770c35aadfecbb97ec71823382a
+  Permission-MediaLibrary: cbc1ee191cf0fe73282d2b3f197714941783d99d
+  Permission-Microphone: 13922195a81b9d46d2df8050c225006eae126d49
+  Permission-Notifications: 4b21cfdd5e8aab2cbb1f117aaa17b44e1f5736c4
+  Permission-PhotoLibrary: ddb5a158725b29cb12e9e477e8a5f5151c66cc3c
+  PromisesObjC: 99b6f43f9e1044bd87a95a60beff28c2c44ddb72
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: e5dc0c44cb366fc93383a2bffbc190fe821e7293
   RCTTypeSafety: 6a4d0cfe070e7fd996e797f439b70878764a1ae0
@@ -681,8 +681,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 1af5de75a4c834c05d53a77c1512e5aa6c18412f
   React-jsinspector: ab80bcdb02f28cdfc0dbbaea6db1241565d59002
   React-logger: b08f354e4c928ff794ca477347fea0922aaf11c3
-  react-native-document-picker: 429972f7ece4463aa5bcdd789622b3a674a3c5d1
-  react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
+  react-native-document-picker: 5663fe4bcdb646200683a41790464d2793307ac8
+  react-native-safe-area-context: 9e40fb181dac02619414ba1294d6c2a807056ab9
   react-native-video: a4c2635d0802f983594b7057e1bce8f442f0ad28
   React-perflogger: 9a6172711d9c4c8c7ac0a426717317c3c6ecf85c
   React-RCTActionSheet: ed408b54b08278e6af8a75e08679675041da61ae
@@ -696,15 +696,15 @@ SPEC CHECKSUMS:
   React-RCTVibration: 19c012d1202df46bafbe49268a346f6b3edadfdd
   React-runtimeexecutor: 2c92a8bddd1a3e72c7513d1e74235c2d9c84875c
   ReactCommon: 2e816fad39f65f2a94a5999d5be463a6b620dcf6
-  RNCAsyncStorage: 6bd5a7ba3dde1c3facba418aa273f449bdc5437a
-  RNFBApp: 7777c22386149f3845f1b0ca74e3d69a574559c5
-  RNFBMessaging: 94fdb127cfa77647ebc85fb53ea6efaec40d344e
-  RNGestureHandler: bf572f552ea324acd5b5464b8d30755b2d8c1de6
-  RNNotifee: ed6c0b5ffc0b021507fe196a1c4cfd1fe002410c
-  RNPermissions: f7ebe52db07c00901127966ca080b4ec6a6ceb0a
-  RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
-  RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
-  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
+  RNCAsyncStorage: 81187912cc9a5c2591ddb161e03e587688afb764
+  RNFBApp: bef4ec5a6d31a3da9bf285379d0c4857c6b7313e
+  RNFBMessaging: bb601451343f61ea26c5806690b4aa62a06aa054
+  RNGestureHandler: 61628a2c859172551aa2100d3e73d1e57878392f
+  RNNotifee: f1ba270897bd7491f889a1a257d0c038a43376f7
+  RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
+  RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
   Yoga: 5cbf25add73edb290e1067017690f7ebf56c5468
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

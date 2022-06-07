@@ -47,10 +47,10 @@ const Login = props => {
       if (state.userId && state.nickname) {
         dispatch({ type: 'start-connection' });
         Keyboard.dismiss();
-        sendbird.connect(state.userId, (err, user) => {
+        sendbird.connect(state.userId, (user, err) => {
           if (!err) {
             if (user.nickname !== state.nickname) {
-              sendbird.updateCurrentUserInfo(state.nickname, '', (err, user) => {
+              sendbird.updateCurrentUserInfo(state.nickname, '', (user, err) => {
                 dispatch({ type: 'end-connection' });
                 if (!err) {
                   start(user);

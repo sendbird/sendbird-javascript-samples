@@ -48,7 +48,7 @@ const Profile = props => {
       if (state.nickname && sendbird.currentUser.nickname !== state.nickname) {
         dispatch({ type: 'start-update' });
         Keyboard.dismiss();
-        sendbird.updateCurrentUserInfo(state.nickname, '', (err, user) => {
+        sendbird.updateCurrentUserInfo(state.nickname, '', (user, err) => {
           dispatch({ type: 'end-update' });
           if (!err) {
             currentUser.nickname = user.nickname;

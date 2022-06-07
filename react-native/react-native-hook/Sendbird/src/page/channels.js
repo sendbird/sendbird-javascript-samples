@@ -25,7 +25,7 @@ const Channels = props => {
     const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
+      sendbird.connect(currentUser.userId, (_, err) => {
         if (!err) {
           refresh();
         } else {
@@ -54,7 +54,7 @@ const Channels = props => {
       const { action, data } = route.params;
       switch (action) {
         case 'leave':
-          data.channel.leave(err => {
+          data.channel.leave((_, err) => {
             if (err) {
               dispatch({
                 type: 'error',
@@ -140,7 +140,7 @@ const Channels = props => {
     if (query.hasNext) {
       dispatch({ type: 'start-loading' });
       query.limit = 20;
-      query.next((err, fetchedChannels) => {
+      query.next((fetchedChannels, err) => {
         dispatch({ type: 'end-loading' });
         if (!err) {
           dispatch({

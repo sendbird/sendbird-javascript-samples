@@ -61,7 +61,7 @@ const Chat = props => {
     const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
+      sendbird.connect(currentUser.userId, (_, err) => {
         if (!err) {
           refresh();
         } else {
@@ -185,7 +185,7 @@ const Chat = props => {
       dispatch({ type: 'error', payload: { error: '' } });
       query.limit = 50;
       query.reverse = true;
-      query.load((err, fetchedMessages) => {
+      query.load((fetchedMessages, err) => {
         if (!err) {
           dispatch({ type: 'fetch-messages', payload: { messages: fetchedMessages } });
         } else {
@@ -199,7 +199,7 @@ const Chat = props => {
       const params = new sendbird.UserMessageParams();
       params.message = state.input;
 
-      const pendingMessage = channel.sendUserMessage(params, (err, message) => {
+      const pendingMessage = channel.sendUserMessage(params, (message, err) => {
         if (!err) {
           dispatch({ type: 'send-message', payload: { message } });
         } else {
@@ -243,7 +243,7 @@ const Chat = props => {
         type: result.type,
       };
       dispatch({ type: 'start-loading' });
-      channel.sendFileMessage(params, (err, message) => {
+      channel.sendFileMessage(params, (message, err) => {
         dispatch({ type: 'end-loading' });
         if (!err) {
           dispatch({ type: 'send-message', payload: { message } });

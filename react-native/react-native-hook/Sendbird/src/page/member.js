@@ -34,7 +34,7 @@ const Member = props => {
     const unsubscribe = AppState.addEventListener('change', handleStateChange);
 
     if (!sendbird.currentUser) {
-      sendbird.connect(currentUser.userId, (err, _) => {
+      sendbird.connect(currentUser.userId, (_, err) => {
         if (!err) {
           refresh();
         } else {

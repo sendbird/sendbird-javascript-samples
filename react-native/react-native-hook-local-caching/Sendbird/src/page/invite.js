@@ -20,7 +20,7 @@ const Invite = props => {
   const { route, navigation, sendbird } = props;
   const { currentUser, channel } = route.params;
 
-  const [query, setQuery] = useState(null);
+  const [query, setQuery] = useState(() => sendbird.createApplicationUserListQuery());
   const [state, dispatch] = useReducer(inviteReducer, {
     channel,
     users: [],
@@ -93,6 +93,7 @@ const Invite = props => {
       try {
         if (!channel) {
           const params = new sendbird.GroupChannelParams();
+
           params.addUsers(state.selectedUsers);
           const createdChannel = await sendbird.GroupChannel.createChannel(params);
 
@@ -100,7 +101,7 @@ const Invite = props => {
           navigation.dispatch(
             StackActions.replace('Chat', {
               currentUser,
-              channel: createdChannel,
+              channel: createdChannel.serialize(),
             }),
           );
         } else {
@@ -129,7 +130,7 @@ const Invite = props => {
     if (query.hasNext) {
       dispatch({ type: 'start-loading' });
       query.limit = 50;
-      query.next((err, fetchedUsers) => {
+      query.next((fetchedUsers, err) => {
         dispatch({ type: 'end-loading' });
         if (!err) {
           dispatch({

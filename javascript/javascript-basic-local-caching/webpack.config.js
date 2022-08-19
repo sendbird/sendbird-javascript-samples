@@ -29,8 +29,8 @@ module.exports = () => {
     module: {
       rules: [
         {
-          // SCSS
-          test: /\.scss$/,
+          // SCSS/SASS
+          test: /\.s[ac]ss$/i,
           use: ExtractTextPlugin.extract({
             fallback: 'style-loader',
             use: [
@@ -44,7 +44,10 @@ module.exports = () => {
                 }
               },
               {
-                loader: 'sass-loader'
+                loader: 'sass-loader',
+                options: {
+                  implementation: require("sass"),
+                }
               }
             ]
           })

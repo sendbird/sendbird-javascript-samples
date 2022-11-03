@@ -30,6 +30,9 @@ If you refresh your browser window, you need to reconnect to SendBird. To retain
 If you wish to issue an `access_token` for your user, modify the `connect function` in `src/sendbird.js`.  
 
 > Require that you have Node v8.x+ installed.
+
+> `node-sass` package requires XCode developer tools (MacOS only) and Node.js version matching. If you have any trouble in the installation, see https://www.npmjs.com/package/node-sass.
+
 1. Install npm
 ```bash
 npm install

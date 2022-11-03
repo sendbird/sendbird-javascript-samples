@@ -14,7 +14,9 @@ You can try out a live demo from the link [here](https://sample.sendbird.com/bas
 ## Run the sample
 1. Install packages
 
-> Require that you have Node v8.x+ installed. 
+> Require that you have Node v8.x+ installed.
+
+> `node-sass` package requires XCode developer tools (MacOS only) and Node.js version matching. If you have any trouble in the installation, see https://www.npmjs.com/package/node-sass.
 
 ```bash
 npm install
@@ -32,6 +34,8 @@ If you want to put some changes into the sample, you should build it using `webp
 1. Install packages
 
 > Require that you have Node v8.x+ installed. 
+
+> `node-sass` package requires XCode developer tools (MacOS only) and Node.js version matching. If you have any trouble in the installation, see https://www.npmjs.com/package/node-sass.
 
 ```bash
 npm install

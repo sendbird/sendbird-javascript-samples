@@ -22,7 +22,7 @@ This section provides the prerequisites for testing Sendbird Desk for Javascript
 
 ### Requirements
 The minimum requirements for SyncManager for Javascript are:
-- Node. js v10+
+- Node. js v8+
 - NPM v6+
 - [Chat SDK for JavaScript](https://github.com/sendbird/SendBird-SDK-JavaScript) v3.0 115+
 
@@ -43,6 +43,8 @@ You can install and run SyncManager for JavaScript sample app on your system usi
 ### Install packages
 
 `Node` v8.x+ should be installed on your system.
+
+> `node-sass` package requires XCode developer tools (MacOS only) and Node.js version matching. If you have any trouble in the installation, see https://www.npmjs.com/package/node-sass.
 
 ```bash
 npm install

@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: sendbird-javascript-samples
+  description: A guide of the installation and functions of Sendbird Chat, UIKit, and SyncManager for JavaScript samples
+  annotations:
+    github.com/project-slug: sendbird/sendbird-javascript-samples
+spec:
+  type: library
+  lifecycle: production
+  owner: dep-client-platform
+  system: sendbird-chat

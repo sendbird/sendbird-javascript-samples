@@ -19,7 +19,7 @@
     "@react-navigation/native-stack": "^6.2.5",
     "moment": "^2.29.1",
     "react": "17.0.2",
-    "react-native": "0.67.1",
+    "react-native": "0.67.5",
     "react-native-document-picker": "^8.0.0",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-permissions": "^3.2.0",

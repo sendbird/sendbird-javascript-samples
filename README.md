@@ -1,11 +1,14 @@
-# Sendbird JavaScript samples
+# Sendbird JavaScript SDK v3 samples
 ![Platform](https://img.shields.io/badge/platform-JAVASCRIPT-orange.svg)
 ![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
 [![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
 
-Sendbird provides an easy-to-use Chat API, native Chat SDKs, UIKits, and a fully-managed chat platform on the backend that provides delivery receipts, offline messaging, presence, translation, moderation tools, and analytics.
+## Deprecation Note (v3)
+:warning: Please note that Sendbird’s SDK v3 will be deprecated by **July 2023**. You may still use the older SDKs at your choice, but no new updates or bug fixes will be made to SDK v3.
 
-The best way to get started is through the [JavaScript Getting Started guide](https://sendbird.com/docs/chat/v3/javascript/getting-started/about-chat-sdk).
+**We recommend clients to plan their migration to SDK v4 as early as possible as there are breaking changes.** We also provide prioritized support for migration and any issues related to v4. SDK v4 provides far richer and robust features in Websocket, Local caching, Polls, Scheduled Messages, Pinned Message, and many more. So try it out now! ([Chat SDK v4 react samples](https://github.com/sendbird/sendbird-chat-sample-react/))
+
+<br />
 
 ## 🔒 Security tip
 When a new Sendbird application is created in the dashboard the default security settings are set permissive to simplify running samples and implementing your first code.

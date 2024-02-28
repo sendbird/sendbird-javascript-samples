@@ -3,6 +3,12 @@
 ![Languages](https://img.shields.io/badge/language-JAVASCRIPT-orange.svg)
 [![npm](https://img.shields.io/npm/v/sendbird.svg?style=popout&colorB=red)](https://www.npmjs.com/package/sendbird)
 
+## Deprecation Note
+⚠️ This Sample has been deprecated. <br />
+[Please visit here to see the UIKit React sample!](https://github.com/sendbird/sendbird-uikit-react/tree/main/samples)
+
+## Overview
+
 Sendbird UIKit for React is a development kit with an user interface that enables an easy and fast integration of standard chat features into new or existing client apps. Here are three UIKit samples for React in the submodules.
 
 * **simple-react-app** is a chat app which is comprised of UIKit’s most essential components.

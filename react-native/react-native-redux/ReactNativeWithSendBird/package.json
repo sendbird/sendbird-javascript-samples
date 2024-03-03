@@ -16,7 +16,7 @@
     "@react-native-community/netinfo": "^4.4.0",
     "@react-native-community/push-notification-ios": "^1.0.2",
     "react": "16.9.0",
-    "react-native": "0.61.2",
+    "react-native": "0.65.0",
     "react-native-cached-image": "https://github.com/fungilation/react-native-cached-image.git",
     "react-native-elements": "^0.19.0",
     "react-native-firebase": "^5.5.6",

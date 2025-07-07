@@ -22,7 +22,7 @@ This repository contains samples for how to use Sendbird to add chat using Javas
 ![UIKit](asset/uikit.png)
 
 ### React
-Sendbird UIKit for React is a set of prebuilt UI components that allows you to easily craft an in-app chat with all the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more. All the included components can be styled and customized to create an unique experience that fits your app.
+Sendbird UIKit for React is a set of prebuilt UI components that allows you to easily craft an in-app chat with all the essential messaging features. Our development kit includes light and dark themes, text fonts, colors and more. All the included components can be styled and customized to create a unique experience that fits your app.
 
 - [**Basic React App**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react/react-app-simple) is a quickest way to get started using UIKit
 
@@ -36,7 +36,7 @@ The Sendbird React Native framework allows you to simplify development for iOS a
 
 - [**React native Redux**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native/react-native-redux) shows how to use Sendbird with React Native on iOS and Android.
 
-- [**React native Redux Syncmanager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native/react-native-redux-syncmanager) Expands on the above sample and implements the [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript)
+- [**React native Redux Sync Manager**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native/react-native-redux-syncmanager) Expands on the above sample and implements the [Sendbird SyncManager](https://github.com/sendbird/sendbird-syncmanager-javascript)
 
 - [**React Native Hooks**](https://github.com/sendbird/SendBird-JavaScript/tree/master/react-native/react-native-hook) Implements Sendbird on iOS and Android using the hooks pattern.
 
